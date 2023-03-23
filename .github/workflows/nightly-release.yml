@@ -2,8 +2,6 @@ name: Nightly Release
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron:  "0 22 * * 1-5"
 
 jobs:
   fedora:
@@ -35,9 +33,7 @@ jobs:
       - name: Prepare files for distribution
         run: |
           export DYNAWO_HOME=$(pwd)
-          util/envDynawo.sh distrib
           util/envDynawo.sh distrib-omc
-          util/envDynawo.sh distrib-headers
 
       - name: INFO. Files created in distributions folder
         run: du -hs distributions/*
