@@ -87,7 +87,7 @@ jobs:
           ls
           ls OpenModelica/dynawo/OpenModelica.zip
           echo here1
-          curl --retry 20 --retry-delay 0 --retry-max-time 40 --max-time 180 --limit-rate 5M --request POST --url ${url}?name=dynawo-3rd-parties-windows.zip --header "authorization: Bearer $GITHUB_TOKEN" --header "Content-Type: application/zip" --data-binary @dynawo-3rd-parties-windows.zip
+          curl --retry 20 --retry-delay 1 --retry-max-time 40 --max-time 2000000 --limit-rate 1M --request POST --url ${url}?name=dynawo-3rd-parties-windows.zip --header "authorization: Bearer $GITHUB_TOKEN" --header "Content-Type: application/zip" --data-binary @dynawo-3rd-parties-windows.zip
           echo here11
           curl -vvv --retry 20 --retry-delay 0 --retry-max-time 40 --limit-rate 5M -H "authorization: Bearer $GITHUB_TOKEN" -H "Content-Type: application/zip" -X POST ${url}?name=dynawo-3rd-parties-windows.zip --data-binary @dynawo-3rd-parties-windows.zip
           echo here2
