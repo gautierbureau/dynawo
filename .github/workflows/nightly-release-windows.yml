@@ -80,8 +80,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          url=$(curl -s -H "authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/dynawo/dynawo/releases/tags/nightly | jq -r '.upload_url' | grep -o ".*assets")
-          curl -s -H "authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/dynawo/dynawo/releases/tags/nightly
+          url=$(curl -s -H "authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/gautierbureau/dynawo/releases/tags/nightly | jq -r '.upload_url' | grep -o ".*assets")
+          curl -s -H "authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/dynawo/gautierbureau/releases/tags/nightly
           echo $url
           cd /d
           ls
