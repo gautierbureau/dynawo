@@ -26,11 +26,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd \dynawo
+          cd /d/dynawo
           7z a test.zip past_commits.txt
           curl -vvv --retry 20 --retry-delay 1 --retry-max-time 40 --max-time 2000000 --limit-rate 10M --request POST --url ${url}?name=test.zip --header "authorization: Bearer $GITHUB_TOKEN" --header "Content-Type: application/zip" --data-binary @test.zip
           exit 1
-          
+
       - name: Install OpenModelica
         shell: cmd
         env:
