@@ -1,5 +1,7 @@
 name: CI
 
+on: []
+
 defaults:
   run:
     shell: bash
