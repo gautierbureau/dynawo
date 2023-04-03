@@ -21,6 +21,18 @@ jobs:
           move dynawo \
           md dynawo
 
+      - name: Upload Test Windows
+        shell: cmd
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd \dynawo
+          7z a test.zip past_commits.txt
+          set url=https://uploads.github.com/repos/gautierbureau/dynawo/releases/96648011/assets
+          curl -vvv --request POST --url %url%?name=test.zip --header "authorization: Bearer $GITHUB_TOKEN" --header "Content-Type: application/zip" --data-binary @test.zip
+          echo here1
+          curl -vvv --request POST --url %url%?name=test.zip --header "authorization: Bearer $GITHUB_TOKEN" --header "Content-Type: application/octet-stream" --data-binary @test.zip
+
       - name: Upload Test
         shell: bash
         env:
@@ -29,8 +41,6 @@ jobs:
           cd /d/dynawo
           7z a test.zip past_commits.txt
           url=$(curl -s -H "authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/gautierbureau/dynawo/releases/tags/nightly | jq -r '.upload_url' | grep -o ".*assets")
-          curl -vvv --retry 20 --retry-delay 1 --retry-max-time 40 --max-time 2000000 --limit-rate 10M --request POST --url ${url}?name=test.zip --header "authorization: Bearer $GITHUB_TOKEN" --header "Content-Type: application/zip" --data-binary @test.zip
-          exit 1
 
       - name: Install OpenModelica
         shell: cmd
