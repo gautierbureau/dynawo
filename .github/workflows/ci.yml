@@ -39,9 +39,15 @@ jobs:
           export DYNAWO_HOME=$(pwd)
           util/envDynawo.sh build-doxygen-doc
           ls install/gcc8/master/Debug/shared/dynawo
+          echo
           ls install/gcc8/master/Debug/shared/dynawo/doxygen
+          echo
           ls install/gcc8/master/Debug/shared/dynawo/doxygen/html
+          echo
           cp -R install/gcc8/master/Debug/shared/dynawo/doxygen/html /opt
+          echo
+          ls /__w/dynawo/dynawo/install/gcc8/master/Debug/shared/dynawo/
+          echo
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
