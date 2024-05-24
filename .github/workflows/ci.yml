@@ -41,13 +41,14 @@ jobs:
           ls install/gcc8/master/Debug/shared/dynawo
           ls install/gcc8/master/Debug/shared/dynawo/doxygen
           ls install/gcc8/master/Debug/shared/dynawo/doxygen/html
+          cp -R install/gcc8/master/Debug/shared/dynawo/doxygen/html /opt
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./install/gcc8/master/Debug/shared/dynawo/doxygen/html
+          publish_dir: /opt/html
 
       # - name: NRT
       #   if: github.event_name == 'workflow_dispatch' && inputs.perform-nrt
