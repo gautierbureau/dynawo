@@ -48,6 +48,8 @@ jobs:
           echo
           ls /__w/dynawo/dynawo/install/gcc8/master/Debug/shared/dynawo/
           echo
+          ls /__w/dynawo/dynawo/install/gcc8/master/Debug/shared/dynawo/doxygen/html
+          echo
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
