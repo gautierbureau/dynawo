@@ -45,10 +45,10 @@ jobs:
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /opt/html
+          publish_dir: ./install/gcc8/master/Debug/shared/dynawo/doxygen/html
 
       # - name: NRT
       #   if: github.event_name == 'workflow_dispatch' && inputs.perform-nrt
