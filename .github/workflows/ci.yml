@@ -32,6 +32,8 @@ jobs:
         run: |
           export DYNAWO_HOME=$(pwd)
           util/envDynawo.sh build-minimal
+          apt update -y
+          apt update -y rsync
 
       - name: Doxygen build
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
@@ -63,7 +65,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ./install/gcc8/master/Debug/shared/dynawo/doxygen/html
-          
+
       # - name: NRT
       #   if: github.event_name == 'workflow_dispatch' && inputs.perform-nrt
       #   run: |
