@@ -63,6 +63,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ./install/gcc8/master/Debug/shared/dynawo/doxygen/html
+          
       # - name: NRT
       #   if: github.event_name == 'workflow_dispatch' && inputs.perform-nrt
       #   run: |
