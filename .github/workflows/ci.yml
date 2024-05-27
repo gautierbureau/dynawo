@@ -61,11 +61,8 @@ jobs:
 
       - name: Build and deploy
         uses: JamesIves/github-pages-deploy-action@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: ./install/gcc8/master/Debug/shared/dynawo/doxygen/html
-
+        with:
+          folder: ./install/gcc8/master/Debug/shared/dynawo/doxygen/html
       # - name: NRT
       #   if: github.event_name == 'workflow_dispatch' && inputs.perform-nrt
       #   run: |
