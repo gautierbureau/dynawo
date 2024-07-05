@@ -23,7 +23,7 @@ var searchData=
   ['updateparametersvalues',['updateParametersValues',['../da/d0a/a03297.html#a877ec30cf8c5fe7b5dc9ffd32da831d7',1,'DYN::Simulation']]],
   ['updatestatistics',['updateStatistics',['../d8/dde/a03313.html#af27110502728ff0b7137d3a0c084d9d4',1,'DYN::SolverKINCommon::updateStatistics()'],['../d8/d5d/a03329.html#a864706e94efc164564647935b79bd0fd',1,'DYN::Solver::updateStatistics()'],['../d3/dfd/a03357.html#ac6734fd43138313973775a325086ae48',1,'DYN::SolverCommonFixedTimeStep::updateStatistics()'],['../d3/d0c/a03381.html#ae4e65a4946b74ef1ac2b136272f1fe29',1,'DYN::SolverIDA::updateStatistics()']]],
   ['updatetimestep',['updateTimeStep',['../d3/dfd/a03357.html#ac1c3dcaa4809983bf376a6878526626d',1,'DYN::SolverCommonFixedTimeStep']]],
-  ['updatevelocity',['updateVelocity',['../d8/d60/a03373.html#ac13e2380d7bc2d2abc94e9c36c0aa3fd',1,'DYN::SolverTRAP']]],
+  ['updatevelocity',['updateVelocity',['../d7/d13/a03365.html#ac2313159a7a99632bb43e305cb5717d2',1,'DYN::SolverSIM::updateVelocity()'],['../d8/d60/a03373.html#ac13e2380d7bc2d2abc94e9c36c0aa3fd',1,'DYN::SolverTRAP::updateVelocity()']]],
   ['updatezandmode',['updateZAndMode',['../d3/dfd/a03357.html#aaca54eb80a1141107165c14818f3e36b',1,'DYN::SolverCommonFixedTimeStep']]],
   ['ur',['ur',['../d7/dee/a03205.html#a45410e8c0130965a6581f43dc840f5a6',1,'DYN::ModelBus']]],
   ['ur1',['ur1',['../dd/d07/a03233.html#a920cdde3910148e2d7e72b1fa37de3b0',1,'DYN::ModelLine::ur1()'],['../d0/d84/a03281.html#a655dd549e08f0f1fe27619c98e958685',1,'DYN::ModelTwoWindingsTransformer::ur1()']]],

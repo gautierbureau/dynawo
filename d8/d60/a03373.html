@@ -128,6 +128,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abeab6a0979630d69f11917a51877fbbc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#abeab6a0979630d69f11917a51877fbbc">init</a> (const boost::shared_ptr&lt; <a class="el" href="../../df/d50/a02725.html">Model</a> &gt; &amp;model, const double t0, const double tEnd)</td></tr>
 <tr class="memdesc:abeab6a0979630d69f11917a51877fbbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize the solver  <a href="#abeab6a0979630d69f11917a51877fbbc">More...</a><br /></td></tr>
 <tr class="separator:abeab6a0979630d69f11917a51877fbbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e261af2d2eab7a3d1c299861fd70dcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#a1e261af2d2eab7a3d1c299861fd70dcc">defineSpecificParameters</a> ()</td></tr>
+<tr class="memdesc:a1e261af2d2eab7a3d1c299861fd70dcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">define parameters specific to each solver  <a href="#a1e261af2d2eab7a3d1c299861fd70dcc">More...</a><br /></td></tr>
+<tr class="separator:a1e261af2d2eab7a3d1c299861fd70dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6973e452bcb99005e3ad8f9e5d355061"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#a6973e452bcb99005e3ad8f9e5d355061">setSolverSpecificParameters</a> ()</td></tr>
+<tr class="memdesc:a6973e452bcb99005e3ad8f9e5d355061"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the solver specific parameters value  <a href="#a6973e452bcb99005e3ad8f9e5d355061">More...</a><br /></td></tr>
+<tr class="separator:a6973e452bcb99005e3ad8f9e5d355061"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accb2a8e7a76afac7c0522fbee2442031"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#accb2a8e7a76afac7c0522fbee2442031">calculateIC</a> (double tEnd)</td></tr>
 <tr class="memdesc:accb2a8e7a76afac7c0522fbee2442031"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the intial condition of the DAE.  <a href="#accb2a8e7a76afac7c0522fbee2442031">More...</a><br /></td></tr>
 <tr class="separator:accb2a8e7a76afac7c0522fbee2442031"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,6 +148,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#abd8c159c3d93e22c6378a79b3c482a5b">computePrediction</a> ()</td></tr>
 <tr class="memdesc:abd8c159c3d93e22c6378a79b3c482a5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAP version of computePrediction. We just compute the first Yp. <br /></td></tr>
 <tr class="separator:abd8c159c3d93e22c6378a79b3c482a5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefc980552f4c1f1d17776de8370b3bd8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#aefc980552f4c1f1d17776de8370b3bd8">hasPrediction</a> () const</td></tr>
+<tr class="memdesc:aefc980552f4c1f1d17776de8370b3bd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">the solver uses a prediction-correction scheme  <a href="#aefc980552f4c1f1d17776de8370b3bd8">More...</a><br /></td></tr>
+<tr class="separator:aefc980552f4c1f1d17776de8370b3bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3ff4812cb9300afd52649cc24510bfd"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#ab3ff4812cb9300afd52649cc24510bfd">getName</a> ()</td></tr>
 <tr class="memdesc:ab3ff4812cb9300afd52649cc24510bfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">name of the solver  <a href="#ab3ff4812cb9300afd52649cc24510bfd">More...</a><br /></td></tr>
 <tr class="separator:ab3ff4812cb9300afd52649cc24510bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,12 +173,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 <tr class="memitem:a32e142455ed816bfc4e2b3aaca8375e0 inherit pub_methods_a03357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a32e142455ed816bfc4e2b3aaca8375e0">initCommon</a> (const boost::shared_ptr&lt; <a class="el" href="../../df/d50/a02725.html">Model</a> &gt; &amp;model, const double t0, const double tEnd)</td></tr>
 <tr class="memdesc:a32e142455ed816bfc4e2b3aaca8375e0 inherit pub_methods_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common part of the function init. Used to factorize.  <a href="../../d3/dfd/a03357.html#a32e142455ed816bfc4e2b3aaca8375e0">More...</a><br /></td></tr>
 <tr class="separator:a32e142455ed816bfc4e2b3aaca8375e0 inherit pub_methods_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34055233719ffebdfd19bd2facc8ca7a inherit pub_methods_a03357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a34055233719ffebdfd19bd2facc8ca7a">defineSpecificParameters</a> ()</td></tr>
-<tr class="memdesc:a34055233719ffebdfd19bd2facc8ca7a inherit pub_methods_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">define parameters specific to each solver  <a href="../../d3/dfd/a03357.html#a34055233719ffebdfd19bd2facc8ca7a">More...</a><br /></td></tr>
-<tr class="separator:a34055233719ffebdfd19bd2facc8ca7a inherit pub_methods_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac33aedb40b9b84b8cfe002437842cbbc inherit pub_methods_a03357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#ac33aedb40b9b84b8cfe002437842cbbc">setSolverSpecificParameters</a> ()</td></tr>
-<tr class="memdesc:ac33aedb40b9b84b8cfe002437842cbbc inherit pub_methods_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the solver specific parameters value  <a href="../../d3/dfd/a03357.html#ac33aedb40b9b84b8cfe002437842cbbc">More...</a><br /></td></tr>
-<tr class="separator:ac33aedb40b9b84b8cfe002437842cbbc inherit pub_methods_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8fcbdf21cc6e9696cfc8954cbc7a43e inherit pub_methods_a03357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#ad8fcbdf21cc6e9696cfc8954cbc7a43e">defineSpecificParametersCommon</a> ()</td></tr>
+<tr class="memdesc:ad8fcbdf21cc6e9696cfc8954cbc7a43e inherit pub_methods_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">define parameters specific to each solver  <a href="../../d3/dfd/a03357.html#ad8fcbdf21cc6e9696cfc8954cbc7a43e">More...</a><br /></td></tr>
+<tr class="separator:ad8fcbdf21cc6e9696cfc8954cbc7a43e inherit pub_methods_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35c28a1bbfcbf5bd8c31d05480795bb5 inherit pub_methods_a03357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a35c28a1bbfcbf5bd8c31d05480795bb5">setSolverSpecificParametersCommon</a> ()</td></tr>
+<tr class="memdesc:a35c28a1bbfcbf5bd8c31d05480795bb5 inherit pub_methods_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the solver specific parameters value  <a href="../../d3/dfd/a03357.html#a35c28a1bbfcbf5bd8c31d05480795bb5">More...</a><br /></td></tr>
+<tr class="separator:a35c28a1bbfcbf5bd8c31d05480795bb5 inherit pub_methods_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2e996069560b564a76075ce9d7c96ef inherit pub_methods_a03357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#aa2e996069560b564a76075ce9d7c96ef">reinit</a> ()</td></tr>
 <tr class="memdesc:aa2e996069560b564a76075ce9d7c96ef inherit pub_methods_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore the equations after an algebraic mode - reinitialize the DAE problem (new initial point)  <a href="../../d3/dfd/a03357.html#aa2e996069560b564a76075ce9d7c96ef">More...</a><br /></td></tr>
 <tr class="separator:aa2e996069560b564a76075ce9d7c96ef inherit pub_methods_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -255,10 +264,10 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=".
 <tr class="memdesc:a3ccfb1271f81ec18f4521346984e4ae3 inherit pub_methods_a03353"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the timeline to use during the simulation (where events should be added/removed)  <a href="../../d1/d3a/a03353.html#a3ccfb1271f81ec18f4521346984e4ae3">More...</a><br /></td></tr>
 <tr class="separator:a3ccfb1271f81ec18f4521346984e4ae3 inherit pub_methods_a03353"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_a03329"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a03329')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d8/d5d/a03329.html">DYN::Solver</a></td></tr>
-<tr class="memitem:af04f3ad2d08b58932a860123c3d7fdeb inherit pub_methods_a03329"><td class="memItemLeft" align="right" valign="top"><a id="af04f3ad2d08b58932a860123c3d7fdeb"></a>
-virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d5d/a03329.html#af04f3ad2d08b58932a860123c3d7fdeb">~Solver</a> ()=default</td></tr>
-<tr class="memdesc:af04f3ad2d08b58932a860123c3d7fdeb inherit pub_methods_a03329"><td class="mdescLeft">&#160;</td><td class="mdescRight">destructor <br /></td></tr>
-<tr class="separator:af04f3ad2d08b58932a860123c3d7fdeb inherit pub_methods_a03329"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a1a9b0b147d07d0d551e2089145030d inherit pub_methods_a03329"><td class="memItemLeft" align="right" valign="top"><a id="a0a1a9b0b147d07d0d551e2089145030d"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d5d/a03329.html#a0a1a9b0b147d07d0d551e2089145030d">~Solver</a> ()</td></tr>
+<tr class="memdesc:a0a1a9b0b147d07d0d551e2089145030d inherit pub_methods_a03329"><td class="mdescLeft">&#160;</td><td class="mdescRight">destructor <br /></td></tr>
+<tr class="separator:a0a1a9b0b147d07d0d551e2089145030d inherit pub_methods_a03329"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -268,17 +277,19 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ae31bb9b1195cc671c9baa5ed6fb44a5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#ae31bb9b1195cc671c9baa5ed6fb44a5c">solveStep</a> (double tAim, double &amp;tNxt)</td></tr>
 <tr class="memdesc:ae31bb9b1195cc671c9baa5ed6fb44a5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Integrate the DAE over an interval in t.  <a href="#ae31bb9b1195cc671c9baa5ed6fb44a5c">More...</a><br /></td></tr>
 <tr class="separator:ae31bb9b1195cc671c9baa5ed6fb44a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabc94efa23da0dff3aa24ffa41cc3ba3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#aabc94efa23da0dff3aa24ffa41cc3ba3">saveContinuousVariables</a> ()</td></tr>
+<tr class="memdesc:aabc94efa23da0dff3aa24ffa41cc3ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">save the initial values of y before the time step  <a href="#aabc94efa23da0dff3aa24ffa41cc3ba3">More...</a><br /></td></tr>
+<tr class="separator:aabc94efa23da0dff3aa24ffa41cc3ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a035db8b14a9640d8930487158f216d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#a1a035db8b14a9640d8930487158f216d">restoreContinuousVariables</a> ()</td></tr>
+<tr class="memdesc:a1a035db8b14a9640d8930487158f216d"><td class="mdescLeft">&#160;</td><td class="mdescRight">restore y to their initial values  <a href="#a1a035db8b14a9640d8930487158f216d">More...</a><br /></td></tr>
+<tr class="separator:a1a035db8b14a9640d8930487158f216d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a9976e470cf5a41d9ba8e67bfce768d0c"><td class="memItemLeft" align="right" valign="top"><a id="a9976e470cf5a41d9ba8e67bfce768d0c"></a>
-boost::shared_ptr&lt; <a class="el" href="../../d8/d1e/a03309.html">SolverKINAlgRestoration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#a9976e470cf5a41d9ba8e67bfce768d0c">solverKINYPrim_</a></td></tr>
-<tr class="memdesc:a9976e470cf5a41d9ba8e67bfce768d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Newton-Raphson solver for the derivatives of the differential variables restoration. <br /></td></tr>
-<tr class="separator:a9976e470cf5a41d9ba8e67bfce768d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a645e919c6752dc734b0ce0fac04abf84"><td class="memItemLeft" align="right" valign="top"><a id="a645e919c6752dc734b0ce0fac04abf84"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#a645e919c6752dc734b0ce0fac04abf84">velocitySave_</a></td></tr>
-<tr class="memdesc:a645e919c6752dc734b0ce0fac04abf84"><td class="mdescLeft">&#160;</td><td class="mdescRight">values of previous derivative functions evaluated <br /></td></tr>
-<tr class="separator:a645e919c6752dc734b0ce0fac04abf84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a5765bc10c7b0bff4d053e12b79d837"><td class="memItemLeft" align="right" valign="top"><a id="a8a5765bc10c7b0bff4d053e12b79d837"></a>
+boost::shared_ptr&lt; <a class="el" href="../../d8/d1e/a03309.html">SolverKINAlgRestoration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d60/a03373.html#a8a5765bc10c7b0bff4d053e12b79d837">solverKINYPrimInit_</a></td></tr>
+<tr class="memdesc:a8a5765bc10c7b0bff4d053e12b79d837"><td class="mdescLeft">&#160;</td><td class="mdescRight">Newton-Raphson solver for the derivatives of the differential variables restoration. <br /></td></tr>
+<tr class="separator:a8a5765bc10c7b0bff4d053e12b79d837"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -303,6 +314,9 @@ Additional Inherited Members</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a540b266bb9b66a343bc181a8304fb6b5">setDifferentialVariablesIndices</a> ()</td></tr>
 <tr class="memdesc:a540b266bb9b66a343bc181a8304fb6b5 inherit pro_methods_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the index of each differential variables <br /></td></tr>
 <tr class="separator:a540b266bb9b66a343bc181a8304fb6b5 inherit pro_methods_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01a0a39057089f43947fb824976e2116 inherit pro_methods_a03357"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/d1e/a03309.html">SolverKINAlgRestoration</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a01a0a39057089f43947fb824976e2116">getSolverKINYPrim</a> ()</td></tr>
+<tr class="memdesc:a01a0a39057089f43947fb824976e2116 inherit pro_methods_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">call the algebraic solver to find the solution of f(x) = 0  <a href="../../d3/dfd/a03357.html#a01a0a39057089f43947fb824976e2116">More...</a><br /></td></tr>
+<tr class="separator:a01a0a39057089f43947fb824976e2116 inherit pro_methods_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_a03353"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_a03353')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d1/d3a/a03353.html">DYN::Solver::Impl</a></td></tr>
 <tr class="memitem:a7bd1d21df1c1a8eff9ca72684bd01d0e inherit pro_methods_a03353"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a7bd1d21df1c1a8eff9ca72684bd01d0e inherit pro_methods_a03353"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d3a/a03353.html#a7bd1d21df1c1a8eff9ca72684bd01d0e">setParameterValue</a> (<a class="el" href="../../d8/d12/a03325.html">ParameterSolver</a> &amp;parameter, const T &amp;value)</td></tr>
@@ -346,6 +360,10 @@ boost::shared_ptr&lt; <a class="el" href="../../d8/ddd/a03317.html">SolverKINEul
 boost::shared_ptr&lt; <a class="el" href="../../d8/d1e/a03309.html">SolverKINAlgRestoration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#aa8146674ade9beea6e4c34fbca21834b">solverKINAlgRestoration_</a></td></tr>
 <tr class="memdesc:aa8146674ade9beea6e4c34fbca21834b inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Newton Raphson solver for the algebraic variables restoration. <br /></td></tr>
 <tr class="separator:aa8146674ade9beea6e4c34fbca21834b inherit pro_attribs_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad44ed5c03e86f790b9f20d6a7aa398e4 inherit pro_attribs_a03357"><td class="memItemLeft" align="right" valign="top"><a id="ad44ed5c03e86f790b9f20d6a7aa398e4"></a>
+boost::shared_ptr&lt; <a class="el" href="../../d8/d1e/a03309.html">SolverKINAlgRestoration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#ad44ed5c03e86f790b9f20d6a7aa398e4">solverKINYPrim_</a></td></tr>
+<tr class="memdesc:ad44ed5c03e86f790b9f20d6a7aa398e4 inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Newton-Raphson solver for the derivatives of the differential variables restoration. <br /></td></tr>
+<tr class="separator:ad44ed5c03e86f790b9f20d6a7aa398e4 inherit pro_attribs_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0289e8095b78d91a01515b11d05f7733 inherit pro_attribs_a03357"><td class="memItemLeft" align="right" valign="top"><a id="a0289e8095b78d91a01515b11d05f7733"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a0289e8095b78d91a01515b11d05f7733">hMin_</a></td></tr>
 <tr class="memdesc:a0289e8095b78d91a01515b11d05f7733 inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">minimum time-step <br /></td></tr>
@@ -392,7 +410,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="..
 <tr class="separator:a54aa9c2209d843723429a77a42d4bd45 inherit pro_attribs_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89c8106e02527dff925acc94a0149977 inherit pro_attribs_a03357"><td class="memItemLeft" align="right" valign="top"><a id="a89c8106e02527dff925acc94a0149977"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a89c8106e02527dff925acc94a0149977">initialaddtol_</a></td></tr>
-<tr class="memdesc:a89c8106e02527dff925acc94a0149977 inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">stopping tolerance at initialization of residual function <br /></td></tr>
+<tr class="memdesc:a89c8106e02527dff925acc94a0149977 inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">at the first newton iteration tol = initialaddtol_ * fnormtol_ <br /></td></tr>
 <tr class="separator:a89c8106e02527dff925acc94a0149977 inherit pro_attribs_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35a51721a5d6a58a11c9993838649313 inherit pro_attribs_a03357"><td class="memItemLeft" align="right" valign="top"><a id="a35a51721a5d6a58a11c9993838649313"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a35a51721a5d6a58a11c9993838649313">scsteptol_</a></td></tr>
@@ -418,10 +436,14 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../..
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a2cb70233747d2ca00a7cc45347712a2b">skipNextNR_</a></td></tr>
 <tr class="memdesc:a2cb70233747d2ca00a7cc45347712a2b inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">indicates if the next algebraic resolution could be skipped <br /></td></tr>
 <tr class="separator:a2cb70233747d2ca00a7cc45347712a2b inherit pro_attribs_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c459908ecab8b53c76e9691b1cbdcc7 inherit pro_attribs_a03357"><td class="memItemLeft" align="right" valign="top"><a id="a7c459908ecab8b53c76e9691b1cbdcc7"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a7c459908ecab8b53c76e9691b1cbdcc7">ySave_</a></td></tr>
-<tr class="memdesc:a7c459908ecab8b53c76e9691b1cbdcc7 inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">values of state variables before step <br /></td></tr>
-<tr class="separator:a7c459908ecab8b53c76e9691b1cbdcc7 inherit pro_attribs_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12fd72e46f391189b051f5431304b85b inherit pro_attribs_a03357"><td class="memItemLeft" align="right" valign="top"><a id="a12fd72e46f391189b051f5431304b85b"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a12fd72e46f391189b051f5431304b85b">vectorYSave_</a></td></tr>
+<tr class="memdesc:a12fd72e46f391189b051f5431304b85b inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">values of state variables before step <br /></td></tr>
+<tr class="separator:a12fd72e46f391189b051f5431304b85b inherit pro_attribs_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1af55df79133cfbead6482f9985a7e9e inherit pro_attribs_a03357"><td class="memItemLeft" align="right" valign="top"><a id="a1af55df79133cfbead6482f9985a7e9e"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a1af55df79133cfbead6482f9985a7e9e">vectorYpSave_</a></td></tr>
+<tr class="memdesc:a1af55df79133cfbead6482f9985a7e9e inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">values of previous derivative functions evaluated <br /></td></tr>
+<tr class="separator:a1af55df79133cfbead6482f9985a7e9e inherit pro_attribs_a03357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a910ed4696058c437f13c7aaf1a550032 inherit pro_attribs_a03357"><td class="memItemLeft" align="right" valign="top"><a id="a910ed4696058c437f13c7aaf1a550032"></a>
 std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/a03357.html#a910ed4696058c437f13c7aaf1a550032">differentialVariablesIndices_</a></td></tr>
 <tr class="memdesc:a910ed4696058c437f13c7aaf1a550032 inherit pro_attribs_a03357"><td class="mdescLeft">&#160;</td><td class="mdescRight">index of each differential variables <br /></td></tr>
@@ -681,6 +703,35 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 
 </div>
 </div>
+<a id="a1e261af2d2eab7a3d1c299861fd70dcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e261af2d2eab7a3d1c299861fd70dcc">&#9670;&nbsp;</a></span>defineSpecificParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::SolverTRAP::defineSpecificParameters </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>define parameters specific to each solver </p>
+
+<p>Implements <a class="el" href="../../d1/d3a/a03353.html#a37c243fc170d29b7a05d6b726087101d">DYN::Solver::Impl</a>.</p>
+
+</div>
+</div>
 <a id="ab3ff4812cb9300afd52649cc24510bfd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab3ff4812cb9300afd52649cc24510bfd">&#9670;&nbsp;</a></span>getName()</h2>
 
@@ -741,6 +792,36 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 
 </div>
 </div>
+<a id="aefc980552f4c1f1d17776de8370b3bd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefc980552f4c1f1d17776de8370b3bd8">&#9670;&nbsp;</a></span>hasPrediction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::SolverTRAP::hasPrediction </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>the solver uses a prediction-correction scheme </p>
+<dl class="section return"><dt>Returns</dt><dd>the solver has a prediction scheme </dd></dl>
+
+<p>Implements <a class="el" href="../../d3/dfd/a03357.html#a6544f3885576335e8d572d6fffa82112">DYN::SolverCommonFixedTimeStep</a>.</p>
+
+</div>
+</div>
 <a id="abeab6a0979630d69f11917a51877fbbc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abeab6a0979630d69f11917a51877fbbc">&#9670;&nbsp;</a></span>init()</h2>
 
@@ -792,6 +873,93 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 </dl>
 
 <p>Implements <a class="el" href="../../d1/d3a/a03353.html#aca29a5592e487db33306b0cb72587eed">DYN::Solver::Impl</a>.</p>
+
+</div>
+</div>
+<a id="a1a035db8b14a9640d8930487158f216d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a035db8b14a9640d8930487158f216d">&#9670;&nbsp;</a></span>restoreContinuousVariables()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::SolverTRAP::restoreContinuousVariables </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>restore y to their initial values </p>
+
+<p>Implements <a class="el" href="../../d3/dfd/a03357.html#af7bea0c031fbc72635809abb135f38d8">DYN::SolverCommonFixedTimeStep</a>.</p>
+
+</div>
+</div>
+<a id="aabc94efa23da0dff3aa24ffa41cc3ba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc94efa23da0dff3aa24ffa41cc3ba3">&#9670;&nbsp;</a></span>saveContinuousVariables()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::SolverTRAP::saveContinuousVariables </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>save the initial values of y before the time step </p>
+
+<p>Implements <a class="el" href="../../d3/dfd/a03357.html#a5d968331430e51a390a53c4c2e1d5bb7">DYN::SolverCommonFixedTimeStep</a>.</p>
+
+</div>
+</div>
+<a id="a6973e452bcb99005e3ad8f9e5d355061"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6973e452bcb99005e3ad8f9e5d355061">&#9670;&nbsp;</a></span>setSolverSpecificParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::SolverTRAP::setSolverSpecificParameters </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>set the solver specific parameters value </p>
+
+<p>Implements <a class="el" href="../../d1/d3a/a03353.html#a2134547dec6f204b4a12d4ff5e32da06">DYN::Solver::Impl</a>.</p>
 
 </div>
 </div>
@@ -892,7 +1060,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>DYN</b></li><li class="navelem"><a class="el" href="../../d8/d60/a03373.html">SolverTRAP</a></li>
-    <li class="footer">Generated on Mon May 27 2024 12:56:08 for Dynawo by
+    <li class="footer">Generated on Fri Jul 5 2024 11:31:08 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>
