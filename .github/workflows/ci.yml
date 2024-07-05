@@ -23,7 +23,7 @@ env:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    container: dynawo/dynawo-ci:latest
+    container: dynawo/dynawo-distribution-cxx11:latest
     env:
       DYNAWO_BUILD_TYPE: ${{ github.event_name == 'workflow_dispatch' && inputs.perform-nrt && 'Release' || 'Debug' }}
       DYNAWO_COMPILER: GCC
@@ -32,8 +32,8 @@ jobs:
       DYNAWO_SRC_OPENMODELICA: /opt/OpenModelica/Source
       DYNAWO_NB_PROCESSORS_USED: 2
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
+      # - name: Checkout sources
+      #   uses: actions/checkout@v4
 
       - name: Create master tag and release if necessary
         if: github.ref == 'refs/heads/master' && github.event_name == 'push' && (github.event_name != 'workflow_dispatch' || inputs.perform-master-tag)
@@ -83,6 +83,10 @@ jobs:
 
       - name: Build all
         run: |
+          printenv
+          git clone ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git
+          cd dynawo
+          git checkout ${GITHUB_SHA}
           export DYNAWO_HOME=$(pwd)
           util/envDynawo.sh build-user
 
