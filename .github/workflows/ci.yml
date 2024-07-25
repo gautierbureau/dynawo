@@ -59,7 +59,7 @@ jobs:
         run: |
           export DYNAWO_HOME=$(pwd)
           util/envDynawo.sh build-minimal
-          util/envDynawo.sh build-dynawo-target MODEL_FILES_INSTALL
+          util/envDynawo.sh build-dynawaltz-models
           util/envDynawo.sh distrib-omc
 
       - name: INFO. Files created in distributions folder
