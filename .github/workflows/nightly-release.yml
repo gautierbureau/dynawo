@@ -340,7 +340,7 @@ jobs:
           export DYNAWO_HOME=$(pwd)
           export DYNAWO_OMCDYNAWO_COMMAND=${DYNAWO_HOME}/omcDynawo.sh
           util/envDynawo.sh build-user
-          util/envDynawo.sh distrib-omc
+          util/envDynawo.sh distrib-headers
           for file in distributions/Dynawo_omc_v*.zip ; do mv $file ${file//_omc_/_macos_} ; done
 
       - name: Upload assets for release
