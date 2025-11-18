@@ -20,7 +20,7 @@ on:
         type: boolean
         default: true
       perform-macos:
-        description: Build MacOs release
+        description: Build MacOS release
         type: boolean
         default: true
       perform-nrt:
@@ -291,7 +291,8 @@ jobs:
   macos:
     if: always() && !cancelled() && !failure() && (github.event_name != 'workflow_dispatch' || inputs.perform-macos)
     needs: fedora
-    runs-on: macos-15
+    name: MacOS
+    runs-on: macos-latest
     env:
       DYNAWO_RESULTS_SHOW: "false"
       DYNAWO_BUILD_TYPE: "Release"

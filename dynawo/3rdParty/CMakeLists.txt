@@ -537,6 +537,7 @@ else()
                           -DCMAKE_BUILD_WITH_INSTALL_RPATH=False
                           -DCMAKE_INSTALL_RPATH=<INSTALL_DIR>/lib
                           -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
+                          -DCMAKE_POLICY_VERSION_MINIMUM=3.5
     )
   else()
     ExternalProject_Add(adept
@@ -888,6 +889,7 @@ else()
                                   -DCMAKE_INSTALL_RPATH=<INSTALL_DIR>/lib
                                   -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
                                   -Dnetwork:BOOL=OFF
+                                  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
       )
       ExternalProject_Add_Step(xercesc install-macos
         DEPENDEES install

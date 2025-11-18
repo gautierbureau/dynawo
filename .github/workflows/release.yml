@@ -253,8 +253,9 @@ jobs:
 
   distribution-macos:
     if: github.event_name != 'workflow_dispatch' || inputs.perform-linux-cxx11
+    name: Distribution MacOS
     needs: distribution-cxx11
-    runs-on: macos-15
+    runs-on: macos-latest
     env:
       DYNAWO_RESULTS_SHOW: "false"
       DYNAWO_BUILD_TYPE: "Release"
