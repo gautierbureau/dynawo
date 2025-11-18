@@ -25,6 +25,10 @@ on:
         description: Create assets for Windows
         type: boolean
         default: true
+      perform-macos:
+        description: Create assets for MacOS
+        type: boolean
+        default: true
 
 jobs:
   distribution-cxx11:
@@ -61,6 +65,7 @@ jobs:
         env:
           DYNAWO_INSTALL_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Install
           DYNAWO_SRC_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Source
+          DYNAWO_KEEP_MODELICA_BUILD_FILES: "YES"
 
       - name: Upload assets
         uses: actions/github-script@v7
@@ -74,6 +79,22 @@ jobs:
           script: |
             const release = require('.github/release.js')
             await release({github, context, core, glob})
+
+      - name: Move Modelica build files
+        run: |
+          export DYNAWO_HOME=$(pwd)
+          branch=$(util/envDynawo.sh display-environment | grep DYNAWO_BRANCH_NAME | cut -d '=' -f 2)
+          mv build/gcc$(gcc -dumpversion)/${branch}/Release/shared/dynawo/M/M/P preassembled
+        env:
+          DYNAWO_INSTALL_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Install
+          DYNAWO_SRC_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Source
+
+      - name: Upload Modelica build files
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: preassembled
+          retention-days: 1
 
   distribution-centos7:
     if: github.event_name != 'workflow_dispatch' || inputs.perform-linux-centos7
@@ -228,4 +249,75 @@ jobs:
           retries: 3
           script: |
             const release = require('/dynawo/.github/release.js')
+            await release({github, context, core, glob})
+
+  distribution-macos:
+    if: github.event_name != 'workflow_dispatch' || inputs.perform-linux-cxx11
+    needs: distribution-cxx11
+    runs-on: macos-15
+    env:
+      DYNAWO_RESULTS_SHOW: "false"
+      DYNAWO_BUILD_TYPE: "Release"
+      DYNAWO_COMPILER: CLANG
+      DYNAWO_BOOST_HOME_DEFAULT: "false"
+      DYNAWO_NB_PROCESSORS_USED: 4
+      DYNAWO_PYTHON_COMMAND: python3
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Download Modelica build files
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: preassembled
+
+      - name: Pre-requisites
+        run: |
+          brew install automake gnu-sed libxml2
+          version_major=$(grep -m1 DYNAWO_VERSION_MAJOR dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
+          version_minor=$(grep -m1 DYNAWO_VERSION_MINOR dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
+          version_patch=$(grep -m1 DYNAWO_VERSION_PATCH dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
+          version="${version_major}.${version_minor}.${version_patch}"
+          curl -sLO https://github.com/dynawo/dynawo/releases/download/vMaster/Dynawo_omc_v${version}.zip
+          unzip -q Dynawo_omc_v${version}.zip
+
+      - name: Fake omcDynawo
+        run: |
+          echo "#!/bin/bash" > omcDynawo.sh
+          echo 'mosFile=$1' >> omcDynawo.sh
+          echo 'varname=${mosFile#compileModelicaToC-}' >> omcDynawo.sh
+          echo 'varname=${varname%.mos}' >> omcDynawo.sh
+          echo 'varname=${varname%_INIT}' >> omcDynawo.sh
+          echo 'model_name=$varname' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.c ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.h ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.json ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.xml ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.txt ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'rm -f ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/CMakeCache.txt' >> omcDynawo.sh
+          chmod +x omcDynawo.sh
+
+      - name: Build
+        env:
+          DYNAWO_INSTALL_OPENMODELICA: ${{ runner.workspace }}/dynawo/dynawo/OpenModelica
+          DYNAWO_SRC_OPENMODELICA: ${{ runner.workspace }}/dynawo/OpenModelica/Source
+        run: |
+          export DYNAWO_HOME=$(pwd)
+          export DYNAWO_OMCDYNAWO_COMMAND=${DYNAWO_HOME}/omcDynawo.sh
+          util/envDynawo.sh build-user
+          util/envDynawo.sh distrib-omc
+          for file in distributions/Dynawo_omc_v*.zip ; do mv $file ${file//_omc_/_macos_} ; done
+
+      - name: Upload assets
+        uses: actions/github-script@v7
+        env:
+          release_id: ${{ github.event_name != 'workflow_dispatch' && github.event.release.id || inputs.release-id }}
+          files: |
+            distributions/Dynawo_*.zip
+        with:
+          retries: 3
+          script: |
+            const release = require('.github/release.js')
             await release({github, context, core, glob})

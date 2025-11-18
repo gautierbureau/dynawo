@@ -474,9 +474,15 @@ set_environment() {
 
   if [ "`uname`" = "Linux" ]; then
     export_var_env_force DYNAWO_SHARED_LIBRARY_SUFFIX="so"
+  elif [ "`uname`" = "Darwin" ]; then
+      export_var_env_force DYNAWO_SHARED_LIBRARY_SUFFIX="dylib"
   else
     echo "OS `uname` not supported."
     exit 1
+  fi
+
+  if [ "`uname`" = "Darwin" ]; then
+    export_var_env DYNAWO_OMCDYNAWO_COMMAND='docker run -u "$(id -u):$(id -g)" --rm -v "${PWD}":/tmp -v "${DYNAWO_HOME}":"${DYNAWO_HOME}" -w /tmp dynawo/dynawo-ci /opt/OpenModelica/Install/bin/omcDynawo'
   fi
 
   # Export library path, path and other standard environment variables
@@ -1702,6 +1708,8 @@ find_lib_system_path() {
   fi
   if [ "`uname`" = "Linux" ]; then
     path=$(ldd $DYNAWO_INSTALL_DIR/bin/dynawo | grep "$1" | cut -d '>' -f 2 | awk '{print $1}' | sed "s/lib$1.*//g"  | uniq)
+  elif [ "`uname`" = "Darwin" ]; then
+    path=$(otool -L $DYNAWO_INSTALL_DIR/bin/dynawo | grep "$1" | awk '{print $1}' | sed "s/lib$1.*//g"  | uniq)
   else
     echo "OS not supported."
     exit 1
@@ -1994,6 +2002,51 @@ deploy_dynawo() {
   cd $current_dir
 }
 
+binary_rpath_for_darwin() {
+  if [ "`uname`" = "Darwin" ]; then
+    version=$($DYNAWO_DEPLOY_DIR/bin/dynawo --version | cut -d ' ' -f 1)
+    bins=("bin/dynawo" "bin/dynawo-$version" "sbin/dumpModel" "sbin/compileModelicaModel" "sbin/dumpSolver" "sbin/generate-preassembled" "sbin/generate-preassembled-$version")
+
+    for bin in ${bins[@]}; do
+      for lib_path in $(otool -l $DYNAWO_DEPLOY_DIR/$bin | grep RPATH -A2 | grep path | awk '{print $2}' | grep -v "@.*path"); do
+        install_name_tool -delete_rpath $lib_path $DYNAWO_DEPLOY_DIR/$bin
+      done
+
+      install_name_tool -add_rpath @loader_path/../lib $DYNAWO_DEPLOY_DIR/$bin 2> /dev/null
+
+      for lib_path in $(otool -l $DYNAWO_DEPLOY_DIR/$bin | grep -A2 LC_LOAD_DYLIB | grep dylib | grep name |awk '{print $2}' | grep -v "@.*path" | grep -v "^/usr/lib/" | grep -v "^/usr/local/lib/" | grep -v "^/System"); do
+        install_name_tool -change $lib_path @rpath/$(echo $lib_path | awk -F'/' '{print $(NF)}') $DYNAWO_DEPLOY_DIR/$bin
+      done
+    done
+
+    for lib in $(find $DYNAWO_DEPLOY_DIR/lib -name "*.dylib"); do
+      for lib_path in $(otool -l $lib | grep RPATH -A2 | grep path | awk '{print $2}' | grep -v "@.*path"); do
+        install_name_tool -delete_rpath $lib_path $lib
+      done
+    done
+
+    for lib in $(find $DYNAWO_DEPLOY_DIR/OpenModelica/lib -name "*.dylib"); do
+      install_name_tool -id @rpath/$(basename $lib) $lib
+      for lib_path in $(otool -l $lib | grep -A2 LC_LOAD_DYLIB | grep dylib | grep name |awk '{print $2}' | grep -v "@.*path" | grep -v "^/usr/lib/" | grep -v "^/usr/local/lib/" | grep -v "^/System"); do
+        omc_lib_path=$DYNAWO_DEPLOY_DIR/OpenModelica/$(otool -l $DYNAWO_DEPLOY_DIR/OpenModelica/bin/omc | grep "@loader_path" | grep -o "lib/.*" | cut -d ' ' -f 1)
+        if [ ! -d "$omc_lib_path" ]; then
+          error_exit "Directory $omc_lib_path does not exist."
+        fi
+        if [ -f "$lib_path" ]; then
+          cp $lib_path $omc_lib_path || error_exit "Copy of $lib_path into $omc_lib_path failed."
+          for lib_path_dylib in $(otool -l $omc_lib_path/$(basename $lib_path) | grep -A2 LC_LOAD_DYLIB | grep dylib | grep name |awk '{print $2}' | grep -v "@.*path" | grep -v "^/usr/lib/" | grep -v "^/usr/local/lib/" | grep -v "^/System"); do
+            install_name_tool -change $lib_path_dylib @rpath/$(echo $lib_path_dylib | awk -F'/' '{print $(NF)}') $omc_lib_path/$(basename $lib_path)
+          done
+          install_name_tool -id @rpath/$(basename $lib_path) $omc_lib_path/$(basename $lib_path)
+          install_name_tool -change $lib_path @rpath/$(echo $lib_path | awk -F'/' '{print $(NF)}') $lib
+        else
+          echo "Warning: could not find $lib_path, you may have issues with this library at runtime."
+        fi
+      done
+    done
+  fi
+}
+
 create_modelica_distrib() {
   if [ -z "$1" ]; then
     error_exit "You need to give a version."
@@ -2062,6 +2115,8 @@ create_distrib_with_headers() {
     fi
   fi
 
+  binary_rpath_for_darwin
+
   # create distribution
   if [ ! -d "$DYNAWO_DEPLOY_DIR" ]; then
     error_exit "$DYNAWO_DEPLOY_DIR does not exist."
@@ -2106,6 +2161,29 @@ create_distrib() {
   deploy_dynawo
 
   create_modelica_distrib $version
+
+  if [ "`uname`" = "Darwin" ]; then
+      version=$($DYNAWO_DEPLOY_DIR/bin/dynawo --version | cut -d ' ' -f 1)
+      bins=("bin/dynawo" "bin/dynawo-$version" "sbin/dumpModel" "sbin/compileModelicaModel" "sbin/dumpSolver" "sbin/generate-preassembled" "sbin/generate-preassembled-$version")
+
+      for bin in ${bins[@]}; do
+        for lib_path in $(otool -l $DYNAWO_DEPLOY_DIR/$bin | grep `id -n -u` | grep path | awk '{print $2}'); do
+          install_name_tool -delete_rpath $lib_path $DYNAWO_DEPLOY_DIR/$bin
+        done
+
+        install_name_tool -add_rpath @loader_path/../lib $DYNAWO_DEPLOY_DIR/$bin 2> /dev/null
+
+        for lib_path in $(otool -l $DYNAWO_DEPLOY_DIR/$bin | grep `id -n -u` | grep name | awk '{print $2}'); do
+          install_name_tool -change $lib_path @rpath/$(echo $lib_path | awk -F'/' '{print $(NF)}') $DYNAWO_DEPLOY_DIR/$bin
+        done
+      done
+
+      for lib in $(find $DYNAWO_DEPLOY_DIR/lib -name "*.dylib"); do
+        for lib_path in $(otool -l $lib | grep `id -n -u` | grep path | awk '{print $2}'); do
+          install_name_tool -delete_rpath $lib_path $lib
+        done
+      done
+    fi
 
   ln -s $DYNAWO_HOME/examples $DYNAWO_DEPLOY_DIR/examples
 
@@ -2215,7 +2293,11 @@ unittest_gdb() {
     build_dynawo_core || error_exit
     build_dynawo_models_cpp || error_exit
   fi
-  list_of_tests=($(find $DYNAWO_BUILD_DIR -executable -type f -exec basename {} \; | grep test))
+  if [ "`uname`" = "Darwin" ]; then
+    list_of_tests=($(find $DYNAWO_BUILD_DIR -perm +111 -type f -exec basename {} \; | grep test))
+  else
+    list_of_tests=($(find $DYNAWO_BUILD_DIR -executable -type f -exec basename {} \; | grep test))
+  fi
   if [[ ${#list_of_tests[@]} == 0 ]]; then
     echo "The list of tests is empty. This should not happen."
     exit 1
@@ -2241,7 +2323,11 @@ unittest_gdb() {
     error_exit "$(dirname $unittest_exe) does not exist."
   fi
   cd $(dirname $unittest_exe)
-  gdb -q --args $unittest_exe
+  if [ "`uname`" = "Darwin" ]; then
+    lldb -- $unittest_exe
+  else
+    gdb -q --args $unittest_exe
+  fi
 }
 
 reset_environment_variables() {
