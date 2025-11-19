@@ -116,7 +116,7 @@ jobs:
             cd /dynawo
             export DYNAWO_HOME=$(pwd)
             util/envDynawo.sh build-user
-            util/envDynawo.sh distrib-headers
+            util/envDynawo.sh distrib-omc
             for file in distributions/Dynawo_omc_v*.zip ; do mv $file ${file//_omc_/_Linux_centos7_} ; done
         env:
           DYNAWO_INSTALL_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Install
@@ -178,7 +178,7 @@ jobs:
     name: Distribution Windows
     runs-on: windows-2022
     env:
-      DYNAWO_VERSION: 1.4.1   # latest release with OpenModelica
+      DYNAWO_VERSION: 1.7.0   # latest release with OpenModelica
     steps:
       - name: No LF to CRLF conversion
         shell: cmd
@@ -196,7 +196,7 @@ jobs:
 
       - name: Fetch previous release of Dynawo
         shell: bash
-        run: curl -LOs https://github.com/${{ github.repository_owner }}/dynawo/releases/download/v$DYNAWO_VERSION/Dynawo_Windows_v$DYNAWO_VERSION.zip
+        run: curl -LOs https://github.com/dynawo/dynawo/releases/download/v$DYNAWO_VERSION/Dynawo_Windows_v$DYNAWO_VERSION.zip
 
       - name: Unzip and retrieve OpenModelica
         shell: cmd
