@@ -119,7 +119,7 @@ jobs:
             cd /dynawo
             export DYNAWO_HOME=$(pwd)
             util/envDynawo.sh build-user
-            util/envDynawo.sh distrib-omc
+            util/envDynawo.sh distrib-headers
             for file in distributions/Dynawo_omc_v*.zip ; do mv $file ${file//_omc_/_Linux_centos7_} ; done
         env:
           DYNAWO_INSTALL_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Install
@@ -309,7 +309,7 @@ jobs:
           export DYNAWO_OMCDYNAWO_COMMAND=${DYNAWO_HOME}/omcDynawo.sh
           util/envDynawo.sh build-user
           util/envDynawo.sh distrib-headers
-          for file in distributions/Dynawo_omc_v*.zip ; do mv $file ${file//_omc_/_macos_} ; done
+          for file in distributions/Dynawo_headers_v*.zip ; do mv $file ${file//_headers_/_macos_} ; done
 
       - name: Upload assets
         uses: actions/github-script@v7

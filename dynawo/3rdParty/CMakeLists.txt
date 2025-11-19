@@ -647,6 +647,7 @@ else()
                         -DKLU_INCLUDE_DIR:PATH=${SUITESPARSE_HOME}/include
                         -DKLU_LIBRARY_DIR:PATH=${SUITESPARSE_HOME}/lib
                         $<$<BOOL:${MSVC}>:-DCMAKE_INSTALL_LIBDIR=bin>
+                        -DCMAKE_POLICY_VERSION_MINIMUM=3.5
                         -DCMAKE_MACOSX_RPATH=True
                         -DCMAKE_SKIP_BUILD_RPATH=False
                         -DCMAKE_BUILD_WITH_INSTALL_RPATH=False
