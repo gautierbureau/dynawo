@@ -655,6 +655,12 @@ else()
                         -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
   )
   ExternalProject_Get_Property(sundials install_dir)
+  if(APPLE)
+    ExternalProject_Add_Step(sundials install-macos
+      DEPENDEES install
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/sundials/rpath.sh ${CMAKE_INSTALL_PREFIX}/sundials
+    )
+  endif()
   set(SUNDIALS_HOME ${install_dir})
 endif()
 
