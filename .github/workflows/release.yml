@@ -66,6 +66,8 @@ jobs:
             for file in distributions/Dynawo_v*.zip ; do mv $file ${file//_/_Linux_minimal_} ; done
             for file in distributions/Dynawo_headers_v*.zip ; do mv $file ${file//_headers_/_Linux_headers_} ; done
             for file in distributions/Dynawo_omc_v*.zip ; do mv $file ${file//_omc_/_Linux_} ; done
+            branch=$(util/envDynawo.sh display-environment | grep DYNAWO_BRANCH_NAME | cut -d '=' -f 2)
+            mv build/gcc$(gcc -dumpversion)/${branch}/Release/shared/dynawo/M/M/P preassembled
         env:
           DYNAWO_INSTALL_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Install
           DYNAWO_SRC_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Source
@@ -83,15 +85,6 @@ jobs:
           script: |
             const release = require('.github/release.js')
             await release({github, context, core, glob})
-
-      - name: Move Modelica build files
-        run: |
-          export DYNAWO_HOME=$(pwd)
-          branch=$(util/envDynawo.sh display-environment | grep DYNAWO_BRANCH_NAME | cut -d '=' -f 2)
-          mv build/gcc$(gcc -dumpversion)/${branch}/Release/shared/dynawo/M/M/P preassembled
-        env:
-          DYNAWO_INSTALL_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Install
-          DYNAWO_SRC_OPENMODELICA: ${{ runner.workspace }}/OpenModelica/Source
 
       - name: Upload Modelica build files
         uses: actions/upload-artifact@v4
