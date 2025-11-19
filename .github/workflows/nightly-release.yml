@@ -19,6 +19,10 @@ on:
         description: Build Windows release
         type: boolean
         default: true
+      perform-macos-arm:
+        description: Build MacOS arm64 release
+        type: boolean
+        default: true
       perform-macos:
         description: Build MacOS release
         type: boolean
@@ -288,10 +292,10 @@ jobs:
           script: |
             await github.rest.repos.createDispatchEvent({ owner: context.repo.owner, repo: "dynawo-algorithms", event_type: "nightly-windows" });
 
-  macos:
-    if: always() && !cancelled() && !failure() && (github.event_name != 'workflow_dispatch' || inputs.perform-macos)
+  macos-arm:
+    if: always() && !cancelled() && !failure() && (github.event_name != 'workflow_dispatch' || inputs.perform-macos-arm)
     needs: fedora
-    name: MacOS
+    name: MacOS arm64
     runs-on: macos-latest
     env:
       DYNAWO_RESULTS_SHOW: "false"
@@ -300,6 +304,78 @@ jobs:
       DYNAWO_BOOST_HOME_DEFAULT: "false"
       DYNAWO_NB_PROCESSORS_USED: 4
       DYNAWO_PYTHON_COMMAND: python3
+      MACOSX_DEPLOYMENT_TARGET: 11
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Download Modelica build files
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: preassembled
+
+      - name: Pre-requisites
+        run: |
+          brew install automake gnu-sed libxml2
+          curl -LO https://github.com/dynawo/dynawo/releases/download/vMaster/Dynawo_omc_v1.8.0.zip
+          unzip -q Dynawo_omc_v1.8.0.zip
+
+      - name: Fake omcDynawo
+        run: |
+          echo "#!/bin/bash" > omcDynawo.sh
+          echo 'mosFile=$1' >> omcDynawo.sh
+          echo 'varname=${mosFile#compileModelicaToC-}' >> omcDynawo.sh
+          echo 'varname=${varname%.mos}' >> omcDynawo.sh
+          echo 'varname=${varname%_INIT}' >> omcDynawo.sh
+          echo 'model_name=$varname' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.c ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.h ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.json ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.xml ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'cp ${DYNAWO_HOME}/preassembled/${model_name}/*.txt ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/' >> omcDynawo.sh
+          echo 'rm -f ${DYNAWO_BUILD_DIR}/M/M/P/${model_name}/CMakeCache.txt' >> omcDynawo.sh
+          chmod +x omcDynawo.sh
+
+      - name: Build
+        env:
+          DYNAWO_INSTALL_OPENMODELICA: ${{ runner.workspace }}/dynawo/dynawo/OpenModelica
+          DYNAWO_SRC_OPENMODELICA: ${{ runner.workspace }}/dynawo/OpenModelica/Source
+        run: |
+          export DYNAWO_HOME=$(pwd)
+          export DYNAWO_OMCDYNAWO_COMMAND=${DYNAWO_HOME}/omcDynawo.sh
+          util/envDynawo.sh build-user
+          util/envDynawo.sh distrib-headers
+          for file in distributions/Dynawo_headers_v*.zip ; do mv $file ${file//_headers_/_macos_arm64_} ; done
+
+      - name: Upload assets for release
+        uses: actions/github-script@v7
+        env:
+          tag_name: ${{ env.DYNAWO_TAG }}
+          draft: false
+          prerelease: true
+          files: |
+            distributions/*.zip
+        with:
+          retries: 3
+          script: |
+            const release = require('.github/release.js')
+            await release({github, context, core, glob})
+
+  macos:
+    if: always() && !cancelled() && !failure() && (github.event_name != 'workflow_dispatch' || inputs.perform-macos)
+    needs: fedora
+    name: MacOS
+    runs-on: macos-13
+    env:
+      DYNAWO_RESULTS_SHOW: "false"
+      DYNAWO_BUILD_TYPE: "Release"
+      DYNAWO_COMPILER: CLANG
+      DYNAWO_BOOST_HOME_DEFAULT: "false"
+      DYNAWO_NB_PROCESSORS_USED: 4
+      DYNAWO_PYTHON_COMMAND: python3
+      MACOSX_DEPLOYMENT_TARGET: 10.16
 
     steps:
       - name: Checkout sources
