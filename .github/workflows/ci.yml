@@ -240,15 +240,16 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4
 
+      # We need to download Dynawo to get OpenModelica include files for compilation
       - name: Pre-requisites
         run: |
           brew install automake gnu-sed libxml2
-#          version_major=$(grep -m1 DYNAWO_VERSION_MAJOR dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
-#          version_minor=$(grep -m1 DYNAWO_VERSION_MINOR dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
-#          version_patch=$(grep -m1 DYNAWO_VERSION_PATCH dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
-#          version="${version_major}.${version_minor}.${version_patch}"
-#          curl -sLO https://github.com/dynawo/dynawo/releases/download/vMaster/Dynawo_omc_v${version}.zip
-#          unzip -q Dynawo_omc_v${version}.zip
+          version_major=$(grep -m1 DYNAWO_VERSION_MAJOR dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
+          version_minor=$(grep -m1 DYNAWO_VERSION_MINOR dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
+          version_patch=$(grep -m1 DYNAWO_VERSION_PATCH dynawo/CMakeLists.txt | cut -d ' ' -f2 | cut -c 1)
+          version="${version_major}.${version_minor}.${version_patch}"
+          curl -sLO https://github.com/dynawo/dynawo/releases/download/vMaster/Dynawo_omc_v${version}.zip
+          unzip -q Dynawo_omc_v${version}.zip
 
       - name: Setup Docker on macOS
         id: setup-docker
