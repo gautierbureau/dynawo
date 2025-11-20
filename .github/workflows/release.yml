@@ -281,6 +281,7 @@ jobs:
           name: build-files
           path: preassembled
 
+      # We need to download Dynawo to get OpenModelica include files for compilation
       - name: Pre-requisites
         run: |
           brew install automake gnu-sed libxml2
@@ -317,9 +318,10 @@ jobs:
           util/envDynawo.sh build-user
           util/envDynawo.sh distrib-headers
           suffix="_"
-          if [ "${{ matrix.os }}" == "macos-15" ]; then
+          if [ "${{ matrix.config.os }}" == "macos-15" ]; then
             suffix="_arm64_"
           fi
+          rm -f distributions/Dynawo_Modelica*.zip
           for file in distributions/Dynawo_headers_v*.zip; do mv $file ${file//_headers_/_macos${suffix}}; done
 
       - name: Upload assets

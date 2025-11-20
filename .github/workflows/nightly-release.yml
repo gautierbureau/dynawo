@@ -291,11 +291,21 @@ jobs:
   macos:
     if: always() && !cancelled() && !failure() && (github.event_name != 'workflow_dispatch' || inputs.perform-macos)
     needs: fedora
-    name: MacOS arm64
-    runs-on: ${{ matrix.os }}
+    name: MacOS ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
     strategy:
       matrix:
-        os: [ macos-15-intel, macos-15 ]
+        config:
+          - {
+            name: intel,
+            os: macos-15-intel,
+            macosx_deployment_target: "11"
+          }
+          - {
+            name: arm64,
+            os: macos-15,
+            macosx_deployment_target: "11"
+          }
     env:
       DYNAWO_RESULTS_SHOW: "false"
       DYNAWO_BUILD_TYPE: "Release"
@@ -315,6 +325,7 @@ jobs:
           name: build-files
           path: preassembled
 
+      # We need to download Dynawo to get OpenModelica include files for compilation
       - name: Pre-requisites
         run: |
           brew install automake gnu-sed libxml2
@@ -351,9 +362,10 @@ jobs:
           util/envDynawo.sh build-user
           util/envDynawo.sh distrib-headers
           suffix="_"
-          if [ "${{ matrix.os }}" == "macos-15" ]; then
+          if [ "${{ matrix.config.os }}" == "macos-15" ]; then
             suffix="_arm64_"
           fi
+          rm -f distributions/Dynawo_Modelica*.zip
           for file in distributions/Dynawo_headers_v*.zip; do mv $file ${file//_headers_/_macos${suffix}}; done
 
       - name: Upload assets for release
