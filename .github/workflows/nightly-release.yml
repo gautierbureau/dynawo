@@ -195,7 +195,7 @@ jobs:
     runs-on: windows-2022
     needs: nightly
     env:
-      DYNAWO_VERSION: 1.4.1   # latest release with OpenModelica
+      DYNAWO_VERSION: 1.7.0   # latest release with OpenModelica
     steps:
       - name: No LF to CRLF conversion
         shell: cmd
@@ -213,7 +213,7 @@ jobs:
 
       - name: Fetch previous release of Dynawo
         shell: bash
-        run: curl -LOs https://github.com/${{ github.repository_owner }}/dynawo/releases/download/v$DYNAWO_VERSION/Dynawo_Windows_v$DYNAWO_VERSION.zip
+        run: curl -LOs https://github.com/dynawo/dynawo/releases/download/v$DYNAWO_VERSION/Dynawo_Windows_v$DYNAWO_VERSION.zip
 
       - name: Unzip and retrieve OpenModelica
         shell: cmd
