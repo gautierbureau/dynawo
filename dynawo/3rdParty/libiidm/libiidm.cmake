@@ -28,7 +28,7 @@ set(package_install_dir "${CMAKE_INSTALL_PREFIX}/${package_name}")
 # Pinning the master branch by commit SHA keeps builds reproducible while the
 # upstream project is in rapid pre-1.0 iteration. Bump this together with any
 # API migration work.
-set(iidm_bridge_git_tag "032bf528b3debe79cf46628d42fa44c3d36bbab7")
+set(iidm_bridge_git_tag "7a277e2bfdb51d55632e33f31b5a927c315cd947")
 
 if(DEFINED ENV{DYNAWO_LIBIIDM_GIT_URL})
   set(iidm_bridge_git_url $ENV{DYNAWO_LIBIIDM_GIT_URL})
