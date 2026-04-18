@@ -103,8 +103,7 @@ target_link_libraries(dynawo_DataInterfaceIIDM
     dynawo_API_LEQ
     ${CMAKE_DL_LIBS}
   PUBLIC
-    IIDM::iidm
-    IIDM::ext-iidm
+    IidmBridge::iidmbridge
   )
 
 set_target_properties(dynawo_DataInterfaceIIDM PROPERTIES VERSION ${DATA_INTERFACE_IIDM_VERSION_STRING}

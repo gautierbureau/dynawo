@@ -1795,11 +1795,8 @@ deploy_dynawo() {
   echo "deploying libxml include folder"
   cp -n -R -P $DYNAWO_LIBXML_HOME/include/xml include/
   echo "deploying libiidm include folder"
-  if [ -d "$DYNAWO_LIBIIDM_HOME/include/IIDM" ]; then
-    cp -n -R -P $DYNAWO_LIBIIDM_HOME/include/IIDM include/
-  fi
-  if [ -d "$DYNAWO_LIBIIDM_HOME/include/powsybl" ]; then
-    cp -n -R -P $DYNAWO_LIBIIDM_HOME/include/powsybl include/
+  if [ -d "$DYNAWO_LIBIIDM_HOME/include/iidm" ]; then
+    cp -n -R -P $DYNAWO_LIBIIDM_HOME/include/iidm include/
   fi
   echo "deploying gtest include folder"
   if [ "$DYNAWO_BUILD_TYPE" = "Debug" ]; then
@@ -1811,12 +1808,9 @@ deploy_dynawo() {
 
   mkdir -p share
   cp -R -P $DYNAWO_LIBXML_HOME/share/cmake share/
-  if [ -d "$DYNAWO_LIBIIDM_HOME/share" ]; then
-    cp -R -P $DYNAWO_LIBIIDM_HOME/share/cmake share/
-    cp -R -P $DYNAWO_LIBIIDM_HOME/share/iidm share/
-  fi
-  if [ -d "$DYNAWO_LIBIIDM_HOME/LibIIDM" ]; then
-    cp -R -P $DYNAWO_LIBIIDM_HOME/LibIIDM/cmake share/
+  if [ -d "$DYNAWO_LIBIIDM_HOME/lib/cmake/IidmBridge" ]; then
+    mkdir -p share/cmake
+    cp -R -P $DYNAWO_LIBIIDM_HOME/lib/cmake/IidmBridge share/cmake/
   fi
 
   mkdir -p cmake

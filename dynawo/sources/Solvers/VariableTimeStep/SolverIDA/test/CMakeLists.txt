@@ -24,7 +24,7 @@ target_link_libraries(${MODULE_NAME}
   dynawo_SolverCommon
   dynawo_API_DYD
   dynawo_CPPModelsCommon
-  IIDM::iidm
+  IidmBridge::iidmbridge
   dynawo_Test
 )
 
