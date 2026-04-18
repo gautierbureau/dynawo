@@ -50,7 +50,7 @@ target_link_libraries(${MODULE_NAME}
   dynawo_ModelerCommon
   dynawo_DataInterfaceIIDM
   dynawo_DataInterface
-  IIDM::iidm
+  IidmBridge::iidmbridge
   dynawo_Test)
 
 add_custom_target(${MODULE_NAME}-tests
