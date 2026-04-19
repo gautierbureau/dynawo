@@ -18,25 +18,13 @@
 
 #include "DYNIIDMExtensions.hpp"
 
-#include "DYNExecUtils.h"
-#include "DYNFileSystemUtils.h"
-#include "DYNMacrosMessage.h"
-
 namespace DYN {
-
-std::mutex IIDMExtensions::librariesMutex_;
 
 boost::filesystem::path
 IIDMExtensions::findLibraryPath() {
-  auto libPathVar = getenv("DYNAWO_IIDM_EXTENSION");
-  if (!libPathVar) {
-    return boost::filesystem::path();
-  }
-  auto libPath = std::string(libPathVar);
-  if (!exists(libPath)) {
-    return boost::filesystem::path();
-  }
-  return boost::filesystem::path(libPath);
+  // iidm-bridge migration: external custom-extension plugins are not loaded.
+  // The dlopen-based loader is disabled until the redesign lands.
+  return boost::filesystem::path();
 }
 
 }  // namespace DYN

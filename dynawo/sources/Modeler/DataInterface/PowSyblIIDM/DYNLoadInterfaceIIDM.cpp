@@ -24,9 +24,9 @@
 
 #include "DYNCommon.h"
 
-#include <powsybl/iidm/Load.hpp>
+#include <iidm/Load.h>
 
-using powsybl::iidm::Load;
+using iidm::Load;
 
 namespace DYN {
 
@@ -191,7 +191,8 @@ LoadInterfaceIIDM::getPUnderVoltage() {
 
 bool
 LoadInterfaceIIDM::isFictitious() {
-  return (loadIIDM_.isFictitious() || loadIIDM_.getLoadType() == powsybl::iidm::LoadType::FICTITIOUS);
+  // TODO(iidm-bridge): Load does not expose isFictitious() in the new API; only LoadType is checked.
+  return (loadIIDM_.getLoadType() == iidm::LoadType::FICTITIOUS);
 }
 
 }  // namespace DYN

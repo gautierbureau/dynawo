@@ -24,7 +24,7 @@
 #include "DYNTrace.h"
 #include "DYNCommon.h"
 
-#include <powsybl/iidm/Bus.hpp>
+#include <iidm/Bus.h>
 #include <algorithm>
 #include <sstream>
 #include <cmath>
@@ -36,7 +36,7 @@ using std::vector;
 
 namespace DYN {
 
-CalculatedBusInterfaceIIDM::CalculatedBusInterfaceIIDM(powsybl::iidm::VoltageLevel& voltageLevel, const string& name, const int busIndex) :
+CalculatedBusInterfaceIIDM::CalculatedBusInterfaceIIDM(iidm::VoltageLevel& voltageLevel, const string& name, const int busIndex) :
 busIndex_(busIndex),
 name_(name),
 voltageLevel_(voltageLevel),
@@ -77,18 +77,20 @@ CalculatedBusInterfaceIIDM::getID() const {
 
 double
 CalculatedBusInterfaceIIDM::getVMax() const {
-  if (std::isnan(voltageLevel_.getHighVoltageLimit())) {
+  const auto high = voltageLevel_.getHighVoltageLimit();
+  if (!high.has_value()) {
     return uMaxPu * getVNom();   // default data
   }
-  return voltageLevel_.getHighVoltageLimit();
+  return high.value();
 }
 
 double
 CalculatedBusInterfaceIIDM::getVMin() const {
-  if (std::isnan(voltageLevel_.getLowVoltageLimit())) {
+  const auto low = voltageLevel_.getLowVoltageLimit();
+  if (!low.has_value()) {
     return uMinPu * getVNom();   // default data
   }
-  return voltageLevel_.getLowVoltageLimit();
+  return low.value();
 }
 
 double
@@ -148,18 +150,20 @@ CalculatedBusInterfaceIIDM::getComponentVarIndex(const std::string& varName) con
 
 void
 CalculatedBusInterfaceIIDM::exportStateVariablesUnitComponent() {
+  // TODO(iidm-bridge): calculated-bus state-variable export disabled pending iidm-bridge support
+  //                    (VoltageLevel::NodeBreakerView::getTerminal(node) is not yet exposed).
+  static bool warnedOnce = false;
+  if (!warnedOnce) {
+    Trace::warn("DATAINTERFACE") << "calculated-bus state-variable export disabled pending iidm-bridge support" << Trace::endline;
+    warnedOnce = true;
+  }
   double angle = getStateVarAngle();
   if (doubleIsZero(angle))
     angle = 0.;
-  for (auto& node : nodes_) {
-    const auto& terminal = voltageLevel_.getNodeBreakerView().getTerminal(node);
-    if (terminal) {
-      const auto& bus = terminal.get().getBusBreakerView().getBus();
-      if (bus) {
-        bus.get().setV(getStateVarV());
-        bus.get().setAngle(angle);
-      }
-    }
+  (void)angle;
+  for (const auto& node : nodes_) {
+    (void)node;
+    // no-op until getTerminal(node) is supported
   }
 }
 

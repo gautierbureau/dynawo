@@ -25,16 +25,14 @@
 #include "DYNGeneratorInterface.h"
 #include "DYNInjectorInterfaceIIDM.h"
 
-#include <powsybl/iidm/Battery.hpp>
-#include <powsybl/iidm/extensions/iidm/ActivePowerControl.hpp>
-#include <powsybl/iidm/extensions/iidm/CoordinatedReactiveControl.hpp>
+#include <iidm/Battery.h>
 
 namespace DYN {
 
 /**
  * class BatteryInterfaceIIDM
  */
-class BatteryInterfaceIIDM : public GeneratorInterface, public InjectorInterfaceIIDM {
+class BatteryInterfaceIIDM : public GeneratorInterface, public InjectorInterfaceIIDM<iidm::Battery> {
  public:
   /**
    * @brief defines the index of each state variable
@@ -50,7 +48,7 @@ class BatteryInterfaceIIDM : public GeneratorInterface, public InjectorInterface
    * @brief Constructor
    * @param battery battery iidm instance
    */
-  explicit BatteryInterfaceIIDM(powsybl::iidm::Battery& battery);
+  explicit BatteryInterfaceIIDM(iidm::Battery& battery);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -204,9 +202,9 @@ class BatteryInterfaceIIDM : public GeneratorInterface, public InjectorInterface
   EnergySource_t getEnergySource() const override;
 
  private:
-  powsybl::iidm::Battery& batteryIIDM_;  ///< reference to the iidm battery instance
+  iidm::Battery& batteryIIDM_;  ///< reference to the iidm battery instance
   std::string country_;  ///< country of the generator
-  stdcxx::Reference<powsybl::iidm::extensions::iidm::ActivePowerControl> activePowerControl_;  ///< reference to ActivePowerControl extension
+  bool hasActivePowerControl_ = false;  ///< whether the ActivePowerControl extension is attached
 };
 }  // namespace DYN
 
