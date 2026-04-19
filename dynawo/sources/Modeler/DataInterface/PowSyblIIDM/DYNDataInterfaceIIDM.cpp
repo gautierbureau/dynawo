@@ -59,6 +59,7 @@
 // ExtensionProviders/ExtensionXmlSerializer have no direct equivalent in the
 // new iidm-bridge headers; load/export paths below use placeholder APIs and
 // may need to be reworked when the bridge exposes them.
+#include <iidm/NetworkFactory.h>
 #include <iidm/Substation.h>
 #include <iidm/VoltageLevel.h>
 
@@ -132,16 +133,12 @@ DataInterfaceIIDM::build(const std::string& iidmFilePath, unsigned int nbVariant
 
     loadExtensions(paths);
 
-    auto networkIIDM = boost::make_shared<iidm::Network>(iidm::Network::readXml(boost::filesystem::path(iidmFilePath)));
+    // TODO(iidm-bridge): use NetworkFactory::load(); ImportOptions are not exposed.
+    auto networkIIDM = boost::make_shared<iidm::Network>(iidm::NetworkFactory::load(iidmFilePath));
 
+    // TODO(iidm-bridge): VariantManager is not exposed; multi-variant support is disabled.
     if (nbVariants > 1) {
-      auto& manager = networkIIDM->getVariantManager();
-      manager.allowVariantMultiThreadAccess(true);
-      constexpr bool overwrite = true;
-      for (unsigned int i = 0; i < nbVariants; ++i) {
-        const std::string& variantName = std::to_string(i);
-        manager.cloneVariant(iidm::VariantManager::getInitialVariantId(), variantName, overwrite);
-      }
+      Trace::warn() << "Multi-variant network requested but iidm-bridge does not expose VariantManager yet; ignoring." << Trace::endline;
     }
 
     data.reset(new DataInterfaceIIDM(networkIIDM));
@@ -152,33 +149,29 @@ DataInterfaceIIDM::build(const std::string& iidmFilePath, unsigned int nbVariant
   return data;
 }
 
+// TODO(iidm-bridge): VariantManager is not exposed; multi-variant always disabled.
 bool DataInterfaceIIDM::canUseVariant() const {
-  return getNetworkIIDM().getVariantManager().isVariantMultiThreadAccessAllowed();
+  return false;
 }
 
-void DataInterfaceIIDM::selectVariant(const std::string& variantName) {
-  getNetworkIIDM().getVariantManager().setWorkingVariant(variantName);
+void DataInterfaceIIDM::selectVariant(const std::string& /*variantName*/) {
+  // No-op: variant management is not exposed by iidm-bridge yet.
 }
 
 void
 DataInterfaceIIDM::dumpToFile(const std::string& iidmFilePath) const {
   try {
-    // TODO(iidm-bridge): writeXml with ExportOptions is not exposed; fall back to
-    // the path-only overload.
-    iidm::Network::writeXml(boost::filesystem::path(iidmFilePath), *networkIIDM_);
+    // TODO(iidm-bridge): only file-path save is exposed; ExportOptions are not.
+    iidm::NetworkFactory::save(*networkIIDM_, iidmFilePath);
   } catch (const std::exception& exp) {
     throw DYNError(Error::GENERAL, XmlFileParsingError, iidmFilePath, exp.what());
   }
 }
 
 void
-DataInterfaceIIDM::dumpToFile(std::stringstream& stream) const {
-  try {
-    // TODO(iidm-bridge): writeXml stream overload with ExportOptions is not exposed.
-    iidm::Network::writeXml("", stream, *networkIIDM_);
-  } catch (const std::exception& exp) {
-    throw DYNError(Error::GENERAL, XmlParsingError, exp.what());
-  }
+DataInterfaceIIDM::dumpToFile(std::stringstream& /*stream*/) const {
+  // TODO(iidm-bridge): stream-based serialization is not exposed.
+  throw DYNError(Error::GENERAL, XmlParsingError, std::string("dumpToFile(stream) not supported in iidm-bridge"));
 }
 
 iidm::Network&
@@ -296,13 +289,22 @@ DataInterfaceIIDM::initFromIIDM() {
   // create network interface
   network_.reset(new NetworkInterfaceIIDM(*networkIIDM_));
 
+  std::unordered_map<std::string, std::string> vlCountry;
   for (auto& substation : networkIIDM_->getSubstations()) {
+    string subCountryStr;
+    if (substation.getCountry())
+      subCountryStr = iidmCountryName(substation.getCountry().value());
     for (auto& voltageLevel : substation.getVoltageLevels()) {
       std::shared_ptr<VoltageLevelInterfaceIIDM> vl = importVoltageLevel(voltageLevel, substation.getCountry());
       network_->addVoltageLevel(vl);
       voltageLevels_[vl->getID()] = vl;
+      vlCountry[vl->getID()] = subCountryStr;
     }
   }
+
+  // TODO(iidm-bridge): VoltageLevel does not expose injectors; iterate at network
+  // level and dispatch to the right voltage level using the terminal's vl id.
+  importInjectorsByVoltageLevel(vlCountry);
 
   //===========================
   //  ADD 2WTFO INTERFACE
@@ -368,10 +370,9 @@ DataInterfaceIIDM::importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM, cons
     //===========================
     for (auto& switchIIDM : voltageLevelIIDM.getSwitches()) {
       if (switchIIDM.isOpen() || switchIIDM.isRetained()) {
-        std::shared_ptr<BusInterface> bus1 = findNodeBreakerBusInterface(voltageLevelIIDM,
-                                                                    static_cast<int>(voltageLevelIIDM.getNodeBreakerView().getNode1(switchIIDM.getId())));
-        std::shared_ptr<BusInterface> bus2 = findNodeBreakerBusInterface(voltageLevelIIDM,
-                                                                    static_cast<int>(voltageLevelIIDM.getNodeBreakerView().getNode2(switchIIDM.getId())));
+        // TODO(iidm-bridge): NodeBreakerView::getNode1/2(switchId) not exposed; use Switch's nodes directly.
+        std::shared_ptr<BusInterface> bus1 = findNodeBreakerBusInterface(voltageLevelIIDM, switchIIDM.getNode1());
+        std::shared_ptr<BusInterface> bus2 = findNodeBreakerBusInterface(voltageLevelIIDM, switchIIDM.getNode2());
         std::shared_ptr<SwitchInterface> sw = importSwitch(switchIIDM, bus1, bus2);
         if (sw->getBusInterface1() != sw->getBusInterface2()) {  // if the switch is connecting one single bus, don't create a specific switch model
           components_[sw->getID()] = sw;
@@ -396,104 +397,101 @@ DataInterfaceIIDM::importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM, cons
     //===========================
     //  ADD SWITCH INTERFACE
     //===========================
+    // TODO(iidm-bridge): BusBreakerView::getBus1/2(switchId) not exposed; switches at
+    // bus-breaker level are skipped until iidm-bridge surfaces the per-switch bus pair.
     for (auto& switchIIDM : voltageLevelIIDM.getSwitches()) {
-      // TODO(iidm-bridge): getBus1/getBus2 now return a value-type handle (std::optional) instead of stdcxx::Reference.
-      auto bus1 = findBusBreakerBusInterface(voltageLevelIIDM.getBusBreakerView().getBus1(switchIIDM.getId()).value());
-      auto bus2 = findBusBreakerBusInterface(voltageLevelIIDM.getBusBreakerView().getBus2(switchIIDM.getId()).value());
-      std::shared_ptr<SwitchInterfaceIIDM> sw = importSwitch(switchIIDM, bus1, bus2);
-      if (sw->getBusInterface1() != sw->getBusInterface2()) {  // if the switch is connecting one single bus, don't create a specific switch model
-        components_[sw->getID()] = sw;
-        voltageLevel->addSwitch(sw);
-      }
+      (void) switchIIDM;
     }
   }
 
-  //==========================================
-  //  ADD VSC CONVERTER INTERFACE
-  //==========================================
-  for (auto& vscConverterIIDM : voltageLevelIIDM.getVscConverterStations()) {
-    std::shared_ptr<VscConverterInterfaceIIDM> vsc = importVscConverter(vscConverterIIDM);
-    voltageLevel->addVscConverter(vsc);
-    components_[vsc->getID()] = vsc;
-    vsc->setVoltageLevelInterface(voltageLevel);
-  }
-
-  //==========================================
-  //  ADD LCC CONVERTER INTERFACE
-  //==========================================
-  for (auto& lccConverterIIDM : voltageLevelIIDM.getLccConverterStations()) {
-    std::shared_ptr<LccConverterInterfaceIIDM> lcc = importLccConverter(lccConverterIIDM);
-    voltageLevel->addLccConverter(lcc);
-    components_[lcc->getID()] = lcc;
-    lcc->setVoltageLevelInterface(voltageLevel);
-  }
-
-  //===========================
-  //  ADD GENERATOR INTERFACE
-  //===========================
-  for (auto& genIIDM : voltageLevelIIDM.getGenerators()) {
-    std::shared_ptr<GeneratorInterfaceIIDM> generator = importGenerator(genIIDM, countryStr);
-    voltageLevel->addGenerator(generator);
-    const string& generatorId = generator->getID();
-    components_[generatorId] = generator;
-    generatorComponents_[generatorId] = generator;
-    generator->setVoltageLevelInterface(voltageLevel);
-  }
-
-  //===========================
-  //  ADD BATTERY INTERFACE
-  //===========================
-  for (auto& batIIDM : voltageLevelIIDM.getBatteries()) {
-    std::shared_ptr<BatteryInterfaceIIDM> battery = importBattery(batIIDM, countryStr);
-    voltageLevel->addGenerator(battery);
-    const string& batteryId = battery->getID();
-    components_[batteryId] = battery;
-    generatorComponents_[batteryId] = battery;
-    battery->setVoltageLevelInterface(voltageLevel);
-  }
-
-  //===========================
-  //  ADD LOAD INTERFACE
-  //===========================
-  for (auto& loadIIDM : voltageLevelIIDM.getLoads()) {
-    std::shared_ptr<LoadInterfaceIIDM> load = importLoad(loadIIDM, countryStr);
-    voltageLevel->addLoad(load);
-    const string& loadId = load->getID();
-    components_[loadId] = load;
-    loadComponents_[loadId] = load;
-    load->setVoltageLevelInterface(voltageLevel);
-  }
-  // =======================================
-  //    ADD SHUNTCOMPENSATORS INTERFACE
-  // =======================================
-  for (auto& shuntCompensators : voltageLevelIIDM.getShuntCompensators()) {
-    std::shared_ptr<ShuntCompensatorInterfaceIIDM> shunt = importShuntCompensator(shuntCompensators);
-    voltageLevel->addShuntCompensator(shunt);
-    components_[shunt->getID()] = shunt;
-    shunt->setVoltageLevelInterface(voltageLevel);
-  }
-
-  //==============================
-  //  ADD DANGLINGLINE INTERFACE
-  //==============================
-  for (auto& danglingLine : voltageLevelIIDM.getDanglingLines()) {
-    std::shared_ptr<DYN::DanglingLineInterfaceIIDM> line = importDanglingLine(danglingLine);
-    voltageLevel->addDanglingLine(line);
-    components_[line->getID()] = line;
-    line->setVoltageLevelInterface(voltageLevel);
-  }
-
-  //==========================================
-  //  ADD STATICVARCOMPENSATOR INTERFACE
-  //==========================================
-  for (auto& staticVarCompensator : voltageLevelIIDM.getStaticVarCompensators()) {
-    std::shared_ptr<DYN::StaticVarCompensatorInterfaceIIDM> svc = importStaticVarCompensator(staticVarCompensator);
-    voltageLevel->addStaticVarCompensator(svc);
-    components_[svc->getID()] = svc;
-    svc->setVoltageLevelInterface(voltageLevel);
-  }
+  // TODO(iidm-bridge): VoltageLevel does not expose per-component getters
+  // (getGenerators / getLoads / getBatteries / getShuntCompensators / getStaticVarCompensators
+  // / getDanglingLines / getVscConverterStations / getLccConverterStations).
+  // Injectors are imported in importInjectorsByVoltageLevel() after all voltage
+  // levels are built, by iterating the network collections and filtering by
+  // each terminal's voltage level id.
 
   return voltageLevel;
+}
+
+void
+DataInterfaceIIDM::importInjectorsByVoltageLevel(const std::unordered_map<std::string, std::string>& vlCountry) {
+  auto vlOf = [&](const iidm::Terminal& t) -> std::shared_ptr<VoltageLevelInterfaceIIDM> {
+    auto it = voltageLevels_.find(t.getVoltageLevel().getId());
+    return it == voltageLevels_.end() ? nullptr : std::dynamic_pointer_cast<VoltageLevelInterfaceIIDM>(it->second);
+  };
+  auto countryOf = [&](const iidm::Terminal& t) -> std::string {
+    auto it = vlCountry.find(t.getVoltageLevel().getId());
+    return it == vlCountry.end() ? std::string() : it->second;
+  };
+
+  for (auto& genIIDM : networkIIDM_->getGenerators()) {
+    auto vl = vlOf(genIIDM.getTerminal());
+    if (!vl) continue;
+    std::shared_ptr<GeneratorInterfaceIIDM> generator = importGenerator(genIIDM, countryOf(genIIDM.getTerminal()));
+    vl->addGenerator(generator);
+    components_[generator->getID()] = generator;
+    generatorComponents_[generator->getID()] = generator;
+    generator->setVoltageLevelInterface(vl);
+  }
+  for (auto& batIIDM : networkIIDM_->getBatteries()) {
+    auto vl = vlOf(batIIDM.getTerminal());
+    if (!vl) continue;
+    std::shared_ptr<BatteryInterfaceIIDM> battery = importBattery(batIIDM, countryOf(batIIDM.getTerminal()));
+    vl->addGenerator(battery);
+    components_[battery->getID()] = battery;
+    generatorComponents_[battery->getID()] = battery;
+    battery->setVoltageLevelInterface(vl);
+  }
+  for (auto& loadIIDM : networkIIDM_->getLoads()) {
+    auto vl = vlOf(loadIIDM.getTerminal());
+    if (!vl) continue;
+    std::shared_ptr<LoadInterfaceIIDM> load = importLoad(loadIIDM, countryOf(loadIIDM.getTerminal()));
+    vl->addLoad(load);
+    components_[load->getID()] = load;
+    loadComponents_[load->getID()] = load;
+    load->setVoltageLevelInterface(vl);
+  }
+  for (auto& shuntIIDM : networkIIDM_->getShuntCompensators()) {
+    auto vl = vlOf(shuntIIDM.getTerminal());
+    if (!vl) continue;
+    std::shared_ptr<ShuntCompensatorInterfaceIIDM> shunt = importShuntCompensator(shuntIIDM);
+    vl->addShuntCompensator(shunt);
+    components_[shunt->getID()] = shunt;
+    shunt->setVoltageLevelInterface(vl);
+  }
+  for (auto& dlIIDM : networkIIDM_->getDanglingLines()) {
+    auto vl = vlOf(dlIIDM.getTerminal());
+    if (!vl) continue;
+    std::shared_ptr<DanglingLineInterfaceIIDM> line = importDanglingLine(dlIIDM);
+    vl->addDanglingLine(line);
+    components_[line->getID()] = line;
+    line->setVoltageLevelInterface(vl);
+  }
+  for (auto& svcIIDM : networkIIDM_->getStaticVarCompensators()) {
+    auto vl = vlOf(svcIIDM.getTerminal());
+    if (!vl) continue;
+    std::shared_ptr<StaticVarCompensatorInterfaceIIDM> svc = importStaticVarCompensator(svcIIDM);
+    vl->addStaticVarCompensator(svc);
+    components_[svc->getID()] = svc;
+    svc->setVoltageLevelInterface(vl);
+  }
+  for (auto& vscIIDM : networkIIDM_->getVscConverterStations()) {
+    auto vl = vlOf(vscIIDM.getTerminal());
+    if (!vl) continue;
+    std::shared_ptr<VscConverterInterfaceIIDM> vsc = importVscConverter(vscIIDM);
+    vl->addVscConverter(vsc);
+    components_[vsc->getID()] = vsc;
+    vsc->setVoltageLevelInterface(vl);
+  }
+  for (auto& lccIIDM : networkIIDM_->getLccConverterStations()) {
+    auto vl = vlOf(lccIIDM.getTerminal());
+    if (!vl) continue;
+    std::shared_ptr<LccConverterInterfaceIIDM> lcc = importLccConverter(lccIIDM);
+    vl->addLccConverter(lcc);
+    components_[lcc->getID()] = lcc;
+    lcc->setVoltageLevelInterface(vl);
+  }
 }
 
 std::unique_ptr<SwitchInterfaceIIDM>
@@ -559,7 +557,8 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
 
   // add phase tapChanger and steps if exists
   if (twoWTfoIIDM.hasPhaseTapChanger()) {
-    std::unique_ptr<PhaseTapChangerInterfaceIIDM> tapChanger = DYN::make_unique<PhaseTapChangerInterfaceIIDM>(twoWTfoIIDM.getPhaseTapChanger());
+    std::unique_ptr<PhaseTapChangerInterfaceIIDM> tapChanger =
+        DYN::make_unique<PhaseTapChangerInterfaceIIDM>(twoWTfoIIDM.getPhaseTapChanger().value());
     twoWTfo->setPhaseTapChanger(std::move(tapChanger));
   }
   // add ratio tapChanger and steps if exists
@@ -567,8 +566,8 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
     // TODO(iidm-bridge): getRegulationTerminal() is not exposed; compare bus ids through
     // getRegulationTerminalId() and terminal.getBusId() instead of stdcxx::areSame().
     string side;
-    const auto& rtc = twoWTfoIIDM.getRatioTapChanger();
-    const std::string regTermId = rtc.getRegulationTerminalId();
+    auto rtcOpt = twoWTfoIIDM.getRatioTapChanger();
+    const std::string regTermId = rtcOpt.value().getRegulationTerminalId();
     if (!regTermId.empty()) {
       if (regTermId == twoWTfoIIDM.getTerminal1().getBusId()) {
         side = "ONE";
@@ -576,7 +575,8 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
         side = "TWO";
       }
     }
-    std::unique_ptr<RatioTapChangerInterfaceIIDM> tapChanger = DYN::make_unique<RatioTapChangerInterfaceIIDM>(twoWTfoIIDM.getRatioTapChanger(), side);
+    std::unique_ptr<RatioTapChangerInterfaceIIDM> tapChanger =
+        DYN::make_unique<RatioTapChangerInterfaceIIDM>(rtcOpt.value(), side);
     twoWTfo->setRatioTapChanger(std::move(tapChanger));
   }
 
@@ -643,9 +643,8 @@ void
 DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransformer& threeWindingTransformer) {
   const string fictVLId = threeWindingTransformer.getId() + "_FictVL";
   const string fictBusId = threeWindingTransformer.getId() + "_FictBUS";
+  // TODO(iidm-bridge): ThreeWindingsTransformer::getSubstation() is not exposed; default to no country.
   string countryStr;
-  if (threeWindingTransformer.getSubstation().getCountry())
-    countryStr = iidmCountryName(threeWindingTransformer.getSubstation().getCountry().value());
 
   // TODO(iidm-bridge): legs are value types on the new side; wrap them in std::optional
   // so downstream code that used stdcxx::Reference<Leg> keeps the same has-value semantics.
@@ -654,25 +653,23 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
   legs.emplace_back(threeWindingTransformer.getLeg2());
   legs.emplace_back(threeWindingTransformer.getLeg3());
 
-  std::shared_ptr<VoltageLevelInterface> vl = std::make_shared<FictVoltageLevelInterfaceIIDM>(fictVLId, threeWindingTransformer.getRatedU0(), countryStr);
+  // TODO(iidm-bridge): ThreeWindingsTransformer::getRatedU0() is not exposed; use leg1 ratedU as proxy.
+  const double ratedU0 = threeWindingTransformer.getLeg1().getRatedU();
+  std::shared_ptr<VoltageLevelInterface> vl = std::make_shared<FictVoltageLevelInterfaceIIDM>(fictVLId, ratedU0, countryStr);
   network_->addVoltageLevel(vl);
   voltageLevels_[vl->getID()] = vl;
-  std::shared_ptr<BusInterface> fictBus = std::make_shared<FictBusInterfaceIIDM>(fictBusId, threeWindingTransformer.getRatedU0(), countryStr);
+  std::shared_ptr<BusInterface> fictBus = std::make_shared<FictBusInterfaceIIDM>(fictBusId, ratedU0, countryStr);
   vl->addBus(fictBus);
   components_[fictBus->getID()] = fictBus;
   busComponents_[fictBus->getID()] = fictBus;
 
   int legCount = 1;
   const bool initialConnected1 = true;
-  const double VNom1 = threeWindingTransformer.getRatedU0();
-  const double ratedU1 = threeWindingTransformer.getRatedU0();
+  const double VNom1 = ratedU0;
+  const double ratedU1 = ratedU0;
 
-  auto libPath = IIDMExtensions::findLibraryPath();
-  auto activeSeasonExtensionDef = IIDMExtensions::getExtension<ActiveSeasonIIDMExtension>(libPath.generic_string());
-  auto activeSeasonExtension = std::get<IIDMExtensions::CREATE_FUNCTION>(activeSeasonExtensionDef)(threeWindingTransformer);
-  auto destroyActiveSeasonExtension = std::get<IIDMExtensions::DESTROY_FUNCTION>(activeSeasonExtensionDef);
-  const string activeSeason = activeSeasonExtension ? activeSeasonExtension->getValue() : std::string("UNDEFINED");
-  destroyActiveSeasonExtension(activeSeasonExtension);
+  // TODO(iidm-bridge): custom-extension plugin loader is disabled; activeSeason defaults to UNDEFINED.
+  const string activeSeason = "UNDEFINED";
 
   for (auto& leg : legs) {
     string TwoWTransfId = threeWindingTransformer.getId() + "_" + std::to_string(legCount);
@@ -689,7 +686,8 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
     fictTwoWTransf->setVoltageLevelInterface2(findVoltageLevelInterface(leg.value().getTerminal().getVoltageLevel().getId()));
     // add phase tapChanger and steps if exists
     if (leg.value().hasPhaseTapChanger()) {
-      std::unique_ptr<PhaseTapChangerInterfaceIIDM> tapChanger = DYN::make_unique<PhaseTapChangerInterfaceIIDM>(leg.value().getPhaseTapChanger());
+      std::unique_ptr<PhaseTapChangerInterfaceIIDM> tapChanger =
+          DYN::make_unique<PhaseTapChangerInterfaceIIDM>(leg.value().getPhaseTapChanger());
       fictTwoWTransf->setPhaseTapChanger(std::move(tapChanger));
     }
     // add ratio tapChanger and steps if exists. It is always referring to side TWO as it is the side coming from
@@ -698,11 +696,11 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
       string side;
       // TODO(iidm-bridge): getRegulationTerminal() is not exposed; compare bus ids via
       // getRegulationTerminalId()/getBusId().
-      const auto& rtc = leg.value().getRatioTapChanger();
+      auto rtc = leg.value().getRatioTapChanger();
       const std::string regTermId = rtc.getRegulationTerminalId();
       if (!regTermId.empty() && regTermId == leg.value().getTerminal().getBusId()) {
         side = "TWO";
-        std::unique_ptr<RatioTapChangerInterfaceIIDM> tapChanger = DYN::make_unique<RatioTapChangerInterfaceIIDM>(leg.value().getRatioTapChanger(), side);
+        std::unique_ptr<RatioTapChangerInterfaceIIDM> tapChanger = DYN::make_unique<RatioTapChangerInterfaceIIDM>(rtc, side);
         fictTwoWTransf->setRatioTapChanger(std::move(tapChanger));
       }
     }
@@ -834,9 +832,8 @@ DataInterfaceIIDM::findBusInterface(const iidm::Terminal& terminal) const {
 std::shared_ptr<BusInterface>
 DataInterfaceIIDM::findBusBreakerBusInterface(const iidm::Bus& bus) const {
   string id = bus.getId();
-  if (bus.getVoltageLevel().getTopologyKind() == iidm::TopologyKind::NODE_BREAKER) {
-    throw DYNError(Error::MODELER, UnknownBus, id);
-  }
+  // TODO(iidm-bridge): iidm::Bus::getVoltageLevel() is not exposed; rely on the
+  // map lookup to discriminate (node-breaker buses won't appear in busComponents_).
   const auto iter = busComponents_.find(id);
   if (iter != busComponents_.end())
     return iter->second;
