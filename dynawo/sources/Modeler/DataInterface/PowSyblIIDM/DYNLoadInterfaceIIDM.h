@@ -26,7 +26,7 @@
 
 #include "DYNInjectorInterfaceIIDM.h"
 
-#include <powsybl/iidm/Load.hpp>
+#include <iidm/Load.h>
 
 #include <string>
 
@@ -35,7 +35,7 @@ namespace DYN {
 /**
  * class LoadInterfaceIIDM
  */
-class LoadInterfaceIIDM : public LoadInterface, public InjectorInterfaceIIDM {
+class LoadInterfaceIIDM : public LoadInterface, public InjectorInterfaceIIDM<iidm::Load> {
  public:
   /**
    * @brief defines the index of each state variable
@@ -51,7 +51,7 @@ class LoadInterfaceIIDM : public LoadInterface, public InjectorInterfaceIIDM {
    * @brief Constructor
    * @param load : the load's iidm instance
    */
-  explicit LoadInterfaceIIDM(powsybl::iidm::Load& load);
+  explicit LoadInterfaceIIDM(iidm::Load& load);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -152,7 +152,7 @@ class LoadInterfaceIIDM : public LoadInterface, public InjectorInterfaceIIDM {
   }
 
  private:
-  powsybl::iidm::Load& loadIIDM_;  ///< reference to the iidm load instance
+  iidm::Load& loadIIDM_;  ///< reference to the iidm load instance
   double loadPUnderV_;             ///< load power value if voltage is under threshold
   double v0_;                      ///< initial voltage of the bus where the load is connected
   double vNom_;                    ///<  nominal voltage of the bus where the load is connected

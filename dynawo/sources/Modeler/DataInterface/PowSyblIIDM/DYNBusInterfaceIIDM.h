@@ -20,7 +20,8 @@
 #ifndef MODELER_DATAINTERFACE_POWSYBLIIDM_DYNBUSINTERFACEIIDM_H_
 #define MODELER_DATAINTERFACE_POWSYBLIIDM_DYNBUSINTERFACEIIDM_H_
 
-#include <powsybl/iidm/Bus.hpp>
+#include <iidm/Bus.h>
+#include <iidm/VoltageLevel.h>
 
 #include <boost/optional.hpp>
 
@@ -45,8 +46,9 @@ class BusInterfaceIIDM : public BusInterface {
   /**
    * @brief Constructor
    * @param bus : bus' iidm instance
+   * @param voltageLevel : voltage level the bus belongs to (needed for limits/nominal V)
    */
-  explicit BusInterfaceIIDM(powsybl::iidm::Bus& bus);
+  BusInterfaceIIDM(iidm::Bus& bus, iidm::VoltageLevel& voltageLevel);
 
   /**
    * @copydoc BusInterface::getV0() const
@@ -152,7 +154,8 @@ class BusInterfaceIIDM : public BusInterface {
   }
 
  private:
-  powsybl::iidm::Bus& busIIDM_;        ///< reference to the iidm bus instance
+  iidm::Bus& busIIDM_;                 ///< reference to the iidm bus instance
+  iidm::VoltageLevel& voltageLevel_;   ///< voltage level the bus belongs to
   bool hasConnection_;                 ///< @b true if the bus has an outside connection, @b false else
   // state variables
   boost::optional<double> U0_;         ///< initial voltage

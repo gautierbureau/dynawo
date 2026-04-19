@@ -24,15 +24,23 @@
 #include "DYNGeneratorActivePowerControlIIDMExtension.h"
 #include "DYNStaticVarCompensatorInterfaceIIDMExtension.h"
 
-#include <powsybl/iidm/Generator.hpp>
+#include <iidm/Generator.h>
+#include <iidm/StaticVarCompensator.h>
 #include <string>
+
+namespace iidm {
+// Placeholder: iidm-bridge does not expose a generic Connectable base yet.
+// The custom-extension plugin loader is currently a no-op (see DYNIIDMExtensions),
+// so the trait only needs a forward declaration to satisfy the template signature.
+class Connectable;
+}  // namespace iidm
 
 namespace DYN {
 /**
  * @brief Base template class for traits
  *
  * Traits for IIDM extensions are:
- * - NetworkComponentType: the powsybl type of input for the extension
+ * - NetworkComponentType: the iidm type of input for the extension
  * - name: the name of the extension, used to build the creation/destruction functions
  */
 template<class T>
@@ -42,7 +50,7 @@ struct IIDMExtensionTrait {};
 template<>
 struct IIDMExtensionTrait<StaticVarCompensatorInterfaceIIDMExtension> {
   /// @brief Network component type
-  using NetworkComponentType = powsybl::iidm::StaticVarCompensator;
+  using NetworkComponentType = iidm::StaticVarCompensator;
   static const char name[];  ///< name of the extension
 };
 
@@ -50,7 +58,7 @@ struct IIDMExtensionTrait<StaticVarCompensatorInterfaceIIDMExtension> {
 template<>
 struct IIDMExtensionTrait<ActiveSeasonIIDMExtension> {
   /// @brief Network component type
-  using NetworkComponentType = powsybl::iidm::Connectable;
+  using NetworkComponentType = iidm::Connectable;
   static const char name[];  ///< name of the extension
 };
 
@@ -58,7 +66,7 @@ struct IIDMExtensionTrait<ActiveSeasonIIDMExtension> {
 template<>
 struct IIDMExtensionTrait<CurrentLimitsPerSeasonIIDMExtension> {
   /// @brief Network component type
-  using NetworkComponentType = powsybl::iidm::Connectable;
+  using NetworkComponentType = iidm::Connectable;
   static const char name[];  ///< name of the extension
 };
 
@@ -66,7 +74,7 @@ struct IIDMExtensionTrait<CurrentLimitsPerSeasonIIDMExtension> {
 template<>
 struct IIDMExtensionTrait<GeneratorActivePowerControlIIDMExtension> {
   /// @brief Network component type
-  using NetworkComponentType = powsybl::iidm::Generator;
+  using NetworkComponentType = iidm::Generator;
   static const char name[];  ///< name of the extension
 };
 }  // namespace DYN
