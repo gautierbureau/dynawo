@@ -28,6 +28,7 @@
 #include <iidm/VscConverterStation.h>
 #include <iidm/ReactiveCapabilityCurve.h>
 #include <iidm/MinMaxReactiveLimits.h>
+#include <iidm/VoltageLevel.h>
 
 #include <string>
 
@@ -189,7 +190,7 @@ VscConverterInterfaceIIDM::getQ() {
 
 const std::string&
 VscConverterInterfaceIIDM::getID() const {
-  return vscConverterIIDM_.getId();
+  return getIDInjector();
 }
 
 double

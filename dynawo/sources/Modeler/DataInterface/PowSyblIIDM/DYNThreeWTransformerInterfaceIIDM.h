@@ -200,6 +200,7 @@ class ThreeWTransformerInterfaceIIDM : public ThreeWTransformerInterface {
 
  private:
   iidm::ThreeWindingsTransformer& tfoIIDM_;  ///< reference to the tfo's iidm instance
+  std::string tfoId_;                        ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<BusInterface> busInterface1_;  ///< busInterface of the bus where the side 1 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface2_;  ///< busInterface of the bus where the side 2 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface3_;  ///< busInterface of the bus where the side 3 of the tfo is connected

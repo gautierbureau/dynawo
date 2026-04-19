@@ -166,6 +166,7 @@ class HvdcLineInterfaceIIDM : public HvdcLineInterface, public boost::noncopyabl
 
  private:
   iidm::HvdcLine& hvdcLineIIDM_;        ///< reference to the iidm line instance
+  std::string hvdcLineId_;              ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<ConverterInterface> conv1_;  ///< conv1
   std::shared_ptr<ConverterInterface> conv2_;  ///< conv2
   bool hasHvdcActivePowerControl_ = false;  ///< whether the HVDC angle droop active power control extension is present

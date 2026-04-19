@@ -31,13 +31,13 @@ using std::vector;
 namespace DYN {
 
 ThreeWTransformerInterfaceIIDM::ThreeWTransformerInterfaceIIDM(iidm::ThreeWindingsTransformer& tfo) :
-tfoIIDM_(tfo) {
+tfoIIDM_(tfo),
+tfoId_(tfo.getId()) {
   setType(ComponentInterface::THREE_WTFO);
 
-  auto libPath = IIDMExtensions::findLibraryPath();
-  auto activeSeasonExtensionDef = IIDMExtensions::getExtension<ActiveSeasonIIDMExtension>(libPath.generic_string());
-  activeSeasonExtension_ = std::get<IIDMExtensions::CREATE_FUNCTION>(activeSeasonExtensionDef)(tfo);
-  destroyActiveSeasonExtension_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(activeSeasonExtensionDef);
+  // TODO(iidm-bridge): custom-extension plugin loader is disabled - extensions are no-op stubs.
+  activeSeasonExtension_ = nullptr;
+  destroyActiveSeasonExtension_ = [](ActiveSeasonIIDMExtension*) {};
 }
 
 ThreeWTransformerInterfaceIIDM::~ThreeWTransformerInterfaceIIDM() {
@@ -91,7 +91,7 @@ ThreeWTransformerInterfaceIIDM::getBusInterface3() const {
 
 const std::string&
 ThreeWTransformerInterfaceIIDM::getID() const {
-  return tfoIIDM_.getId();
+  return tfoId_;
 }
 
 bool

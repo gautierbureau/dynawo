@@ -22,10 +22,13 @@
 
 #include "DYNGeneratorInterfaceIIDM.h"
 
+#include "DYNCommon.h"
+
 #include <iidm/MinMaxReactiveLimits.h>
 #include <iidm/ReactiveCapabilityCurve.h>
 #include <iidm/ActivePowerControl.h>
 #include <iidm/CoordinatedReactiveControl.h>
+#include <iidm/VoltageLevel.h>
 
 using std::string;
 using std::vector;
@@ -315,7 +318,7 @@ GeneratorInterfaceIIDM::getTargetV() {
 
 const std::string&
 GeneratorInterfaceIIDM::getID() const {
-  return generatorIIDM_.getId();
+  return getIDInjector();
 }
 
 vector<GeneratorInterface::ReactiveCurvePoint> GeneratorInterfaceIIDM::getReactiveCurvesPoints() const {

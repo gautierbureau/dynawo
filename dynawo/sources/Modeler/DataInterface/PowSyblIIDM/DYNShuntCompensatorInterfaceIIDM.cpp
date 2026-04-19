@@ -22,6 +22,7 @@
 
 #include <iidm/ShuntCompensator.h>
 #include <iidm/ShuntCompensatorNonLinearModel.h>
+#include <iidm/VoltageLevel.h>
 
 #include "DYNShuntCompensatorInterfaceIIDM.h"
 
@@ -143,7 +144,7 @@ ShuntCompensatorInterfaceIIDM::getQ() {
 
 const std::string&
 ShuntCompensatorInterfaceIIDM::getID() const {
-  return shuntCompensatorIIDM_.getId();
+  return getIDInjector();
 }
 
 int

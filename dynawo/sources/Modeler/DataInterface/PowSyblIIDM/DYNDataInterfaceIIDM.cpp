@@ -60,6 +60,7 @@
 // new iidm-bridge headers; load/export paths below use placeholder APIs and
 // may need to be reworked when the bridge exposes them.
 #include <iidm/Substation.h>
+#include <iidm/VoltageLevel.h>
 
 #include <regex>
 #include <unordered_set>

@@ -26,6 +26,8 @@
 #include "DYNExecUtils.h"
 #include "DYNFileSystemUtils.h"
 #include "DYNIIDMExtensions.hpp"
+#include <iidm/StaticVarCompensator.h>
+#include <iidm/VoltageLevel.h>
 #include <iostream>
 
 using iidm::StaticVarCompensator;
@@ -199,7 +201,7 @@ StaticVarCompensatorInterfaceIIDM::getVNom() const {
 
 const std::string&
 StaticVarCompensatorInterfaceIIDM::getID() const {
-  return staticVarCompensatorIIDM_.getId();
+  return getIDInjector();
 }
 
 double

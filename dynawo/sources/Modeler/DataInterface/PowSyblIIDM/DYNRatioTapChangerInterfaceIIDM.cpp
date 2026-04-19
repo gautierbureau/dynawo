@@ -24,6 +24,8 @@
 
 #include "make_unique.hpp"
 
+#include <cmath>
+
 using boost::shared_ptr;
 
 namespace DYN {

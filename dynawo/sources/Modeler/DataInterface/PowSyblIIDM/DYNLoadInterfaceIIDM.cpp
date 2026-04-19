@@ -25,6 +25,7 @@
 #include "DYNCommon.h"
 
 #include <iidm/Load.h>
+#include <iidm/VoltageLevel.h>
 
 using iidm::Load;
 

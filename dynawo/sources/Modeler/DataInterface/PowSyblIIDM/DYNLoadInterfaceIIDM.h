@@ -117,7 +117,7 @@ class LoadInterfaceIIDM : public LoadInterface, public InjectorInterfaceIIDM<iid
    * @copydoc LoadInterface::getID() const
    */
   const std::string& getID() const override {
-    return loadIIDM_.getId();
+    return getIDInjector();
   }
 
   /**
