@@ -24,6 +24,7 @@
 
 #include <iidm/HvdcLine.h>
 #include <iidm/LccConverterStation.h>
+#include <iidm/VoltageLevel.h>
 
 #include <string>
 
@@ -126,7 +127,7 @@ LccConverterInterfaceIIDM::getQ() {
 
 const std::string&
 LccConverterInterfaceIIDM::getID() const {
-  return lccConverterIIDM_.getId();
+  return getIDInjector();
 }
 
 double

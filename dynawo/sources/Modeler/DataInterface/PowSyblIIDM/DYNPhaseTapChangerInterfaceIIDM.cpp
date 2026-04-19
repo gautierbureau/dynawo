@@ -24,6 +24,8 @@
 
 #include <iidm/PhaseTapChanger.h>
 
+#include <cmath>
+
 
 namespace DYN {
 

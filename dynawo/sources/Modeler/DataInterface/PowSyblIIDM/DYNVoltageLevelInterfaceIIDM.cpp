@@ -31,8 +31,7 @@
 #include "DYNTrace.h"
 #include "make_unique.hpp"
 
-#include <iidm/TopologyKind.h>
-#include <iidm/SwitchKind.h>
+#include <iidm/Enums.h>
 #include <iidm/BusbarSection.h>
 #include <iidm/Bus.h>
 #include <iidm/Switch.h>

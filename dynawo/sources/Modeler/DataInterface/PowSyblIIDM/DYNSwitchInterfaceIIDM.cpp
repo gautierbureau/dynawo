@@ -25,7 +25,7 @@ using std::shared_ptr;
 
 namespace DYN {
 
-SwitchInterfaceIIDM::SwitchInterfaceIIDM(iidm::Switch& sw) : switchIIDM_(sw) {
+SwitchInterfaceIIDM::SwitchInterfaceIIDM(iidm::Switch& sw) : switchIIDM_(sw), switchId_(sw.getId()) {
   setType(ComponentInterface::SWITCH);
   stateVariables_.resize(1);
   stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);
@@ -43,7 +43,7 @@ SwitchInterfaceIIDM::isConnected() const {
 
 const std::string&
 SwitchInterfaceIIDM::getID() const {
-  return switchIIDM_.getId();
+  return switchId_;
 }
 
 void

@@ -132,7 +132,7 @@ DanglingLineInterfaceIIDM::getQ() {
 
 const std::string&
 DanglingLineInterfaceIIDM::getID() const {
-  return danglingLineIIDM_.getId();
+  return getIDInjector();
 }
 
 double

@@ -35,6 +35,7 @@ namespace DYN {
 
 LineInterfaceIIDM::LineInterfaceIIDM(iidm::Line& line) : LineInterface(false),
                                                                   lineIIDM_(line),
+                                                                  lineId_(line.getId()),
                                                                   initialConnected1_(boost::none),
                                                                   initialConnected2_(boost::none) {
   setType(ComponentInterface::LINE);
@@ -45,15 +46,11 @@ LineInterfaceIIDM::LineInterfaceIIDM(iidm::Line& line) : LineInterface(false),
   stateVariables_[VAR_Q2] = StateVariable("q2", StateVariable::DOUBLE);     // Q2
   stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);  // connectionState
 
-  auto libPath = IIDMExtensions::findLibraryPath();
-
-  auto activeSeasonExtensionDef = IIDMExtensions::getExtension<ActiveSeasonIIDMExtension>(libPath.generic_string());
-  activeSeasonExtension_ = std::get<IIDMExtensions::CREATE_FUNCTION>(activeSeasonExtensionDef)(line);
-  destroyActiveSeasonExtension_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(activeSeasonExtensionDef);
-
-  auto currentLimitsPerSeasonExtensionDef = IIDMExtensions::getExtension<CurrentLimitsPerSeasonIIDMExtension>(libPath.generic_string());
-  currentLimitsPerSeasonExtension_ = std::get<IIDMExtensions::CREATE_FUNCTION>(currentLimitsPerSeasonExtensionDef)(line);
-  destroyCurrentLimitsPerSeasonExtension_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(currentLimitsPerSeasonExtensionDef);
+  // TODO(iidm-bridge): custom-extension plugin loader is disabled - extensions are no-op stubs.
+  activeSeasonExtension_ = nullptr;
+  destroyActiveSeasonExtension_ = [](ActiveSeasonIIDMExtension*) {};
+  currentLimitsPerSeasonExtension_ = nullptr;
+  destroyCurrentLimitsPerSeasonExtension_ = [](CurrentLimitsPerSeasonIIDMExtension*) {};
   if (!std::isnan(lineIIDM_.getTerminal1().getP()) || !std::isnan(lineIIDM_.getTerminal1().getQ()) ||
       !std::isnan(lineIIDM_.getTerminal2().getP()) || !std::isnan(lineIIDM_.getTerminal2().getQ())) {
       hasInitialConditions(true);
@@ -233,7 +230,7 @@ LineInterfaceIIDM::isPartiallyConnected() const {
 
 const std::string&
 LineInterfaceIIDM::getID() const {
-  return lineIIDM_.getId();
+  return lineId_;
 }
 
 void

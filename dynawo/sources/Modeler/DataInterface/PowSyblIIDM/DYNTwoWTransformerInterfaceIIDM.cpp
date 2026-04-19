@@ -21,6 +21,7 @@
 #include "DYNTwoWTransformerInterfaceIIDM.h"
 
 #include <iidm/TwoWindingsTransformer.h>
+#include <iidm/VoltageLevel.h>
 
 #include "DYNCommon.h"
 #include "DYNPhaseTapChangerInterfaceIIDM.h"
@@ -42,6 +43,7 @@ namespace DYN {
 TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(iidm::TwoWindingsTransformer& tfo) :
     TwoWTransformerInterface(false),
     tfoIIDM_(tfo),
+    tfoId_(tfo.getId()),
     initialConnected1_(boost::none),
     initialConnected2_(boost::none) {
   setType(ComponentInterface::TWO_WTFO);
@@ -57,10 +59,9 @@ TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(iidm::TwoWindingsTran
   if (tfo.hasRatioTapChanger() || tfo.hasPhaseTapChanger())
     stateVariables_[VAR_TAPINDEX] = StateVariable("tapIndex", StateVariable::INT);
 
-  auto libPath = IIDMExtensions::findLibraryPath();
-  auto activeSeasonExtensionDef = IIDMExtensions::getExtension<ActiveSeasonIIDMExtension>(libPath.generic_string());
-  activeSeasonExtension_ = std::get<IIDMExtensions::CREATE_FUNCTION>(activeSeasonExtensionDef)(tfo);
-  destroyActiveSeasonExtension_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(activeSeasonExtensionDef);
+  // TODO(iidm-bridge): custom-extension plugin loader is disabled - extensions are no-op stubs.
+  activeSeasonExtension_ = nullptr;
+  destroyActiveSeasonExtension_ = [](ActiveSeasonIIDMExtension*) {};
   if (!std::isnan(tfoIIDM_.getTerminal1().getP()) || !std::isnan(tfoIIDM_.getTerminal1().getQ()) ||
       !std::isnan(tfoIIDM_.getTerminal2().getP()) || !std::isnan(tfoIIDM_.getTerminal2().getQ())) {
       hasInitialConditions(true);
@@ -103,7 +104,7 @@ TwoWTransformerInterfaceIIDM::getBusInterface2() const {
 
 const std::string&
 TwoWTransformerInterfaceIIDM::getID() const {
-  return tfoIIDM_.getId();
+  return tfoId_;
 }
 
 bool

@@ -41,6 +41,7 @@ namespace DYN {
 HvdcLineInterfaceIIDM::HvdcLineInterfaceIIDM(iidm::HvdcLine& hvdcLine,
                                              const shared_ptr<ConverterInterface>& conv1,
                                              const shared_ptr<ConverterInterface>& conv2) : hvdcLineIIDM_(hvdcLine),
+                                                                                            hvdcLineId_(hvdcLine.getId()),
                                                                                             conv1_(conv1),
                                                                                             conv2_(conv2) {
   setType(ComponentInterface::HVDC_LINE);
@@ -254,7 +255,7 @@ HvdcLineInterfaceIIDM::isPartiallyConnected() const {
 
 const std::string&
 HvdcLineInterfaceIIDM::getID() const {
-  return hvdcLineIIDM_.getId();
+  return hvdcLineId_;
 }
 
 double

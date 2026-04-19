@@ -21,6 +21,7 @@
 #include "DYNFictTwoWTransformerInterfaceIIDM.h"
 
 #include <iidm/ThreeWindingsTransformer.h>
+#include <iidm/VoltageLevel.h>
 
 #include "DYNCommon.h"
 #include "DYNPhaseTapChangerInterfaceIIDM.h"

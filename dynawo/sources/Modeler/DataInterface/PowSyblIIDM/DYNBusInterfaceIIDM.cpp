@@ -38,6 +38,7 @@ BusInterfaceIIDM::BusInterfaceIIDM(Bus& bus, VoltageLevel& voltageLevel) :
 BusInterface(false),
 busIIDM_(bus),
 voltageLevel_(voltageLevel),
+busId_(bus.getId()),
 hasConnection_(false) {
   setType(ComponentInterface::BUS);
   if (!std::isnan(busIIDM_.getV())) {
@@ -57,7 +58,7 @@ hasConnection_(false) {
 
 const std::string&
 BusInterfaceIIDM::getID() const {
-  return busIIDM_.getId();
+  return busId_;
 }
 
 double

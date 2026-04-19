@@ -110,6 +110,7 @@ class SwitchInterfaceIIDM : public SwitchInterface {
 
  private:
   iidm::Switch& switchIIDM_;              ///< reference to the iidm switch instance
+  std::string switchId_;                  ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<BusInterface> busInterface1_;  ///< busInterface of the bus where the side 1 of the switch is connected
   std::shared_ptr<BusInterface> busInterface2_;  ///< busInterface of the bus where the side 2 of the switch is connected
 };                                                 ///< class for switch model interface

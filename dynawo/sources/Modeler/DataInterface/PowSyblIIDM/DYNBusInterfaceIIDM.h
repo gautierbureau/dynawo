@@ -156,6 +156,7 @@ class BusInterfaceIIDM : public BusInterface {
  private:
   iidm::Bus& busIIDM_;                 ///< reference to the iidm bus instance
   iidm::VoltageLevel& voltageLevel_;   ///< voltage level the bus belongs to
+  std::string busId_;                  ///< cached bus id (iidm-bridge returns by value)
   bool hasConnection_;                 ///< @b true if the bus has an outside connection, @b false else
   // state variables
   boost::optional<double> U0_;         ///< initial voltage

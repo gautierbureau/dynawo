@@ -289,6 +289,7 @@ class LineInterfaceIIDM : public LineInterface, public boost::noncopyable {
 
  private:
   iidm::Line& lineIIDM_;                                    ///< reference to the iidm line instance
+  std::string lineId_;                                      ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<BusInterface> busInterface1_;                    ///< busInterface of the bus where the side 1 of the line is connected
   std::shared_ptr<BusInterface> busInterface2_;                    ///< busInterface of the bus where the side 2 of the line is connected
   std::shared_ptr<VoltageLevelInterface> voltageLevelInterface1_;  ///< voltageLevel interface where the side 1 of the line is connected

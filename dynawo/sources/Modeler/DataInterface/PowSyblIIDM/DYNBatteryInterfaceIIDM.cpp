@@ -23,6 +23,8 @@
 
 #include "DYNBatteryInterfaceIIDM.h"
 
+#include <iidm/VoltageLevel.h>
+
 using std::string;
 using std::vector;
 
