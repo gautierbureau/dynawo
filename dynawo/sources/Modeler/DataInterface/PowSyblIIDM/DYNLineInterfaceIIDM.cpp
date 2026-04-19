@@ -20,9 +20,9 @@
 
 #include "DYNLineInterfaceIIDM.h"
 
-#include <powsybl/iidm/Bus.hpp>
-#include <powsybl/iidm/Line.hpp>
-#include <powsybl/iidm/VoltageLevel.hpp>
+#include <iidm/Bus.h>
+#include <iidm/Line.h>
+#include <iidm/VoltageLevel.h>
 
 #include "DYNCommon.h"
 #include "DYNModelConstants.h"
@@ -33,7 +33,7 @@
 
 namespace DYN {
 
-LineInterfaceIIDM::LineInterfaceIIDM(powsybl::iidm::Line& line) : LineInterface(false),
+LineInterfaceIIDM::LineInterfaceIIDM(iidm::Line& line) : LineInterface(false),
                                                                   lineIIDM_(line),
                                                                   initialConnected1_(boost::none),
                                                                   initialConnected2_(boost::none) {

@@ -20,46 +20,78 @@
 
 #include "DYNStepInterfaceIIDM.h"
 
-#include <powsybl/iidm/TapChanger.hpp>
-
 namespace DYN {
 
-StepInterfaceIIDM::StepInterfaceIIDM(const powsybl::iidm::PhaseTapChangerStep& step) : phaseStep_(step),
-                                                                                       isPhaseStep_(true) {
+StepInterfaceIIDM::StepInterfaceIIDM(const iidm::PhaseTapChangerStep& step) : phaseStep_(step),
+                                                                              kind_(Kind::PHASE) {
 }
 
-StepInterfaceIIDM::StepInterfaceIIDM(const powsybl::iidm::RatioTapChangerStep& step) : ratioStep_(step),
-                                                                                       isPhaseStep_(false) {
+StepInterfaceIIDM::StepInterfaceIIDM(const iidm::RatioTapChangerStep& step) : ratioStep_(step),
+                                                                              kind_(Kind::RATIO) {
+}
+
+StepInterfaceIIDM::StepInterfaceIIDM(const SyntheticStep& step) : syntheticStep_(step),
+                                                                  kind_(Kind::SYNTHETIC) {
 }
 
 double
 StepInterfaceIIDM::getR() const {
-  return isPhaseStep_ ? phaseStep_->getR() : ratioStep_->getR();
+  switch (kind_) {
+    case Kind::PHASE:     return phaseStep_->getR();
+    case Kind::RATIO:     return ratioStep_->getR();
+    case Kind::SYNTHETIC: return syntheticStep_.r;
+  }
+  return 0.0;
 }
 
 double
 StepInterfaceIIDM::getX() const {
-  return isPhaseStep_ ? phaseStep_->getX() : ratioStep_->getX();
+  switch (kind_) {
+    case Kind::PHASE:     return phaseStep_->getX();
+    case Kind::RATIO:     return ratioStep_->getX();
+    case Kind::SYNTHETIC: return syntheticStep_.x;
+  }
+  return 0.0;
 }
 
 double
 StepInterfaceIIDM::getG() const {
-  return isPhaseStep_ ? phaseStep_->getG() : ratioStep_->getG();
+  switch (kind_) {
+    case Kind::PHASE:     return phaseStep_->getG();
+    case Kind::RATIO:     return ratioStep_->getG();
+    case Kind::SYNTHETIC: return syntheticStep_.g;
+  }
+  return 0.0;
 }
 
 double
 StepInterfaceIIDM::getB() const {
-  return isPhaseStep_ ? phaseStep_->getB() : ratioStep_->getB();
+  switch (kind_) {
+    case Kind::PHASE:     return phaseStep_->getB();
+    case Kind::RATIO:     return ratioStep_->getB();
+    case Kind::SYNTHETIC: return syntheticStep_.b;
+  }
+  return 0.0;
 }
 
 double
 StepInterfaceIIDM::getRho() const {
-  return isPhaseStep_ ? phaseStep_->getRho() : ratioStep_->getRho();
+  switch (kind_) {
+    case Kind::PHASE:     return phaseStep_->getRho();
+    case Kind::RATIO:     return ratioStep_->getRho();
+    case Kind::SYNTHETIC: return syntheticStep_.rho;
+  }
+  return 0.0;
 }
 
 double
 StepInterfaceIIDM::getAlpha() const {
-  return isPhaseStep_ ? phaseStep_->getAlpha() : 0.0;
+  switch (kind_) {
+    case Kind::PHASE:     return phaseStep_->getAlpha();
+    case Kind::RATIO:     return 0.0;
+    case Kind::SYNTHETIC: return 0.0;
+  }
+  return 0.0;
 }
 
 }  // namespace DYN

@@ -19,7 +19,7 @@
  */
 #include "DYNThreeWTransformerInterfaceIIDM.h"
 
-#include <powsybl/iidm/ThreeWindingsTransformer.hpp>
+#include <iidm/ThreeWindingsTransformer.h>
 
 #include "DYNBusInterface.h"
 #include "DYNStateVariable.h"
@@ -30,7 +30,7 @@ using std::vector;
 
 namespace DYN {
 
-ThreeWTransformerInterfaceIIDM::ThreeWTransformerInterfaceIIDM(powsybl::iidm::ThreeWindingsTransformer& tfo) :
+ThreeWTransformerInterfaceIIDM::ThreeWTransformerInterfaceIIDM(iidm::ThreeWindingsTransformer& tfo) :
 tfoIIDM_(tfo) {
   setType(ComponentInterface::THREE_WTFO);
 

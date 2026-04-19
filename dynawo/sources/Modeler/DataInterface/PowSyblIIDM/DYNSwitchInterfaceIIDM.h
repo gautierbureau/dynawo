@@ -20,7 +20,7 @@
 #ifndef MODELER_DATAINTERFACE_POWSYBLIIDM_DYNSWITCHINTERFACEIIDM_H_
 #define MODELER_DATAINTERFACE_POWSYBLIIDM_DYNSWITCHINTERFACEIIDM_H_
 
-#include <powsybl/iidm/Switch.hpp>
+#include <iidm/Switch.h>
 
 #include "DYNSwitchInterface.h"
 
@@ -42,7 +42,7 @@ class SwitchInterfaceIIDM : public SwitchInterface {
    * @brief Constructor
    * @param sw the switch's iidm instance
    */
-  explicit SwitchInterfaceIIDM(powsybl::iidm::Switch& sw);
+  explicit SwitchInterfaceIIDM(iidm::Switch& sw);
 
   /**
    * @copydoc SwitchInterface::setBusInterface1(const std::shared_ptr<BusInterface>& busInterface)
@@ -109,7 +109,7 @@ class SwitchInterfaceIIDM : public SwitchInterface {
   bool isRetained() const override;
 
  private:
-  powsybl::iidm::Switch& switchIIDM_;              ///< reference to the iidm switch instance
+  iidm::Switch& switchIIDM_;              ///< reference to the iidm switch instance
   std::shared_ptr<BusInterface> busInterface1_;  ///< busInterface of the bus where the side 1 of the switch is connected
   std::shared_ptr<BusInterface> busInterface2_;  ///< busInterface of the bus where the side 2 of the switch is connected
 };                                                 ///< class for switch model interface

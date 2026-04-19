@@ -22,7 +22,10 @@
 
 #include "DYNGeneratorInterfaceIIDM.h"
 
-#include <powsybl/iidm/MinMaxReactiveLimits.hpp>
+#include <iidm/MinMaxReactiveLimits.h>
+#include <iidm/ReactiveCapabilityCurve.h>
+#include <iidm/ActivePowerControl.h>
+#include <iidm/CoordinatedReactiveControl.h>
 
 using std::string;
 using std::vector;
@@ -33,7 +36,7 @@ GeneratorInterfaceIIDM::~GeneratorInterfaceIIDM() {
   destroyGeneratorActivePowerControl_(generatorActivePowerControl_);
 }
 
-GeneratorInterfaceIIDM::GeneratorInterfaceIIDM(powsybl::iidm::Generator& generator) :
+GeneratorInterfaceIIDM::GeneratorInterfaceIIDM(iidm::Generator& generator) :
 GeneratorInterface(false),
 InjectorInterfaceIIDM(generator, generator.getId()),
 generatorIIDM_(generator) {
@@ -46,8 +49,8 @@ generatorIIDM_(generator) {
   stateVariables_[VAR_P] = StateVariable("p", StateVariable::DOUBLE, neededForCriteriaCheck);  // P
   stateVariables_[VAR_Q] = StateVariable("q", StateVariable::DOUBLE);  // Q
   stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);   // connectionState
-  activePowerControl_ = generator.findExtension<powsybl::iidm::extensions::iidm::ActivePowerControl>();
-  coordinatedReactiveControl_ = generator.findExtension<powsybl::iidm::extensions::iidm::CoordinatedReactiveControl>();
+  hasActivePowerControl_ = generator.hasActivePowerControl();
+  hasCoordinatedReactiveControl_ = generator.hasCoordinatedReactiveControl();
 
   auto libPath = IIDMExtensions::findLibraryPath();
 
@@ -120,9 +123,8 @@ GeneratorInterfaceIIDM::importStaticParameters() {
       localVNom = generatorIIDM_.getTerminal().getVoltageLevel().getNominalV();
     else
       throw DYNError(Error::MODELER, UndefinedNominalV, generatorIIDM_.getTerminal().getVoltageLevel().getId());
+    // TODO(iidm-bridge): Generator::getRegulatingTerminal() not exposed; fall back to the generator's own terminal.
     double distantvNom = localVNom;
-    if (generatorIIDM_.getRegulatingTerminal().getVoltageLevel().getNominalV() > 0)
-      distantvNom = generatorIIDM_.getRegulatingTerminal().getVoltageLevel().getNominalV();
 
     double theta = getBusInterface()->getAngle0();
     staticParameters_.insert(std::make_pair("v_pu", StaticParameter("v_pu", StaticParameter::DOUBLE).setValue(U0 / localVNom)));
@@ -212,10 +214,10 @@ GeneratorInterfaceIIDM::getQ() {
 
 double
 GeneratorInterfaceIIDM::getQMax() {
-  if (generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::MIN_MAX) {
-    return generatorIIDM_.getReactiveLimits<powsybl::iidm::MinMaxReactiveLimits>().getMaxQ();
-  } else if (generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    assert(generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>().getPointCount() > 0);
+  if (generatorIIDM_.hasMinMaxReactiveLimits()) {
+    return generatorIIDM_.getMinMaxReactiveLimits().getMaxQ();
+  } else if (generatorIIDM_.hasReactiveCapabilityCurve()) {
+    assert(generatorIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
     double qMax = 0.0;
     const double pGen = - getP();
     const auto& points = getReactiveCurvesPoints();
@@ -241,11 +243,11 @@ GeneratorInterfaceIIDM::getQMax() {
 
 double
 GeneratorInterfaceIIDM::getQNom() {
-  if (generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::MIN_MAX) {
-    return std::max(std::abs(generatorIIDM_.getReactiveLimits<powsybl::iidm::MinMaxReactiveLimits>().getMaxQ()),
-        std::abs(generatorIIDM_.getReactiveLimits<powsybl::iidm::MinMaxReactiveLimits>().getMinQ()));
-  } else if (generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    assert(generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>().getPointCount() > 0);
+  if (generatorIIDM_.hasMinMaxReactiveLimits()) {
+    return std::max(std::abs(generatorIIDM_.getMinMaxReactiveLimits().getMaxQ()),
+        std::abs(generatorIIDM_.getMinMaxReactiveLimits().getMinQ()));
+  } else if (generatorIIDM_.hasReactiveCapabilityCurve()) {
+    assert(generatorIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
     double qNom = 0.0;
     const auto& points = getReactiveCurvesPoints();
     for (unsigned int i = 0; i < points.size(); ++i) {
@@ -265,10 +267,10 @@ GeneratorInterfaceIIDM::getQNom() {
 
 double
 GeneratorInterfaceIIDM::getQMin() {
-  if (generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::MIN_MAX) {
-    return generatorIIDM_.getReactiveLimits<powsybl::iidm::MinMaxReactiveLimits>().getMinQ();
-  } else if (generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    assert(generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>().getPointCount() > 0);
+  if (generatorIIDM_.hasMinMaxReactiveLimits()) {
+    return generatorIIDM_.getMinMaxReactiveLimits().getMinQ();
+  } else if (generatorIIDM_.hasReactiveCapabilityCurve()) {
+    assert(generatorIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
     double qMin = 0.0;
     const double pGen = - getP();
     const auto& points = getReactiveCurvesPoints();
@@ -318,10 +320,10 @@ GeneratorInterfaceIIDM::getID() const {
 
 vector<GeneratorInterface::ReactiveCurvePoint> GeneratorInterfaceIIDM::getReactiveCurvesPoints() const {
   vector<GeneratorInterface::ReactiveCurvePoint> ret;
-  if (generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    const auto& reactiveCurve = generatorIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>();
+  if (generatorIIDM_.hasReactiveCapabilityCurve()) {
+    const auto reactiveCurve = generatorIIDM_.getReactiveCapabilityCurve();
     for (const auto& point : reactiveCurve.getPoints()) {
-      ret.emplace_back(point.getP(), point.getMinQ(), point.getMaxQ());
+      ret.emplace_back(point.p, point.minQ, point.maxQ);
     }
   }
 
@@ -334,7 +336,7 @@ bool GeneratorInterfaceIIDM::isVoltageRegulationOn() const {
 
 bool
 GeneratorInterfaceIIDM::hasActivePowerControl() const {
-  if (activePowerControl_ || (generatorActivePowerControl_ && generatorActivePowerControl_->exists())) {
+  if (hasActivePowerControl_ || (generatorActivePowerControl_ && generatorActivePowerControl_->exists())) {
     return true;
   }
   return false;
@@ -343,8 +345,8 @@ GeneratorInterfaceIIDM::hasActivePowerControl() const {
 bool
 GeneratorInterfaceIIDM::isParticipating() const {
   if (hasActivePowerControl()) {
-    if (activePowerControl_) {
-      return activePowerControl_.get().isParticipate();
+    if (hasActivePowerControl_) {
+      return generatorIIDM_.getActivePowerControl().isParticipate();
     } else {
       return generatorActivePowerControl_->isParticipate().value();
     }
@@ -355,8 +357,8 @@ GeneratorInterfaceIIDM::isParticipating() const {
 double
 GeneratorInterfaceIIDM::getActivePowerControlDroop() const {
   if (hasActivePowerControl() && isParticipating()) {
-    if (activePowerControl_) {
-      return activePowerControl_.get().getDroop();
+    if (hasActivePowerControl_) {
+      return generatorIIDM_.getActivePowerControl().getDroop();
     } else {
       return generatorActivePowerControl_->getDroop().value();
     }
@@ -366,16 +368,13 @@ GeneratorInterfaceIIDM::getActivePowerControlDroop() const {
 
 bool
 GeneratorInterfaceIIDM::hasCoordinatedReactiveControl() const {
-  if (coordinatedReactiveControl_) {
-    return true;
-  }
-  return false;
+  return hasCoordinatedReactiveControl_;
 }
 
 double
 GeneratorInterfaceIIDM::getCoordinatedReactiveControlPercentage() const {
   if (hasCoordinatedReactiveControl()) {
-    return coordinatedReactiveControl_.get().getQPercent();
+    return generatorIIDM_.getCoordinatedReactiveControl().getQPercent();
   }
   return 0.;
 }
@@ -383,17 +382,17 @@ GeneratorInterfaceIIDM::getCoordinatedReactiveControlPercentage() const {
 GeneratorInterface::EnergySource_t
 GeneratorInterfaceIIDM::getEnergySource() const {
   switch (generatorIIDM_.getEnergySource()) {
-  case powsybl::iidm::EnergySource::HYDRO:
+  case iidm::EnergySource::HYDRO:
     return SOURCE_HYDRO;
-  case powsybl::iidm::EnergySource::NUCLEAR:
+  case iidm::EnergySource::NUCLEAR:
     return SOURCE_NUCLEAR;
-  case powsybl::iidm::EnergySource::SOLAR:
+  case iidm::EnergySource::SOLAR:
     return SOURCE_SOLAR;
-  case powsybl::iidm::EnergySource::THERMAL:
+  case iidm::EnergySource::THERMAL:
     return SOURCE_THERMAL;
-  case powsybl::iidm::EnergySource::WIND:
+  case iidm::EnergySource::WIND:
     return SOURCE_WIND;
-  case powsybl::iidm::EnergySource::OTHER:
+  case iidm::EnergySource::OTHER:
     return SOURCE_OTHER;
   }
   return SOURCE_OTHER;

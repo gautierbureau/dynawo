@@ -25,9 +25,9 @@
 
 #include "DYNHvdcLineInterface.h"
 
-#include <powsybl/iidm/HvdcLine.hpp>
-#include <powsybl/iidm/extensions/iidm/HvdcAngleDroopActivePowerControl.hpp>
-#include <powsybl/iidm/extensions/iidm/HvdcOperatorActivePowerRange.hpp>
+#include <iidm/HvdcLine.h>
+#include <iidm/HvdcAngleDroopActivePowerControl.h>
+#include <iidm/HvdcOperatorActivePowerRange.h>
 
 #include <boost/noncopyable.hpp>
 
@@ -64,7 +64,7 @@ class HvdcLineInterfaceIIDM : public HvdcLineInterface, public boost::noncopyabl
    * @param conv1 converter 1 data interface instance
    * @param conv2 converter 2 data interface instance
    */
-  explicit HvdcLineInterfaceIIDM(powsybl::iidm::HvdcLine& hvdcLine,
+  explicit HvdcLineInterfaceIIDM(iidm::HvdcLine& hvdcLine,
                                  const std::shared_ptr<ConverterInterface>& conv1,
                                  const std::shared_ptr<ConverterInterface>& conv2);
 
@@ -165,11 +165,11 @@ class HvdcLineInterfaceIIDM : public HvdcLineInterface, public boost::noncopyabl
   boost::optional<double> getOprFromCS2toCS1() const final;
 
  private:
-  powsybl::iidm::HvdcLine& hvdcLineIIDM_;        ///< reference to the iidm line instance
+  iidm::HvdcLine& hvdcLineIIDM_;        ///< reference to the iidm line instance
   std::shared_ptr<ConverterInterface> conv1_;  ///< conv1
   std::shared_ptr<ConverterInterface> conv2_;  ///< conv2
-  stdcxx::Reference<powsybl::iidm::extensions::iidm::HvdcAngleDroopActivePowerControl> hvdcActivePowerControl_;  ///< HVDC active power control extension
-  stdcxx::Reference<powsybl::iidm::extensions::iidm::HvdcOperatorActivePowerRange> hvdcActivePowerRange_;        ///< HVDC active power range extension
+  bool hasHvdcActivePowerControl_ = false;  ///< whether the HVDC angle droop active power control extension is present
+  bool hasHvdcActivePowerRange_ = false;    ///< whether the HVDC operator active power range extension is present
 };                                               ///< Interface class for Hvdc Line model
 
 }  // namespace DYN

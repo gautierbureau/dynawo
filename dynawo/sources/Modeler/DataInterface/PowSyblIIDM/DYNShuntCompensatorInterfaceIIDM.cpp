@@ -20,8 +20,8 @@
  */
 //======================================================================
 
-#include <powsybl/iidm/ShuntCompensator.hpp>
-#include <powsybl/iidm/ShuntCompensatorNonLinearModel.hpp>
+#include <iidm/ShuntCompensator.h>
+#include <iidm/ShuntCompensatorNonLinearModel.h>
 
 #include "DYNShuntCompensatorInterfaceIIDM.h"
 
@@ -30,7 +30,7 @@ using std::string;
 
 namespace DYN {
 
-ShuntCompensatorInterfaceIIDM::ShuntCompensatorInterfaceIIDM(powsybl::iidm::ShuntCompensator& shunt) :
+ShuntCompensatorInterfaceIIDM::ShuntCompensatorInterfaceIIDM(iidm::ShuntCompensator& shunt) :
 ShuntCompensatorInterface(false),
 InjectorInterfaceIIDM(shunt, shunt.getId()),
 shuntCompensatorIIDM_(shunt) {
@@ -82,7 +82,17 @@ ShuntCompensatorInterfaceIIDM::importStaticParameters() {
   staticParameters_.clear();
   staticParameters_.insert(std::make_pair("q_pu", StaticParameter("q_pu", StaticParameter::DOUBLE).setValue(getQ() / SNREF)));
   staticParameters_.insert(std::make_pair("q", StaticParameter("q", StaticParameter::DOUBLE).setValue(getQ())));
-  double B = shuntCompensatorIIDM_.getB();
+  // TODO(iidm-bridge): ShuntCompensator::getB() (aggregate) not exposed; approximate via active section.
+  double B = 0.;
+  const int currentSection = shuntCompensatorIIDM_.getSectionCount();
+  if (shuntCompensatorIIDM_.hasLinearModel()) {
+    B = shuntCompensatorIIDM_.getBPerSection() * static_cast<double>(currentSection);
+  } else if (shuntCompensatorIIDM_.hasNonLinearModel() && currentSection > 0) {
+    const auto sections = shuntCompensatorIIDM_.getNonLinearModel().getAllSections();
+    if (static_cast<int>(sections.size()) >= currentSection) {
+      B = sections[currentSection - 1].b;
+    }
+  }
   staticParameters_.insert(std::make_pair("isCapacitor", StaticParameter("isCapacitor", StaticParameter::BOOL).setValue(B > 0)));
   if (getBusInterface()) {
     double U0 = getBusInterface()->getV0();
@@ -148,12 +158,25 @@ ShuntCompensatorInterfaceIIDM::getMaximumSection() const {
 
 double
 ShuntCompensatorInterfaceIIDM::getB(const int section) const {
-  return shuntCompensatorIIDM_.getB(section);
+  if (shuntCompensatorIIDM_.hasLinearModel()) {
+    // linear: cumulative susceptance up to 'section' sections
+    return shuntCompensatorIIDM_.getBPerSection() * static_cast<double>(section);
+  }
+  if (shuntCompensatorIIDM_.hasNonLinearModel()) {
+    if (section <= 0) {
+      return 0.;
+    }
+    const auto sections = shuntCompensatorIIDM_.getNonLinearModel().getAllSections();
+    if (static_cast<int>(sections.size()) >= section) {
+      return sections[section - 1].b;
+    }
+  }
+  return 0.;
 }
 
 bool
 ShuntCompensatorInterfaceIIDM::isLinear() const {
-  return (shuntCompensatorIIDM_.getModelType() == powsybl::iidm::ShuntCompensatorModelType::LINEAR);
+  return shuntCompensatorIIDM_.hasLinearModel();
 }
 
 bool
