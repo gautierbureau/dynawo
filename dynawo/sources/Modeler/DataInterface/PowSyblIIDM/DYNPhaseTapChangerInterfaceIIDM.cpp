@@ -22,20 +22,17 @@
 #include "DYNStepInterfaceIIDM.h"
 #include "make_unique.hpp"
 
-#include <powsybl/iidm/TapChanger.hpp>
+#include <iidm/PhaseTapChanger.h>
 
 
 namespace DYN {
 
-PhaseTapChangerInterfaceIIDM::PhaseTapChangerInterfaceIIDM(powsybl::iidm::PhaseTapChanger& tapChanger) : tapChangerIIDM_(tapChanger) {
-  auto oldTapPosition = tapChanger.getTapPosition();
-  for (long i = tapChanger.getLowTapPosition(); i <= tapChanger.getHighTapPosition(); i++) {
-    tapChanger.setTapPosition(i);
-    const auto& x = tapChanger.getStep(i);
-    powsybl::iidm::PhaseTapChangerStep S(x.getAlpha(), x.getRho(), x.getR(), x.getX(), x.getG(), x.getB());
-    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(S));
+PhaseTapChangerInterfaceIIDM::PhaseTapChangerInterfaceIIDM(iidm::PhaseTapChanger tapChanger) : tapChangerIIDM_(tapChanger) {
+  // TODO(iidm-bridge): iidm::PhaseTapChangerStep has no multi-arg constructor; iterate through getAllSteps().
+  const auto all = tapChanger.getAllSteps();
+  for (const auto& s : all) {
+    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(s));
   }
-  tapChanger.setTapPosition(oldTapPosition);
 }
 
 void
@@ -70,7 +67,7 @@ PhaseTapChangerInterfaceIIDM::getNbTap() const {
 
 bool
 PhaseTapChangerInterfaceIIDM::isCurrentLimiter() const {
-  return tapChangerIIDM_.getRegulationMode() == powsybl::iidm::PhaseTapChanger::RegulationMode::CURRENT_LIMITER;
+  return tapChangerIIDM_.getRegulationMode() == iidm::PhaseTapChangerRegulationMode::CURRENT_LIMITER;
 }
 
 bool
@@ -124,7 +121,11 @@ PhaseTapChangerInterfaceIIDM::getCurrentAlpha() const {
 
 double
 PhaseTapChangerInterfaceIIDM::getTargetDeadBand() const {
-  return getRegulating() ? tapChangerIIDM_.getTargetDeadband() : 0.;
+  if (!getRegulating()) {
+    return 0.;
+  }
+  const auto d = tapChangerIIDM_.getTargetDeadband();
+  return d.has_value() ? d.value() : 0.;
 }
 
 }  // namespace DYN

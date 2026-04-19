@@ -25,7 +25,7 @@
 #include "DYNActiveSeasonIIDMExtension.h"
 #include "DYNIIDMExtensions.hpp"
 
-#include <powsybl/iidm/TwoWindingsTransformer.hpp>
+#include <iidm/TwoWindingsTransformer.h>
 
 namespace DYN {
 
@@ -56,7 +56,7 @@ class TwoWTransformerInterfaceIIDM : public TwoWTransformerInterface {
    * @brief Constructor
    * @param tfo two windings transformer's iidm instance
    */
-  explicit TwoWTransformerInterfaceIIDM(powsybl::iidm::TwoWindingsTransformer & tfo);
+  explicit TwoWTransformerInterfaceIIDM(iidm::TwoWindingsTransformer & tfo);
 
 
   /**
@@ -254,7 +254,7 @@ class TwoWTransformerInterfaceIIDM : public TwoWTransformerInterface {
   explicit TwoWTransformerInterfaceIIDM(const TwoWTransformerInterfaceIIDM& other) = delete;
 
  private:
-  powsybl::iidm::TwoWindingsTransformer& tfoIIDM_;  ///< reference to the tfo's iidm instance
+  iidm::TwoWindingsTransformer& tfoIIDM_;  ///< reference to the tfo's iidm instance
   std::shared_ptr<BusInterface> busInterface1_;  ///< busInterface of the bus where the side 1 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface2_;  ///< busInterface of the bus where the side 2 of the tfo is connected
   std::shared_ptr<VoltageLevelInterface> voltageLevelInterface1_;  ///< voltageLevel interface where the side 1 of the line is connected

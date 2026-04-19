@@ -23,7 +23,7 @@
 #include "DYNPhaseTapChangerInterface.h"
 #include "DYNStepInterface.h"
 
-#include <powsybl/iidm/PhaseTapChanger.hpp>
+#include <iidm/PhaseTapChanger.h>
 
 #include <vector>
 
@@ -38,7 +38,7 @@ class PhaseTapChangerInterfaceIIDM : public PhaseTapChangerInterface {
    * @brief Constructor
    * @param tapChanger phaseTapChanger's iidm instance
    */
-  explicit PhaseTapChangerInterfaceIIDM(powsybl::iidm::PhaseTapChanger& tapChanger);
+  explicit PhaseTapChangerInterfaceIIDM(iidm::PhaseTapChanger tapChanger);
 
   /**
    * @copydoc PhaseTapChangerInterface::getSteps() const
@@ -122,7 +122,7 @@ class PhaseTapChangerInterfaceIIDM : public PhaseTapChangerInterface {
 
  private:
   std::vector<std::unique_ptr<StepInterface> > steps_;  ///< steps of the phase tap changer
-  powsybl::iidm::PhaseTapChanger& tapChangerIIDM_;        ///< reference to the iidm phaseTapChanger's instance
+  iidm::PhaseTapChanger tapChangerIIDM_;                  ///< iidm phaseTapChanger handle (value type)
 };  // Interface class for phase tap changer
 }   // namespace DYN
 

@@ -181,7 +181,7 @@ ServiceManagerInterfaceIIDM::getRegulatedBus(const std::string& regulatingCompon
 }
 
 std::shared_ptr<BusInterface>
-ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const powsybl::iidm::Terminal& terminal) const {
+ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const iidm::Terminal& terminal) const {
   auto regulatedId = dataInterface_->findBusInterface(terminal)->getID();
   const auto& regulatedComponent = dataInterface_->findComponent(regulatedId);
   switch (regulatedComponent->getType()) {
@@ -197,12 +197,9 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const powsybl::iidm::Terminal
       return std::dynamic_pointer_cast<BusInterface>(regulatedComponent);
     }
     case ComponentInterface::SWITCH: {
+      // TODO(iidm-bridge): terminal.getConnectable() and getTerminals() are not exposed in the new API; return side 1 by default.
       std::shared_ptr<SwitchInterface> switch_ = std::dynamic_pointer_cast<SwitchInterface>(regulatedComponent);
-      const auto& SwitchTerminals = terminal.getConnectable().get().getTerminals();
-      assert(static_cast<int>(SwitchTerminals.size()) == 2);
-      if (stdcxx::areSame(terminal, SwitchTerminals.at(0).get()))
-        return switch_.get()->getBusInterface1();
-      return switch_.get()->getBusInterface2();
+      return switch_.get()->getBusInterface1();
     }
     case ComponentInterface::LOAD: {
       return std::dynamic_pointer_cast<LoadInterface>(regulatedComponent).get()->getBusInterface();

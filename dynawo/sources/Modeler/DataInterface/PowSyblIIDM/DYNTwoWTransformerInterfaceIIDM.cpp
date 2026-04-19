@@ -20,7 +20,7 @@
 
 #include "DYNTwoWTransformerInterfaceIIDM.h"
 
-#include <powsybl/iidm/TwoWindingsTransformer.hpp>
+#include <iidm/TwoWindingsTransformer.h>
 
 #include "DYNCommon.h"
 #include "DYNPhaseTapChangerInterfaceIIDM.h"
@@ -39,7 +39,7 @@ using std::vector;
 
 namespace DYN {
 
-TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(powsybl::iidm::TwoWindingsTransformer& tfo) :
+TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(iidm::TwoWindingsTransformer& tfo) :
     TwoWTransformerInterface(false),
     tfoIIDM_(tfo),
     initialConnected1_(boost::none),

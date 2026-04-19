@@ -22,7 +22,7 @@
 
 #include "DYNRatioTapChangerInterface.h"
 
-#include <powsybl/iidm/RatioTapChanger.hpp>
+#include <iidm/RatioTapChanger.h>
 
 #include <string>
 #include <vector>
@@ -39,7 +39,7 @@ class RatioTapChangerInterfaceIIDM : public RatioTapChangerInterface {
    * @param tapChanger ratioTapChanger's iidm instance
    * @param terminalRefSide terminal reference side
    */
-  explicit RatioTapChangerInterfaceIIDM(powsybl::iidm::RatioTapChanger& tapChanger, const std::string& terminalRefSide);
+  explicit RatioTapChangerInterfaceIIDM(iidm::RatioTapChanger tapChanger, const std::string& terminalRefSide);
 
   /**
    * @copydoc RatioTapChangerInterface::getSteps() const
@@ -128,7 +128,7 @@ class RatioTapChangerInterfaceIIDM : public RatioTapChangerInterface {
 
  private:
   std::vector<std::unique_ptr<StepInterface> > steps_;  ///< steps of the ratio tap changer
-  powsybl::iidm::RatioTapChanger& tapChangerIIDM_;        ///< reference to the iidm ratioTapChanger's instance
+  iidm::RatioTapChanger tapChangerIIDM_;                  ///< iidm ratioTapChanger handle (value type)
   const std::string terminalRefSide_;                     ///< terminal reference side
 };
 }  // namespace DYN

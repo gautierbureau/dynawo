@@ -22,15 +22,15 @@
 
 #include "DYNLccConverterInterfaceIIDM.h"
 
-#include <powsybl/iidm/HvdcLine.hpp>
-#include <powsybl/iidm/LccConverterStation.hpp>
+#include <iidm/HvdcLine.h>
+#include <iidm/LccConverterStation.h>
 
 #include <string>
 
 
 namespace DYN {
 
-LccConverterInterfaceIIDM::LccConverterInterfaceIIDM(powsybl::iidm::LccConverterStation& lcc) : LccConverterInterface(false),
+LccConverterInterfaceIIDM::LccConverterInterfaceIIDM(iidm::LccConverterStation& lcc) : LccConverterInterface(false),
                                                                                                 InjectorInterfaceIIDM(lcc, lcc.getId()),
                                                                                                 lccConverterIIDM_(lcc) {
   if (hasQInjector() || hasPInjector()) {
@@ -59,7 +59,8 @@ LccConverterInterfaceIIDM::importStaticParameters() {
   staticParameters_.insert(std::make_pair("powerFactor", StaticParameter("powerFactor", StaticParameter::DOUBLE).setValue(getPowerFactor())));
   if (getBusInterface()) {
     double U0 = getBusInterface()->getV0();
-    double vNom = lccConverterIIDM_.getHvdcLine().get().getNominalV();
+    // TODO(iidm-bridge): LccConverterStation::getHvdcLine() not exposed; fall back to terminal VL nominalV.
+    double vNom = lccConverterIIDM_.getTerminal().getVoltageLevel().getNominalV();
     double theta = getBusInterface()->getAngle0();
     staticParameters_.insert(std::make_pair("v_pu", StaticParameter("v_pu", StaticParameter::DOUBLE).setValue(U0 / vNom)));
     staticParameters_.insert(std::make_pair("angle_pu", StaticParameter("angle_pu", StaticParameter::DOUBLE).setValue(theta * M_PI / 180)));
@@ -138,7 +139,7 @@ LccConverterInterfaceIIDM::getPowerFactor() const {
   return lccConverterIIDM_.getPowerFactor();
 }
 
-powsybl::iidm::LccConverterStation&
+iidm::LccConverterStation&
 LccConverterInterfaceIIDM::getLccIIDM() {
   return lccConverterIIDM_;
 }

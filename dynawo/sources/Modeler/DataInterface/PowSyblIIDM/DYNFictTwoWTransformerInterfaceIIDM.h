@@ -23,7 +23,8 @@
 #include "DYNTwoWTransformerInterface.h"
 #include "DYNCurrentLimitInterface.h"
 
-#include <powsybl/iidm/ThreeWindingsTransformer.hpp>
+#include <iidm/ThreeWindingsTransformer.h>
+#include <optional>
 
 
 namespace DYN {
@@ -56,7 +57,7 @@ class FictTwoWTransformerInterfaceIIDM : public TwoWTransformerInterface {
    * @param activeSeason active season of the fictitious transformer
    */
   explicit FictTwoWTransformerInterfaceIIDM(const std::string& Id,
-                                            stdcxx::Reference<powsybl::iidm::ThreeWindingsTransformer::Leg>& leg,
+                                            std::optional<iidm::ThreeWindingsTransformer::Leg>& leg,
                                             bool initialConnected1, double VNom1, double ratedU1, const std::string& activeSeason);
 
 
@@ -236,7 +237,7 @@ class FictTwoWTransformerInterfaceIIDM : public TwoWTransformerInterface {
   bool isConnected() const override;
 
  private:
-  stdcxx::Reference<powsybl::iidm::ThreeWindingsTransformer::Leg> leg_;  ///< reference to original three winding transformer leg
+  std::optional<iidm::ThreeWindingsTransformer::Leg> leg_;  ///< reference to original three winding transformer leg
   std::string Id_;                                 ///< Id of fictitious transformer
   std::shared_ptr<BusInterface> busInterface1_;  ///< busInterface of the bus where the side 1 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface2_;  ///< busInterface of the bus where the side 2 of the tfo is connected

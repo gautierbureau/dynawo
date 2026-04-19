@@ -22,12 +22,24 @@
 
 #include "DYNStepInterface.h"
 
-#include <powsybl/iidm/PhaseTapChangerStep.hpp>
-#include <powsybl/iidm/RatioTapChangerStep.hpp>
+#include <iidm/PhaseTapChangerStep.h>
+#include <iidm/RatioTapChangerStep.h>
 
 #include <boost/optional.hpp>
 
 namespace DYN {
+
+/**
+ * @brief Dynawo-side synthetic step used where the iidm-bridge API does not allow
+ *        constructing a step directly (e.g. the fallback step in DYNRatioTapChangerInterfaceIIDM).
+ */
+struct SyntheticStep {
+  double rho;
+  double r;
+  double x;
+  double g;
+  double b;
+};
 
 /**
  * class StepInterfaceIIDM
@@ -38,13 +50,19 @@ class StepInterfaceIIDM : public StepInterface {
    * @brief Constructor
    * @param step phase tap changer step's iidm instance
    */
-  explicit StepInterfaceIIDM(const powsybl::iidm::PhaseTapChangerStep& step);
+  explicit StepInterfaceIIDM(const iidm::PhaseTapChangerStep& step);
 
   /**
    * @brief Constructor
    * @param step ratio tap changer step's iidm instance
    */
-  explicit StepInterfaceIIDM(const powsybl::iidm::RatioTapChangerStep& step);
+  explicit StepInterfaceIIDM(const iidm::RatioTapChangerStep& step);
+
+  /**
+   * @brief Constructor from a synthetic (Dynawo-side) step
+   * @param step synthetic step values
+   */
+  explicit StepInterfaceIIDM(const SyntheticStep& step);
 
   /**
    * @copydoc StepInterface::getR() const
@@ -82,10 +100,14 @@ class StepInterfaceIIDM : public StepInterface {
    */
   StepInterfaceIIDM();
 
-  boost::optional<powsybl::iidm::PhaseTapChangerStep> phaseStep_;  ///< reference to the iidm phase tap changer step instance
-  boost::optional<powsybl::iidm::RatioTapChangerStep> ratioStep_;  ///< reference to the iidm ratio tap changer step instance
-  bool isPhaseStep_;                                               ///< @b true if the step belongs to a phase tap changer
-};                                                                 ///< interface class for step of tap changer
+  /// Kind of step stored.
+  enum class Kind { PHASE, RATIO, SYNTHETIC };
+
+  boost::optional<iidm::PhaseTapChangerStep> phaseStep_;  ///< reference to the iidm phase tap changer step instance
+  boost::optional<iidm::RatioTapChangerStep> ratioStep_;  ///< reference to the iidm ratio tap changer step instance
+  SyntheticStep syntheticStep_ = {0., 0., 0., 0., 0.};    ///< Dynawo-side synthetic step values
+  Kind kind_;                                             ///< discriminant for the step kind
+};                                                        ///< interface class for step of tap changer
 
 }  // namespace DYN
 

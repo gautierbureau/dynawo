@@ -27,7 +27,7 @@
 #include "DYNCurrentLimitInterface.h"
 #include "DYNIIDMExtensions.hpp"
 
-#include <powsybl/iidm/ThreeWindingsTransformer.hpp>
+#include <iidm/ThreeWindingsTransformer.h>
 
 
 namespace DYN {
@@ -46,7 +46,7 @@ class ThreeWTransformerInterfaceIIDM : public ThreeWTransformerInterface {
    * @brief Constructor
    * @param tfo three windings transformer's iidm instance
    */
-  explicit ThreeWTransformerInterfaceIIDM(powsybl::iidm::ThreeWindingsTransformer& tfo);
+  explicit ThreeWTransformerInterfaceIIDM(iidm::ThreeWindingsTransformer& tfo);
 
   /**
    * @copydoc ThreeWTransformerInterface::addCurrentLimitInterface1(std::unique_ptr<CurrentLimitInterface> currentLimitInterface)
@@ -199,7 +199,7 @@ class ThreeWTransformerInterfaceIIDM : public ThreeWTransformerInterface {
   explicit ThreeWTransformerInterfaceIIDM(const ThreeWTransformerInterfaceIIDM& other) = delete;
 
  private:
-  powsybl::iidm::ThreeWindingsTransformer& tfoIIDM_;  ///< reference to the tfo's iidm instance
+  iidm::ThreeWindingsTransformer& tfoIIDM_;  ///< reference to the tfo's iidm instance
   std::shared_ptr<BusInterface> busInterface1_;  ///< busInterface of the bus where the side 1 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface2_;  ///< busInterface of the bus where the side 2 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface3_;  ///< busInterface of the bus where the side 3 of the tfo is connected

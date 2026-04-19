@@ -20,7 +20,7 @@
 
 #include "DYNFictTwoWTransformerInterfaceIIDM.h"
 
-#include <powsybl/iidm/ThreeWindingsTransformer.hpp>
+#include <iidm/ThreeWindingsTransformer.h>
 
 #include "DYNCommon.h"
 #include "DYNPhaseTapChangerInterfaceIIDM.h"
@@ -40,7 +40,7 @@ using std::vector;
 namespace DYN {
 
   FictTwoWTransformerInterfaceIIDM::FictTwoWTransformerInterfaceIIDM(const std::string& Id,
-                      stdcxx::Reference<powsybl::iidm::ThreeWindingsTransformer::Leg>& leg,
+                      std::optional<iidm::ThreeWindingsTransformer::Leg>& leg,
                       bool initialConnected1, double VNom1, double ratedU1, const std::string& activeSeason) :
                       leg_(leg),
                       Id_(Id),
@@ -50,9 +50,15 @@ namespace DYN {
                       RatedU1_(ratedU1),
                       activeSeason_(activeSeason) {
     setType(ComponentInterface::TWO_WTFO);
-    if (leg.get().hasPhaseTapChanger() ||
-        (leg.get().hasRatioTapChanger() && leg.get().getRatioTapChanger().getRegulationTerminal() &&
-         stdcxx::areSame(leg.get().getTerminal(), leg.get().getRatioTapChanger().getRegulationTerminal().get())))
+    // TODO(iidm-bridge): RatioTapChanger::getRegulationTerminal() not exposed; compare terminal ids instead.
+    auto selfLocallyRegulating = [&]() -> bool {
+      if (!leg.value().hasRatioTapChanger()) return false;
+      const auto rtc = leg.value().getRatioTapChanger();
+      const std::string termId = rtc.getRegulationTerminalId();
+      return !termId.empty() && termId == leg.value().getTerminal().getBusId();
+    };
+    if (leg.value().hasPhaseTapChanger() ||
+        (leg.value().hasRatioTapChanger() && selfLocallyRegulating()))
       stateVariables_.resize(6);
     else
       stateVariables_.resize(5);
@@ -61,9 +67,8 @@ namespace DYN {
     stateVariables_[VAR_Q1] = StateVariable("q1", StateVariable::DOUBLE);  // Q1
     stateVariables_[VAR_Q2] = StateVariable("q2", StateVariable::DOUBLE);  // Q2
     stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);  // connectionState
-    if (leg.get().hasPhaseTapChanger() ||
-      (leg.get().hasRatioTapChanger() && leg.get().getRatioTapChanger().getRegulationTerminal() &&
-      stdcxx::areSame(leg.get().getTerminal(), leg.get().getRatioTapChanger().getRegulationTerminal().get()))) {
+    if (leg.value().hasPhaseTapChanger() ||
+      (leg.value().hasRatioTapChanger() && selfLocallyRegulating())) {
       stateVariables_[VAR_TAPINDEX] = StateVariable("tapIndex", StateVariable::INT);
     }
   }
@@ -126,10 +131,10 @@ namespace DYN {
   bool
   FictTwoWTransformerInterfaceIIDM::getInitialConnected2() {
     if (initialConnected2_ == boost::none) {
-      initialConnected2_ = leg_.get().getTerminal().isConnected();
+      initialConnected2_ = leg_.value().getTerminal().isConnected();
       if (voltageLevelInterface2_->isNodeBreakerTopology()) {
         initialConnected2_ = initialConnected2_
-                          && voltageLevelInterface2_->isNodeConnected(static_cast<unsigned int>(leg_.get().getTerminal().getNodeBreakerView().getNode()));
+                          && voltageLevelInterface2_->isNodeConnected(static_cast<unsigned int>(leg_.value().getTerminal().getNodeBreakerView().getNode()));
       }
     }
     return initialConnected2_.value();
@@ -142,7 +147,7 @@ namespace DYN {
 
   double
   FictTwoWTransformerInterfaceIIDM::getVNom2() const {
-    return leg_.get().getTerminal().getVoltageLevel().getNominalV();
+    return leg_.value().getTerminal().getVoltageLevel().getNominalV();
   }
 
   double
@@ -152,7 +157,7 @@ namespace DYN {
 
   double
   FictTwoWTransformerInterfaceIIDM::getRatedU2() const {
-    return leg_.get().getRatedU();
+    return leg_.value().getRatedU();
   }
 
   const std::unique_ptr<PhaseTapChangerInterface>&
@@ -177,22 +182,22 @@ namespace DYN {
 
   double
   FictTwoWTransformerInterfaceIIDM::getR() const {
-    return leg_.get().getR() * getVNom2() * getVNom2() / (getVNom1() * getVNom1());
+    return leg_.value().getR() * getVNom2() * getVNom2() / (getVNom1() * getVNom1());
   }
 
   double
   FictTwoWTransformerInterfaceIIDM::getX() const {
-    return leg_.get().getX() * getVNom2() * getVNom2() / (getVNom1() * getVNom1());
+    return leg_.value().getX() * getVNom2() * getVNom2() / (getVNom1() * getVNom1());
   }
 
   double
   FictTwoWTransformerInterfaceIIDM::getG() const {
-    return leg_.get().getG() * getVNom2() * getVNom2() / (getVNom1() * getVNom1());
+    return leg_.value().getG() * getVNom2() * getVNom2() / (getVNom1() * getVNom1());
   }
 
   double
   FictTwoWTransformerInterfaceIIDM::getB() const {
-    return leg_.get().getB() * getVNom2() * getVNom2() / (getVNom1() * getVNom1());
+    return leg_.value().getB() * getVNom2() * getVNom2() / (getVNom1() * getVNom1());
   }
 
   double
@@ -290,8 +295,8 @@ namespace DYN {
   void
   FictTwoWTransformerInterfaceIIDM::exportStateVariablesUnitComponent() {
     int state = getValue<int>(VAR_STATE);
-    leg_.get().getTerminal().setP(getValue<double>(VAR_P2) * SNREF);
-    leg_.get().getTerminal().setQ(getValue<double>(VAR_Q2) * SNREF);
+    leg_.value().getTerminal().setP(getValue<double>(VAR_P2) * SNREF);
+    leg_.value().getTerminal().setQ(getValue<double>(VAR_Q2) * SNREF);
 
     if (getPhaseTapChanger()) {
       getPhaseTapChanger()->setCurrentPosition(getValue<int>(VAR_TAPINDEX));
@@ -303,14 +308,14 @@ namespace DYN {
 
     if (voltageLevelInterface2_->isNodeBreakerTopology()) {
       if (connected2 && !getInitialConnected2())
-        voltageLevelInterface2_->connectNode(static_cast<unsigned int>(leg_.get().getTerminal().getNodeBreakerView().getNode()));
+        voltageLevelInterface2_->connectNode(static_cast<unsigned int>(leg_.value().getTerminal().getNodeBreakerView().getNode()));
       else if (!connected2 && getInitialConnected2())
-        voltageLevelInterface2_->disconnectNode(static_cast<unsigned int>(leg_.get().getTerminal().getNodeBreakerView().getNode()));
+        voltageLevelInterface2_->disconnectNode(static_cast<unsigned int>(leg_.value().getTerminal().getNodeBreakerView().getNode()));
     } else {
       if (connected2)
-        leg_.get().getTerminal().connect();
+        leg_.value().getTerminal().connect();
       else
-        leg_.get().getTerminal().disconnect();
+        leg_.value().getTerminal().disconnect();
     }
   }
 
@@ -334,9 +339,9 @@ namespace DYN {
 
   bool
   FictTwoWTransformerInterfaceIIDM::isConnected() const {
-    bool connected = leg_.get().getTerminal().isConnected();
+    bool connected = leg_.value().getTerminal().isConnected();
     if (connected && voltageLevelInterface2_->isNodeBreakerTopology())
-      connected = voltageLevelInterface2_->isNodeConnected(static_cast<unsigned int>(leg_.get().getTerminal().getNodeBreakerView().getNode()));
+      connected = voltageLevelInterface2_->isNodeConnected(static_cast<unsigned int>(leg_.value().getTerminal().getNodeBreakerView().getNode()));
     return connected;
   }
 }  // namespace DYN

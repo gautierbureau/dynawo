@@ -22,8 +22,7 @@
 #ifndef MODELER_DATAINTERFACE_POWSYBLIIDM_DYNSTATICVARCOMPENSATORINTERFACEIIDM_H_
 #define MODELER_DATAINTERFACE_POWSYBLIIDM_DYNSTATICVARCOMPENSATORINTERFACEIIDM_H_
 
-#include <powsybl/iidm/StaticVarCompensator.hpp>
-#include <powsybl/iidm/extensions/iidm/VoltagePerReactivePowerControl.hpp>
+#include <iidm/StaticVarCompensator.h>
 
 #include "DYNStaticVarCompensatorInterface.h"
 #include "DYNInjectorInterfaceIIDM.h"
@@ -35,7 +34,7 @@ namespace DYN {
 /**
  * class StaticVarCompensatorInterfaceIIDM
  */
-class StaticVarCompensatorInterfaceIIDM : public StaticVarCompensatorInterface, public InjectorInterfaceIIDM {
+class StaticVarCompensatorInterfaceIIDM : public StaticVarCompensatorInterface, public InjectorInterfaceIIDM<iidm::StaticVarCompensator> {
  public:
   /**
    * @brief defines the index of each state variable
@@ -57,7 +56,7 @@ class StaticVarCompensatorInterfaceIIDM : public StaticVarCompensatorInterface, 
    * @brief Constructor
    * @param svc static var compensator's iidm instance
    */
-  explicit StaticVarCompensatorInterfaceIIDM(powsybl::iidm::StaticVarCompensator& svc);
+  explicit StaticVarCompensatorInterfaceIIDM(iidm::StaticVarCompensator& svc);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -195,11 +194,10 @@ class StaticVarCompensatorInterfaceIIDM : public StaticVarCompensatorInterface, 
   double getSlope() const override;
 
  private:
-  powsybl::iidm::StaticVarCompensator& staticVarCompensatorIIDM_;  ///< reference to the iidm static var compensator instance
+  iidm::StaticVarCompensator& staticVarCompensatorIIDM_;  ///< reference to the iidm static var compensator instance
   StaticVarCompensatorInterfaceIIDMExtension* extension_;  ///< extension's pointer
   IIDMExtensions::DestroyFunction<StaticVarCompensatorInterfaceIIDMExtension> destroy_extension_;  ///< function pointer to destroy the extension
-  stdcxx::Reference<powsybl::iidm::extensions
-                    ::iidm::VoltagePerReactivePowerControl> voltagePerReactivePowerControl_;  ///< reference to voltagePerReactivePowerControl_ extension
+  bool hasVoltagePerReactivePowerControl_ = false;  ///< whether the VoltagePerReactivePowerControl extension is attached
 };
 }  // namespace DYN
 

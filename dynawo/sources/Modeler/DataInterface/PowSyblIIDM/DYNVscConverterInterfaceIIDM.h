@@ -26,7 +26,7 @@
 
 #include "DYNInjectorInterfaceIIDM.h"
 
-#include <powsybl/iidm/VscConverterStation.hpp>
+#include <iidm/VscConverterStation.h>
 
 
 namespace DYN {
@@ -34,13 +34,13 @@ namespace DYN {
 /**
  * class VscConverterInterfaceIIDM
  */
-class VscConverterInterfaceIIDM : public VscConverterInterface, public InjectorInterfaceIIDM {
+class VscConverterInterfaceIIDM : public VscConverterInterface, public InjectorInterfaceIIDM<iidm::VscConverterStation> {
  public:
   /**
    * @brief Constructor
    * @param vsc vsc converter iidm instance
    */
-  explicit VscConverterInterfaceIIDM(powsybl::iidm::VscConverterStation& vsc);
+  explicit VscConverterInterfaceIIDM(iidm::VscConverterStation& vsc);
 
   /**
    * @copydoc ComponentInterface::importStaticParameters()
@@ -151,10 +151,10 @@ class VscConverterInterfaceIIDM : public VscConverterInterface, public InjectorI
    * @brief Getter for the reference to the iidm vsc converter istance
    * @return the iidm vsc converter istance
    */
-  powsybl::iidm::VscConverterStation& getVscIIDM();
+  iidm::VscConverterStation& getVscIIDM();
 
  private:
-  powsybl::iidm::VscConverterStation& vscConverterIIDM_;  ///< reference to the iidm vsc converter instance
+  iidm::VscConverterStation& vscConverterIIDM_;  ///< reference to the iidm vsc converter instance
 };
 }  // namespace DYN
 

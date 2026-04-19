@@ -28,7 +28,7 @@
 #include "DYNIIDMExtensions.hpp"
 #include <iostream>
 
-using powsybl::iidm::StaticVarCompensator;
+using iidm::StaticVarCompensator;
 using std::string;
 using std::shared_ptr;
 
@@ -54,7 +54,7 @@ staticVarCompensatorIIDM_(svc) {
 
   extension_ = std::get<IIDMExtensions::CREATE_FUNCTION>(extensionDef)(svc);
   destroy_extension_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(extensionDef);
-  voltagePerReactivePowerControl_ = svc.findExtension<powsybl::iidm::extensions::iidm::VoltagePerReactivePowerControl>();
+  hasVoltagePerReactivePowerControl_ = svc.hasVoltagePerReactivePowerControl();
 
   stateVariables_.resize(3);
   stateVariables_[VAR_P] = StateVariable("p", StateVariable::DOUBLE);  // P
@@ -103,16 +103,16 @@ StaticVarCompensatorInterfaceIIDM::exportStateVariablesUnitComponent() {
     bool standbyMode(false);
     switch (regulatingMode) {
       case StaticVarCompensatorInterface::OFF:
-        staticVarCompensatorIIDM_.setRegulationMode(powsybl::iidm::StaticVarCompensator::RegulationMode::OFF);
+        staticVarCompensatorIIDM_.setRegulationMode(iidm::StaticVarCompensatorRegulationMode::OFF);
         break;
       case StaticVarCompensatorInterface::STANDBY:
         standbyMode = true;
         break;
       case StaticVarCompensatorInterface::RUNNING_Q:
-        staticVarCompensatorIIDM_.setRegulationMode(powsybl::iidm::StaticVarCompensator::RegulationMode::REACTIVE_POWER);
+        staticVarCompensatorIIDM_.setRegulationMode(iidm::StaticVarCompensatorRegulationMode::REACTIVE_POWER);
         break;
       case StaticVarCompensatorInterface::RUNNING_V:
-        staticVarCompensatorIIDM_.setRegulationMode(powsybl::iidm::StaticVarCompensator::RegulationMode::VOLTAGE);
+        staticVarCompensatorIIDM_.setRegulationMode(iidm::StaticVarCompensatorRegulationMode::VOLTAGE);
         break;
       default:
         throw DYNError(Error::STATIC_DATA, RegulationModeNotInIIDM, regulatingMode, staticVarCompensatorIIDM_.getId());
@@ -204,12 +204,12 @@ StaticVarCompensatorInterfaceIIDM::getID() const {
 
 double
 StaticVarCompensatorInterfaceIIDM::getBMin() const {
-  return staticVarCompensatorIIDM_.getBmin();
+  return staticVarCompensatorIIDM_.getBMin();
 }
 
 double
 StaticVarCompensatorInterfaceIIDM::getBMax() const {
-  return staticVarCompensatorIIDM_.getBmax();
+  return staticVarCompensatorIIDM_.getBMax();
 }
 
 double
@@ -224,16 +224,13 @@ StaticVarCompensatorInterfaceIIDM::getQ() {
 
 bool
 StaticVarCompensatorInterfaceIIDM::hasVoltagePerReactivePowerControl() const {
-  if (voltagePerReactivePowerControl_) {
-    return true;
-  }
-  return false;
+  return hasVoltagePerReactivePowerControl_;
 }
 
 double
 StaticVarCompensatorInterfaceIIDM::getSlope() const {
-  if (hasVoltagePerReactivePowerControl()) {
-    return voltagePerReactivePowerControl_.get().getSlope();
+  if (hasVoltagePerReactivePowerControl_) {
+    return staticVarCompensatorIIDM_.getVoltagePerReactivePowerControl().getSlope();
   }
   return 0.;
 }
@@ -288,13 +285,13 @@ StaticVarCompensatorInterface::RegulationMode_t StaticVarCompensatorInterfaceIID
     return StaticVarCompensatorInterface::STANDBY;
   }
 
-  const powsybl::iidm::StaticVarCompensator::RegulationMode& regMode = staticVarCompensatorIIDM_.getRegulationMode();
+  iidm::StaticVarCompensatorRegulationMode regMode = staticVarCompensatorIIDM_.getRegulationMode();
   switch (regMode) {
-    case powsybl::iidm::StaticVarCompensator::RegulationMode::VOLTAGE:
+    case iidm::StaticVarCompensatorRegulationMode::VOLTAGE:
       return StaticVarCompensatorInterface::RUNNING_V;
-    case powsybl::iidm::StaticVarCompensator::RegulationMode::REACTIVE_POWER:
+    case iidm::StaticVarCompensatorRegulationMode::REACTIVE_POWER:
       return StaticVarCompensatorInterface::RUNNING_Q;
-    case powsybl::iidm::StaticVarCompensator::RegulationMode::OFF:
+    case iidm::StaticVarCompensatorRegulationMode::OFF:
       return StaticVarCompensatorInterface::OFF;
     default:
       return StaticVarCompensatorInterface::OFF;
