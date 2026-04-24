@@ -5,52 +5,11 @@ from plotly.subplots import make_subplots
 import numpy as np
 import io
 import re
-import struct
+
+from binary_curves import load_bin
 
 st.set_page_config(page_title="Curve Visualizer", layout="wide")
 st.title("Curve Visualizer")
-
-# ── Binary (.bin) loader ──────────────────────────────────────────────────────
-
-def load_bin(data: bytes) -> pd.DataFrame:
-    """Parse a .bin binary file and return a DataFrame (first column = time)."""
-    if len(data) < 12:
-        raise ValueError("File too short to be a valid .bin file")
-    magic = data[:4]
-    if magic != b"DYNB":
-        raise ValueError(f"Invalid .bin magic: {magic!r}")
-    version = struct.unpack_from("<I", data, 4)[0]
-    if version != 1:
-        raise ValueError(f"Unsupported .bin version: {version}")
-    n_vars = struct.unpack_from("<I", data, 8)[0]
-
-    offset = 12
-    var_names = []
-    for _ in range(n_vars):
-        if offset + 4 > len(data):
-            raise ValueError("Truncated .bin header (variable name length)")
-        name_len = struct.unpack_from("<I", data, offset)[0]
-        offset += 4
-        if offset + name_len > len(data):
-            raise ValueError("Truncated .bin header (variable name)")
-        var_names.append(data[offset:offset + name_len].decode("utf-8"))
-        offset += name_len
-
-    # Each record: 1 time double + n_vars doubles
-    record_size = (1 + n_vars) * 8
-    remaining = len(data) - offset
-    if remaining % record_size != 0:
-        raise ValueError(
-            f"Data section size {remaining} is not a multiple of record size {record_size}"
-        )
-    n_records = remaining // record_size
-
-    fmt = f"<{(1 + n_vars) * n_records}d"
-    flat = struct.unpack_from(fmt, data, offset)
-
-    arr = np.array(flat, dtype=np.float64).reshape(n_records, 1 + n_vars)
-    columns = ["time"] + var_names
-    return pd.DataFrame(arr, columns=columns)
 
 # ── Palettes ───────────────────────────────────────────────────────────────────
 
