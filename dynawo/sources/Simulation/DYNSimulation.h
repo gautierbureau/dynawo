@@ -45,6 +45,7 @@ class Timeline;
 
 namespace curves {
 class CurvesCollection;
+class BinaryCurves;
 }
 
 namespace constraints {
@@ -67,7 +68,6 @@ class Solver;
 class DynamicData;
 class DataInterface;
 class SimulationContext;
-class BinaryCurves;
 
 /**
  * @brief Simulation class
@@ -701,7 +701,7 @@ class Simulation {
   boost::shared_ptr<DynamicData> dyd_;  ///< Dynamic data container associated to the job
   boost::shared_ptr<timeline::Timeline> timeline_;  ///< instance of the timeline where events are stored
   std::shared_ptr<curves::CurvesCollection> curvesCollection_;  ///< instance of curves collection where curves are stored
-  std::unique_ptr<BinaryCurves> binaryCurves_;  ///< optional streaming binary writer for the full solution vector
+  std::unique_ptr<curves::BinaryCurves> binaryCurves_;  ///< optional streaming binary writer for the full solution vector
   std::shared_ptr<constraints::ConstraintsCollection> constraintsCollection_;  ///< instance of constraints collection where constraints are stored
   std::shared_ptr<criteria::CriteriaCollection> criteriaCollection_;  ///< instance of criteria collection where criteria are stored
   std::shared_ptr<std::vector<

@@ -57,6 +57,7 @@
 #include "CRVCurve.h"
 #include "CRVXmlExporter.h"
 #include "CRVCsvExporter.h"
+#include "CRVBinaryCurves.h"
 
 #include "FSVFinalStateValuesCollectionFactory.h"
 #include "FSVFinalStateValuesCollection.h"
@@ -118,7 +119,6 @@
 #include "DYNSignalHandler.h"
 #include "DYNIoDico.h"
 #include "DYNBitMask.h"
-#include "DYNBinaryCurves.h"
 
 #include "make_unique.hpp"
 
@@ -996,7 +996,7 @@ Simulation::simulate() {
     names.reserve(model_->sizeY());
     for (int i = 0; i < model_->sizeY(); ++i)
       names.push_back(model_->getVariableName(i));
-    binaryCurves_.reset(new BinaryCurves(curvesOutputFile_, names));
+    binaryCurves_.reset(new curves::BinaryCurves(curvesOutputFile_, names));
   }
   constexpr bool updateCalculatedVariable = false;
   updateCurves(updateCalculatedVariable);  // initial curves

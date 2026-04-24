@@ -12,7 +12,7 @@
 //
 
 /**
- * @file  DYNBinaryCurves.h
+ * @file  CRVBinaryCurves.h
  *
  * @brief Streaming binary writer for the full solution vector
  *
@@ -30,15 +30,15 @@
  *     time   : f64
  *     values : f64[n_vars]
  */
-#ifndef SIMULATION_DYNBINARYCURVES_H_
-#define SIMULATION_DYNBINARYCURVES_H_
+#ifndef API_CRV_CRVBINARYCURVES_H_
+#define API_CRV_CRVBINARYCURVES_H_
 
 #include <cstddef>
 #include <fstream>
 #include <string>
 #include <vector>
 
-namespace DYN {
+namespace curves {
 
 /**
  * @brief Streams the full solution vector to a compact binary file.
@@ -83,6 +83,6 @@ class BinaryCurves {
   std::vector<char> buf_;
 };
 
-}  // namespace DYN
+}  // namespace curves
 
-#endif  // SIMULATION_DYNBINARYCURVES_H_
+#endif  // API_CRV_CRVBINARYCURVES_H_

@@ -12,17 +12,17 @@
 //
 
 /**
- * @file  DYNBinaryCurves.cpp
+ * @file  CRVBinaryCurves.cpp
  *
  * @brief Streaming binary writer for the full solution vector
  */
-#include "DYNBinaryCurves.h"
+#include "CRVBinaryCurves.h"
 
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
 
-namespace DYN {
+namespace curves {
 
 namespace {
 
@@ -92,4 +92,4 @@ void BinaryCurves::writeHeader(const std::vector<std::string>& names) {
   }
 }
 
-}  // namespace DYN
+}  // namespace curves
