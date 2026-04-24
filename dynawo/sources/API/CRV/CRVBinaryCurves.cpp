@@ -92,7 +92,7 @@ void BinaryCurves::close() {
 }
 
 void BinaryCurves::writeHeader(const std::vector<std::string>& names) {
-  stream_.write("MODC", 4);
+  stream_.write("DYNB", 4);
   write_u32_le(stream_, 1u);
   write_u32_le(stream_, static_cast<uint32_t>(names.size()));
   for (const auto& name : names) {
