@@ -21,12 +21,15 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <set>
 #include <fstream>
 #include <algorithm>
 
 #include "TLTimeline.h"
 #include "CRVCurve.h"
+#include "CRVCurveFactory.h"
 #include "CRVCurvesCollection.h"
+#include "CRVCurvesCollectionFactory.h"
 #include "CSTRConstraintsCollection.h"
 
 #include "DYNMacrosMessage.h"
@@ -1088,6 +1091,87 @@ ModelMulti::initCurves(const std::shared_ptr<curves::Curve>& curve) {
   if (!curve->getAvailable())
     Trace::warn() << DYNLog(CurveNotAdded, modelName, variable) << Trace::endline;
   return curve->getAvailable();
+}
+
+void
+ModelMulti::expandCurvesCollection(std::shared_ptr<curves::CurvesCollection>& curvesCollection) const {
+  if (!curvesCollection)
+    return;
+  const auto& inputs = curvesCollection->getCurves();
+  const bool needsExpansion = std::any_of(
+      inputs.begin(), inputs.end(),
+      [](const std::shared_ptr<curves::Curve>& c) {
+        return c->getModelName().empty() || c->getVariable().empty();
+      });
+  if (!needsExpansion)
+    return;
+
+  auto expanded = std::shared_ptr<curves::CurvesCollection>(
+      curves::CurvesCollectionFactory::newInstance("expanded"));
+
+  const std::string valueSuffix = "_value";
+  for (const auto& curve : inputs) {
+    const std::string& modelName = curve->getModelName();
+    const std::string& variable = curve->getVariable();
+    if (!modelName.empty() && !variable.empty()) {
+      expanded->add(curve);
+      continue;
+    }
+    if (modelName.empty() && variable.empty()) {
+      Trace::warn() << DYNLog(CurveNotAdded, "(empty)", "(empty)") << Trace::endline;
+      continue;
+    }
+    if (variable.empty()) {
+      // model="X" shortcut: expand to every variable of submodel X.
+      const auto it = subModelByName_.find(modelName);
+      if (it == subModelByName_.end()) {
+        Trace::warn() << DYNLog(CurveNotAdded, modelName, "*") << Trace::endline;
+        continue;
+      }
+      const auto& sub = subModels_[it->second];
+      const auto& byName = sub->getVariableByName();
+      // Prefer the bare form when a `foo` / `foo_value` pair coexists; drop
+      // the `_value` entry so the expansion emits each variable only once.
+      std::set<std::string> names;
+      for (const auto& kv : byName) {
+        const std::string& nm = kv.first;
+        if (nm.size() > valueSuffix.size() &&
+            nm.compare(nm.size() - valueSuffix.size(), valueSuffix.size(), valueSuffix) == 0) {
+          const std::string bare = nm.substr(0, nm.size() - valueSuffix.size());
+          if (byName.count(bare))
+            continue;  // bare form already picked up, skip the `_value` twin
+          names.insert(bare);
+        } else {
+          names.insert(nm);
+        }
+      }
+      for (const auto& nm : names) {
+        std::shared_ptr<curves::Curve> newCurve = curves::CurveFactory::newCurve();
+        newCurve->setModelName(modelName);
+        newCurve->setVariable(nm);
+        newCurve->setFactor(curve->getFactor());
+        newCurve->setExportType(curve->getExportType());
+        expanded->add(newCurve);
+      }
+    } else {
+      // variable="V" shortcut: expand across all submodels exposing V.
+      bool matched = false;
+      for (const auto& sub : subModels_) {
+        if (sub->hasVariable(variable) || sub->hasVariable(variable + valueSuffix)) {
+          std::shared_ptr<curves::Curve> newCurve = curves::CurveFactory::newCurve();
+          newCurve->setModelName(sub->name());
+          newCurve->setVariable(variable);
+          newCurve->setFactor(curve->getFactor());
+          newCurve->setExportType(curve->getExportType());
+          expanded->add(newCurve);
+          matched = true;
+        }
+      }
+      if (!matched)
+        Trace::warn() << DYNLog(CurveNotAdded, "*", variable) << Trace::endline;
+    }
+  }
+  curvesCollection = std::move(expanded);
 }
 
 void

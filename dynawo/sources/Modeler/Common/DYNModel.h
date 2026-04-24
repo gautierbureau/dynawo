@@ -468,6 +468,19 @@ class Model {
   virtual bool initCurves(const std::shared_ptr<curves::Curve>& curve) = 0;
 
   /**
+   * @brief Expand shortcut curve declarations in-place.
+   *
+   * Input curves that declare only the @p model attribute are replaced by one
+   * curve per variable of that submodel; curves that declare only the
+   * @p variable attribute are replaced by one curve per submodel that exposes
+   * that variable. Fully-specified curves are kept as-is. The provided shared
+   * pointer is reseated to the expanded collection when any expansion occurs.
+   *
+   * @param curvesCollection curves collection to expand in-place
+   */
+  virtual void expandCurvesCollection(std::shared_ptr<curves::CurvesCollection>& curvesCollection) const = 0;
+
+  /**
    * @brief set the simulation working directory to use
    * @param workingDirectory Simulation working directory to use
    */

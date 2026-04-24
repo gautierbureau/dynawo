@@ -71,8 +71,15 @@ CurveHandler::~CurveHandler() {}
 
 void CurveHandler::create(attributes_type const & attributes) {
   curveRead_ = CurveFactory::newCurve();
-  curveRead_->setModelName(attributes["model"]);
-  curveRead_->setVariable(attributes["variable"]);
+  // Both model and variable are optional in the schema: a curve may declare
+  // only one to request expansion against the model (model-only = all
+  // variables of that submodel; variable-only = that variable across every
+  // submodel that exposes it). The expansion is handled downstream in
+  // ModelMulti::expandCurvesCollection.
+  if (attributes.has("model"))
+    curveRead_->setModelName(attributes["model"]);
+  if (attributes.has("variable"))
+    curveRead_->setVariable(attributes["variable"]);
   if (attributes.has("factor"))
     curveRead_->setFactor(attributes["factor"]);
 }

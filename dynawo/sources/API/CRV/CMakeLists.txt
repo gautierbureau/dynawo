@@ -30,6 +30,7 @@ set(API_CRV_SOURCES
   CRVXmlImporter.cpp
   CRVXmlExporter.cpp
   CRVCsvExporter.cpp
+  CRVBinaryCurves.cpp
   )
 
 set(API_CRV_INCLUDE_HEADERS
@@ -44,6 +45,7 @@ set(API_CRV_INCLUDE_HEADERS
   CRVExporter.h
   CRVXmlExporter.h
   CRVCsvExporter.h
+  CRVBinaryCurves.h
   )
 
 add_library(dynawo_API_CRV SHARED ${API_CRV_SOURCES})
