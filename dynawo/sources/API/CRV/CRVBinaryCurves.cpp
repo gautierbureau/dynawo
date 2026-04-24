@@ -22,6 +22,8 @@
 #include <cstring>
 #include <stdexcept>
 
+#include "DYNCommon.h"
+
 namespace curves {
 
 namespace {
@@ -42,6 +44,13 @@ void encode_f64_le(char* out, double v) {
   std::memcpy(&bits, &v, 8);
   for (int i = 0; i < 8; ++i)
     out[i] = static_cast<char>((bits >> (8 * i)) & 0xFFu);
+}
+
+// Round @p v through DYN::double2String so the encoded value has the same
+// decimal precision as the CSV/XML exporters (fixed decimals below 1e6,
+// scientific notation above).
+double roundToCsvPrecision(double v) {
+  return std::stod(DYN::double2String(v));
 }
 
 }  // namespace
@@ -69,9 +78,9 @@ void BinaryCurves::record(double t, const std::vector<double>& y) {
   if (y.size() < nVars_)
     throw std::out_of_range("BinaryCurves::record: y vector smaller than registered variables");
 
-  encode_f64_le(buf_.data(), t);
+  encode_f64_le(buf_.data(), roundToCsvPrecision(t));
   for (std::size_t i = 0; i < nVars_; ++i)
-    encode_f64_le(buf_.data() + (1 + i) * sizeof(double), y[i]);
+    encode_f64_le(buf_.data() + (1 + i) * sizeof(double), roundToCsvPrecision(y[i]));
   stream_.write(buf_.data(), static_cast<std::streamsize>(buf_.size()));
 }
 
