@@ -60,12 +60,12 @@ python binary_curves.py extract simulation.bin --regex -p '.*theta.*'
 python binary_curves.py extract simulation.bin -p '*' -o all.csv --fmt '%.12g'
 
 # Smaller streaming chunks for tight-memory environments
-python binary_curves.py extract simulation.bin -p '*voltage*' --chunk-bytes 8388608
+python binary_curves.py extract simulation.bin -p '*voltage*' --chunk-bytes 67108864
 ```
 
 The CSV always starts with a `time` column followed by the matching variables
 in the order they appear in the file. Records are read chunk-by-chunk
-(`--chunk-bytes`, default 64 MiB), so files that do not fit in RAM are
+(`--chunk-bytes`, default 1 GiB), so files that do not fit in RAM are
 processed without issue.
 
 ### Programmatic use

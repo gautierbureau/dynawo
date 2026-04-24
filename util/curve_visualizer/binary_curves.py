@@ -51,7 +51,7 @@ MAGIC = b"DYNB"
 VERSION = 1
 HEADER_FIXED_SIZE = 12           # 4 (magic) + 4 (version) + 4 (n_vars)
 DOUBLE_SIZE = 8
-DEFAULT_CHUNK_BYTES = 64 * 1024 * 1024  # 64 MiB working set per chunk
+DEFAULT_CHUNK_BYTES = 1024 * 1024 * 1024  # 1 GiB working set per chunk
 
 
 @dataclass(frozen=True)
