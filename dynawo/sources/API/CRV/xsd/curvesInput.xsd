@@ -22,16 +22,11 @@
         <xs:element name="curve" type="dyn:CurveInput" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
-    <xs:unique name="uniqueCurve">
-      <xs:selector xpath="dyn:curve"/>
-      <xs:field xpath="@model"/>
-      <xs:field xpath="@variable"/>
-    </xs:unique>
   </xs:element>
 
   <xs:complexType name="CurveInput">
-    <xs:attribute name="model" use="required" type="xs:string"/>
-    <xs:attribute name="variable" use="required" type="xs:string"/>
+    <xs:attribute name="model" type="xs:string"/>
+    <xs:attribute name="variable" type="xs:string"/>
     <xs:attribute name="factor" type="xs:float"/>
   </xs:complexType>
 </xs:schema>

@@ -376,6 +376,11 @@ class ModelMulti : public Model, private boost::noncopyable {
    */
   bool initCurves(const std::shared_ptr<curves::Curve>& curve) override;
 
+  /**
+   * @copydoc Model::expandCurvesCollection(std::shared_ptr<curves::CurvesCollection>&)
+   */
+  void expandCurvesCollection(std::shared_ptr<curves::CurvesCollection>& curvesCollection) const override;
+
  public:
   /**
    * @brief add a sub model to the model multi container

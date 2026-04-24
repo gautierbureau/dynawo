@@ -896,6 +896,9 @@ Simulation::init() {
   Trace::info() << "-----------------------------------------------------------------------" << Trace::endline;
   Trace::info() << DYNLog(CurveInit) << Trace::endline;
   Trace::info() << "-----------------------------------------------------------------------" << Trace::endline;
+  // Expand shortcut <curve model="..."/> and <curve variable="..."/> entries
+  // against the composed model now that subModels are fully built.
+  model_->expandCurvesCollection(curvesCollection_);
   const std::vector<double>& y = solver_->getCurrentY();
   unsigned nbCurves = 0;
   for (const auto& curve : curvesCollection_->getCurves()) {

@@ -17,7 +17,7 @@ utility for working with binary (`.bin`) curves files.
 
 ```bash
 pip install -r requirements.txt
-streamlit run app.py --server.maxUploadSize 900
+streamlit run app.py --server.maxUploadSize 1024
 ```
 
 ## CSV format
