@@ -67,6 +67,7 @@ class Solver;
 class DynamicData;
 class DataInterface;
 class SimulationContext;
+class BinaryCurves;
 
 /**
  * @brief Simulation class
@@ -84,7 +85,8 @@ class Simulation {
   typedef enum {
     EXPORT_CURVES_NONE,  ///< Export zero curves
     EXPORT_CURVES_XML,  ///< Export curves selected in input file in XML mode in output file
-    EXPORT_CURVES_CSV  ///< Export curves selected in input file in CSV mode in output file
+    EXPORT_CURVES_CSV,  ///< Export curves selected in input file in CSV mode in output file
+    EXPORT_CURVES_BINARY  ///< Stream the full solution vector to a binary file
   } exportCurvesMode_t;
 
   /**
@@ -164,7 +166,7 @@ class Simulation {
   /**
    * @brief default destructor
    */
-  virtual ~Simulation() {}
+  virtual ~Simulation();
 
   /**
    * @brief initialize the simulation
@@ -699,6 +701,7 @@ class Simulation {
   boost::shared_ptr<DynamicData> dyd_;  ///< Dynamic data container associated to the job
   boost::shared_ptr<timeline::Timeline> timeline_;  ///< instance of the timeline where events are stored
   std::shared_ptr<curves::CurvesCollection> curvesCollection_;  ///< instance of curves collection where curves are stored
+  std::unique_ptr<BinaryCurves> binaryCurves_;  ///< optional streaming binary writer for the full solution vector
   std::shared_ptr<constraints::ConstraintsCollection> constraintsCollection_;  ///< instance of constraints collection where constraints are stored
   std::shared_ptr<criteria::CriteriaCollection> criteriaCollection_;  ///< instance of criteria collection where criteria are stored
   std::shared_ptr<std::vector<
