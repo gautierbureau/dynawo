@@ -173,25 +173,32 @@ def iter_chunks(
 
 def select_indices(
     names: Sequence[str],
-    patterns: Sequence[str],
+    patterns: Sequence[str] = (),
     *,
     regex: bool = False,
+    contains: Sequence[str] = (),
 ) -> List[int]:
-    """Return the indices of ``names`` that match at least one pattern.
+    """Return the indices of ``names`` matching at least one pattern.
 
-    Patterns are fnmatch-style globs (``*``, ``?``, ``[seq]``) by default, or
-    full regular expressions when ``regex=True``. Order of results follows
-    ``names`` order, not pattern order; duplicates are removed.
+    ``patterns`` are fnmatch-style globs (``*``, ``?``, ``[seq]``) by default
+    or full regular expressions when ``regex=True``. ``contains`` are plain
+    substrings — a name matches when any of them appears anywhere in it.
+    The two filters are OR-combined; order of the result follows ``names``,
+    not the order of patterns, and duplicates are removed.
     """
-    if not patterns:
+    if not patterns and not contains:
         return []
     if regex:
-        compiled = [re.compile(p) for p in patterns]
-        return [i for i, n in enumerate(names) if any(c.search(n) for c in compiled)]
+        pattern_matchers = [re.compile(p).search for p in patterns]
+    else:
+        pattern_matchers = [
+            (lambda n, p=p: fnmatch.fnmatchcase(n, p)) for p in patterns
+        ]
+    contains_list = list(contains)
     return [
         i
         for i, n in enumerate(names)
-        if any(fnmatch.fnmatchcase(n, p) for p in patterns)
+        if any(m(n) for m in pattern_matchers) or any(s in n for s in contains_list)
     ]
 
 
@@ -211,13 +218,14 @@ def write_variable_names(bin_path: str, txt_path: str) -> int:
 def extract_to_csv(
     bin_path: str,
     csv_path: str,
-    patterns: Sequence[str],
+    patterns: Sequence[str] = (),
     *,
     regex: bool = False,
+    contains: Sequence[str] = (),
     chunk_bytes: int = DEFAULT_CHUNK_BYTES,
     fmt: str = "%.7g",
 ) -> tuple[int, int]:
-    """Extract columns matching ``patterns`` to ``csv_path``.
+    """Extract columns matching ``patterns`` or ``contains`` to ``csv_path``.
 
     The file is streamed chunk-by-chunk so files larger than RAM are handled
     without issue. Each row starts with ``time`` followed by the matching
@@ -225,9 +233,13 @@ def extract_to_csv(
 
     Returns ``(n_matched_columns, n_records_written)``.
     """
+    if not patterns and not contains:
+        raise ValueError("extract_to_csv: provide at least one pattern or substring")
     with open(bin_path, "rb") as f:
         header = read_header(f)
-        matched = select_indices(header.names, patterns, regex=regex)
+        matched = select_indices(
+            header.names, patterns, regex=regex, contains=contains
+        )
         if not matched:
             raise SystemExit(
                 "No variable names matched the given patterns.\n"
@@ -265,12 +277,15 @@ def _cmd_names(args: argparse.Namespace) -> int:
 
 
 def _cmd_extract(args: argparse.Namespace) -> int:
+    if not args.pattern and not args.contains:
+        raise SystemExit("extract: provide at least one --pattern or --contains")
     out = args.output or _default_output(args.input, ".extract.csv")
     n_cols, n_rows = extract_to_csv(
         args.input,
         out,
         args.pattern,
         regex=args.regex,
+        contains=args.contains,
         chunk_bytes=args.chunk_bytes,
         fmt=args.fmt,
     )
@@ -307,14 +322,22 @@ def _build_parser() -> argparse.ArgumentParser:
         "-p", "--pattern",
         action="append",
         default=[],
-        required=True,
         help="fnmatch-style pattern (can be repeated; OR-combined). "
              "Examples: '*voltage*', 'bus?_V'. Use --regex for regular expressions.",
     )
     extract.add_argument(
+        "-c", "--contains",
+        action="append",
+        default=[],
+        help="Plain substring filter (can be repeated; OR-combined with --pattern). "
+             "Selects every variable whose name contains the given string. "
+             "Example: -c generator.",
+    )
+    extract.add_argument(
         "--regex",
         action="store_true",
-        help="Treat --pattern values as Python regular expressions (re.search).",
+        help="Treat --pattern values as Python regular expressions (re.search). "
+             "Has no effect on --contains.",
     )
     extract.add_argument(
         "-o", "--output",

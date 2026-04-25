@@ -50,17 +50,21 @@ Only the header is read, so this is fast even on multi-GB files.
 ### Extract a subset of columns as CSV
 
 ```bash
-# Glob-style patterns (default). Multiple --pattern flags are OR-combined.
+# Glob-style patterns. Multiple --pattern flags are OR-combined.
 python binary_curves.py extract simulation.bin -p '*voltage*' -p 'bus?_V'
 
-# Regular expressions
+# Plain substring filter (-c, repeatable, OR-combined with -p)
+python binary_curves.py extract simulation.bin -c generator
+python binary_curves.py extract simulation.bin -c generator -c load
+
+# Regular expressions (applies to --pattern only)
 python binary_curves.py extract simulation.bin --regex -p '.*theta.*'
 
 # Custom output path and number format
 python binary_curves.py extract simulation.bin -p '*' -o all.csv --fmt '%.12g'
 
 # Smaller streaming chunks for tight-memory environments
-python binary_curves.py extract simulation.bin -p '*voltage*' --chunk-bytes 67108864
+python binary_curves.py extract simulation.bin -c generator --chunk-bytes 67108864
 ```
 
 The CSV always starts with a `time` column followed by the matching variables
