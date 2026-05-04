@@ -63,27 +63,37 @@ def _parse_csv_bytes(data: bytes) -> pd.DataFrame:
 _DYN_NS = "http://www.rte-france.com/dynawo"
 _JOBS_EXPORT_EXT = {"CSV": "csv", "BINARY": "bin"}
 
-def _resolve_jobs_file(jobs_path: str) -> "list[str]":
-    """Return the curves output files referenced by a Dynawo .jobs file.
+def _resolve_jobs_file(jobs_path: str) -> "list[tuple[str, str]]":
+    """Return ``(label, abs_path)`` tuples for every curves output referenced
+    by a Dynawo .jobs file.
 
-    Walks every <curves exportMode="..."/> nested under <outputs directory="..."/>
-    and points at ``<jobs_dir>/<directory>/curves/curves.{csv,bin}``.
+    Walks every ``<dyn:job>``, then every ``<dyn:outputs directory="...">``,
+    then every ``<dyn:curves exportMode="..."/>`` inside it and points at
+    ``<jobs_dir>/<directory>/curves/curves.{csv,bin}``. The label is built
+    from the outputs directory so multi-job .jobs files (different
+    ``directory`` per job) produce distinguishable entries:
+
+        outputsRunning/curves.csv
+        outputsOmega/curves.csv
+        outputsPVar/curves.csv
+
     XML curves output is skipped — the visualizer only loads CSV and binary.
     """
     base = os.path.dirname(os.path.abspath(jobs_path))
-    found: "list[str]" = []
+    found: "list[tuple[str, str]]" = []
     root = ET.parse(jobs_path).getroot()
-    for outputs in root.iter(f"{{{_DYN_NS}}}outputs"):
-        directory = outputs.get("directory")
-        if not directory:
-            continue
-        for curves_el in outputs.iter(f"{{{_DYN_NS}}}curves"):
-            ext = _JOBS_EXPORT_EXT.get(curves_el.get("exportMode", ""))
-            if ext is None:
+    for job in root.iter(f"{{{_DYN_NS}}}job"):
+        for outputs in job.iter(f"{{{_DYN_NS}}}outputs"):
+            directory = outputs.get("directory")
+            if not directory:
                 continue
-            path = os.path.join(base, directory, "curves", f"curves.{ext}")
-            if os.path.isfile(path):
-                found.append(path)
+            for curves_el in outputs.iter(f"{{{_DYN_NS}}}curves"):
+                ext = _JOBS_EXPORT_EXT.get(curves_el.get("exportMode", ""))
+                if ext is None:
+                    continue
+                path = os.path.join(base, directory, "curves", f"curves.{ext}")
+                if os.path.isfile(path):
+                    found.append((f"{directory}/curves.{ext}", os.path.abspath(path)))
     return found
 
 
@@ -110,10 +120,11 @@ def _load_path_cached(path: str, mtime: float, size: int) -> pd.DataFrame:
     )
 
 
-def _expand_preload_path(path: str) -> "list[str]":
-    """Given a path from the CLI, return the actual data files to load.
-    A ``.jobs`` file is resolved into its referenced curves outputs; .csv /
-    .bin paths pass through; anything else aborts with a clear error."""
+def _expand_preload_path(path: str) -> "list[tuple[str, str]]":
+    """Given a path from the CLI, return ``(label, abs_path)`` tuples for
+    every data file to load. ``.jobs`` files are resolved into their
+    referenced curves outputs (one entry per ``<dyn:outputs>`` × ``<dyn:curves>``);
+    ``.csv`` / ``.bin`` paths pass through unchanged; anything else aborts."""
     lower = path.lower()
     if lower.endswith(".jobs"):
         resolved = _resolve_jobs_file(path)
@@ -126,7 +137,7 @@ def _expand_preload_path(path: str) -> "list[str]":
             st.stop()
         return resolved
     if lower.endswith(_SUPPORTED_DATA_EXTS):
-        return [path]
+        return [(os.path.basename(path), os.path.abspath(path))]
     st.error(
         f"Unsupported preload file: {path}\n"
         f"Supported extensions: {', '.join(_SUPPORTED_PRELOAD_EXTS)}"
@@ -153,13 +164,13 @@ for _arg in (a for a in sys.argv[1:] if not a.startswith("-")):
     if not os.path.isfile(_arg):
         st.error(f"Preload path not found: {_arg}")
         st.stop()
-    for _path in _expand_preload_path(_arg):
+    for _label, _path in _expand_preload_path(_arg):
         _stat = os.stat(_path)
-        _label = _disambiguate_label(os.path.basename(_path), _preloaded, _path)
-        _preloaded[_label] = _load_path_cached(
+        _final_label = _disambiguate_label(_label, _preloaded, _path)
+        _preloaded[_final_label] = _load_path_cached(
             _path, _stat.st_mtime, _stat.st_size
         )
-        _preloaded_paths.append((_label, os.path.abspath(_path)))
+        _preloaded_paths.append((_final_label, _path))
 
 if _preloaded_paths:
     st.success(
