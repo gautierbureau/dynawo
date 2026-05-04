@@ -4,12 +4,40 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 import io
+import os
 import re
+import sys
 
 from binary_curves import load_bin
 
 st.set_page_config(page_title="Curve Visualizer", layout="wide")
 st.title("Curve Visualizer")
+
+# ── CLI preload (streamlit run app.py -- file1.csv file2.bin) ────────────────
+
+@st.cache_data(show_spinner="Loading file…")
+def _load_path_cached(path: str, mtime: float, size: int) -> pd.DataFrame:
+    """Read and parse a CSV/.bin file from disk. Cached on (path, mtime, size)
+    so reruns of the script don't re-read multi-GB inputs."""
+    with open(path, "rb") as fh:
+        raw = fh.read()
+    if path.lower().endswith(".bin"):
+        return load_bin(raw)
+    sample = raw[:4096].decode("utf-8", errors="replace")
+    first_line = sample.splitlines()[0] if sample else ""
+    sep = ";" if first_line.count(";") > first_line.count(",") else ","
+    return pd.read_csv(io.BytesIO(raw), sep=sep)
+
+
+_preloaded: "dict[str, pd.DataFrame]" = {}
+for _path in (a for a in sys.argv[1:] if not a.startswith("-")):
+    if not os.path.isfile(_path):
+        st.error(f"Preload path not found: {_path}")
+        st.stop()
+    _stat = os.stat(_path)
+    _preloaded[os.path.basename(_path)] = _load_path_cached(
+        _path, _stat.st_mtime, _stat.st_size
+    )
 
 # ── Palettes ───────────────────────────────────────────────────────────────────
 
@@ -206,15 +234,16 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True,
 )
 
+files: dict[str, pd.DataFrame] = dict(_preloaded)
 if uploaded_files:
-    files: dict[str, pd.DataFrame] = {}
     for f in uploaded_files:
         raw = f.read()
         if f.name.endswith(".bin"):
             files[f.name] = load_bin_cached(raw)
         else:
             files[f.name] = load_csv(raw)
-else:
+
+if not files:
     st.info("Please upload one or more CSV or binary (.bin) files to visualize.")
     st.stop()
 

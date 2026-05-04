@@ -105,6 +105,7 @@ where [option] can be:"
         curves [arg]                          plot curves of job
         curves-reference [arg]                plot curves of job's reference
         curves-reference-same-graph [arg]     plot curves of job and job's reference on the same graph
+        curves-app [files...]                 launch the Streamlit curve visualizer app preloaded with the given .csv/.bin files (1 GiB upload limit)
 
         =========== Distribution
         distrib                               create distribution of Dynawo
@@ -439,6 +440,7 @@ set_environment() {
   export_var_env_force DYNAWO_EXAMPLES_DIR=$DYNAWO_HOME/examples
   export_var_env DYNAWO_RESULTS_SHOW=true
   export_var_env_force DYNAWO_CURVES_TO_HTML_DIR=$DYNAWO_HOME/util/curvesToHtml
+  export_var_env_force DYNAWO_CURVE_VISUALIZER_DIR=$DYNAWO_HOME/util/curve_visualizer
   export_var_env_force DYNAWO_SCRIPTS_DIR=$DYNAWO_INSTALL_DIR/sbin
   export_var_env_force DYNAWO_NRT_DIFF_DIR=$DYNAWO_HOME/util/nrt_diff
   export_var_env_force DYNAWO_UPDATE_XML_DIR=$DYNAWO_HOME/util/updateXML
@@ -1454,6 +1456,23 @@ curves_visu_reference() {
   curves_visu $jobs
   sed -i 's/<dyn:outputs directory="reference\//<dyn:outputs directory="/' $jobs
   sed -i 's/<outputs directory="reference\//<outputs directory="/' $jobs
+}
+
+curves_visu_app() {
+  if [ $# -eq 0 ]; then
+    error_exit "curves-app: provide at least one .csv or .bin file"
+  fi
+  if ! ${DYNAWO_PYTHON_COMMAND} -c "import streamlit" >/dev/null 2>&1; then
+    error_exit "Streamlit is not installed. Run: ${DYNAWO_PYTHON_COMMAND} -m pip install -r $DYNAWO_CURVE_VISUALIZER_DIR/requirements.txt"
+  fi
+  resolved_paths=()
+  for f in "$@"; do
+    if [ ! -f "$f" ]; then
+      error_exit "File not found: $f"
+    fi
+    resolved_paths+=("$("$DYNAWO_PYTHON_COMMAND" -c "import os; print(os.path.realpath('$f'))")")
+  done
+  ${DYNAWO_PYTHON_COMMAND} -m streamlit run "$DYNAWO_CURVE_VISUALIZER_DIR/app.py" --server.maxUploadSize 1024 -- "${resolved_paths[@]}" || return 1
 }
 
 dump_model() {
@@ -2499,6 +2518,10 @@ case $MODE in
 
   curves-reference-same-graph)
     curves_visu_reference_same_graph ${ARGS} || error_exit "Error with reference curves plot"
+    ;;
+
+  curves-app)
+    curves_visu_app ${ARGS} || error_exit "Error launching curves visualizer app"
     ;;
 
   deploy)
