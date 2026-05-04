@@ -3,41 +3,148 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
+import csv as _csv
 import io
 import os
 import re
 import sys
+import xml.etree.ElementTree as ET
 
 from binary_curves import load_bin
 
 st.set_page_config(page_title="Curve Visualizer", layout="wide")
 st.title("Curve Visualizer")
 
-# ── CLI preload (streamlit run app.py -- file1.csv file2.bin) ────────────────
+# ── CSV parsing helpers ──────────────────────────────────────────────────────
+
+_CSV_DELIMITERS = ";,\t|"
+
+def _detect_csv_separator(text: str) -> str:
+    """Pick a separator from a CSV sample. Tries csv.Sniffer first; falls back
+    to the delimiter that yields the highest minimum field count across the
+    first non-empty lines (handles Dynawo's `;`-with-trailing-`;` format and
+    plain `,` CSVs equally well)."""
+    sample = text[:8192]
+    try:
+        return _csv.Sniffer().sniff(sample, delimiters=_CSV_DELIMITERS).delimiter
+    except _csv.Error:
+        pass
+    candidate_lines = [l for l in sample.splitlines() if l.strip()][:5]
+    if not candidate_lines:
+        return ","
+    best = ","
+    best_min = -1
+    for sep in _CSV_DELIMITERS:
+        m = min(l.count(sep) for l in candidate_lines)
+        if m > best_min:
+            best_min = m
+            best = sep
+    return best
+
+
+def _parse_csv_bytes(data: bytes) -> pd.DataFrame:
+    """Parse CSV bytes into a DataFrame, auto-detecting the separator and
+    dropping any trailing all-NaN ``Unnamed: N`` columns produced by Dynawo's
+    `value;value;\\n` format."""
+    text = data.decode("utf-8-sig", errors="replace")
+    sep = _detect_csv_separator(text)
+    df = pd.read_csv(io.BytesIO(data), sep=sep, encoding_errors="replace")
+    junk = [
+        c for c in df.columns
+        if isinstance(c, str) and c.startswith("Unnamed:") and df[c].isna().all()
+    ]
+    if junk:
+        df = df.drop(columns=junk)
+    return df
+
+
+# ── .jobs file resolver ──────────────────────────────────────────────────────
+
+_DYN_NS = "http://www.rte-france.com/dynawo"
+_JOBS_EXPORT_EXT = {"CSV": "csv", "BINARY": "bin"}
+
+def _resolve_jobs_file(jobs_path: str) -> "list[str]":
+    """Return the curves output files referenced by a Dynawo .jobs file.
+
+    Walks every <curves exportMode="..."/> nested under <outputs directory="..."/>
+    and points at ``<jobs_dir>/<directory>/curves/curves.{csv,bin}``.
+    XML curves output is skipped — the visualizer only loads CSV and binary.
+    """
+    base = os.path.dirname(os.path.abspath(jobs_path))
+    found: "list[str]" = []
+    root = ET.parse(jobs_path).getroot()
+    for outputs in root.iter(f"{{{_DYN_NS}}}outputs"):
+        directory = outputs.get("directory")
+        if not directory:
+            continue
+        for curves_el in outputs.iter(f"{{{_DYN_NS}}}curves"):
+            ext = _JOBS_EXPORT_EXT.get(curves_el.get("exportMode", ""))
+            if ext is None:
+                continue
+            path = os.path.join(base, directory, "curves", f"curves.{ext}")
+            if os.path.isfile(path):
+                found.append(path)
+    return found
+
+
+# ── CLI preload (streamlit run app.py -- file1.csv file2.bin file3.jobs) ────
+
+_SUPPORTED_DATA_EXTS = (".csv", ".bin")
+_SUPPORTED_PRELOAD_EXTS = _SUPPORTED_DATA_EXTS + (".jobs",)
+
 
 @st.cache_data(show_spinner="Loading file…")
 def _load_path_cached(path: str, mtime: float, size: int) -> pd.DataFrame:
     """Read and parse a CSV/.bin file from disk. Cached on (path, mtime, size)
-    so reruns of the script don't re-read multi-GB inputs."""
+    so Streamlit reruns don't re-read multi-GB inputs."""
+    lower = path.lower()
     with open(path, "rb") as fh:
         raw = fh.read()
-    if path.lower().endswith(".bin"):
+    if lower.endswith(".bin"):
         return load_bin(raw)
-    sample = raw[:4096].decode("utf-8", errors="replace")
-    first_line = sample.splitlines()[0] if sample else ""
-    sep = ";" if first_line.count(";") > first_line.count(",") else ","
-    return pd.read_csv(io.BytesIO(raw), sep=sep)
+    if lower.endswith(".csv"):
+        return _parse_csv_bytes(raw)
+    raise ValueError(
+        f"Unsupported file type: {path!r} "
+        f"(expected one of {_SUPPORTED_DATA_EXTS})"
+    )
+
+
+def _expand_preload_path(path: str) -> "list[str]":
+    """Given a path from the CLI, return the actual data files to load.
+    A ``.jobs`` file is resolved into its referenced curves outputs; .csv /
+    .bin paths pass through; anything else aborts with a clear error."""
+    lower = path.lower()
+    if lower.endswith(".jobs"):
+        resolved = _resolve_jobs_file(path)
+        if not resolved:
+            st.error(
+                f"No CSV/BINARY curves output found for jobs file: {path}\n"
+                f"Check that the simulation has run and produced "
+                f"<outputs directory=...>/curves/curves.{{csv,bin}}."
+            )
+            st.stop()
+        return resolved
+    if lower.endswith(_SUPPORTED_DATA_EXTS):
+        return [path]
+    st.error(
+        f"Unsupported preload file: {path}\n"
+        f"Supported extensions: {', '.join(_SUPPORTED_PRELOAD_EXTS)}"
+    )
+    st.stop()
+    return []  # unreachable; keeps the type checker happy
 
 
 _preloaded: "dict[str, pd.DataFrame]" = {}
-for _path in (a for a in sys.argv[1:] if not a.startswith("-")):
-    if not os.path.isfile(_path):
-        st.error(f"Preload path not found: {_path}")
+for _arg in (a for a in sys.argv[1:] if not a.startswith("-")):
+    if not os.path.isfile(_arg):
+        st.error(f"Preload path not found: {_arg}")
         st.stop()
-    _stat = os.stat(_path)
-    _preloaded[os.path.basename(_path)] = _load_path_cached(
-        _path, _stat.st_mtime, _stat.st_size
-    )
+    for _path in _expand_preload_path(_arg):
+        _stat = os.stat(_path)
+        _preloaded[os.path.basename(_path)] = _load_path_cached(
+            _path, _stat.st_mtime, _stat.st_size
+        )
 
 # ── Palettes ───────────────────────────────────────────────────────────────────
 
@@ -55,11 +162,7 @@ DASHES = ["solid", "dash", "dot", "dashdot", "longdash", "longdashdot"]
 
 @st.cache_data
 def load_csv(data: bytes) -> pd.DataFrame:
-    # Sniff ',' vs ';' from the header line; fall back to ','.
-    sample = data[:4096].decode("utf-8", errors="replace")
-    first_line = sample.splitlines()[0] if sample else ""
-    sep = ";" if first_line.count(";") > first_line.count(",") else ","
-    return pd.read_csv(io.BytesIO(data), sep=sep)
+    return _parse_csv_bytes(data)
 
 @st.cache_data
 def load_bin_cached(data: bytes) -> pd.DataFrame:

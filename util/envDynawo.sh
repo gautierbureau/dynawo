@@ -105,7 +105,7 @@ where [option] can be:"
         curves [arg]                          plot curves of job
         curves-reference [arg]                plot curves of job's reference
         curves-reference-same-graph [arg]     plot curves of job and job's reference on the same graph
-        curves-app [files...]                 launch the Streamlit curve visualizer app preloaded with the given .csv/.bin files (1 GiB upload limit)
+        curves-app [files...]                 launch the Streamlit curve visualizer app preloaded with the given .csv/.bin files (1 GiB upload limit). Pass a .jobs file to auto-resolve its curves output.
 
         =========== Distribution
         distrib                               create distribution of Dynawo
@@ -1460,7 +1460,7 @@ curves_visu_reference() {
 
 curves_visu_app() {
   if [ $# -eq 0 ]; then
-    error_exit "curves-app: provide at least one .csv or .bin file"
+    error_exit "curves-app: provide at least one .csv, .bin or .jobs file"
   fi
   if ! ${DYNAWO_PYTHON_COMMAND} -c "import streamlit" >/dev/null 2>&1; then
     error_exit "Streamlit is not installed. Run: ${DYNAWO_PYTHON_COMMAND} -m pip install -r $DYNAWO_CURVE_VISUALIZER_DIR/requirements.txt"
@@ -1470,6 +1470,10 @@ curves_visu_app() {
     if [ ! -f "$f" ]; then
       error_exit "File not found: $f"
     fi
+    case "${f,,}" in
+      *.csv|*.bin|*.jobs) ;;
+      *) error_exit "Unsupported file type: $f (expected .csv, .bin or .jobs)" ;;
+    esac
     resolved_paths+=("$("$DYNAWO_PYTHON_COMMAND" -c "import os; print(os.path.realpath('$f'))")")
   done
   ${DYNAWO_PYTHON_COMMAND} -m streamlit run "$DYNAWO_CURVE_VISUALIZER_DIR/app.py" --server.maxUploadSize 1024 -- "${resolved_paths[@]}" || return 1
