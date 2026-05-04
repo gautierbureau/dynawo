@@ -135,16 +135,37 @@ def _expand_preload_path(path: str) -> "list[str]":
     return []  # unreachable; keeps the type checker happy
 
 
+def _disambiguate_label(label: str, used: "dict[str, pd.DataFrame]", path: str) -> str:
+    """Return a label that doesn't collide with already-loaded files. Falls
+    back to ``<parent_dir>/<basename>`` then to the absolute path."""
+    if label not in used:
+        return label
+    parent = os.path.basename(os.path.dirname(os.path.abspath(path)))
+    candidate = f"{parent}/{label}" if parent else label
+    if candidate not in used:
+        return candidate
+    return os.path.abspath(path)
+
+
 _preloaded: "dict[str, pd.DataFrame]" = {}
+_preloaded_paths: "list[tuple[str, str]]" = []
 for _arg in (a for a in sys.argv[1:] if not a.startswith("-")):
     if not os.path.isfile(_arg):
         st.error(f"Preload path not found: {_arg}")
         st.stop()
     for _path in _expand_preload_path(_arg):
         _stat = os.stat(_path)
-        _preloaded[os.path.basename(_path)] = _load_path_cached(
+        _label = _disambiguate_label(os.path.basename(_path), _preloaded, _path)
+        _preloaded[_label] = _load_path_cached(
             _path, _stat.st_mtime, _stat.st_size
         )
+        _preloaded_paths.append((_label, os.path.abspath(_path)))
+
+if _preloaded_paths:
+    st.success(
+        "Preloaded "
+        + ", ".join(f"**{label}** (`{path}`)" for label, path in _preloaded_paths)
+    )
 
 # ── Palettes ───────────────────────────────────────────────────────────────────
 
