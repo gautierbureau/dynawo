@@ -173,10 +173,33 @@ for _arg in (a for a in sys.argv[1:] if not a.startswith("-")):
         _preloaded_paths.append((_final_label, _path))
 
 if _preloaded_paths:
-    st.success(
-        "Preloaded "
-        + ", ".join(f"**{label}** (`{path}`)" for label, path in _preloaded_paths)
-    )
+    _unloaded: set = st.session_state.setdefault("preload_unloaded", set())
+    _active_paths = [(lbl, path) for lbl, path in _preloaded_paths if lbl not in _unloaded]
+    if _active_paths:
+        st.success(
+            "Preloaded "
+            + ", ".join(f"**{label}** (`{path}`)" for label, path in _active_paths)
+        )
+    with st.expander(
+        f"Preloaded files ({len(_active_paths)}/{len(_preloaded_paths)} active)",
+        expanded=False,
+    ):
+        for _lbl, _full in _preloaded_paths:
+            cols = st.columns([6, 1])
+            cols[0].markdown(
+                f"{'✅' if _lbl not in _unloaded else '⛔'} **{_lbl}** — `{_full}`"
+            )
+            if _lbl in _unloaded:
+                if cols[1].button("Reload", key=f"reload_{_lbl}"):
+                    _unloaded.discard(_lbl)
+                    st.rerun()
+            else:
+                if cols[1].button("Unload", key=f"unload_{_lbl}"):
+                    _unloaded.add(_lbl)
+                    st.rerun()
+    # Drop unloaded preloads before they reach the visualization layer.
+    for _lbl in list(_unloaded):
+        _preloaded.pop(_lbl, None)
 
 # ── Palettes ───────────────────────────────────────────────────────────────────
 
