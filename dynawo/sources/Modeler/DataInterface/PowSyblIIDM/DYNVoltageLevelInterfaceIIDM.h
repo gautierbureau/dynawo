@@ -27,11 +27,9 @@
 
 #include <iidm/VoltageLevel.h>
 #include <iidm/SlackTerminal.h>
-#include <iidm/Switch.h>
 
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <boost/optional.hpp>
 
 namespace DYN {
@@ -236,8 +234,6 @@ class VoltageLevelInterfaceIIDM : public VoltageLevelInterface {
   iidm::VoltageLevel& voltageLevelIIDM_;  ///< reference to the iidm voltageLevel instance
   std::string voltageLevelId_;  ///< cached id (iidm::VoltageLevel::getId returns by value)
   bool isNodeBreakerTopology_;  ///< @b true if the topology of the voltageLevel is node breaker topology
-  std::unordered_set<int> nodes_;  ///< set of node ids reconstructed from switches and internal connections
-  std::unordered_map<std::string, iidm::Switch> switchByIidmId_;  ///< iidm switch handle by id (replaces NodeBreakerView::getSwitch)
   std::unordered_map<std::shared_ptr<SwitchInterface>, double, SwitchInterfaceHash> switchState_;  ///< state to apply to switch (due to topology change)
   std::map<std::string, std::shared_ptr<SwitchInterface> > switchesById_;  ///< switch interface by Id
   Graph graph_;  ///< topology graph to find node connection

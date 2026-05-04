@@ -35,9 +35,8 @@
 #include <iidm/BusbarSection.h>
 #include <iidm/Bus.h>
 #include <iidm/Switch.h>
+#include <iidm/Terminal.h>
 #include <iidm/InternalConnection.h>
-
-#include <unordered_set>
 
 #include <optional>
 #include <vector>
@@ -64,40 +63,24 @@ voltageLevelIIDM_(voltageLevel),
 voltageLevelId_(voltageLevel.getId()) {
   isNodeBreakerTopology_ = (voltageLevelIIDM_.getTopologyKind() == iidm::TopologyKind::NODE_BREAKER);
   if (voltageLevelIIDM_.getTopologyKind() == iidm::TopologyKind::NODE_BREAKER) {
-    // TODO(iidm-bridge): NodeBreakerView::getNodes()/getSwitch(id) are not exposed;
-    // rebuild a node set and switch-by-id cache from getSwitches()/getInternalConnections().
-    for (const iidm::Switch& itSwitch : voltageLevelIIDM_.getSwitches()) {
-      nodes_.insert(itSwitch.getNode1());
-      nodes_.insert(itSwitch.getNode2());
-      switchByIidmId_.emplace(itSwitch.getId(), itSwitch);
-    }
-    for (const auto& itInternalConnection : voltageLevelIIDM_.getNodeBreakerView().getInternalConnections()) {
-      nodes_.insert(itInternalConnection.getNode1());
-      nodes_.insert(itInternalConnection.getNode2());
-    }
-    for (int nodeId : nodes_) {
+    for (int nodeId : voltageLevelIIDM_.getNodeBreakerView().getNodes()) {
       graph_.addVertex(static_cast<unsigned int>(nodeId));
     }
 
     // Add edges
-    for (const iidm::Switch& itSwitch : voltageLevelIIDM_.getSwitches()) {
+    for (const iidm::Switch& itSwitch : voltageLevelIIDM_.getNodeBreakerView().getSwitches()) {
       if (itSwitch.isOpen() && !itSwitch.isRetained()) {
         // Disconnectors should never be closed
         continue;
       }
-      // TODO(iidm-bridge): NodeBreakerView::getNode1/2(switchId) not exposed; use Switch's nodes directly.
-      int node1 = itSwitch.getNode1();
-      int node2 = itSwitch.getNode2();
-      graph_.addEdge(node1, node2, itSwitch.getId());
+      graph_.addEdge(itSwitch.getNode1(), itSwitch.getNode2(), itSwitch.getId());
       weights1_[itSwitch.getId()] = 1;
     }
     // Additional edges for internal connections
     stringstream ssInternalConnectionId;
     for (const iidm::InternalConnection& itInternalConnection : voltageLevelIIDM_.getNodeBreakerView().getInternalConnections()) {
       buildInternalConnectionId(itInternalConnection, ssInternalConnectionId);
-      int node1 = itInternalConnection.getNode1();
-      int node2 = itInternalConnection.getNode2();
-      graph_.addEdge(node1, node2, ssInternalConnectionId.str());
+      graph_.addEdge(itInternalConnection.getNode1(), itInternalConnection.getNode2(), ssInternalConnectionId.str());
       weights1_[ssInternalConnectionId.str()] = 1;
     }
   }
@@ -319,18 +302,21 @@ VoltageLevelInterfaceIIDM::calculateBusTopology() {
   std::unordered_map<unsigned int, unsigned int> componentIndexToNodeId;
   std::unordered_map<unsigned int, unsigned int> nodeIdToComponentIndex;
   unsigned int componentIndex = 0;
-  // TODO(iidm-bridge): NodeBreakerView::getNodes() not exposed; iterate over the
-  // node set rebuilt from switches and internal connections instead.
-  for (const auto& nodeId : nodes_) {
+  for (int nodeId : voltageLevelIIDM_.getNodeBreakerView().getNodes()) {
     componentIndexToNodeId[componentIndex] = static_cast<unsigned int>(nodeId);
     nodeIdToComponentIndex[static_cast<unsigned int>(nodeId)] = componentIndex;
     componentIndex++;
   }
   for (unsigned int i = 0; i != component.size(); ++i) {
     calculatedBus_[component[i]]->addNode(componentIndexToNodeId[i]);
-    // TODO(iidm-bridge): NodeBreakerView::getTerminal(node) not exposed; the per-node
-    // u0/angle0 init is deferred to the busbar-section pass below, which is the only
-    // node->terminal mapping we can recover from the bridge API.
+    iidm::Terminal terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(static_cast<int>(componentIndexToNodeId[i]));
+    if (terminal.isValid()) {
+      iidm::Bus bus = terminal.getBusBreakerView().getConnectableBus();
+      if (bus.isValid()) {
+        calculatedBus_[component[i]]->setU0(bus.getV());
+        calculatedBus_[component[i]]->setAngle0(bus.getAngle());
+      }
+    }
   }
 
   // associate busBarSection to CalculatedBus
@@ -342,7 +328,6 @@ VoltageLevelInterfaceIIDM::calculateBusTopology() {
   for (iidm::BusbarSection& bbsIIDM : voltageLevelIIDM_.getNodeBreakerView().getBusbarSections()) {
     int node = static_cast<int>(bbsIIDM.getTerminal().getNodeBreakerView().getNode());
     calculatedBus_[component[nodeIdToComponentIndex[node]]]->addBusBarSection(bbsIIDM.getId());
-    // TODO(iidm-bridge): getConnectableBus() returns a value-type Bus handle (no optional).
     iidm::Bus bus = bbsIIDM.getTerminal().getBusBreakerView().getConnectableBus();
 
     // retrieve the electricalNode
@@ -385,9 +370,8 @@ unsigned
 VoltageLevelInterfaceIIDM::countNumberOfSwitchesToClose(const std::vector<std::string>& path) const {
   unsigned res = 0;
   for (const auto& switchId : path) {
-    // TODO(iidm-bridge): NodeBreakerView::getSwitch(id) not exposed; use the local cache.
-    auto itSw = switchByIidmId_.find(switchId);
-    if (itSw != switchByIidmId_.end() && itSw->second.isOpen()) {
+    std::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(switchId);
+    if (sw.has_value() && sw->isOpen()) {
       ++res;
     }
   }
@@ -401,41 +385,38 @@ VoltageLevelInterfaceIIDM::connectNode(unsigned int nodeToConnect) {
   assert(voltageLevelIIDM_.getTopologyKind() == iidm::TopologyKind::NODE_BREAKER);
 
   // close the shortest path to one bus bar section
-  // TODO(iidm-bridge): NodeBreakerView::getNodes()/getTerminal(node) not exposed; iterate
-  // BusbarSections instead -- they are the only node->terminal mapping the bridge exposes.
   vector<string> shortestPath;
   unsigned nbSwitchToClose = 0;
-  for (iidm::BusbarSection& bbsIIDM : voltageLevelIIDM_.getNodeBreakerView().getBusbarSections()) {
-    int nodeId = bbsIIDM.getTerminal().getNodeBreakerView().getNode();
-    iidm::Bus bus = bbsIIDM.getTerminal().getBusBreakerView().getBus();
-    if (bus.isValid()) {
-      vector<string> ret;
-      graph_.shortestPath(nodeToConnect, static_cast<unsigned int>(nodeId), weights1_, ret);
-      if (shortestPath.empty()) {
+  for (int nodeId : voltageLevelIIDM_.getNodeBreakerView().getNodes()) {
+    iidm::Terminal terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
+    if (!terminal.isValid()) continue;
+    iidm::Bus bus = terminal.getBusBreakerView().getBus();
+    if (!bus.isValid()) continue;
+    vector<string> ret;
+    graph_.shortestPath(nodeToConnect, static_cast<unsigned int>(nodeId), weights1_, ret);
+    if (shortestPath.empty()) {
+      shortestPath = ret;
+      nbSwitchToClose = countNumberOfSwitchesToClose(ret);
+    } else if (!ret.empty() && ret.size() < shortestPath.size()) {
+      shortestPath = ret;
+      nbSwitchToClose = countNumberOfSwitchesToClose(ret);
+    } else if (!ret.empty() && shortestPath.size() == ret.size()) {  // Tie-breaker
+      unsigned currentNbSwitchToClose = countNumberOfSwitchesToClose(ret);
+      if (currentNbSwitchToClose < nbSwitchToClose) {
         shortestPath = ret;
-        nbSwitchToClose = countNumberOfSwitchesToClose(ret);
-      } else if (!ret.empty() && ret.size() < shortestPath.size()) {
-        shortestPath = ret;
-        nbSwitchToClose = countNumberOfSwitchesToClose(ret);
-      } else if (!ret.empty() && shortestPath.size() == ret.size()) {  // Tie-breaker
-        unsigned currentNbSwitchToClose = countNumberOfSwitchesToClose(ret);
-        if (currentNbSwitchToClose < nbSwitchToClose) {
-          shortestPath = ret;
-          nbSwitchToClose = currentNbSwitchToClose;
-        }
+        nbSwitchToClose = currentNbSwitchToClose;
       }
     }
   }
 
   for (const auto& id : shortestPath) {
-    // TODO(iidm-bridge): NodeBreakerView::getSwitch(id) not exposed; use the local cache.
-    auto itSwIidm = switchByIidmId_.find(id);
-    if (itSwIidm != switchByIidmId_.end() && itSwIidm->second.isOpen()) {
+    std::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(id);
+    if (sw.has_value() && sw->isOpen()) {
       map<string, std::shared_ptr<SwitchInterface> >::iterator itSw = switchesById_.find(id);
       if (itSw != switchesById_.end()) {
         switchState_[itSw->second] = CLOSED;
       }
-      itSwIidm->second.setOpen(false);
+      sw->setOpen(false);
     }
   }
 }
@@ -447,7 +428,7 @@ VoltageLevelInterfaceIIDM::disconnectNode(unsigned int nodeToDisconnect) {
   assert(voltageLevelIIDM_.getTopologyKind() == iidm::TopologyKind::NODE_BREAKER);
   // open all paths to bus bar section
   std::unordered_map<string, float> weights;
-  for (const iidm::Switch& itSwitch : voltageLevelIIDM_.getSwitches()) {
+  for (const iidm::Switch& itSwitch : voltageLevelIIDM_.getNodeBreakerView().getSwitches()) {
     if (itSwitch.isOpen() && !itSwitch.isRetained()) {
       // Opened disconnectors are not in the graph
       continue;
@@ -460,37 +441,34 @@ VoltageLevelInterfaceIIDM::disconnectNode(unsigned int nodeToDisconnect) {
     buildInternalConnectionId(itInternalConnection, ssInternalConnectionId);
     weights[ssInternalConnectionId.str()] = 1;
   }
-  // TODO(iidm-bridge): NodeBreakerView::getNodes()/getTerminal(node) not exposed; iterate
-  // BusbarSections instead -- they are the only node->terminal mapping the bridge exposes.
-  for (iidm::BusbarSection& bbsIIDM : voltageLevelIIDM_.getNodeBreakerView().getBusbarSections()) {
-    int nodeId = bbsIIDM.getTerminal().getNodeBreakerView().getNode();
-    iidm::Bus bus = bbsIIDM.getTerminal().getBusView();
-    if (bus.isValid()) {
-      vector<string> path;
-      graph_.shortestPath(nodeToDisconnect, static_cast<unsigned int>(nodeId), weights, path);
-      bool somethingWasDisconnected = true;
+  for (int nodeId : voltageLevelIIDM_.getNodeBreakerView().getNodes()) {
+    iidm::Terminal terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
+    if (!terminal.isValid()) continue;
+    iidm::Bus bus = terminal.getBusView();
+    if (!bus.isValid()) continue;
+    vector<string> path;
+    graph_.shortestPath(nodeToDisconnect, static_cast<unsigned int>(nodeId), weights, path);
+    bool somethingWasDisconnected = true;
 
-      while (!path.empty() && somethingWasDisconnected) {
-        somethingWasDisconnected = false;
-        for (const auto& switchID : path) {
-          // TODO(iidm-bridge): NodeBreakerView::getSwitch(id) not exposed; use the local cache.
-          auto itSwIidm = switchByIidmId_.find(switchID);
-          if (itSwIidm != switchByIidmId_.end() && itSwIidm->second.getKind() == iidm::SwitchKind::BREAKER) {
-            if (!itSwIidm->second.isOpen()) {
-              map<string, std::shared_ptr<SwitchInterface> >::iterator itSw = switchesById_.find(switchID);
-              if (itSw != switchesById_.end()) {
-                switchState_[itSw->second] = OPEN;
-              }
-              itSwIidm->second.setOpen(true);
-              weights[switchID] = 0;
-              somethingWasDisconnected = true;
+    while (!path.empty() && somethingWasDisconnected) {
+      somethingWasDisconnected = false;
+      for (const auto& switchID : path) {
+        std::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(switchID);
+        if (sw.has_value() && sw->getKind() == iidm::SwitchKind::BREAKER) {
+          if (!sw->isOpen()) {
+            map<string, std::shared_ptr<SwitchInterface> >::iterator itSw = switchesById_.find(switchID);
+            if (itSw != switchesById_.end()) {
+              switchState_[itSw->second] = OPEN;
             }
-            break;  // no more things to do, one breaker is open
+            sw->setOpen(true);
+            weights[switchID] = 0;
+            somethingWasDisconnected = true;
           }
+          break;  // no more things to do, one breaker is open
         }
-        path.clear();
-        graph_.shortestPath(nodeToDisconnect, static_cast<unsigned int>(nodeId), weights, path);
       }
+      path.clear();
+      graph_.shortestPath(nodeToDisconnect, static_cast<unsigned int>(nodeId), weights, path);
     }
   }
 }
@@ -501,7 +479,7 @@ VoltageLevelInterfaceIIDM::isNodeConnected(unsigned int nodeToCheck) {
 
   // Change weight of edges
   std::unordered_map<string, float> weights;
-  for (const iidm::Switch& itSwitch : voltageLevelIIDM_.getSwitches()) {
+  for (const iidm::Switch& itSwitch : voltageLevelIIDM_.getNodeBreakerView().getSwitches()) {
     if (itSwitch.isOpen() && !itSwitch.isRetained()) {
       // Opened disconnectors are not in the graph
       continue;
@@ -515,11 +493,10 @@ VoltageLevelInterfaceIIDM::isNodeConnected(unsigned int nodeToCheck) {
     weights[ssInternalConnectionId.str()] = 1;
   }
 
-  // TODO(iidm-bridge): NodeBreakerView::getNodes()/getTerminal(node) not exposed; iterate
-  // BusbarSections instead -- they are the only node->terminal mapping the bridge exposes.
-  for (iidm::BusbarSection& bbsIIDM : voltageLevelIIDM_.getNodeBreakerView().getBusbarSections()) {
-    int nodeId = bbsIIDM.getTerminal().getNodeBreakerView().getNode();
-    iidm::Bus bus = bbsIIDM.getTerminal().getBusView();
+  for (int nodeId : voltageLevelIIDM_.getNodeBreakerView().getNodes()) {
+    iidm::Terminal terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
+    if (!terminal.isValid()) continue;
+    iidm::Bus bus = terminal.getBusView();
     if (bus.isValid() && graph_.pathExist(nodeToCheck, static_cast<unsigned int>(nodeId), weights)) {
       return true;
     }
@@ -532,8 +509,6 @@ VoltageLevelInterfaceIIDM::getSlackBusId() const {
   if (!hasSlackTerminal_) {
     return boost::none;
   }
-  // TODO(iidm-bridge): the new Terminal exposes only getBusId(); it returns the
-  // connected bus id for both node-breaker and bus-breaker topologies.
   return slackTerminal_.getTerminal().getBusId();
 }
 
