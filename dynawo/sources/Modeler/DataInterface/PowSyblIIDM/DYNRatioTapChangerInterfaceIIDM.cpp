@@ -33,11 +33,8 @@ namespace DYN {
 RatioTapChangerInterfaceIIDM::RatioTapChangerInterfaceIIDM(iidm::RatioTapChanger tapChanger, const std::string& terminalRefSide) :
   tapChangerIIDM_(tapChanger),
   terminalRefSide_(terminalRefSide) {
-  // TODO(iidm-bridge): iidm::RatioTapChangerStep has no multi-arg constructor; build synthetic steps to mirror old powsybl snapshot.
-  const auto all = tapChanger.getAllSteps();
-  for (const auto& x : all) {
-    SyntheticStep R{x.getRho(), x.getR(), x.getX(), x.getG(), x.getB()};
-    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(R));
+  for (const auto& step : tapChanger.getAllSteps()) {
+    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(step));
   }
 }
 
@@ -73,8 +70,7 @@ RatioTapChangerInterfaceIIDM::getNbTap() const {
 
 bool
 RatioTapChangerInterfaceIIDM::hasLoadTapChangingCapabilities() const {
-  // TODO(iidm-bridge): hasLoadTapChangingCapabilities not exposed; approximate using isRegulating.
-  return tapChangerIIDM_.isRegulating();
+  return tapChangerIIDM_.hasLoadTapChangingCapabilities();
 }
 
 bool
@@ -92,8 +88,7 @@ RatioTapChangerInterfaceIIDM::getTargetV() const {
 
 std::string
 RatioTapChangerInterfaceIIDM::getTerminalRefId() const {
-  // TODO(iidm-bridge): getRegulationTerminal().getConnectable() not exposed; best-effort fallback to regulation terminal id.
-  return getRegulating() ? tapChangerIIDM_.getRegulationTerminalId() : std::string();
+  return getRegulating() ? tapChangerIIDM_.getRegulationTerminal().getConnectableId() : std::string();
 }
 
 std::string

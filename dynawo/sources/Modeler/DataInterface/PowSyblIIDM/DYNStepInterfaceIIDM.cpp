@@ -30,68 +30,34 @@ StepInterfaceIIDM::StepInterfaceIIDM(const iidm::RatioTapChangerStep& step) : ra
                                                                               kind_(Kind::RATIO) {
 }
 
-StepInterfaceIIDM::StepInterfaceIIDM(const SyntheticStep& step) : syntheticStep_(step),
-                                                                  kind_(Kind::SYNTHETIC) {
-}
-
 double
 StepInterfaceIIDM::getR() const {
-  switch (kind_) {
-    case Kind::PHASE:     return phaseStep_->getR();
-    case Kind::RATIO:     return ratioStep_->getR();
-    case Kind::SYNTHETIC: return syntheticStep_.r;
-  }
-  return 0.0;
+  return kind_ == Kind::PHASE ? phaseStep_->getR() : ratioStep_->getR();
 }
 
 double
 StepInterfaceIIDM::getX() const {
-  switch (kind_) {
-    case Kind::PHASE:     return phaseStep_->getX();
-    case Kind::RATIO:     return ratioStep_->getX();
-    case Kind::SYNTHETIC: return syntheticStep_.x;
-  }
-  return 0.0;
+  return kind_ == Kind::PHASE ? phaseStep_->getX() : ratioStep_->getX();
 }
 
 double
 StepInterfaceIIDM::getG() const {
-  switch (kind_) {
-    case Kind::PHASE:     return phaseStep_->getG();
-    case Kind::RATIO:     return ratioStep_->getG();
-    case Kind::SYNTHETIC: return syntheticStep_.g;
-  }
-  return 0.0;
+  return kind_ == Kind::PHASE ? phaseStep_->getG() : ratioStep_->getG();
 }
 
 double
 StepInterfaceIIDM::getB() const {
-  switch (kind_) {
-    case Kind::PHASE:     return phaseStep_->getB();
-    case Kind::RATIO:     return ratioStep_->getB();
-    case Kind::SYNTHETIC: return syntheticStep_.b;
-  }
-  return 0.0;
+  return kind_ == Kind::PHASE ? phaseStep_->getB() : ratioStep_->getB();
 }
 
 double
 StepInterfaceIIDM::getRho() const {
-  switch (kind_) {
-    case Kind::PHASE:     return phaseStep_->getRho();
-    case Kind::RATIO:     return ratioStep_->getRho();
-    case Kind::SYNTHETIC: return syntheticStep_.rho;
-  }
-  return 0.0;
+  return kind_ == Kind::PHASE ? phaseStep_->getRho() : ratioStep_->getRho();
 }
 
 double
 StepInterfaceIIDM::getAlpha() const {
-  switch (kind_) {
-    case Kind::PHASE:     return phaseStep_->getAlpha();
-    case Kind::RATIO:     return 0.0;
-    case Kind::SYNTHETIC: return 0.0;
-  }
-  return 0.0;
+  return kind_ == Kind::PHASE ? phaseStep_->getAlpha() : 0.0;
 }
 
 }  // namespace DYN
