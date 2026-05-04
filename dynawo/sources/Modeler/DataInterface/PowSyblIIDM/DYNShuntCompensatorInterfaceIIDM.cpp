@@ -83,18 +83,8 @@ ShuntCompensatorInterfaceIIDM::importStaticParameters() {
   staticParameters_.clear();
   staticParameters_.insert(std::make_pair("q_pu", StaticParameter("q_pu", StaticParameter::DOUBLE).setValue(getQ() / SNREF)));
   staticParameters_.insert(std::make_pair("q", StaticParameter("q", StaticParameter::DOUBLE).setValue(getQ())));
-  // TODO(iidm-bridge): ShuntCompensator::getB() (aggregate) not exposed; approximate via active section.
-  double B = 0.;
-  const int currentSection = shuntCompensatorIIDM_.getSectionCount();
-  if (shuntCompensatorIIDM_.hasLinearModel()) {
-    B = shuntCompensatorIIDM_.getBPerSection() * static_cast<double>(currentSection);
-  } else if (shuntCompensatorIIDM_.hasNonLinearModel() && currentSection > 0) {
-    const auto sections = shuntCompensatorIIDM_.getNonLinearModel().getAllSections();
-    if (static_cast<int>(sections.size()) >= currentSection) {
-      B = sections[currentSection - 1].b;
-    }
-  }
-  staticParameters_.insert(std::make_pair("isCapacitor", StaticParameter("isCapacitor", StaticParameter::BOOL).setValue(B > 0)));
+  bool isCapacitor = shuntCompensatorIIDM_.getB() > 0;
+  staticParameters_.insert(std::make_pair("isCapacitor", StaticParameter("isCapacitor", StaticParameter::BOOL).setValue(isCapacitor)));
   if (getBusInterface()) {
     double U0 = getBusInterface()->getV0();
     double vNom = shuntCompensatorIIDM_.getTerminal().getVoltageLevel().getNominalV();

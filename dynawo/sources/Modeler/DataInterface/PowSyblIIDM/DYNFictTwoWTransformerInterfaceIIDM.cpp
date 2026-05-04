@@ -51,12 +51,10 @@ namespace DYN {
                       RatedU1_(ratedU1),
                       activeSeason_(activeSeason) {
     setType(ComponentInterface::TWO_WTFO);
-    // TODO(iidm-bridge): RatioTapChanger::getRegulationTerminal() not exposed; compare terminal ids instead.
     auto selfLocallyRegulating = [&]() -> bool {
       if (!leg.value().hasRatioTapChanger()) return false;
-      const auto rtc = leg.value().getRatioTapChanger();
-      const std::string termId = rtc.getRegulationTerminalId();
-      return !termId.empty() && termId == leg.value().getTerminal().getBusId();
+      iidm::Terminal regTerm = leg.value().getRatioTapChanger().getRegulationTerminal();
+      return regTerm.isValid() && regTerm == leg.value().getTerminal();
     };
     if (leg.value().hasPhaseTapChanger() ||
         (leg.value().hasRatioTapChanger() && selfLocallyRegulating()))

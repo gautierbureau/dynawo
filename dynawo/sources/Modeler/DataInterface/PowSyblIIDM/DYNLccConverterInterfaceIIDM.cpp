@@ -60,8 +60,7 @@ LccConverterInterfaceIIDM::importStaticParameters() {
   staticParameters_.insert(std::make_pair("powerFactor", StaticParameter("powerFactor", StaticParameter::DOUBLE).setValue(getPowerFactor())));
   if (getBusInterface()) {
     double U0 = getBusInterface()->getV0();
-    // TODO(iidm-bridge): LccConverterStation::getHvdcLine() not exposed; fall back to terminal VL nominalV.
-    double vNom = lccConverterIIDM_.getTerminal().getVoltageLevel().getNominalV();
+    double vNom = lccConverterIIDM_.getHvdcLine().getNominalV();
     double theta = getBusInterface()->getAngle0();
     staticParameters_.insert(std::make_pair("v_pu", StaticParameter("v_pu", StaticParameter::DOUBLE).setValue(U0 / vNom)));
     staticParameters_.insert(std::make_pair("angle_pu", StaticParameter("angle_pu", StaticParameter::DOUBLE).setValue(theta * M_PI / 180)));

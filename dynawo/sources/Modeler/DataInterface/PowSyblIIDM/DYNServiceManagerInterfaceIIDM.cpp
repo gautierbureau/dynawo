@@ -147,17 +147,15 @@ ServiceManagerInterfaceIIDM::getRegulatedBus(const std::string& regulatingCompon
       if (isABattery) {
         return std::shared_ptr<BusInterface>();
       } else {
-        // TODO(iidm-bridge): Generator::getRegulatingTerminal() is not exposed; fall back to connection terminal.
         auto generator = dataInterface_->getNetworkIIDM().getGenerator(regulatingComp.get()->getID());
         if (!generator) return std::shared_ptr<BusInterface>();
-        return getRegulatedBusOnSide(generator.value().getTerminal());
+        return getRegulatedBusOnSide(generator.value().getRegulatingTerminal());
       }
     }
     case ComponentInterface::SVC: {
-      // TODO(iidm-bridge): StaticVarCompensator::getRegulatingTerminal() is not exposed; fall back to connection terminal.
       auto svc = dataInterface_->getNetworkIIDM().getStaticVarCompensator(regulatingComp.get()->getID());
       if (!svc) return std::shared_ptr<BusInterface>();
-      return getRegulatedBusOnSide(svc.value().getTerminal());
+      return getRegulatedBusOnSide(svc.value().getRegulatingTerminal());
     }
     case ComponentInterface::SHUNT: {
       auto shunt = dataInterface_->getNetworkIIDM().getShuntCompensator(regulatingComp.get()->getID());
@@ -180,7 +178,7 @@ ServiceManagerInterfaceIIDM::getRegulatedBus(const std::string& regulatingCompon
     case ComponentInterface::VSC_CONVERTER: {
       auto vsc = dataInterface_->getNetworkIIDM().getVscConverterStation(regulatingComp.get()->getID());
       if (!vsc) return std::shared_ptr<BusInterface>();
-      return getRegulatedBusOnSide(vsc.value().getTerminal());  // regulating at connection terminal
+      return getRegulatedBusOnSide(vsc.value().getRegulatingTerminal());
     }
   }
   return std::shared_ptr<BusInterface> ();

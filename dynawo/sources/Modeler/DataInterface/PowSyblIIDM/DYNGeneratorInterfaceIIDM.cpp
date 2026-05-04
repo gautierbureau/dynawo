@@ -126,8 +126,10 @@ GeneratorInterfaceIIDM::importStaticParameters() {
       localVNom = generatorIIDM_.getTerminal().getVoltageLevel().getNominalV();
     else
       throw DYNError(Error::MODELER, UndefinedNominalV, generatorIIDM_.getTerminal().getVoltageLevel().getId());
-    // TODO(iidm-bridge): Generator::getRegulatingTerminal() not exposed; fall back to the generator's own terminal.
-    double distantvNom = localVNom;
+    iidm::Terminal regulatingTerminal = generatorIIDM_.getRegulatingTerminal();
+    double distantvNom = regulatingTerminal.isValid()
+        ? regulatingTerminal.getVoltageLevel().getNominalV()
+        : localVNom;
 
     double theta = getBusInterface()->getAngle0();
     staticParameters_.insert(std::make_pair("v_pu", StaticParameter("v_pu", StaticParameter::DOUBLE).setValue(U0 / localVNom)));

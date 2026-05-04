@@ -298,18 +298,6 @@ class DataInterfaceIIDM : public DataInterfaceImpl {
                                                                 const std::optional<iidm::Country>& country);
 
   /**
-   * @brief Import injectors (generators / batteries / loads / shunts / SVCs /
-   * dangling lines / VSC and LCC converters) by iterating network-level
-   * collections and dispatching to each terminal's voltage level.
-   *
-   * Required because the iidm-bridge VoltageLevel does not expose per-injector
-   * getters yet.
-   *
-   * @param vlCountry map of voltage level id to country string
-   */
-  void importInjectorsByVoltageLevel(const std::unordered_map<std::string, std::string>& vlCountry);
-
-  /**
    * @brief import and create a switch interface thanks to the IIDM instance
    *
    * @param switchIIDM IIDM instance to use to create switchInterface
