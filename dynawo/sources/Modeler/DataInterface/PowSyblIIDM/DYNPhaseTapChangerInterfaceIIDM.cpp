@@ -30,10 +30,8 @@
 namespace DYN {
 
 PhaseTapChangerInterfaceIIDM::PhaseTapChangerInterfaceIIDM(iidm::PhaseTapChanger tapChanger) : tapChangerIIDM_(tapChanger) {
-  // TODO(iidm-bridge): iidm::PhaseTapChangerStep has no multi-arg constructor; iterate through getAllSteps().
-  const auto all = tapChanger.getAllSteps();
-  for (const auto& s : all) {
-    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(s));
+  for (const auto& step : tapChanger.getAllSteps()) {
+    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(step));
   }
 }
 

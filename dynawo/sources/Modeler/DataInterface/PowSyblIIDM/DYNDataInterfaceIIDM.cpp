@@ -387,10 +387,14 @@ DataInterfaceIIDM::importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM, cons
     //===========================
     //  ADD SWITCH INTERFACE
     //===========================
-    // TODO(iidm-bridge): BusBreakerView::getBus1/2(switchId) not exposed; switches at
-    // bus-breaker level are skipped until iidm-bridge surfaces the per-switch bus pair.
     for (auto& switchIIDM : voltageLevelIIDM.getSwitches()) {
-      (void) switchIIDM;
+      auto bus1 = findBusBreakerBusInterface(voltageLevelIIDM.getBusBreakerView().getBus1(switchIIDM.getId()));
+      auto bus2 = findBusBreakerBusInterface(voltageLevelIIDM.getBusBreakerView().getBus2(switchIIDM.getId()));
+      std::shared_ptr<SwitchInterface> sw = importSwitch(switchIIDM, bus1, bus2);
+      if (sw->getBusInterface1() != sw->getBusInterface2()) {
+        components_[sw->getID()] = sw;
+        voltageLevel->addSwitch(sw);
+      }
     }
   }
 
@@ -525,8 +529,25 @@ DataInterfaceIIDM::importDanglingLine(iidm::DanglingLine& danglingLineIIDM) cons
   std::unique_ptr<DanglingLineInterfaceIIDM> danglingLine = DYN::make_unique<DanglingLineInterfaceIIDM>(danglingLineIIDM);
   danglingLine->setBusInterface(findBusInterface(danglingLineIIDM.getTerminal()));
 
-  // TODO(iidm-bridge): iidm::DanglingLine does not expose getCurrentLimits() in the
-  // new API; no current-limit wiring is possible here for now.
+  auto currentLimitsOpt = danglingLineIIDM.getCurrentLimits();
+  if (currentLimitsOpt) {
+    iidm::CurrentLimits currentLimits = currentLimitsOpt.value();
+
+    if (!std::isnan(currentLimits.getPermanentLimit())) {
+      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
+                                                                                                      std::numeric_limits<unsigned long>::max(),
+                                                                                                      false);
+      danglingLine->addCurrentLimitInterface(std::move(cLimit));
+    }
+
+    for (auto& currentLimit : currentLimits.getTemporaryLimits()) {
+      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
+                                                                                                      currentLimit.acceptableDuration,
+                                                                                                      currentLimit.fictitious,
+                                                                                                      currentLimit.name);
+      danglingLine->addCurrentLimitInterface(std::move(cLimit));
+    }
+  }
   return danglingLine;
 }
 
@@ -570,14 +591,10 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
   twoWTfo->setBusInterface2(findBusInterface(twoWTfoIIDM.getTerminal2()));
   twoWTfo->setVoltageLevelInterface2(findVoltageLevelInterface(twoWTfoIIDM.getTerminal2().getVoltageLevel().getId()));
 
-  // TODO(iidm-bridge): getCurrentLimits1/2() now return std::optional<CurrentLimits>;
-  // TemporaryLimit is a plain struct (name/value/acceptableDuration/fictitious) and
-  // getFictitiousLimits() is no longer exposed.
   auto cl1Opt = twoWTfoIIDM.getCurrentLimits1();
   if (cl1Opt) {
     iidm::CurrentLimits currentLimits = cl1Opt.value();
 
-    // permanent limit
     if (!std::isnan(currentLimits.getPermanentLimit())) {
       std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
                                                                                                       std::numeric_limits<unsigned long>::max(),
@@ -585,15 +602,12 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
       twoWTfo->addCurrentLimitInterface1(std::move(cLimit));
     }
 
-    // temporary limit
     for (auto& currentLimit : currentLimits.getTemporaryLimits()) {
-      if (!currentLimit.fictitious) {
-        std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                        currentLimit.acceptableDuration,
-                                                                                                        currentLimit.fictitious,
-                                                                                                        currentLimit.name);
-        twoWTfo->addCurrentLimitInterface1(std::move(cLimit));
-      }
+      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
+                                                                                                      currentLimit.acceptableDuration,
+                                                                                                      currentLimit.fictitious,
+                                                                                                      currentLimit.name);
+      twoWTfo->addCurrentLimitInterface1(std::move(cLimit));
     }
   }
 
@@ -601,7 +615,6 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
   if (cl2Opt) {
     iidm::CurrentLimits currentLimits = cl2Opt.value();
 
-    // permanent limit
     if (!std::isnan(currentLimits.getPermanentLimit())) {
       std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
                                                                                                       std::numeric_limits<unsigned long>::max(),
@@ -609,15 +622,12 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
       twoWTfo->addCurrentLimitInterface2(std::move(cLimit));
     }
 
-    // temporary limit
     for (auto& currentLimit : currentLimits.getTemporaryLimits()) {
-      if (!currentLimit.fictitious) {
-        std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                        currentLimit.acceptableDuration,
-                                                                                                        currentLimit.fictitious,
-                                                                                                        currentLimit.name);
-        twoWTfo->addCurrentLimitInterface2(std::move(cLimit));
-      }
+      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
+                                                                                                      currentLimit.acceptableDuration,
+                                                                                                      currentLimit.fictitious,
+                                                                                                      currentLimit.name);
+      twoWTfo->addCurrentLimitInterface2(std::move(cLimit));
     }
   }
   return twoWTfo;
@@ -627,18 +637,19 @@ void
 DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransformer& threeWindingTransformer) {
   const string fictVLId = threeWindingTransformer.getId() + "_FictVL";
   const string fictBusId = threeWindingTransformer.getId() + "_FictBUS";
-  // TODO(iidm-bridge): ThreeWindingsTransformer::getSubstation() is not exposed; default to no country.
   string countryStr;
+  if (threeWindingTransformer.getSubstation().getCountry()) {
+    countryStr = iidmCountryName(threeWindingTransformer.getSubstation().getCountry().value());
+  }
 
-  // TODO(iidm-bridge): legs are value types on the new side; wrap them in std::optional
-  // so downstream code that used stdcxx::Reference<Leg> keeps the same has-value semantics.
+  // legs are value types on the new side; wrap them in std::optional so downstream
+  // code that used stdcxx::Reference<Leg> keeps the same has-value semantics.
   std::vector<std::optional<iidm::ThreeWindingsTransformer::Leg> > legs;
   legs.emplace_back(threeWindingTransformer.getLeg1());
   legs.emplace_back(threeWindingTransformer.getLeg2());
   legs.emplace_back(threeWindingTransformer.getLeg3());
 
-  // TODO(iidm-bridge): ThreeWindingsTransformer::getRatedU0() is not exposed; use leg1 ratedU as proxy.
-  const double ratedU0 = threeWindingTransformer.getLeg1().getRatedU();
+  const double ratedU0 = threeWindingTransformer.getRatedU0();
   std::shared_ptr<VoltageLevelInterface> vl = std::make_shared<FictVoltageLevelInterfaceIIDM>(fictVLId, ratedU0, countryStr);
   network_->addVoltageLevel(vl);
   voltageLevels_[vl->getID()] = vl;
@@ -684,26 +695,21 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
         fictTwoWTransf->setRatioTapChanger(std::move(tapChanger));
       }
     }
-    // TODO(iidm-bridge): getCurrentLimits() returns std::optional<CurrentLimits>; use value(); no getFictitiousLimits() anymore.
     auto currentLimitsOpt = leg.value().getCurrentLimits();
     if (currentLimitsOpt) {
       iidm::CurrentLimits currentLimits = currentLimitsOpt.value();
-      // permanent limit
       if (!std::isnan(currentLimits.getPermanentLimit())) {
         std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
                                                                                                         std::numeric_limits<unsigned long>::max(),
                                                                                                         false);
         fictTwoWTransf->addCurrentLimitInterface2(std::move(cLimit));
       }
-      // temporary limit (TemporaryLimit is a POD struct on the new side)
       for (auto& currentLimit : currentLimits.getTemporaryLimits()) {
-        if (!currentLimit.fictitious) {
-          std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                          currentLimit.acceptableDuration,
-                                                                                                          currentLimit.fictitious,
-                                                                                                          currentLimit.name);
-          fictTwoWTransf->addCurrentLimitInterface2(std::move(cLimit));
-        }
+        std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
+                                                                                                        currentLimit.acceptableDuration,
+                                                                                                        currentLimit.fictitious,
+                                                                                                        currentLimit.name);
+        fictTwoWTransf->addCurrentLimitInterface2(std::move(cLimit));
       }
     }
     network_->addTwoWTransformer(fictTwoWTransf);
@@ -721,9 +727,6 @@ DataInterfaceIIDM::importLine(iidm::Line& lineIIDM) const {
   line->setBusInterface2(findBusInterface(lineIIDM.getTerminal2()));
   line->setVoltageLevelInterface2(findVoltageLevelInterface(lineIIDM.getTerminal2().getVoltageLevel().getId()));
 
-  // TODO(iidm-bridge): getCurrentLimits1/2() now return std::optional<CurrentLimits>;
-  // TemporaryLimit is a plain struct (name/value/acceptableDuration/fictitious) and
-  // getFictitiousLimits() is no longer exposed.
   auto cl1Opt = lineIIDM.getCurrentLimits1();
   if (cl1Opt) {
     iidm::CurrentLimits currentLimits1 = cl1Opt.value();
@@ -733,21 +736,17 @@ DataInterfaceIIDM::importLine(iidm::Line& lineIIDM) const {
                                                                                                       false);
       line->addCurrentLimitInterface1(std::move(cLimit));
     }
-    // temporary limit on side 1
     for (auto& currentLimit : currentLimits1.getTemporaryLimits()) {
-      if (!currentLimit.fictitious) {
-        std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                        currentLimit.acceptableDuration,
-                                                                                                        currentLimit.fictitious,
-                                                                                                        currentLimit.name);
-        line->addCurrentLimitInterface1(std::move(cLimit));
-      }
+      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
+                                                                                                      currentLimit.acceptableDuration,
+                                                                                                      currentLimit.fictitious,
+                                                                                                      currentLimit.name);
+      line->addCurrentLimitInterface1(std::move(cLimit));
     }
   }
 
   auto cl2Opt = lineIIDM.getCurrentLimits2();
   if (cl2Opt) {
-    // permanent limit on side 2
     iidm::CurrentLimits currentLimits2 = cl2Opt.value();
     if (!std::isnan(currentLimits2.getPermanentLimit())) {
       std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits2.getPermanentLimit(),
@@ -755,15 +754,12 @@ DataInterfaceIIDM::importLine(iidm::Line& lineIIDM) const {
                                                                                                       false);
       line->addCurrentLimitInterface2(std::move(cLimit));
     }
-    // temporary limit on side 2
     for (auto& currentLimit : currentLimits2.getTemporaryLimits()) {
-      if (!currentLimit.fictitious) {
-        std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                        currentLimit.acceptableDuration,
-                                                                                                        currentLimit.fictitious,
-                                                                                                        currentLimit.name);
-        line->addCurrentLimitInterface2(std::move(cLimit));
-      }
+      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
+                                                                                                      currentLimit.acceptableDuration,
+                                                                                                      currentLimit.fictitious,
+                                                                                                      currentLimit.name);
+      line->addCurrentLimitInterface2(std::move(cLimit));
     }
   }
   return line;
@@ -785,7 +781,6 @@ DataInterfaceIIDM::importLccConverter(iidm::LccConverterStation& lccIIDM) const 
 
 std::unique_ptr<HvdcLineInterfaceIIDM>
 DataInterfaceIIDM::importHvdcLine(iidm::HvdcLine& hvdcLineIIDM) const {
-  // TODO(iidm-bridge): getConverterStation1/2() are not exposed; use the string-id getters instead.
   std::shared_ptr<ConverterInterface> conv1 = std::dynamic_pointer_cast<ConverterInterface>(findComponent(hvdcLineIIDM.getConverterStation1Id()));
   std::shared_ptr<ConverterInterface> conv2 = std::dynamic_pointer_cast<ConverterInterface>(findComponent(hvdcLineIIDM.getConverterStation2Id()));
 

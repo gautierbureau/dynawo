@@ -30,18 +30,6 @@
 namespace DYN {
 
 /**
- * @brief Dynawo-side synthetic step used where the iidm-bridge API does not allow
- *        constructing a step directly (e.g. the fallback step in DYNRatioTapChangerInterfaceIIDM).
- */
-struct SyntheticStep {
-  double rho;
-  double r;
-  double x;
-  double g;
-  double b;
-};
-
-/**
  * class StepInterfaceIIDM
  */
 class StepInterfaceIIDM : public StepInterface {
@@ -57,12 +45,6 @@ class StepInterfaceIIDM : public StepInterface {
    * @param step ratio tap changer step's iidm instance
    */
   explicit StepInterfaceIIDM(const iidm::RatioTapChangerStep& step);
-
-  /**
-   * @brief Constructor from a synthetic (Dynawo-side) step
-   * @param step synthetic step values
-   */
-  explicit StepInterfaceIIDM(const SyntheticStep& step);
 
   /**
    * @copydoc StepInterface::getR() const
@@ -95,17 +77,11 @@ class StepInterfaceIIDM : public StepInterface {
   double getAlpha() const override;
 
  private:
-  /**
-   * @brief empty constructor
-   */
-  StepInterfaceIIDM();
-
   /// Kind of step stored.
-  enum class Kind { PHASE, RATIO, SYNTHETIC };
+  enum class Kind { PHASE, RATIO };
 
   boost::optional<iidm::PhaseTapChangerStep> phaseStep_;  ///< reference to the iidm phase tap changer step instance
   boost::optional<iidm::RatioTapChangerStep> ratioStep_;  ///< reference to the iidm ratio tap changer step instance
-  SyntheticStep syntheticStep_ = {0., 0., 0., 0., 0.};    ///< Dynawo-side synthetic step values
   Kind kind_;                                             ///< discriminant for the step kind
 };                                                        ///< interface class for step of tap changer
 

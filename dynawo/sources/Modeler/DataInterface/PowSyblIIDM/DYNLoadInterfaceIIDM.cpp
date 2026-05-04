@@ -192,8 +192,7 @@ LoadInterfaceIIDM::getPUnderVoltage() {
 
 bool
 LoadInterfaceIIDM::isFictitious() {
-  // TODO(iidm-bridge): Load does not expose isFictitious() in the new API; only LoadType is checked.
-  return (loadIIDM_.getLoadType() == iidm::LoadType::FICTITIOUS);
+  return (loadIIDM_.isFictitious() || loadIIDM_.getLoadType() == iidm::LoadType::FICTITIOUS);
 }
 
 }  // namespace DYN

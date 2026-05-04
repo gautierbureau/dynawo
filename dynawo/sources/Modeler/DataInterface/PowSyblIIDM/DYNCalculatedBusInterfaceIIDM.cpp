@@ -25,6 +25,8 @@
 #include "DYNCommon.h"
 
 #include <iidm/Bus.h>
+#include <iidm/Terminal.h>
+#include <iidm/VoltageLevel.h>
 #include <algorithm>
 #include <sstream>
 #include <cmath>
@@ -150,20 +152,16 @@ CalculatedBusInterfaceIIDM::getComponentVarIndex(const std::string& varName) con
 
 void
 CalculatedBusInterfaceIIDM::exportStateVariablesUnitComponent() {
-  // TODO(iidm-bridge): calculated-bus state-variable export disabled pending iidm-bridge support
-  //                    (VoltageLevel::NodeBreakerView::getTerminal(node) is not yet exposed).
-  static bool warnedOnce = false;
-  if (!warnedOnce) {
-    Trace::warn("DATAINTERFACE") << "calculated-bus state-variable export disabled pending iidm-bridge support" << Trace::endline;
-    warnedOnce = true;
-  }
   double angle = getStateVarAngle();
   if (doubleIsZero(angle))
     angle = 0.;
-  (void)angle;
   for (const auto& node : nodes_) {
-    (void)node;
-    // no-op until getTerminal(node) is supported
+    iidm::Terminal terminal = voltageLevel_.getNodeBreakerView().getTerminal(node);
+    if (!terminal.isValid()) continue;
+    iidm::Bus bus = terminal.getBusView();
+    if (!bus.isValid()) continue;
+    bus.setV(getStateVarV());
+    bus.setAngle(angle);
   }
 }
 

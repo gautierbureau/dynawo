@@ -280,7 +280,6 @@ HvdcLineInterfaceIIDM::getPmax() const {
 
 HvdcLineInterfaceIIDM::ConverterMode_t
 HvdcLineInterfaceIIDM::getConverterMode() const {
-  // TODO(iidm-bridge): Convert modes are now a flat enum (RECTIFIER/INVERTER) representing side 1's mode.
   return hvdcLineIIDM_.getConvertersMode() == iidm::HvdcConverterStationMode::RECTIFIER
              ? HvdcLineInterface::RECTIFIER_INVERTER
              : HvdcLineInterface::INVERTER_RECTIFIER;

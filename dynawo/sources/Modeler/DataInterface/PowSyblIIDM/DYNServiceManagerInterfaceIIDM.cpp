@@ -191,9 +191,8 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const iidm::Terminal& termina
   switch (regulatedComponent->getType()) {
     case ComponentInterface::LINE: {
       std::shared_ptr<LineInterface> line = std::dynamic_pointer_cast<LineInterface>(regulatedComponent);
-      // TODO(iidm-bridge): stdcxx::areSame is not exposed; compare via bus id.
       auto lineIIDM = dataInterface_->getNetworkIIDM().getLine(regulatedComponent.get()->getID());
-      if (lineIIDM && terminal.getBusId() == lineIIDM.value().getTerminal1().getBusId())
+      if (lineIIDM && terminal == lineIIDM.value().getTerminal1())
         return line.get()->getBusInterface1();
       return line.get()->getBusInterface2();
     }
@@ -202,9 +201,12 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const iidm::Terminal& termina
       return std::dynamic_pointer_cast<BusInterface>(regulatedComponent);
     }
     case ComponentInterface::SWITCH: {
-      // TODO(iidm-bridge): terminal.getConnectable() and getTerminals() are not exposed in the new API; return side 1 by default.
       std::shared_ptr<SwitchInterface> switch_ = std::dynamic_pointer_cast<SwitchInterface>(regulatedComponent);
-      return switch_.get()->getBusInterface1();
+      const auto switchTerminals = terminal.getTerminals();
+      assert(switchTerminals.size() == 2);
+      if (terminal == switchTerminals.at(0))
+        return switch_.get()->getBusInterface1();
+      return switch_.get()->getBusInterface2();
     }
     case ComponentInterface::LOAD: {
       return std::dynamic_pointer_cast<LoadInterface>(regulatedComponent).get()->getBusInterface();
@@ -217,9 +219,8 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const iidm::Terminal& termina
     }
     case ComponentInterface::TWO_WTFO: {
       std::shared_ptr<TwoWTransformerInterface> TwoWTransf = std::dynamic_pointer_cast<TwoWTransformerInterface>(regulatedComponent);
-      // TODO(iidm-bridge): stdcxx::areSame is not exposed; compare via bus id.
       auto TwoWTransfIIDM = dataInterface_->getNetworkIIDM().getTwoWindingsTransformer(regulatedComponent.get()->getID());
-      if (TwoWTransfIIDM && terminal.getBusId() == TwoWTransfIIDM.value().getTerminal1().getBusId())
+      if (TwoWTransfIIDM && terminal == TwoWTransfIIDM.value().getTerminal1())
         return TwoWTransf.get()->getBusInterface1();
       return TwoWTransf.get()->getBusInterface2();
     }
@@ -237,13 +238,11 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const iidm::Terminal& termina
     }
     case ComponentInterface::THREE_WTFO: {
       std::shared_ptr<ThreeWTransformerInterface> ThreeWTransf = std::dynamic_pointer_cast<ThreeWTransformerInterface>(regulatedComponent);
-      // TODO(iidm-bridge): stdcxx::areSame is not exposed; compare via bus id.
       auto ThreeWTransfIIDM = dataInterface_->getNetworkIIDM().getThreeWindingsTransformer(regulatedComponent.get()->getID());
       if (ThreeWTransfIIDM) {
-        const std::string termBusId = terminal.getBusId();
-        if (termBusId == ThreeWTransfIIDM.value().getLeg1().getTerminal().getBusId())
+        if (terminal == ThreeWTransfIIDM.value().getLeg1().getTerminal())
           return ThreeWTransf.get()->getBusInterface1();
-        if (termBusId == ThreeWTransfIIDM.value().getLeg2().getTerminal().getBusId())
+        if (terminal == ThreeWTransfIIDM.value().getLeg2().getTerminal())
           return ThreeWTransf.get()->getBusInterface2();
       }
       return ThreeWTransf.get()->getBusInterface3();
