@@ -1432,11 +1432,9 @@ install_jquery() {
 }
 
 jobs_with_curves() {
-  install_jquery
   launch_jobs $@ || error_exit "Dynawo job failed."
-  echo "Generating curves visualization pages"
-  curves_visu $@ || error_exit "Error during curves visualisation page generation"
-  echo "End of generating curves visualization pages"
+  echo "Launching curves visualizer app"
+  curves_visu_app $@ || error_exit "Error launching curves visualizer app"
 }
 
 curves_visu() {
