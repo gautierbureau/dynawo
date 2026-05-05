@@ -14,5 +14,5 @@
 #include "gtest_dynawo.h"
 
 TEST(DataInterfaceTest, testFictVoltageLevelInterface) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }

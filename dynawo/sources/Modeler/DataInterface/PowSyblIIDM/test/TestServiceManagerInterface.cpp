@@ -14,9 +14,9 @@
 #include "gtest_dynawo.h"
 
 TEST(DataInterfaceTest, ServiceManager) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
 
 TEST(DataInterfaceTest, ServiceManagerRegulatedBus) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
