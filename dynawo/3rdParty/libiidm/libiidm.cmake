@@ -72,10 +72,12 @@ else()
                       "$<$<BOOL:${FORCE_CXX11_ABI}>:-DCMAKE_CXX_FLAGS=-D_GLIBCXX_USE_CXX11_ABI=1>"
                       "$<$<BOOL:${MSVC}>:-DINSTALL_LIB_DIR:STRING=bin>"
                       "-DBUILD_SHARED_LIBS=ON"
-                      "-DIIDM_BRIDGE_BUILD_TESTS=OFF"
+                      "-DIIDM_BRIDGE_ENABLE_GRAALVM=ON"
+                      "-DIIDM_BRIDGE_ENABLE_JNI=ON"
+                      "-DIIDM_BRIDGE_BUILD_TESTS=ON"
                       "-DIIDM_BRIDGE_BUILD_EXAMPLES=OFF"
-                      "-DIIDM_BRIDGE_BUILD_JAVA=OFF"
-                      "-DIIDM_BRIDGE_BUILD_NATIVE=OFF"
+                      "-DIIDM_BRIDGE_BUILD_JAVA=ON"
+                      "-DIIDM_BRIDGE_BUILD_NATIVE=ON"
   )
 
   unset(iidm_bridge_git_url)
