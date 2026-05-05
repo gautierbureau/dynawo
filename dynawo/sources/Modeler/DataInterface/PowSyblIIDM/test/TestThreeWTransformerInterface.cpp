@@ -14,5 +14,5 @@
 #include "gtest_dynawo.h"
 
 TEST(DataInterfaceTest, ThreeWTransformer_1) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }

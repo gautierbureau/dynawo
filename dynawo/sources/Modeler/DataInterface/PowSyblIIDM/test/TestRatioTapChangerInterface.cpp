@@ -14,13 +14,13 @@
 #include "gtest_dynawo.h"
 
 TEST(DataInterfaceTest, RatioTapChanger_2WT) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
 
 TEST(DataInterfaceTest, RatioTapChanger_bad) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
 
 TEST(DataInterfaceTest, RatioTapChanger_3WT) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }

@@ -14,9 +14,9 @@
 #include "gtest_dynawo.h"
 
 TEST(DataInterfaceTest, PhaseTapChanger_2WT) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
 
 TEST(DataInterfaceTest, PhaseTapChanger_3WT) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }

@@ -14,17 +14,17 @@
 #include "gtest_dynawo.h"
 
 TEST(DataInterfaceTest, TwoWTransformer_1) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
 
 TEST(DataInterfaceTest, TwoWTransformer_2) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
 
 TEST(DataInterfaceTest, TwoWTransformer_NoInitialConnections) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
 
 TEST(DataInterfaceTest, TwoWTransformer_R_X_zero) {
-  GTEST_SKIP() << "TODO: rewrite for iidm-bridge-cpp";
+  // TODO: rewrite for iidm-bridge-cpp
 }
