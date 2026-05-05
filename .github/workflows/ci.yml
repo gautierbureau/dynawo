@@ -42,16 +42,14 @@ jobs:
           # which require: a JDK (jni.h + libjvm.so), Maven, and a native-image
           # toolchain. The dynawo-ci image is fedora:29 based and ships none of
           # them; install them here until they are baked into the image.
-          dnf install -y --setopt=tsflags=nodocs \
-            java-1.8.0-openjdk-devel \
-            maven
-          # GraalVM CE 22.3.3 (last freely-distributed CE release) provides the
-          # native-image binary needed by IIDM_BRIDGE_BUILD_NATIVE.
-          curl -L -o /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.3/graalvm-ce-java17-linux-amd64-22.3.3.tar.gz
+          dnf install -y --setopt=tsflags=nodocs maven
+          # GraalVM Community JDK 21 — the iidm-bridge java module targets
+          # Java 21 (see java/pom.xml maven.compiler.source/target), and
+          # native-image is bundled, no separate 'gu install' needed.
+          curl -L -o /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_linux-x64_bin.tar.gz
           mkdir -p /opt/graalvm
           tar xzf /tmp/graalvm.tar.gz -C /opt/graalvm --strip-components=1
           rm /tmp/graalvm.tar.gz
-          /opt/graalvm/bin/gu install native-image
           echo "GRAALVM_HOME=/opt/graalvm" >> "$GITHUB_ENV"
           echo "JAVA_HOME=/opt/graalvm" >> "$GITHUB_ENV"
           echo "/opt/graalvm/bin" >> "$GITHUB_PATH"
@@ -141,14 +139,11 @@ jobs:
     steps:
       - name: Install Java/JNI and GraalVM native-image for iidm-bridge
         run: |
-          dnf install -y --setopt=tsflags=nodocs \
-            java-1.8.0-openjdk-devel \
-            maven
-          curl -L -o /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.3/graalvm-ce-java17-linux-amd64-22.3.3.tar.gz
+          dnf install -y --setopt=tsflags=nodocs maven
+          curl -L -o /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_linux-x64_bin.tar.gz
           mkdir -p /opt/graalvm
           tar xzf /tmp/graalvm.tar.gz -C /opt/graalvm --strip-components=1
           rm /tmp/graalvm.tar.gz
-          /opt/graalvm/bin/gu install native-image
           # JAVA_HOME is exported here for the third-party build; the Sonarcloud
           # step sets its own JAVA_HOME inline (sonar-scanner needs JDK 17), so
           # the two don't conflict.
