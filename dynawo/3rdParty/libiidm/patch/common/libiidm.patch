@@ -1,4 +1,5 @@
 Fix genex list split for JNI_LIBRARIES / JNI_INCLUDE_DIRS / GRAALVM_INCLUDE_DIRS
++ propagate JNI libs to consumers
 
 CMake list variables expand inside generator expressions with their ';'
 separators preserved, which then split the surrounding genex into
@@ -8,6 +9,17 @@ name -> "No rule to make target ...libjvm.so>".
 
 Move the conditionals to plain if() blocks so list variables are passed
 as proper lists, not embedded inside genex.
+
+JNI_LIBRARIES is also moved from PRIVATE to PUBLIC: libiidmbridge.so
+records DT_NEEDED libjvm.so / libjawt.so, so any consumer (dynawo here)
+linking against the exported IidmBridge::iidmbridge target needs the
+JVM library directories on its link path. Making them PUBLIC propagates
+the absolute paths to consumers via INTERFACE_LINK_LIBRARIES, fixing:
+
+    /usr/bin/ld: warning: libjawt.so, needed by libiidmbridge.so, not found
+    /usr/bin/ld: warning: libjvm.so,  needed by libiidmbridge.so, not found
+    /usr/bin/ld: libiidmbridge.so: undefined reference to
+                 'JNI_GetCreatedJavaVMs@SUNWprivate_1.1'
 
 This patch is applied locally by dynawo's libiidm ExternalProject_Add as
 a stop-gap until the same fix lands upstream.
@@ -35,7 +47,7 @@ a stop-gap until the same fix lands upstream.
          ${CMAKE_DL_LIBS}
  )
 +if(IIDM_BRIDGE_ENABLE_JNI)
-+    target_link_libraries(iidmbridge PRIVATE ${JNI_LIBRARIES})
++    target_link_libraries(iidmbridge PUBLIC ${JNI_LIBRARIES})
 +endif()
 
  target_compile_definitions(iidmbridge PRIVATE
