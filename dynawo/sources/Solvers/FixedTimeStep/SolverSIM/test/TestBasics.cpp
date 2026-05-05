@@ -29,6 +29,7 @@
 
 #include "gtest_dynawo.h"
 #include "DYNDataInterfaceIIDM.h"
+#include <iidm/NetworkFactory.h>
 #include "DYNFileSystemUtils.h"
 #include "DYNExecUtils.h"
 #include "DYNSolver.h"
@@ -140,7 +141,7 @@ static std::pair<SolverFactory::SolverPtr, std::shared_ptr<Model> > initSolverAn
 
   // DYD
   boost::shared_ptr<DynamicData> dyd(new DynamicData());
-  auto networkIIDM = boost::make_shared<powsybl::iidm::Network>(powsybl::iidm::Network::readXml(boost::filesystem::path(iidmFileName)));
+  auto networkIIDM = boost::make_shared<iidm::Network>(iidm::NetworkFactory::load(iidmFileName));
   boost::shared_ptr<DataInterface> data(new DataInterfaceIIDM(networkIIDM));
 
   boost::dynamic_pointer_cast<DataInterfaceIIDM>(data)->initFromIIDM();

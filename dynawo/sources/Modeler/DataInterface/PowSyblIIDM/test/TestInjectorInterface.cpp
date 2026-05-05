@@ -14,74 +14,51 @@
 /**
  * @file  TestInjectorInterface.cpp
  *
- * @brief Test of the Injector interface base class for IIDM
- *
- * InjectorInterface is a base class for other objects: LoadInterface, BusCalculated...
- * This test file instanciates only unitary tests
+ * @brief Test of the Injector interface base class for IIDM.
+ * InjectorInterfaceIIDM<T> is a template; tests use LoadInterfaceIIDM
+ * which inherits from InjectorInterfaceIIDM<iidm::Load>.
  */
 
+#include "DYNLoadInterfaceIIDM.h"
 #include "DYNInjectorInterfaceIIDM.h"
 
 #include "DYNBusInterfaceIIDM.h"
 #include "DYNVoltageLevelInterfaceIIDM.h"
 
-#include <powsybl/iidm/Bus.hpp>
-#include <powsybl/iidm/Load.hpp>
-#include <powsybl/iidm/LoadAdder.hpp>
-#include <powsybl/iidm/Network.hpp>
-#include <powsybl/iidm/Substation.hpp>
+#include <iidm/Network.h>
+#include <iidm/NetworkFactory.h>
+#include <iidm/VoltageLevel.h>
+#include <iidm/Bus.h>
+#include <iidm/Load.h>
 
 #include "make_unique.hpp"
 #include "gtest_dynawo.h"
 
+static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
+  for (auto& vl : net.getVoltageLevels())
+    if (vl.getId() == id) return vl;
+  throw std::runtime_error("VoltageLevel not found: " + id);
+}
+
+static iidm::Bus findBus(iidm::VoltageLevel& vl, const std::string& id) {
+  for (auto& b : vl.getBusBreakerView().getBuses())
+    if (b.getId() == id) return b;
+  throw std::runtime_error("Bus not found: " + id);
+}
+
 TEST(DataInterfaceTest, Injector_1) {
-  using powsybl::iidm::Bus;
-  using powsybl::iidm::Load;
-  using powsybl::iidm::LoadType;
-  using powsybl::iidm::Network;
-  using powsybl::iidm::Substation;
-  using powsybl::iidm::TopologyKind;
-  using powsybl::iidm::VoltageLevel;
+  auto net = iidm::NetworkFactory::load("resources/injector.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto bus = findBus(vl, "VL1_BUS1");
+  auto load = net.getLoad("LOAD1").value();
 
-  Network network("test", "test");
-
-  Substation& substation = network.newSubstation()
-                               .setId("S1")
-                               .setName("S1_NAME")
-                               .setCountry(powsybl::iidm::Country::FR)
-                               .setTso("TSO")
-                               .add();
-
-  VoltageLevel& vl1 = substation.newVoltageLevel()
-                          .setId("VL1")
-                          .setName("VL1_NAME")
-                          .setTopologyKind(TopologyKind::BUS_BREAKER)
-                          .setNominalV(380.0)
-                          .setLowVoltageLimit(340.0)
-                          .setHighVoltageLimit(420.0)
-                          .add();
-
-  Bus& bus = vl1.getBusBreakerView().newBus().setId("VL1_BUS1").add();
-
-  vl1.newLoad()
-      .setId("LOAD1")
-      .setBus("VL1_BUS1")
-      .setConnectableBus("VL1_BUS1")
-      .setLoadType(LoadType::UNDEFINED)
-      .setP0(55.0)
-      .setQ0(44.0)
-      .add();
-
-  Load& load = network.getLoad("LOAD1");
-  const powsybl::iidm::Injection& Inj = load;
-
-  DYN::InjectorInterfaceIIDM Ifce(Inj, "Name for TRACE");
-  const std::shared_ptr<DYN::VoltageLevelInterface> voltageLevelIfce = std::make_shared<DYN::VoltageLevelInterfaceIIDM>(vl1);
+  DYN::LoadInterfaceIIDM Ifce(load);
+  const std::shared_ptr<DYN::VoltageLevelInterface> voltageLevelIfce = std::make_shared<DYN::VoltageLevelInterfaceIIDM>(vl);
   Ifce.setVoltageLevelInterfaceInjector(voltageLevelIfce);
-  ASSERT_EQ("Name for TRACE", Ifce.getIDInjector());
+  ASSERT_EQ("LOAD1", Ifce.getIDInjector());
 
   ASSERT_EQ(Ifce.getBusInterfaceInjector().get(), nullptr);
-  std::unique_ptr<DYN::BusInterface> busIfce = DYN::make_unique<DYN::BusInterfaceIIDM>(bus);
+  std::unique_ptr<DYN::BusInterface> busIfce = DYN::make_unique<DYN::BusInterfaceIIDM>(bus, vl);
   Ifce.setBusInterfaceInjector(std::move(busIfce));
   ASSERT_EQ(Ifce.getBusInterfaceInjector().get()->getID(), "VL1_BUS1");
 
@@ -104,61 +81,28 @@ TEST(DataInterfaceTest, Injector_1) {
   ASSERT_TRUE(Ifce.hasQInjector());
   ASSERT_DOUBLE_EQ(Ifce.getQInjector(), 499.0);
 
-  DYN::InjectorInterfaceIIDM IfceNC(Inj, "Injector initially not connected");
+  // Test "initially not connected" interface for LOAD2 (disconnected before first use)
+  auto load2 = net.getLoad("LOAD2").value();
+  load2.getTerminal().disconnect();
+  DYN::LoadInterfaceIIDM IfceNC(load2);
   IfceNC.setVoltageLevelInterfaceInjector(voltageLevelIfce);
   ASSERT_FALSE(IfceNC.getInitialConnectedInjector());
   ASSERT_DOUBLE_EQ(IfceNC.getPInjector(), 0.0);
   ASSERT_DOUBLE_EQ(IfceNC.getQInjector(), 0.0);
   ASSERT_DOUBLE_EQ(Ifce.getVNomInjector(), 380);
   ASSERT_EQ(Ifce.getVoltageLevelInterfaceInjector(), voltageLevelIfce);
-}  // TEST(DataInterfaceTest, Injector_1)
-
+}
 
 TEST(DataInterfaceTest, Injector_2) {
-  using powsybl::iidm::Load;
-  using powsybl::iidm::LoadType;
-  using powsybl::iidm::Network;
-  using powsybl::iidm::Substation;
-  using powsybl::iidm::TopologyKind;
-  using powsybl::iidm::VoltageLevel;
+  auto net = iidm::NetworkFactory::load("resources/injector.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto load2 = net.getLoad("LOAD2").value();
+  load2.getTerminal().disconnect();
 
-  Network network("test", "test");
-
-  Substation& substation = network.newSubstation()
-                               .setId("S1")
-                               .setName("S1_NAME")
-                               .setCountry(powsybl::iidm::Country::FR)
-                               .setTso("TSO")
-                               .add();
-
-  VoltageLevel& vl1 = substation.newVoltageLevel()
-                          .setId("VL1")
-                          .setName("VL1_NAME")
-                          .setTopologyKind(TopologyKind::BUS_BREAKER)
-                          .setNominalV(380.0)
-                          .setLowVoltageLimit(340.0)
-                          .setHighVoltageLimit(420.0)
-                          .add();
-
-  vl1.getBusBreakerView().newBus().setId("VL1_BUS1").add();
-
-  vl1.newLoad()
-      .setId("LOAD2")
-      .setBus("VL1_BUS1")
-      .setConnectableBus("VL1_BUS1")
-      .setLoadType(LoadType::UNDEFINED)
-      .setP0(55.0)
-      .setQ0(44.0)
-      .add();
-
-  Load& load = network.getLoad("LOAD2");
-  load.getTerminal().disconnect();
-  const powsybl::iidm::Injection& Inj = load;
-
-  DYN::InjectorInterfaceIIDM IfceNC(Inj, "Injector initially not connected");
-  const std::shared_ptr<DYN::VoltageLevelInterface> voltageLevelIfce = std::make_shared<DYN::VoltageLevelInterfaceIIDM>(vl1);
+  DYN::LoadInterfaceIIDM IfceNC(load2);
+  const std::shared_ptr<DYN::VoltageLevelInterface> voltageLevelIfce = std::make_shared<DYN::VoltageLevelInterfaceIIDM>(vl);
   IfceNC.setVoltageLevelInterfaceInjector(voltageLevelIfce);
   ASSERT_FALSE(IfceNC.getInitialConnectedInjector());
   ASSERT_DOUBLE_EQ(IfceNC.getPInjector(), 0.0);
   ASSERT_DOUBLE_EQ(IfceNC.getQInjector(), 0.0);
-}  // TEST(DataInterfaceTest, Injector_2)
+}

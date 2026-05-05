@@ -57,8 +57,10 @@ CalculatedBusInterfaceIIDM::addBusBarSection(const string& bbs) {
 
 void
 CalculatedBusInterfaceIIDM::setU0(const double& u0) {
-  if (!std::isnan(u0))
+  if (!std::isnan(u0)) {
     U0_ = u0;
+    hasInitialConditions(true);
+  }
 }
 
 void

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_4" id="test" caseDate="2022-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="test">
+    <iidm:substation id="S1" country="FR">
+        <iidm:voltageLevel id="VL1" nominalV="380.0" lowVoltageLimit="340.0" highVoltageLimit="420.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="VL1_BUS1"/>
+            </iidm:busBreakerTopology>
+            <iidm:danglingLine id="DANGLING_LINE1" p0="3.0" q0="4.0" r="5.0" x="6.0" g="2.0" b="1.0" ucteXnodeCode="ucteXnodeCodeTest"
+                bus="VL1_BUS1" connectableBus="VL1_BUS1">
+                <iidm:currentLimits permanentLimit="1000.0">
+                    <iidm:temporaryLimit name="limit1" acceptableDuration="99" fictitious="false" value="1.0"/>
+                    <iidm:temporaryLimit name="limit2" fictitious="true" value="1.0"/>
+                </iidm:currentLimits>
+            </iidm:danglingLine>
+            <iidm:danglingLine id="DANGLING_LINE2" p0="3.0" q0="4.0" r="0.0" x="0.0" g="0.0" b="0.0"
+                bus="VL1_BUS1" connectableBus="VL1_BUS1" p="10.0" q="40.0"/>
+        </iidm:voltageLevel>
+    </iidm:substation>
+</iidm:network>

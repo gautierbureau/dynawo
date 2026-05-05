@@ -13,10 +13,13 @@
 
 #include "DYNStepInterfaceIIDM.h"
 
+#include <iidm/PhaseTapChangerStep.h>
+#include <iidm/RatioTapChangerStep.h>
+
 #include "gtest_dynawo.h"
 
 TEST(DataInterfaceTest, PhaseTapChangerStep) {
-  powsybl::iidm::PhaseTapChangerStep S(1.1, 2.2, 3.3, 4.4, 5.5, 6.6);
+  iidm::PhaseTapChangerStep S(1.1, 2.2, 3.3, 4.4, 5.5, 6.6);
   DYN::StepInterfaceIIDM Ifce(S);
 
   ASSERT_DOUBLE_EQ(Ifce.getAlpha(), 1.1);
@@ -28,7 +31,7 @@ TEST(DataInterfaceTest, PhaseTapChangerStep) {
 }  // TEST(DataInterfaceTest, PhaseTapChangerStep)
 
 TEST(DataInterfaceTest, RatioTapChangerStep) {
-  powsybl::iidm::RatioTapChangerStep S(1.1, 2.2, 3.3, 4.4, 5.5);
+  iidm::RatioTapChangerStep S(1.1, 2.2, 3.3, 4.4, 5.5);
   DYN::StepInterfaceIIDM Ifce(S);
 
   ASSERT_DOUBLE_EQ(Ifce.getAlpha(), 0.0);
