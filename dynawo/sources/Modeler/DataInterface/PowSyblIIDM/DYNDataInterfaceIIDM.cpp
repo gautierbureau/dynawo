@@ -82,18 +82,6 @@ using criteria::CriteriaCollection;
 
 namespace DYN {
 
-// TODO(iidm-bridge): iidm-bridge does not expose getCountryName; provide a
-// minimal Dynawo-side helper that produces the same uppercase ISO-like string
-// the previous API returned.
-namespace {
-std::string iidmCountryName(iidm::Country country) {
-  // Values are taken from iidm::Country's enumerator names.
-  // The cast goes through the underlying integral to avoid depending on a
-  // dedicated serialization helper that is not exposed here.
-  return std::to_string(static_cast<int>(country));
-}
-}  // namespace
-
 std::mutex DataInterfaceIIDM::loadExtensionMutex_;
 
 DataInterfaceIIDM::DataInterfaceIIDM(const boost::shared_ptr<iidm::Network>& networkIIDM) :
@@ -338,7 +326,7 @@ DataInterfaceIIDM::importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM, cons
   std::shared_ptr<VoltageLevelInterfaceIIDM> voltageLevel = std::make_shared<VoltageLevelInterfaceIIDM>(voltageLevelIIDM);
   string countryStr;
   if (country)
-    countryStr = iidmCountryName(country.value());
+    countryStr = iidm::getCountryName(country.value());
   voltageLevel->setCountry(countryStr);
 
   if (voltageLevelIIDM.getTopologyKind() == iidm::TopologyKind::NODE_BREAKER) {
@@ -639,7 +627,7 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
   const string fictBusId = threeWindingTransformer.getId() + "_FictBUS";
   string countryStr;
   if (threeWindingTransformer.getSubstation().getCountry()) {
-    countryStr = iidmCountryName(threeWindingTransformer.getSubstation().getCountry().value());
+    countryStr = iidm::getCountryName(threeWindingTransformer.getSubstation().getCountry().value());
   }
 
   // legs are value types on the new side; wrap them in std::optional so downstream
