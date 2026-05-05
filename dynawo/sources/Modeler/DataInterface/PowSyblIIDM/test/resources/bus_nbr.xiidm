@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_4" id="test" caseDate="2022-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="test">
+    <iidm:substation id="S5">
+        <iidm:voltageLevel id="MyVoltageLevel" nominalV="400.0" lowVoltageLimit="380.0" highVoltageLimit="420.0" topologyKind="NODE_BREAKER">
+            <iidm:nodeBreakerTopology>
+                <iidm:busbarSection id="BBS" name="BBS_NAME" node="3"/>
+                <iidm:busbarSection id="BBS2" name="BBS2_NAME" node="4"/>
+                <iidm:breaker id="BK1" node1="0" node2="5" retained="true" open="true"/>
+                <iidm:disconnector id="DC11" node1="5" node2="3" retained="false" open="true"/>
+                <iidm:disconnector id="DC12" node1="5" node2="4" retained="false" open="true"/>
+                <iidm:breaker id="BK2" node1="1" node2="6" retained="true" open="false"/>
+                <iidm:disconnector id="DC21" node1="6" node2="3" retained="false" open="true"/>
+                <iidm:disconnector id="DC22" node1="6" node2="4" retained="false" open="false"/>
+                <iidm:breaker id="BK3" node1="2" node2="7" retained="true" open="true"/>
+                <iidm:disconnector id="DC31" node1="7" node2="3" retained="false" open="true"/>
+            </iidm:nodeBreakerTopology>
+        </iidm:voltageLevel>
+    </iidm:substation>
+</iidm:network>

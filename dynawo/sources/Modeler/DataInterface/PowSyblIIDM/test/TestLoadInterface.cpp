@@ -17,66 +17,37 @@
 #include "DYNInjectorInterfaceIIDM.h"
 #include "DYNVoltageLevelInterfaceIIDM.h"
 
-#include <powsybl/iidm/Bus.hpp>
-#include <powsybl/iidm/Load.hpp>
-#include <powsybl/iidm/LoadAdder.hpp>
-#include <powsybl/iidm/Network.hpp>
-#include <powsybl/iidm/Substation.hpp>
+#include <iidm/Network.h>
+#include <iidm/NetworkFactory.h>
+#include <iidm/VoltageLevel.h>
+#include <iidm/Bus.h>
+#include <iidm/Load.h>
 
 #include "make_unique.hpp"
 #include "gtest_dynawo.h"
 
-namespace powsybl {
-namespace iidm {
-
-static Network
-CreateLoadNetwork() {
-  Network network("test", "test");
-
-  Substation& substation = network.newSubstation()
-                               .setId("S1")
-                               .setName("S1_NAME")
-                               .setCountry(powsybl::iidm::Country::FR)
-                               .setTso("TSO")
-                               .add();
-
-  VoltageLevel& vl1 = substation.newVoltageLevel()
-                          .setId("VL1")
-                          .setName("VL1_NAME")
-                          .setTopologyKind(TopologyKind::BUS_BREAKER)
-                          .setNominalV(382.0)
-                          .setLowVoltageLimit(340.0)
-                          .setHighVoltageLimit(420.0)
-                          .add();
-
-  vl1.getBusBreakerView().newBus().setId("VL1_BUS1").add();
-
-  return network;
-}  // CreateLoadNetwork
-}  // namespace iidm
-}  // namespace powsybl
-
 namespace DYN {
-using powsybl::iidm::CreateLoadNetwork;
+
+static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
+  for (auto& vl : net.getVoltageLevels())
+    if (vl.getId() == id) return vl;
+  throw std::runtime_error("VoltageLevel not found: " + id);
+}
+
+static iidm::Bus findBus(iidm::VoltageLevel& vl, const std::string& id) {
+  for (auto& b : vl.getBusBreakerView().getBuses())
+    if (b.getId() == id) return b;
+  throw std::runtime_error("Bus not found: " + id);
+}
 
 TEST(DataInterfaceTest, Load_1) {
-  powsybl::iidm::Network network = CreateLoadNetwork();
-  powsybl::iidm::VoltageLevel& vl1 = network.getVoltageLevel("VL1");
-  powsybl::iidm::Bus& bus1 = vl1.getBusBreakerView().getBus("VL1_BUS1");
-  vl1.newLoad()
-      .setId("LOAD1")
-      .setBus("VL1_BUS1")
-      .setConnectableBus("VL1_BUS1")
-      .setName("LOAD1_NAME")
-      .setLoadType(powsybl::iidm::LoadType::UNDEFINED)
-      .setFictitious(true)
-      .setP0(50.0)
-      .setQ0(40.0)
-      .add();
-  powsybl::iidm::Load& load = network.getLoad("LOAD1");
+  auto net = iidm::NetworkFactory::load("resources/load.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto bus1 = findBus(vl, "VL1_BUS1");
+  auto load = net.getLoad("LOAD1").value();
 
   LoadInterfaceIIDM loadIfce(load);
-  const std::shared_ptr<VoltageLevelInterface> voltageLevelIfce = std::make_shared<DYN::VoltageLevelInterfaceIIDM>(vl1);
+  const std::shared_ptr<VoltageLevelInterface> voltageLevelIfce = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
   loadIfce.setVoltageLevelInterface(voltageLevelIfce);
 
   ASSERT_EQ(loadIfce.getComponentVarIndex(std::string("p")), LoadInterfaceIIDM::VAR_P);
@@ -96,7 +67,7 @@ TEST(DataInterfaceTest, Load_1) {
   ASSERT_TRUE(loadIfce.getInitialConnected());
 
   ASSERT_EQ(loadIfce.getBusInterface().get(), nullptr);
-  std::unique_ptr<BusInterface> busIfce = DYN::make_unique<BusInterfaceIIDM>(bus1);
+  std::unique_ptr<BusInterface> busIfce = DYN::make_unique<BusInterfaceIIDM>(bus1, vl);
   loadIfce.setBusInterface(std::move(busIfce));
   ASSERT_EQ(loadIfce.getBusInterface().get()->getID(), "VL1_BUS1");
 
@@ -130,29 +101,22 @@ TEST(DataInterfaceTest, Load_1) {
   ASSERT_DOUBLE_EQ(loadIfce.getVNomInjector(), 382.0);
   ASSERT_EQ(loadIfce.getVoltageLevelInterfaceInjector(), voltageLevelIfce);
 
-  load.setFictitious(false);
-  LoadInterfaceIIDM loadIfceNotFictitious(load);
-  loadIfceNotFictitious.setVoltageLevelInterface(voltageLevelIfce);
+  // Test load with fictitious=false (loaded from separate file)
+  auto net2 = iidm::NetworkFactory::load("resources/load_not_fictitious.xiidm");
+  auto vl2 = findVL(net2, "VL1");
+  auto loadNotFictitious = net2.getLoad("LOAD1").value();
+  LoadInterfaceIIDM loadIfceNotFictitious(loadNotFictitious);
+  loadIfceNotFictitious.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl2));
   ASSERT_FALSE(loadIfceNotFictitious.isFictitious());
-}  // TEST(DataInterfaceTest, Load_1)
+}
 
-TEST(DataInterfaceTest, Load_2) {  // tests assuming getInitialConnected == false
-  powsybl::iidm::Network network = CreateLoadNetwork();
-  powsybl::iidm::VoltageLevel& vl1 = network.getVoltageLevel("VL1");
-  vl1.newLoad()
-      .setId("LOAD")
-      .setBus("VL1_BUS1")
-      .setConnectableBus("VL1_BUS1")
-      .setName("LOAD1_NAME")
-      .setLoadType(powsybl::iidm::LoadType::FICTITIOUS)
-      .setFictitious(false)
-      .setP0(5000.0)
-      .setQ0(4000.0)
-      .add();
-  powsybl::iidm::Load& load = network.getLoad("LOAD");
+TEST(DataInterfaceTest, Load_2) {
+  auto net = iidm::NetworkFactory::load("resources/load2.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto load = net.getLoad("LOAD").value();
 
   LoadInterfaceIIDM loadIfce(load);
-  const std::shared_ptr<VoltageLevelInterface> voltageLevelIfce = std::make_shared<DYN::VoltageLevelInterfaceIIDM>(vl1);
+  const std::shared_ptr<VoltageLevelInterface> voltageLevelIfce = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
   loadIfce.setVoltageLevelInterface(voltageLevelIfce);
   ASSERT_EQ(loadIfce.getID(), "LOAD");
 
@@ -165,27 +129,14 @@ TEST(DataInterfaceTest, Load_2) {  // tests assuming getInitialConnected == fals
   ASSERT_DOUBLE_EQ(loadIfce.getQ(), 0.0);
   ASSERT_TRUE(loadIfce.isFictitious());
   ASSERT_FALSE(loadIfce.hasInitialConditions());
-}  // TEST(DataInterfaceTest, Load_2)
+}
 
 TEST(DataInterfaceTest, Load_3) {
-  powsybl::iidm::Network network = CreateLoadNetwork();
-  powsybl::iidm::VoltageLevel& vl1 = network.getVoltageLevel("VL1");
-  vl1.newLoad()
-      .setId("LOAD1")
-      .setBus("VL1_BUS1")
-      .setConnectableBus("VL1_BUS1")
-      .setName("LOAD1_NAME")
-      .setLoadType(powsybl::iidm::LoadType::UNDEFINED)
-      .setFictitious(true)
-      .setP0(50.0)
-      .setQ0(40.0)
-      .add();
-  powsybl::iidm::Load& load = network.getLoad("LOAD1");
+  auto net = iidm::NetworkFactory::load("resources/load_initial_pq.xiidm");
+  auto load = net.getLoad("LOAD1").value();
 
-  load.getTerminal().setP(0.);
-  load.getTerminal().setQ(0.);
   LoadInterfaceIIDM loadIfce(load);
-
   ASSERT_TRUE(loadIfce.hasInitialConditions());
-}  // TEST(DataInterfaceTest, Load_3)
+}
+
 }  // namespace DYN

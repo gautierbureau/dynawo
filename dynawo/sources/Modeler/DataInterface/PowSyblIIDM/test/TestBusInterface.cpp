@@ -11,182 +11,80 @@
 // simulation tool for power systems.
 //
 
-
 #include "DYNBusInterfaceIIDM.h"
 #include "DYNCalculatedBusInterfaceIIDM.h"
 
 #include "gtest_dynawo.h"
 #include "DYNCommon.h"
 
-#include <powsybl/iidm/Bus.hpp>
-#include <powsybl/iidm/BusbarSection.hpp>
-#include <powsybl/iidm/Substation.hpp>
-#include <powsybl/iidm/VoltageLevel.hpp>
-#include <powsybl/iidm/TopologyKind.hpp>
-#include <powsybl/iidm/Switch.hpp>
+#include <iidm/Network.h>
+#include <iidm/NetworkFactory.h>
+#include <iidm/VoltageLevel.h>
+#include <iidm/Bus.h>
+#include <iidm/BusbarSection.h>
 
+static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
+  for (auto& vl : net.getVoltageLevels())
+    if (vl.getId() == id) return vl;
+  throw std::runtime_error("VoltageLevel not found: " + id);
+}
 
-using powsybl::iidm::Network;
-using powsybl::iidm::Substation;
-using powsybl::iidm::VoltageLevel;
-using powsybl::iidm::Bus;
-using powsybl::iidm::BusbarSection;
-using powsybl::iidm::TopologyKind;
-using powsybl::iidm::Switch;
+static iidm::Bus findBus(iidm::VoltageLevel& vl, const std::string& id) {
+  for (auto& b : vl.getBusBreakerView().getBuses())
+    if (b.getId() == id) return b;
+  throw std::runtime_error("Bus not found: " + id);
+}
 
 namespace DYN {
 
 TEST(DataInterfaceTest, testBusInterface) {
-  Network network("test", "test");
+  auto net = iidm::NetworkFactory::load("resources/bus_bbr.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto bus = findBus(vl, "Bus1");
 
-  Substation& s = network.newSubstation()
-      .setId("S")
-      .add();
+  BusInterfaceIIDM busIface(bus, vl);
 
-  VoltageLevel& vl1 = s.newVoltageLevel()
-      .setId("VL1")
-      .setNominalV(400.)
-      .setTopologyKind(TopologyKind::BUS_BREAKER)
-      .setHighVoltageLimit(420.)
-      .setLowVoltageLimit(380.)
-      .add();
-
-  Bus& iidmBus = vl1.getBusBreakerView().newBus()
-      .setId("Bus1")
-      .add();
-
-  iidmBus.setV(410.);
-  iidmBus.setAngle(3.14);
-  BusInterfaceIIDM bus(iidmBus);
-
-  ASSERT_EQ(bus.getID(), "Bus1");
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getVMax(), 420.);
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getVMin(), 380.);
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getV0(), 410.);
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getVNom(), 400.);
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getAngle0(), 3.14);
-  ASSERT_FALSE(bus.hasConnection());
-  bus.hasConnection(true);
-  ASSERT_TRUE(bus.hasConnection());
-  ASSERT_EQ(bus.getComponentVarIndex("v"), BusInterfaceIIDM::VAR_V);
-  ASSERT_EQ(bus.getComponentVarIndex("angle"), BusInterfaceIIDM::VAR_ANGLE);
-  ASSERT_EQ(bus.getComponentVarIndex("foo"), -1);
-  ASSERT_EQ(bus.getBusIndex(), 0);
-  ASSERT_TRUE(bus.getBusBarSectionIdentifiers().empty());
-  ASSERT_FALSE(bus.isFictitious());
-  ASSERT_EQ(bus.getCountry(), "");
-  bus.setCountry("AF");
-  ASSERT_EQ(bus.getCountry(), "AF");
-  ASSERT_TRUE(bus.hasInitialConditions());
+  ASSERT_EQ(busIface.getID(), "Bus1");
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getVMax(), 420.);
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getVMin(), 380.);
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getV0(), 410.);
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getVNom(), 400.);
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getAngle0(), 3.14);
+  ASSERT_FALSE(busIface.hasConnection());
+  busIface.hasConnection(true);
+  ASSERT_TRUE(busIface.hasConnection());
+  ASSERT_EQ(busIface.getComponentVarIndex("v"), BusInterfaceIIDM::VAR_V);
+  ASSERT_EQ(busIface.getComponentVarIndex("angle"), BusInterfaceIIDM::VAR_ANGLE);
+  ASSERT_EQ(busIface.getComponentVarIndex("foo"), -1);
+  ASSERT_EQ(busIface.getBusIndex(), 0);
+  ASSERT_TRUE(busIface.getBusBarSectionIdentifiers().empty());
+  ASSERT_FALSE(busIface.isFictitious());
+  ASSERT_EQ(busIface.getCountry(), "");
+  busIface.setCountry("AF");
+  ASSERT_EQ(busIface.getCountry(), "AF");
+  ASSERT_TRUE(busIface.hasInitialConditions());
 }
 
 TEST(DataInterfaceTest, testBusInterfaceCornerCases) {
-  Network network("test", "test");
+  auto net = iidm::NetworkFactory::load("resources/bus_bbr_no_limits.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto bus = findBus(vl, "Bus1");
 
-  Substation& s = network.newSubstation()
-      .setId("S")
-      .add();
-
-  VoltageLevel& vl1 = s.newVoltageLevel()
-      .setId("VL1")
-      .setNominalV(400.)
-      .setTopologyKind(TopologyKind::BUS_BREAKER)
-      .add();
-
-  Bus& iidmBus = vl1.getBusBreakerView().newBus()
-      .setId("Bus1")
-      .add();
-
-  BusInterfaceIIDM bus(iidmBus);
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getV0(), 400.);
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getAngle0(), 0.);
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getVMax(), 480.);
-  ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getVMin(), 320.);
-  ASSERT_FALSE(bus.hasInitialConditions());
+  BusInterfaceIIDM busIface(bus, vl);
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getV0(), 400.);
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getAngle0(), 0.);
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getVMax(), 480.);
+  ASSERT_DOUBLE_EQUALS_DYNAWO(busIface.getVMin(), 320.);
+  ASSERT_FALSE(busIface.hasInitialConditions());
 }
 
 TEST(DataInterfaceTest, testCalculatedBusInterface) {
-  Network network("test", "test");
-  Substation& s = network.newSubstation()
-      .setId("S5")
-      .add();
-  VoltageLevel& vl = s.newVoltageLevel()
-      .setId("MyVoltageLevel")
-      .setTopologyKind(TopologyKind::NODE_BREAKER)
-      .setNominalV(400.0)
-      .setLowVoltageLimit(380.0)
-      .setHighVoltageLimit(420.0)
-      .add();
-  BusbarSection& bbs = vl.getNodeBreakerView().newBusbarSection()
-      .setId("BBS")
-      .setName("BBS_NAME")
-      .setNode(3)
-      .add();
-  vl.getNodeBreakerView().newBusbarSection()
-      .setId("BBS2")
-      .setName("BBS2_NAME")
-      .setNode(4)
-      .add();
-  vl.getNodeBreakerView().newBreaker()
-      .setId("BK1")
-      .setNode1(0)
-      .setNode2(5)
-      .setRetained(true)
-      .setOpen(true)
-      .add();
-  vl.getNodeBreakerView().newDisconnector()
-      .setId("DC11")
-      .setNode1(5)
-      .setNode2(3)
-      .setRetained(false)
-      .setOpen(true)
-      .add();
-  vl.getNodeBreakerView().newDisconnector()
-      .setId("DC12")
-      .setNode1(5)
-      .setNode2(4)
-      .setRetained(false)
-      .setOpen(true)
-      .add();
-  vl.getNodeBreakerView().newBreaker()
-      .setId("BK2")
-      .setNode1(1)
-      .setNode2(6)
-      .setRetained(true)
-      .setOpen(false)
-      .add();
-  vl.getNodeBreakerView().newDisconnector()
-      .setId("DC21")
-      .setNode1(6)
-      .setNode2(3)
-      .setRetained(false)
-      .setOpen(true)
-      .add();
-  vl.getNodeBreakerView().newDisconnector()
-      .setId("DC22")
-      .setNode1(6)
-      .setNode2(4)
-      .setRetained(false)
-      .setOpen(false)
-      .add();
-  vl.getNodeBreakerView().newBreaker()
-      .setId("BK3")
-      .setNode1(2)
-      .setNode2(7)
-      .setRetained(true)
-      .setOpen(true)
-      .add();
-  vl.getNodeBreakerView().newDisconnector()
-      .setId("DC31")
-      .setNode1(7)
-      .setNode2(3)
-      .setRetained(false)
-      .setOpen(true)
-      .add();
+  auto net = iidm::NetworkFactory::load("resources/bus_nbr.xiidm");
+  auto vl = findVL(net, "MyVoltageLevel");
 
-  Bus& calculatedIIDMBus = vl.getBusBreakerView().getBus("MyVoltageLevel_0").get();
-  calculatedIIDMBus.setV(410.);
-  calculatedIIDMBus.setAngle(3.14);
+  auto bss = vl.getNodeBreakerView().getBusbarSections();
+  ASSERT_GE(bss.size(), 1U);
+
   CalculatedBusInterfaceIIDM bus(vl, "MyTest", 1);
   ASSERT_EQ(bus.getID(), "MyTest");
   ASSERT_DOUBLE_EQUALS_DYNAWO(bus.getVMax(), 420.);
@@ -206,7 +104,7 @@ TEST(DataInterfaceTest, testCalculatedBusInterface) {
   ASSERT_EQ(bus.getComponentVarIndex("foo"), -1);
   ASSERT_EQ(bus.getBusIndex(), 1);
   ASSERT_EQ(bus.getBusBarSectionIdentifiers().size(), 0);
-  bus.addBusBarSection(bbs.getId());
+  bus.addBusBarSection(bss[0].getId());
   ASSERT_EQ(bus.getBusBarSectionIdentifiers().size(), 1);
   ASSERT_EQ(bus.getBusBarSectionIdentifiers()[0], "BBS");
   ASSERT_FALSE(bus.isFictitious());

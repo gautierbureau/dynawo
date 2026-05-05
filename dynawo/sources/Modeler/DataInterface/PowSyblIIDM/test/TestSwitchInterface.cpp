@@ -18,99 +18,76 @@
 #include "make_unique.hpp"
 #include "gtest_dynawo.h"
 
-#include <powsybl/iidm/Substation.hpp>
-#include <powsybl/iidm/Switch.hpp>
-#include <powsybl/iidm/VoltageLevel.hpp>
+#include <iidm/Network.h>
+#include <iidm/NetworkFactory.h>
+#include <iidm/VoltageLevel.h>
+#include <iidm/Bus.h>
+#include <iidm/Switch.h>
 
-using powsybl::iidm::Network;
-using powsybl::iidm::Substation;
-using powsybl::iidm::TopologyKind;
-using powsybl::iidm::VoltageLevel;
+static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
+  for (auto& vl : net.getVoltageLevels())
+    if (vl.getId() == id) return vl;
+  throw std::runtime_error("VoltageLevel not found: " + id);
+}
+
+static iidm::Bus findBus(iidm::VoltageLevel& vl, const std::string& id) {
+  for (auto& b : vl.getBusBreakerView().getBuses())
+    if (b.getId() == id) return b;
+  throw std::runtime_error("Bus not found: " + id);
+}
+
+static iidm::Switch findSwitch(iidm::VoltageLevel& vl, const std::string& id) {
+  for (auto& sw : vl.getBusBreakerView().getSwitches())
+    if (sw.getId() == id) return sw;
+  throw std::runtime_error("Switch not found: " + id);
+}
 
 namespace DYN {
 
 TEST(DataInterfaceTest, Switch) {
-  Network network("test", "test");
+  auto net = iidm::NetworkFactory::load("resources/switch.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto b1 = findBus(vl, "BUS1");
+  auto b2 = findBus(vl, "BUS2");
+  auto sw = findSwitch(vl, "Sw");
 
-  Substation& s = network.newSubstation()
-                      .setId("S")
-                      .add();
+  DYN::SwitchInterfaceIIDM swIface(sw);
+  ASSERT_EQ(swIface.getID(), "Sw");
+  ASSERT_FALSE(swIface.isOpen());
+  ASSERT_TRUE(swIface.isConnected());
+  ASSERT_TRUE(swIface.isPartiallyConnected());
 
-  VoltageLevel& vl1 = s.newVoltageLevel()
-                          .setId("VL1")
-                          .setNominalV(400.)
-                          .setTopologyKind(TopologyKind::BUS_BREAKER)
-                          .setHighVoltageLimit(420.)
-                          .setLowVoltageLimit(380.)
-                          .add();
+  std::unique_ptr<BusInterface> x_b1 = DYN::make_unique<BusInterfaceIIDM>(b1, vl);
+  std::unique_ptr<BusInterface> x_b2 = DYN::make_unique<BusInterfaceIIDM>(b2, vl);
+  swIface.setBusInterface1(std::move(x_b1));
+  swIface.setBusInterface2(std::move(x_b2));
+  ASSERT_EQ(swIface.getBusInterface1()->getID(), "BUS1");
+  ASSERT_EQ(swIface.getBusInterface2()->getID(), "BUS2");
 
-  auto swAdder = vl1.getBusBreakerView().newSwitch().setId("Sw").setName("SwName").setFictitious(false);
+  swIface.close();
+  ASSERT_FALSE(swIface.isOpen());
+  ASSERT_TRUE(swIface.isConnected());
+  ASSERT_TRUE(swIface.isPartiallyConnected());
+  swIface.open();
+  ASSERT_TRUE(swIface.isOpen());
+  ASSERT_FALSE(swIface.isConnected());
+  ASSERT_FALSE(swIface.isPartiallyConnected());
+  swIface.close();
+  ASSERT_FALSE(swIface.isOpen());
+  ASSERT_TRUE(swIface.isConnected());
+  ASSERT_TRUE(swIface.isPartiallyConnected());
 
-  powsybl::iidm::Bus& b1 = vl1.getBusBreakerView().newBus().setId("BUS1").add();
-  powsybl::iidm::Bus& b2 = vl1.getBusBreakerView().newBus().setId("BUS2").add();
-  swAdder.setBus1("BUS1");
-  swAdder.setBus2("BUS2");
-
-  powsybl::iidm::Switch& aSwitch = swAdder.add();
-  SwitchInterfaceIIDM sw(aSwitch);
-  ASSERT_EQ(sw.getID(), "Sw");
-  ASSERT_FALSE(sw.isOpen());
-  ASSERT_TRUE(sw.isConnected());
-  ASSERT_TRUE(sw.isPartiallyConnected());
-
-  std::unique_ptr<BusInterface> x_b1 = DYN::make_unique<BusInterfaceIIDM>(b1);
-  std::unique_ptr<BusInterface> x_b2 = DYN::make_unique<BusInterfaceIIDM>(b2);
-  sw.setBusInterface1(std::move(x_b1));
-  sw.setBusInterface2(std::move(x_b2));
-  ASSERT_EQ(sw.getBusInterface1()->getID(), "BUS1");
-  ASSERT_EQ(sw.getBusInterface2()->getID(), "BUS2");
-
-  sw.close();
-  ASSERT_FALSE(sw.isOpen());
-  ASSERT_TRUE(sw.isConnected());
-  ASSERT_TRUE(sw.isPartiallyConnected());
-  sw.open();
-  ASSERT_TRUE(sw.isOpen());
-  ASSERT_FALSE(sw.isConnected());
-  ASSERT_FALSE(sw.isPartiallyConnected());
-  sw.close();
-  ASSERT_FALSE(sw.isOpen());
-  ASSERT_TRUE(sw.isConnected());
-  ASSERT_TRUE(sw.isPartiallyConnected());
-
-  ASSERT_EQ(sw.getComponentVarIndex("state"), 0);
-  ASSERT_EQ(sw.getComponentVarIndex("others"), -1);
-}  // TEST(DataInterfaceTest, Switch)
+  ASSERT_EQ(swIface.getComponentVarIndex("state"), 0);
+  ASSERT_EQ(swIface.getComponentVarIndex("others"), -1);
+}
 
 TEST(DataInterfaceTest, SwitchWithSameExtremities) {
-  auto network = boost::make_shared<Network>("test", "test");
-  Substation& s = network->newSubstation()
-                      .setId("S")
-                      .add();
-
-  VoltageLevel& vl1 = s.newVoltageLevel()
-                          .setId("VL1")
-                          .setNominalV(400.)
-                          .setTopologyKind(TopologyKind::BUS_BREAKER)
-                          .setHighVoltageLimit(420.)
-                          .setLowVoltageLimit(380.)
-                          .add();
-
-  auto swAdder = vl1.getBusBreakerView().newSwitch().setId("SwSameBus").setName("SwNameSameBus").setFictitious(false);
-  auto swAdder2 = vl1.getBusBreakerView().newSwitch().setId("Sw").setName("SwName").setFictitious(false);
-
-  vl1.getBusBreakerView().newBus().setId("BUS1").add();
-  vl1.getBusBreakerView().newBus().setId("BUS2").add();
-  swAdder.setBus1("BUS1");
-  swAdder.setBus2("BUS1");
-  swAdder.add();
-  swAdder2.setBus1("BUS1");
-  swAdder2.setBus2("BUS2");
-  swAdder2.add();
+  auto network = boost::make_shared<iidm::Network>(iidm::NetworkFactory::load("resources/switch_same_bus.xiidm"));
   boost::shared_ptr<DataInterfaceIIDM> data;
   DataInterfaceIIDM* ptr = new DataInterfaceIIDM(network);
   ptr->initFromIIDM();
   data.reset(ptr);
   ASSERT_THROW_DYNAWO(data->findComponent("SwSameBus"), Error::MODELER, KeyError_t::UnknownStaticComponent);
 }
+
 }  // namespace DYN

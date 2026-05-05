@@ -53,10 +53,13 @@ target_link_libraries(${MODULE_NAME}
   IidmBridge::iidmbridge
   dynawo_Test)
 
+add_custom_target(${MODULE_NAME}-pre-tests
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/resources)
+
 add_custom_target(${MODULE_NAME}-tests
   COMMAND ${CMAKE_COMMAND} -E env "${runtime_tests_PATH}"
   "DYNAWO_LIBIIDM_EXTENSIONS=${LIBIIDM_HOME}/lib" $<TARGET_FILE:${MODULE_NAME}>
-  DEPENDS ${MODULE_NAME}
+  DEPENDS ${MODULE_NAME}-pre-tests ${MODULE_NAME}
   COMMENT "Running ${MODULE_NAME}...")
 
 if(BUILD_TESTS_COVERAGE)

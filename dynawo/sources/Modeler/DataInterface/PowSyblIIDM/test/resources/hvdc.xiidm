@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_4" id="test" caseDate="2022-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="test">
+    <iidm:substation id="S1" country="FR">
+        <iidm:voltageLevel id="VL1" nominalV="380.0" lowVoltageLimit="340.0" highVoltageLimit="420.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="VL1_BUS1"/>
+            </iidm:busBreakerTopology>
+            <iidm:lccConverterStation id="LCC1" name="LCC1" lossFactor="2.0" powerFactor="-0.2"
+                bus="VL1_BUS1" connectableBus="VL1_BUS1"/>
+            <iidm:vscConverterStation id="VSC2" name="VSC2" lossFactor="3.0"
+                voltageRegulatorOn="true" voltageSetpoint="1.2" reactivePowerSetpoint="-1.5"
+                bus="VL1_BUS1" connectableBus="VL1_BUS1">
+                <iidm:minMaxReactiveLimits minQ="-9999.0" maxQ="9999.0"/>
+            </iidm:vscConverterStation>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:hvdcLine id="HVDC1" name="HVDC1" r="14.0" nominalV="13.0"
+        convertersMode="SIDE_1_RECTIFIER_SIDE_2_INVERTER"
+        activePowerSetpoint="111.1" maxP="12.0"
+        converterStation1="LCC1" converterStation2="VSC2"/>
+</iidm:network>

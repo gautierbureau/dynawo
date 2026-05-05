@@ -56,7 +56,5 @@ install(FILES ${SOLVER_IDA_INCLUDE_HEADERS} DESTINATION ${INCLUDEDIR_NAME})
 desc_solver(dynawo_SolverIDA)
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  # TODO(iidm-bridge): test/TestBasics.cpp still references powsybl::iidm and
-  # needs to be migrated to the iidm-bridge API before re-enabling.
-  # add_subdirectory(test)
+  add_subdirectory(test)
 endif()
