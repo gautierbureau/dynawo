@@ -44,6 +44,11 @@ if(IidmBridge_FOUND)
   add_custom_target("${package_name}" DEPENDS libxml2 boost)
   message(STATUS "Found IidmBridge ${IidmBridge_VERSION}")
 else()
+  # Pick up the standard dynawo per-project patch under
+  # libiidm/patch/common/libiidm.patch (genex JNI_LIBRARIES list-split fix,
+  # stop-gap until upstream lands the same change).
+  GetPatchCommand(libiidm)
+
   include(ExternalProject)
   ExternalProject_Add(
                       "${package_name}"
@@ -62,14 +67,7 @@ else()
     BINARY_DIR        "${DOWNLOAD_DIR}/${package_name}-build"
     SOURCE_DIR        "${DOWNLOAD_DIR}/${package_name}"
 
-    # Stop-gap until the same fix lands upstream: target_link_libraries with a
-    # genex containing ${JNI_LIBRARIES} (a CMake list) splits on ';' and leaks
-    # the closing '>' as a target name. Patch the iidm-bridge CMakeLists to
-    # use plain if() blocks instead. The patch tolerates being re-applied
-    # (UPDATE_DISCONNECTED=1 means the source is reused on rebuilds): --forward
-    # skips already-applied hunks and we ignore the resulting exit code.
-    PATCH_COMMAND     ${CMAKE_COMMAND} -E env sh -c
-                      "patch -p1 --forward -r - -i '${CMAKE_CURRENT_SOURCE_DIR}/0001-fix-jni-genex-list-split.patch' || true"
+    PATCH_COMMAND     ${libiidm_patch_common}
 
     CMAKE_CACHE_ARGS  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
                       -DCMAKE_CXX_FLAGS_INIT:STRING=$<$<CONFIG:Debug>:-O0>
