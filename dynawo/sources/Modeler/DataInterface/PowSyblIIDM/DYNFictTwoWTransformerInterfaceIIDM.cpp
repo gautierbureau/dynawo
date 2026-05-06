@@ -41,7 +41,7 @@ using std::vector;
 namespace DYN {
 
   FictTwoWTransformerInterfaceIIDM::FictTwoWTransformerInterfaceIIDM(const std::string& Id,
-                      std::optional<iidm::ThreeWindingsTransformer::Leg>& leg,
+                      boost::optional<iidm::ThreeWindingsTransformer::Leg>& leg,
                       bool initialConnected1, double VNom1, double ratedU1, const std::string& activeSeason) :
                       leg_(leg),
                       Id_(Id),
