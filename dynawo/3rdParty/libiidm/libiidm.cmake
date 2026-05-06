@@ -28,7 +28,7 @@ set(package_install_dir "${CMAKE_INSTALL_PREFIX}/${package_name}")
 # Pinning the master branch by commit SHA keeps builds reproducible while the
 # upstream project is in rapid pre-1.0 iteration. Bump this together with any
 # API migration work.
-set(iidm_bridge_git_tag "03c6a78")
+set(iidm_bridge_git_tag "9e53a3f")
 
 if(DEFINED ENV{DYNAWO_LIBIIDM_GIT_URL})
   set(iidm_bridge_git_url $ENV{DYNAWO_LIBIIDM_GIT_URL})
@@ -44,11 +44,6 @@ if(IidmBridge_FOUND)
   add_custom_target("${package_name}" DEPENDS libxml2 boost)
   message(STATUS "Found IidmBridge ${IidmBridge_VERSION}")
 else()
-  # Pick up the standard dynawo per-project patch under
-  # libiidm/patch/common/libiidm.patch (genex JNI_LIBRARIES list-split fix,
-  # stop-gap until upstream lands the same change).
-  GetPatchCommand(libiidm)
-
   include(ExternalProject)
   ExternalProject_Add(
                       "${package_name}"
@@ -66,8 +61,6 @@ else()
     STAMP_DIR         "${DOWNLOAD_DIR}/${package_name}-stamp"
     BINARY_DIR        "${DOWNLOAD_DIR}/${package_name}-build"
     SOURCE_DIR        "${DOWNLOAD_DIR}/${package_name}"
-
-    PATCH_COMMAND     ${libiidm_patch_common}
 
     CMAKE_CACHE_ARGS  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
                       -DCMAKE_CXX_FLAGS_INIT:STRING=$<$<CONFIG:Debug>:-O0>
