@@ -44,6 +44,19 @@ if(IidmBridge_FOUND)
   add_custom_target("${package_name}" DEPENDS libxml2 boost)
   message(STATUS "Found IidmBridge ${IidmBridge_VERSION}")
 else()
+  # iidm-bridge-cpp's BUILD_NATIVE step does find_program(native-image),
+  # which on Windows misses native-image.cmd shipped by GraalVM CE.
+  # Detect it ourselves and pass it through as a hint so the inner cmake
+  # configure step doesn't FATAL_ERROR out of "native-image not found".
+  set(_native_image_hint "")
+  if(WIN32 AND DEFINED ENV{JAVA_HOME})
+    if(EXISTS "$ENV{JAVA_HOME}/bin/native-image.cmd")
+      set(_native_image_hint "-DNATIVE_IMAGE_EXECUTABLE:FILEPATH=$ENV{JAVA_HOME}/bin/native-image.cmd")
+    elseif(EXISTS "$ENV{JAVA_HOME}/bin/native-image.exe")
+      set(_native_image_hint "-DNATIVE_IMAGE_EXECUTABLE:FILEPATH=$ENV{JAVA_HOME}/bin/native-image.exe")
+    endif()
+  endif()
+
   include(ExternalProject)
   ExternalProject_Add(
                       "${package_name}"
@@ -78,7 +91,10 @@ else()
                       "-DIIDM_BRIDGE_BUILD_EXAMPLES=OFF"
                       "-DIIDM_BRIDGE_BUILD_JAVA=ON"
                       "-DIIDM_BRIDGE_BUILD_NATIVE=ON"
+                      ${_native_image_hint}
   )
+
+  unset(_native_image_hint)
 
   unset(iidm_bridge_git_url)
   unset(iidm_bridge_git_tag)

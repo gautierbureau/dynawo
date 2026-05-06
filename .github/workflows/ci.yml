@@ -253,6 +253,16 @@ jobs:
           where mvn  2>nul || echo mvn  not on PATH
           java -version 2>&1 || echo java invocation failed
           mvn  -version 2>&1 || echo mvn  invocation failed
+          echo --- listing %JAVA_HOME%\bin
+          dir "%JAVA_HOME%\bin" 2>nul || echo cannot list %JAVA_HOME%\bin
+          echo --- searching for native-image
+          if exist "%JAVA_HOME%\bin\native-image.cmd" ( echo found native-image.cmd ) else ( echo MISSING native-image.cmd )
+          if exist "%JAVA_HOME%\bin\native-image.exe" ( echo found native-image.exe ) else ( echo MISSING native-image.exe )
+          if exist "%JAVA_HOME%\bin\native-image"     ( echo found native-image ) else ( echo MISSING native-image )
+          where native-image     2>nul || echo native-image     not on PATH
+          where native-image.cmd 2>nul || echo native-image.cmd not on PATH
+          set "PATH=%JAVA_HOME%\bin;%PATH%"
+          native-image --version 2>&1 || echo native-image invocation failed
 
       - name: Install OpenModelica and Third Parties
         shell: cmd
