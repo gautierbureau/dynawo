@@ -41,8 +41,9 @@
 #include "DYNServiceManagerInterfaceIIDM.h"
 #include <iidm/Network.h>
 
+#include <boost/optional.hpp>
+
 #include <mutex>
-#include <optional>
 
 namespace DYN {
 
@@ -295,7 +296,7 @@ class DataInterfaceIIDM : public DataInterfaceImpl {
    * @return the instance VoltageLevelInterface created
    */
   std::shared_ptr<VoltageLevelInterfaceIIDM> importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM,
-                                                                const std::optional<iidm::Country>& country);
+                                                                const boost::optional<iidm::Country>& country);
 
   /**
    * @brief import and create a switch interface thanks to the IIDM instance
