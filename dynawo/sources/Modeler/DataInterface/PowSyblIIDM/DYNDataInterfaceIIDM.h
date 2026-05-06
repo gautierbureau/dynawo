@@ -296,7 +296,7 @@ class DataInterfaceIIDM : public DataInterfaceImpl {
    * @return the instance VoltageLevelInterface created
    */
   std::shared_ptr<VoltageLevelInterfaceIIDM> importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM,
-                                                                const boost::optional<iidm::Country>& country);
+                                                                const iidm::optional<iidm::Country>& country);
 
   /**
    * @brief import and create a switch interface thanks to the IIDM instance

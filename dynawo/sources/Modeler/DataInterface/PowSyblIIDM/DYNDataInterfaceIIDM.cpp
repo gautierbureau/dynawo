@@ -322,7 +322,7 @@ DataInterfaceIIDM::initFromIIDM() {
 }
 
 std::shared_ptr<VoltageLevelInterfaceIIDM>
-DataInterfaceIIDM::importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM, const boost::optional<iidm::Country>& country) {
+DataInterfaceIIDM::importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM, const iidm::optional<iidm::Country>& country) {
   std::shared_ptr<VoltageLevelInterfaceIIDM> voltageLevel = std::make_shared<VoltageLevelInterfaceIIDM>(voltageLevelIIDM);
   string countryStr;
   if (country)
@@ -630,9 +630,9 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
     countryStr = iidm::getCountryName(threeWindingTransformer.getSubstation().getCountry().value());
   }
 
-  // legs are value types on the new side; wrap them in boost::optional so downstream
+  // legs are value types on the new side; wrap them in iidm::optional so downstream
   // code that used stdcxx::Reference<Leg> keeps the same has-value semantics.
-  std::vector<boost::optional<iidm::ThreeWindingsTransformer::Leg> > legs;
+  std::vector<iidm::optional<iidm::ThreeWindingsTransformer::Leg> > legs;
   legs.emplace_back(threeWindingTransformer.getLeg1());
   legs.emplace_back(threeWindingTransformer.getLeg2());
   legs.emplace_back(threeWindingTransformer.getLeg3());

@@ -371,7 +371,7 @@ unsigned
 VoltageLevelInterfaceIIDM::countNumberOfSwitchesToClose(const std::vector<std::string>& path) const {
   unsigned res = 0;
   for (const auto& switchId : path) {
-    boost::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(switchId);
+    iidm::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(switchId);
     if (sw.has_value() && sw->isOpen()) {
       ++res;
     }
@@ -411,7 +411,7 @@ VoltageLevelInterfaceIIDM::connectNode(unsigned int nodeToConnect) {
   }
 
   for (const auto& id : shortestPath) {
-    boost::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(id);
+    iidm::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(id);
     if (sw.has_value() && sw->isOpen()) {
       map<string, std::shared_ptr<SwitchInterface> >::iterator itSw = switchesById_.find(id);
       if (itSw != switchesById_.end()) {
@@ -454,7 +454,7 @@ VoltageLevelInterfaceIIDM::disconnectNode(unsigned int nodeToDisconnect) {
     while (!path.empty() && somethingWasDisconnected) {
       somethingWasDisconnected = false;
       for (const auto& switchID : path) {
-        boost::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(switchID);
+        iidm::optional<iidm::Switch> sw = voltageLevelIIDM_.getNodeBreakerView().getSwitch(switchID);
         if (sw.has_value() && sw->getKind() == iidm::SwitchKind::BREAKER) {
           if (!sw->isOpen()) {
             map<string, std::shared_ptr<SwitchInterface> >::iterator itSw = switchesById_.find(switchID);
