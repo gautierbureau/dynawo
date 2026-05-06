@@ -233,7 +233,26 @@ jobs:
 
       - name: Install Maven
         shell: cmd
-        run: choco install maven --no-progress
+        run: |
+          curl -L -o C:\maven.zip https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip
+          7z x C:\maven.zip -oC:\
+          del C:\maven.zip
+          echo MAVEN_HOME=C:\apache-maven-3.9.6>>%GITHUB_ENV%
+          echo C:\apache-maven-3.9.6\bin>>%GITHUB_PATH%
+
+      - name: Debug Java/Maven install
+        shell: cmd
+        run: |
+          echo --- JAVA_HOME=%JAVA_HOME%
+          echo --- MAVEN_HOME=%MAVEN_HOME%
+          echo --- PATH=%PATH%
+          if exist "%JAVA_HOME%\bin\java.exe" ( echo found java.exe ) else ( echo MISSING java.exe at %JAVA_HOME%\bin )
+          if exist "%MAVEN_HOME%\bin\mvn.cmd" ( echo found mvn.cmd ) else ( echo MISSING mvn.cmd at %MAVEN_HOME%\bin )
+          dir C:\apache-maven-3.9.6\bin 2>nul || echo no maven dir at C:\apache-maven-3.9.6
+          where java 2>nul || echo java not on PATH
+          where mvn  2>nul || echo mvn  not on PATH
+          java -version 2>&1 || echo java invocation failed
+          mvn  -version 2>&1 || echo mvn  invocation failed
 
       - name: Install OpenModelica and Third Parties
         shell: cmd
@@ -245,10 +264,10 @@ jobs:
       - name: Build Dynawo
         shell: cmd
         env:
-          PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\ProgramData\chocolatey\bin
+          PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          set "PATH=%JAVA_HOME%\bin;%PATH%"
+          set "PATH=%JAVA_HOME%\bin;%MAVEN_HOME%\bin;%PATH%"
           cd \dynawo
           cmake -Wno-dev -S dynawo/3rdParty -B b-3-p -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../d-3-p -DOPENMODELICA_INSTALL=../../OpenModelica -DOPENMODELICA_SRC=../../OpenModelica/Source -DOMDEV_HOME=../../OMDev -G "Ninja"
           cmake --build b-3-p
