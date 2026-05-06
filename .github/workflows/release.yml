@@ -186,13 +186,25 @@ jobs:
           7z x Dynawo_Windows_v%DYNAWO_VERSION%.zip dynawo\OpenModelica\ -r -o\OpenModelica
           del Dynawo_Windows_v%DYNAWO_VERSION%.zip
 
+      - name: Install GraalVM (JDK 21)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Maven
+        shell: cmd
+        run: choco install maven --no-progress
+
       # We are forced to change the path to avoid too long commands when compiling
       - name: Build Dynawo Third Parties
         shell: cmd
         env:
-          PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64
+          PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\ProgramData\chocolatey\bin
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          set "PATH=%JAVA_HOME%\bin;%PATH%"
           cd \dynawo
           cmake -Wno-dev -S dynawo/3rdParty -B b-3-p -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../d-3-p -DOPENMODELICA_INSTALL=../OpenModelica/dynawo/OpenModelica -DOPENMODELICA_SRC=../OpenModelica/Source -DOMDEV_HOME=../OMDev -G "Ninja"
           cmake --build b-3-p --target openmodelica
@@ -201,9 +213,10 @@ jobs:
       - name: Build Dynawo
         shell: cmd
         env:
-          PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64
+          PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\ProgramData\chocolatey\bin
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          set "PATH=%JAVA_HOME%\bin;%PATH%"
           cd \dynawo
           cmake -Wno-dev -S dynawo -B b -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../d-i -DDYNAWO_HOME=.. -DINSTALL_OPENMODELICA=../../OpenModelica/dynawo/OpenModelica -DDYNAWO_THIRD_PARTY_DIR=../../d-3-p -G "Ninja"
           cmake --build b --target install || exit /b 1

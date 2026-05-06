@@ -224,6 +224,17 @@ jobs:
         shell: cmd
         run: choco install wget --no-progress
 
+      - name: Install GraalVM (JDK 21)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Maven
+        shell: cmd
+        run: choco install maven --no-progress
+
       - name: Install OpenModelica and Third Parties
         shell: cmd
         run: |
@@ -234,9 +245,10 @@ jobs:
       - name: Build Dynawo
         shell: cmd
         env:
-          PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64
+          PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64;C:\ProgramData\chocolatey\bin
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          set "PATH=%JAVA_HOME%\bin;%PATH%"
           cd \dynawo
           cmake -Wno-dev -S dynawo/3rdParty -B b-3-p -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../d-3-p -DOPENMODELICA_INSTALL=../../OpenModelica -DOPENMODELICA_SRC=../../OpenModelica/Source -DOMDEV_HOME=../../OMDev -G "Ninja"
           cmake --build b-3-p
