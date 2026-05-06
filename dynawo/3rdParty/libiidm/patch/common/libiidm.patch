@@ -40,7 +40,7 @@ a stop-gap until the same fix lands upstream.
 +if(IIDM_BRIDGE_ENABLE_GRAALVM)
 +    target_include_directories(iidmbridge PRIVATE ${GRAALVM_INCLUDE_DIRS})
 +endif()
-
+ 
  target_link_libraries(iidmbridge
      PRIVATE
 -        $<$<BOOL:${IIDM_BRIDGE_ENABLE_JNI}>:${JNI_LIBRARIES}>
@@ -49,6 +49,6 @@ a stop-gap until the same fix lands upstream.
 +if(IIDM_BRIDGE_ENABLE_JNI)
 +    target_link_libraries(iidmbridge PUBLIC ${JNI_LIBRARIES})
 +endif()
-
+ 
  target_compile_definitions(iidmbridge PRIVATE
      $<$<BOOL:${IIDM_BRIDGE_ENABLE_GRAALVM}>:IIDM_BRIDGE_GRAALVM_ENABLED>
