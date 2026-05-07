@@ -33,7 +33,7 @@
 
 namespace DYN {
 
-LineInterfaceIIDM::LineInterfaceIIDM(iidm::Line& line) : LineInterface(false),
+LineInterfaceIIDM::LineInterfaceIIDM(const iidm::Line& line) : LineInterface(false),
                                                                   lineIIDM_(line),
                                                                   lineId_(line.getId()),
                                                                   initialConnected1_(boost::none),

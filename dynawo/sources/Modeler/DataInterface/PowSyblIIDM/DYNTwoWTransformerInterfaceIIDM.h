@@ -56,7 +56,7 @@ class TwoWTransformerInterfaceIIDM : public TwoWTransformerInterface {
    * @brief Constructor
    * @param tfo two windings transformer's iidm instance
    */
-  explicit TwoWTransformerInterfaceIIDM(iidm::TwoWindingsTransformer & tfo);
+  explicit TwoWTransformerInterfaceIIDM(const iidm::TwoWindingsTransformer& tfo);
 
 
   /**
@@ -254,7 +254,7 @@ class TwoWTransformerInterfaceIIDM : public TwoWTransformerInterface {
   explicit TwoWTransformerInterfaceIIDM(const TwoWTransformerInterfaceIIDM& other) = delete;
 
  private:
-  iidm::TwoWindingsTransformer& tfoIIDM_;  ///< reference to the tfo's iidm instance
+  iidm::TwoWindingsTransformer tfoIIDM_;  ///< two windings transformer iidm instance (value-typed handle)
   std::string tfoId_;                      ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<BusInterface> busInterface1_;  ///< busInterface of the bus where the side 1 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface2_;  ///< busInterface of the bus where the side 2 of the tfo is connected

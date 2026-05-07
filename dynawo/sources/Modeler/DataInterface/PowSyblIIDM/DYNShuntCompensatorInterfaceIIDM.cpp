@@ -31,7 +31,7 @@ using std::string;
 
 namespace DYN {
 
-ShuntCompensatorInterfaceIIDM::ShuntCompensatorInterfaceIIDM(iidm::ShuntCompensator& shunt) :
+ShuntCompensatorInterfaceIIDM::ShuntCompensatorInterfaceIIDM(const iidm::ShuntCompensator& shunt) :
 ShuntCompensatorInterface(false),
 InjectorInterfaceIIDM(shunt, shunt.getId()),
 shuntCompensatorIIDM_(shunt) {

@@ -47,7 +47,7 @@ class ShuntCompensatorInterfaceIIDM : public ShuntCompensatorInterface, public I
    * @brief Constructor
    * @param shunt shunt compensator's iidm instance
    */
-  explicit ShuntCompensatorInterfaceIIDM(iidm::ShuntCompensator& shunt);
+  explicit ShuntCompensatorInterfaceIIDM(const iidm::ShuntCompensator& shunt);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -139,7 +139,7 @@ class ShuntCompensatorInterfaceIIDM : public ShuntCompensatorInterface, public I
   int getComponentVarIndex(const std::string& varName) const override;
 
  private:
-  iidm::ShuntCompensator& shuntCompensatorIIDM_;  ///< reference to the iidm shunt compensator instance
+  iidm::ShuntCompensator shuntCompensatorIIDM_;  ///< iidm shunt compensator instance (value-typed handle)
 };
 }  // namespace DYN
 

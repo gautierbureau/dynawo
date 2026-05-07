@@ -42,7 +42,7 @@ class LccConverterInterfaceIIDM : public LccConverterInterface, public InjectorI
    * @brief Constructor
    * @param lcc lcc converter iidm instance
    */
-  explicit LccConverterInterfaceIIDM(iidm::LccConverterStation& lcc);
+  explicit LccConverterInterfaceIIDM(const iidm::LccConverterStation& lcc);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -131,7 +131,7 @@ class LccConverterInterfaceIIDM : public LccConverterInterface, public InjectorI
   iidm::LccConverterStation& getLccIIDM();
 
  private:
-  iidm::LccConverterStation& lccConverterIIDM_;  ///< reference to the iidm lcc converter instance
+  iidm::LccConverterStation lccConverterIIDM_;  ///< iidm lcc converter instance (value-typed handle)
 };
 }  // namespace DYN
 

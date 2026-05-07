@@ -38,7 +38,7 @@ class NetworkInterfaceIIDM : public NetworkInterface {
    * @brief Constructor
    * @param network the network's iidm instance
    */
-  explicit NetworkInterfaceIIDM(iidm::Network& network);
+  explicit NetworkInterfaceIIDM(const iidm::Network& network);
 
   /**
    * @copydoc NetworkInterface::addLine(const std::shared_ptr<LineInterface>& line)
@@ -101,7 +101,7 @@ class NetworkInterfaceIIDM : public NetworkInterface {
    */
   NetworkInterfaceIIDM();
 
-  iidm::Network& networkIIDM_;                                              ///< reference to the iidm network instance
+  iidm::Network networkIIDM_;                                               ///< iidm network instance (value-typed handle)
   std::vector<std::shared_ptr<LineInterface> > lines_;                            ///< vector of line interface of the network
   std::vector<std::shared_ptr<TwoWTransformerInterface> > twoWTransformers_;      ///< vector of two windings transformer interface of the network
   std::vector<std::shared_ptr<ThreeWTransformerInterface> > threeWTransformers_;  ///< vector of three windings transformer interface of the network

@@ -58,7 +58,7 @@ class LineInterfaceIIDM : public LineInterface, public boost::noncopyable {
    * @brief Constructor
    * @param line line's iidm instance
    */
-  explicit LineInterfaceIIDM(iidm::Line& line);
+  explicit LineInterfaceIIDM(const iidm::Line& line);
 
   /**
    * @copydoc LineInterface::getVNom1() const
@@ -288,7 +288,7 @@ class LineInterfaceIIDM : public LineInterface, public boost::noncopyable {
   bool isPartiallyConnected() const override;
 
  private:
-  iidm::Line& lineIIDM_;                                    ///< reference to the iidm line instance
+  iidm::Line lineIIDM_;                                     ///< iidm line instance (value-typed handle)
   std::string lineId_;                                      ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<BusInterface> busInterface1_;                    ///< busInterface of the bus where the side 1 of the line is connected
   std::shared_ptr<BusInterface> busInterface2_;                    ///< busInterface of the bus where the side 2 of the line is connected

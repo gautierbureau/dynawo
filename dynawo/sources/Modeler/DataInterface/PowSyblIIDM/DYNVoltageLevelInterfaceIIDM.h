@@ -44,7 +44,7 @@ class VoltageLevelInterfaceIIDM : public VoltageLevelInterface {
    * @brief Constructor
    * @param voltageLevel : voltageLevel's iidm instance
    */
-  explicit VoltageLevelInterfaceIIDM(iidm::VoltageLevel& voltageLevel);
+  explicit VoltageLevelInterfaceIIDM(const iidm::VoltageLevel& voltageLevel);
 
   /**
    * @brief Getter for the voltageLevel's id
@@ -231,7 +231,7 @@ class VoltageLevelInterfaceIIDM : public VoltageLevelInterface {
   unsigned countNumberOfSwitchesToClose(const std::vector<std::string>& path) const;
 
  private:
-  iidm::VoltageLevel& voltageLevelIIDM_;  ///< reference to the iidm voltageLevel instance
+  iidm::VoltageLevel voltageLevelIIDM_;   ///< iidm voltageLevel instance (value-typed handle)
   std::string voltageLevelId_;  ///< cached id (iidm::VoltageLevel::getId returns by value)
   bool isNodeBreakerTopology_;  ///< @b true if the topology of the voltageLevel is node breaker topology
   std::unordered_map<std::shared_ptr<SwitchInterface>, double, SwitchInterfaceHash> switchState_;  ///< state to apply to switch (due to topology change)

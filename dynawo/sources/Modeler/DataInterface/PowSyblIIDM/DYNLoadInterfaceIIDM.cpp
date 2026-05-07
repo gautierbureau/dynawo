@@ -31,7 +31,7 @@ using iidm::Load;
 
 namespace DYN {
 
-LoadInterfaceIIDM::LoadInterfaceIIDM(Load& load) : LoadInterface(false),
+LoadInterfaceIIDM::LoadInterfaceIIDM(const Load& load) : LoadInterface(false),
                                                    InjectorInterfaceIIDM(load, load.getId()),
                                                    loadIIDM_(load),
                                                    loadPUnderV_(0.),

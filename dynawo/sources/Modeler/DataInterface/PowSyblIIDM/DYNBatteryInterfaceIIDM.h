@@ -48,7 +48,7 @@ class BatteryInterfaceIIDM : public GeneratorInterface, public InjectorInterface
    * @brief Constructor
    * @param battery battery iidm instance
    */
-  explicit BatteryInterfaceIIDM(iidm::Battery& battery);
+  explicit BatteryInterfaceIIDM(const iidm::Battery& battery);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -202,7 +202,7 @@ class BatteryInterfaceIIDM : public GeneratorInterface, public InjectorInterface
   EnergySource_t getEnergySource() const override;
 
  private:
-  iidm::Battery& batteryIIDM_;  ///< reference to the iidm battery instance
+  iidm::Battery batteryIIDM_;  ///< iidm battery instance (value-typed handle)
   std::string country_;  ///< country of the generator
   bool hasActivePowerControl_ = false;  ///< whether the ActivePowerControl extension is attached
 };

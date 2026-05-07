@@ -48,7 +48,7 @@ class DanglingLineInterfaceIIDM : public DanglingLineInterface, public InjectorI
    * @brief Constructor
    * @param danglingLine :  dangling line's iidm instance
    */
-  explicit DanglingLineInterfaceIIDM(iidm::DanglingLine& danglingLine);
+  explicit DanglingLineInterfaceIIDM(const iidm::DanglingLine& danglingLine);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -151,7 +151,7 @@ class DanglingLineInterfaceIIDM : public DanglingLineInterface, public InjectorI
   int getComponentVarIndex(const std::string& varName) const override;
 
  private:
-  iidm::DanglingLine& danglingLineIIDM_;  ///< reference to the iidm dangling line reference
+  iidm::DanglingLine danglingLineIIDM_;  ///< iidm dangling line instance (value-typed handle)
   std::vector<std::unique_ptr<CurrentLimitInterface> > currentLimitInterfaces_;  ///< current limit interfaces
 };  ///< class for dangling line interface
 }  // namespace DYN

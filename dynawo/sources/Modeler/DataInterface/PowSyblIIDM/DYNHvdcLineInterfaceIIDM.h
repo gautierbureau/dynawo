@@ -64,7 +64,7 @@ class HvdcLineInterfaceIIDM : public HvdcLineInterface, public boost::noncopyabl
    * @param conv1 converter 1 data interface instance
    * @param conv2 converter 2 data interface instance
    */
-  explicit HvdcLineInterfaceIIDM(iidm::HvdcLine& hvdcLine,
+  explicit HvdcLineInterfaceIIDM(const iidm::HvdcLine& hvdcLine,
                                  const std::shared_ptr<ConverterInterface>& conv1,
                                  const std::shared_ptr<ConverterInterface>& conv2);
 
@@ -165,7 +165,7 @@ class HvdcLineInterfaceIIDM : public HvdcLineInterface, public boost::noncopyabl
   boost::optional<double> getOprFromCS2toCS1() const final;
 
  private:
-  iidm::HvdcLine& hvdcLineIIDM_;        ///< reference to the iidm line instance
+  iidm::HvdcLine hvdcLineIIDM_;         ///< iidm hvdc line instance (value-typed handle)
   std::string hvdcLineId_;              ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<ConverterInterface> conv1_;  ///< conv1
   std::shared_ptr<ConverterInterface> conv2_;  ///< conv2
