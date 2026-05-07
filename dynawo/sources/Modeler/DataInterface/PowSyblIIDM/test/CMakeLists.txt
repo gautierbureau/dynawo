@@ -43,11 +43,17 @@ target_link_libraries(${MODULE_NAME}
   dynawo_Test)
 
 add_custom_target(${MODULE_NAME}-pre-tests
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/resources)
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_CURRENT_BINARY_DIR}/resources
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_CURRENT_BINARY_DIR}/resources
+  COMMAND ${CMAKE_COMMAND} -E echo "==== resources prepared at ${CMAKE_CURRENT_BINARY_DIR}/resources"
+  BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resources
+)
 
 add_custom_target(${MODULE_NAME}-tests
+  COMMAND ${CMAKE_COMMAND} -E echo "==== running ${MODULE_NAME} from ${CMAKE_CURRENT_BINARY_DIR}"
   COMMAND ${CMAKE_COMMAND} -E env "${runtime_tests_PATH}"
   "DYNAWO_LIBIIDM_EXTENSIONS=${LIBIIDM_HOME}/lib" $<TARGET_FILE:${MODULE_NAME}>
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   DEPENDS ${MODULE_NAME}-pre-tests ${MODULE_NAME}
   COMMENT "Running ${MODULE_NAME}...")
 
