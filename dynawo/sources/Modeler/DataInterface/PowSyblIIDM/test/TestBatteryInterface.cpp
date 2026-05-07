@@ -122,10 +122,12 @@ TEST(DataInterfaceTest, Battery_MinMax) {
 // Curve P=1:15/25, P=2:10/20 with terminal P=10 → pGen=-10 < P[0]=1 → use first point
 TEST(DataInterfaceTest, Battery_Curve1) {
   auto net = iidm::NetworkFactory::load("resources/battery_curve1.xiidm");
+  auto vl = findVL(net, "VL1");
   auto bat = net.getBattery("BAT1").value();
   bat.getTerminal().setP(10.0);
 
   BatteryInterfaceIIDM batItf(bat);
+  batItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
   ASSERT_EQ(batItf.getQMin(), 15.0);
   ASSERT_EQ(batItf.getQMax(), 25.0);
   ASSERT_EQ(batItf.getQNom(), 25.0);
@@ -134,10 +136,12 @@ TEST(DataInterfaceTest, Battery_Curve1) {
 // Curve P=-30:15/25, P=-20:10/20 with terminal P=10 → pGen=-10 > P[-1]=-20 → use last point
 TEST(DataInterfaceTest, Battery_Curve2) {
   auto net = iidm::NetworkFactory::load("resources/battery_curve2.xiidm");
+  auto vl = findVL(net, "VL1");
   auto bat = net.getBattery("BAT1").value();
   bat.getTerminal().setP(10.0);
 
   BatteryInterfaceIIDM batItf(bat);
+  batItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
   ASSERT_EQ(batItf.getQMin(), 10.0);
   ASSERT_EQ(batItf.getQMax(), 20.0);
   ASSERT_EQ(batItf.getQNom(), 25.0);
@@ -146,10 +150,12 @@ TEST(DataInterfaceTest, Battery_Curve2) {
 // Curve P=-20:15/25, P=0:10/20 with terminal P=10 → pGen=-10 → interpolate t=0.5
 TEST(DataInterfaceTest, Battery_Curve3) {
   auto net = iidm::NetworkFactory::load("resources/battery_curve3.xiidm");
+  auto vl = findVL(net, "VL1");
   auto bat = net.getBattery("BAT1").value();
   bat.getTerminal().setP(10.0);
 
   BatteryInterfaceIIDM batItf(bat);
+  batItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
   ASSERT_EQ(batItf.getQMin(), 12.5);
   ASSERT_EQ(batItf.getQMax(), 22.5);
   ASSERT_EQ(batItf.getQNom(), 25.0);
@@ -159,10 +165,12 @@ TEST(DataInterfaceTest, Battery_Curve3) {
 // Curve P=-10:-30/25, P=0:10/20 with terminal P=10 → pGen=-10 → use first point → qNom=30
 TEST(DataInterfaceTest, Battery_Curve4) {
   auto net = iidm::NetworkFactory::load("resources/battery_curve4.xiidm");
+  auto vl = findVL(net, "VL1");
   auto bat = net.getBattery("BAT1").value();
   bat.getTerminal().setP(10.0);
 
   BatteryInterfaceIIDM batItf(bat);
+  batItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
   ASSERT_EQ(batItf.getQNom(), 30.0);
 }
 

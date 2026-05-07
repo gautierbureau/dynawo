@@ -158,10 +158,12 @@ TEST(DataInterfaceTest, Generator_3) {
 // Curve P=1:15/25, P=2:10/20 with terminal P=10 → pGen=-10 < P[0]=1 → use first point
 TEST(DataInterfaceTest, Generator_Curve1) {
   auto net = iidm::NetworkFactory::load("resources/generator_curve1.xiidm");
+  auto vl = findVL(net, "VL1");
   auto gen = net.getGenerator("GEN1").value();
   gen.getTerminal().setP(10.0);
 
   GeneratorInterfaceIIDM genItf(gen);
+  genItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
   ASSERT_EQ(genItf.getQMin(), 15.0);
   ASSERT_EQ(genItf.getQMax(), 25.0);
   ASSERT_EQ(genItf.getQNom(), 25.0);
@@ -170,10 +172,12 @@ TEST(DataInterfaceTest, Generator_Curve1) {
 // Curve P=-30:15/25, P=-20:10/20 with terminal P=10 → pGen=-10 > last P=-20 → use last point
 TEST(DataInterfaceTest, Generator_Curve2) {
   auto net = iidm::NetworkFactory::load("resources/generator_curve2.xiidm");
+  auto vl = findVL(net, "VL1");
   auto gen = net.getGenerator("GEN1").value();
   gen.getTerminal().setP(10.0);
 
   GeneratorInterfaceIIDM genItf(gen);
+  genItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
   ASSERT_EQ(genItf.getQMin(), 10.0);
   ASSERT_EQ(genItf.getQMax(), 20.0);
   ASSERT_EQ(genItf.getQNom(), 25.0);
@@ -182,10 +186,12 @@ TEST(DataInterfaceTest, Generator_Curve2) {
 // Curve P=-20:15/25, P=0:10/20 with terminal P=10 → pGen=-10 → interpolate t=0.5
 TEST(DataInterfaceTest, Generator_Curve3) {
   auto net = iidm::NetworkFactory::load("resources/generator_curve3.xiidm");
+  auto vl = findVL(net, "VL1");
   auto gen = net.getGenerator("GEN1").value();
   gen.getTerminal().setP(10.0);
 
   GeneratorInterfaceIIDM genItf(gen);
+  genItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
   ASSERT_EQ(genItf.getQMin(), 12.5);
   ASSERT_EQ(genItf.getQMax(), 22.5);
   ASSERT_EQ(genItf.getQNom(), 25.0);
@@ -195,10 +201,12 @@ TEST(DataInterfaceTest, Generator_Curve3) {
 // Curve P=-10:-30/25, P=0:10/20 with terminal P=10 → pGen=-10 → first point → qNom=30
 TEST(DataInterfaceTest, Generator_Curve4) {
   auto net = iidm::NetworkFactory::load("resources/generator_curve4.xiidm");
+  auto vl = findVL(net, "VL1");
   auto gen = net.getGenerator("GEN1").value();
   gen.getTerminal().setP(10.0);
 
   GeneratorInterfaceIIDM genItf(gen);
+  genItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
   ASSERT_EQ(genItf.getQNom(), 30.0);
 }
 
