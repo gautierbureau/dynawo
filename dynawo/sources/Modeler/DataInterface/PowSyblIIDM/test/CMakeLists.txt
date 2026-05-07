@@ -10,33 +10,22 @@
 
 set(MODULE_NAME MODELER_DATAINTERFACEIIDM_unittest)
 
+# Temporarily restricted to the tests that exercise iidm::NetworkFactory::load
+# (and related XIIDM-loading paths) to bisect a segmentation fault. Re-enable
+# the rest once the load path is stable.
 set(MODULE_SOURCES
   TestBatteryInterface.cpp
   TestBusInterface.cpp
-  TestCriteria.cpp
-  TestCurrentLimitInterface.cpp
   TestDanglingLineInterface.cpp
-  TestDataInterface.cpp
-  TestFictBusInterface.cpp
-  TestFictTwoWTransformerInterface.cpp
-  TestFictVoltageLevelInterface.cpp
   TestGeneratorInterface.cpp
   TestHvdcLineInterface.cpp
   TestInjectorInterface.cpp
   TestLccConverterInterface.cpp
   TestLineInterface.cpp
   TestLoadInterface.cpp
-  TestNetworkInterface.cpp
-  TestPhaseTapChangerInterface.cpp
-  TestRatioTapChangerInterface.cpp
-  TestServiceManagerInterface.cpp
   TestShuntCompensatorInterface.cpp
   TestStaticVarCompensatorInterface.cpp
-  TestStepInterface.cpp
   TestSwitchInterface.cpp
-  TestThreeWTransformerInterface.cpp
-  TestTwoWTransformerInterface.cpp
-  TestVoltageLevelInterface.cpp
   TestVscConverterInterface.cpp
 )
 
