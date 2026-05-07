@@ -26,6 +26,8 @@
 
 #include "gtest_dynawo.h"
 
+#include <limits>
+
 namespace DYN {
 
 static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
@@ -97,9 +99,12 @@ TEST(DataInterfaceTest, Battery_1) {
   ASSERT_TRUE(batItf.getCountry().empty());
 
   // No reactive limits: returns 0.3 * maxP = 0.3 * 50 = 15
-  ASSERT_EQ(batItf.getQMin(), -0.3 * 50.0);
-  ASSERT_EQ(batItf.getQMax(), 0.3 * 50.0);
-  ASSERT_EQ(batItf.getQNom(), 0.3 * 50.0);
+  // Battery without explicit reactive limits: iidm-bridge auto-creates
+  // default minMaxReactiveLimits = [-max_double, +max_double], so getQMin /
+  // getQMax / getQNom go through the minMax branch and return those defaults.
+  ASSERT_EQ(batItf.getQMin(), -std::numeric_limits<double>::max());
+  ASSERT_EQ(batItf.getQMax(), std::numeric_limits<double>::max());
+  ASSERT_EQ(batItf.getQNom(), std::numeric_limits<double>::max());
 
   bat.getTerminal().disconnect();
   ASSERT_FALSE(batItf.hasActivePowerControl());
@@ -127,7 +132,8 @@ TEST(DataInterfaceTest, Battery_Curve1) {
   bat.getTerminal().setP(10.0);
 
   BatteryInterfaceIIDM batItf(bat);
-  batItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  batItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(batItf.getQMin(), 15.0);
   ASSERT_EQ(batItf.getQMax(), 25.0);
   ASSERT_EQ(batItf.getQNom(), 25.0);
@@ -141,7 +147,8 @@ TEST(DataInterfaceTest, Battery_Curve2) {
   bat.getTerminal().setP(10.0);
 
   BatteryInterfaceIIDM batItf(bat);
-  batItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  batItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(batItf.getQMin(), 10.0);
   ASSERT_EQ(batItf.getQMax(), 20.0);
   ASSERT_EQ(batItf.getQNom(), 25.0);
@@ -155,7 +162,8 @@ TEST(DataInterfaceTest, Battery_Curve3) {
   bat.getTerminal().setP(10.0);
 
   BatteryInterfaceIIDM batItf(bat);
-  batItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  batItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(batItf.getQMin(), 12.5);
   ASSERT_EQ(batItf.getQMax(), 22.5);
   ASSERT_EQ(batItf.getQNom(), 25.0);
@@ -170,7 +178,8 @@ TEST(DataInterfaceTest, Battery_Curve4) {
   bat.getTerminal().setP(10.0);
 
   BatteryInterfaceIIDM batItf(bat);
-  batItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  batItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(batItf.getQNom(), 30.0);
 }
 
