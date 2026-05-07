@@ -40,5 +40,5 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/compileCppModelicaModelInDynamicLib.cm
 add_subdirectory(Scripts_OMC_${OPENMODELICA_VERSION})
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  add_subdirectory(test)
+  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
 endif()

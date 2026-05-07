@@ -288,5 +288,5 @@ endforeach( FILE )
 include(CMakeListsModelsTargets.txt)
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  add_subdirectory(test)
+  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
 endif()

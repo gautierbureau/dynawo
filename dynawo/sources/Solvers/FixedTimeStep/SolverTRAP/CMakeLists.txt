@@ -58,5 +58,5 @@ install(FILES ${SOLVER_TRAP_INCLUDE_HEADERS} DESTINATION ${INCLUDEDIR_NAME})
 desc_solver(dynawo_SolverTRAP)
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  add_subdirectory(test)
+  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
 endif()
