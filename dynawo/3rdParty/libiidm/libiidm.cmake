@@ -28,7 +28,7 @@ set(package_install_dir "${CMAKE_INSTALL_PREFIX}/${package_name}")
 # Pinning the master branch by commit SHA keeps builds reproducible while the
 # upstream project is in rapid pre-1.0 iteration. Bump this together with any
 # API migration work.
-set(iidm_bridge_git_tag "f1b3686")
+set(iidm_bridge_git_tag "b58b745")
 
 if(DEFINED ENV{DYNAWO_LIBIIDM_GIT_URL})
   set(iidm_bridge_git_url $ENV{DYNAWO_LIBIIDM_GIT_URL})
@@ -80,6 +80,7 @@ else()
 
     CMAKE_ARGS        "-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>"
                       "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}"
+                      "-DCMAKE_CXX_STANDARD=11"
                       "-DBOOST_ROOT:PATH=${BOOST_ROOT}"
                       "$<$<BOOL:${MSVC}>:-DBOOST_LIBRARYDIR=${BOOST_ROOT}/bin>"
                       "$<$<BOOL:${FORCE_CXX11_ABI}>:-DCMAKE_CXX_FLAGS=-D_GLIBCXX_USE_CXX11_ABI=1>"
