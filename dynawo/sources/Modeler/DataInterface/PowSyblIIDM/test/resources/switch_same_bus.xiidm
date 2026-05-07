@@ -5,8 +5,8 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="BUS1"/>
                 <iidm:bus id="BUS2"/>
-                <iidm:switch id="SwSameBus" name="SwNameSameBus" kind="BREAKER" fictitious="false" open="false" bus1="BUS1" bus2="BUS1"/>
-                <iidm:switch id="Sw" name="SwName" kind="BREAKER" fictitious="false" open="false" bus1="BUS1" bus2="BUS2"/>
+                <iidm:switch id="SwSameBus" name="SwNameSameBus" kind="BREAKER" retained="true" fictitious="false" open="false" bus1="BUS1" bus2="BUS1"/>
+                <iidm:switch id="Sw" name="SwName" kind="BREAKER" retained="true" fictitious="false" open="false" bus1="BUS1" bus2="BUS2"/>
             </iidm:busBreakerTopology>
         </iidm:voltageLevel>
     </iidm:substation>
