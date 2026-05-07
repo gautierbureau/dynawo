@@ -6,7 +6,7 @@
                 <iidm:bus id="VL1_BUS1"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="GEN1" energySource="OTHER" minP="3.0" maxP="50.0"
-                voltageRegulatorOn="false" targetP="45.0" reactivePowerSetpoint="10.0"
+                voltageRegulatorOn="false" targetP="45.0" targetQ="10.0"
                 connectableBus="VL1_BUS1"/>
         </iidm:voltageLevel>
     </iidm:substation>

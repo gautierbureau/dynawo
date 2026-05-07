@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_4" id="test" caseDate="2022-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="test">
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_5" id="test" caseDate="2022-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="test">
     <iidm:substation id="S1" country="FR" tso="TSO">
         <iidm:voltageLevel id="VL1" nominalV="382.0" lowVoltageLimit="340.0" highVoltageLimit="420.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
                 <iidm:bus id="VL1_BUS1"/>
             </iidm:busBreakerTopology>
-            <iidm:battery id="BAT1" minP="3.0" maxP="50.0" targetP="5.0" targetQ="5.0"
+            <iidm:battery id="BAT1" minP="3.0" maxP="50.0" p0="5.0" q0="5.0"
                 bus="VL1_BUS1" connectableBus="VL1_BUS1"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:extension id="BAT1">
-        <apc:activePowerControl xmlns:apc="http://www.itesla_project.eu/schema/iidm/ext/active_power_control/1_0"
+        <apc:activePowerControl xmlns:apc="http://www.powsybl.org/schema/iidm/ext/active_power_control/1_0"
             participate="true" droop="4.0"/>
     </iidm:extension>
 </iidm:network>
