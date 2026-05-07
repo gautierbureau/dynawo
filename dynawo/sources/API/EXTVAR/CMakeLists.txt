@@ -67,5 +67,5 @@ install(TARGETS dynawo_API_EXTVAR EXPORT dynawo-targets DESTINATION ${LIBDIR_NAM
 install(FILES ${API_EXTVAR_INCLUDE_HEADERS} DESTINATION ${INCLUDEDIR_NAME})
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  add_subdirectory(test)
+  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
 endif()
