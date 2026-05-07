@@ -26,6 +26,8 @@
 #include "make_unique.hpp"
 #include "gtest_dynawo.h"
 
+#include <limits>
+
 namespace DYN {
 
 static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
@@ -98,10 +100,12 @@ TEST(DataInterfaceTest, Generator_1) {
   genItf.setCountry("");
   ASSERT_TRUE(genItf.getCountry().empty());
 
-  // No reactive limits: returns 0.3 * maxP = 15
-  ASSERT_EQ(genItf.getQMin(), -0.3 * 50.0);
-  ASSERT_EQ(genItf.getQMax(), 0.3 * 50.0);
-  ASSERT_EQ(genItf.getQNom(), 0.3 * 50.0);
+  // Generator without explicit reactive limits: iidm-bridge auto-creates
+  // default minMaxReactiveLimits = [-max_double, +max_double], so getQMin /
+  // getQMax / getQNom go through the minMax branch and return those defaults.
+  ASSERT_EQ(genItf.getQMin(), -std::numeric_limits<double>::max());
+  ASSERT_EQ(genItf.getQMax(), std::numeric_limits<double>::max());
+  ASSERT_EQ(genItf.getQNom(), std::numeric_limits<double>::max());
 
   ASSERT_TRUE(genItf.isConnected());
   ASSERT_TRUE(genItf.isPartiallyConnected());
@@ -163,7 +167,8 @@ TEST(DataInterfaceTest, Generator_Curve1) {
   gen.getTerminal().setP(10.0);
 
   GeneratorInterfaceIIDM genItf(gen);
-  genItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  genItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(genItf.getQMin(), 15.0);
   ASSERT_EQ(genItf.getQMax(), 25.0);
   ASSERT_EQ(genItf.getQNom(), 25.0);
@@ -177,7 +182,8 @@ TEST(DataInterfaceTest, Generator_Curve2) {
   gen.getTerminal().setP(10.0);
 
   GeneratorInterfaceIIDM genItf(gen);
-  genItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  genItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(genItf.getQMin(), 10.0);
   ASSERT_EQ(genItf.getQMax(), 20.0);
   ASSERT_EQ(genItf.getQNom(), 25.0);
@@ -191,7 +197,8 @@ TEST(DataInterfaceTest, Generator_Curve3) {
   gen.getTerminal().setP(10.0);
 
   GeneratorInterfaceIIDM genItf(gen);
-  genItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  genItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(genItf.getQMin(), 12.5);
   ASSERT_EQ(genItf.getQMax(), 22.5);
   ASSERT_EQ(genItf.getQNom(), 25.0);
@@ -206,7 +213,8 @@ TEST(DataInterfaceTest, Generator_Curve4) {
   gen.getTerminal().setP(10.0);
 
   GeneratorInterfaceIIDM genItf(gen);
-  genItf.setVoltageLevelInterface(std::make_shared<VoltageLevelInterfaceIIDM>(vl));
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  genItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(genItf.getQNom(), 30.0);
 }
 
