@@ -24,9 +24,6 @@
 
 #include "DYNLineInterface.h"
 #include "DYNCurrentLimitInterface.h"
-#include "DYNActiveSeasonIIDMExtension.h"
-#include "DYNCurrentLimitsPerSeasonIIDMExtension.h"
-#include "DYNIIDMExtensions.hpp"
 
 #include <boost/noncopyable.hpp>
 
@@ -299,12 +296,6 @@ class LineInterfaceIIDM : public LineInterface, public boost::noncopyable {
   std::vector<std::unique_ptr<CurrentLimitInterface> > currentLimitInterfaces2_;  ///< current limit interfaces for side 2
   boost::optional<bool> initialConnected1_;                                         ///< side 1 initially connected
   boost::optional<bool> initialConnected2_;                                         ///< side 2 initially connected
-
-  ActiveSeasonIIDMExtension* activeSeasonExtension_;                                         ///< Active season extension
-  IIDMExtensions::DestroyFunction<ActiveSeasonIIDMExtension> destroyActiveSeasonExtension_;  ///< active season destroy function
-  CurrentLimitsPerSeasonIIDMExtension* currentLimitsPerSeasonExtension_;                        ///< current limit per season IIDM extension
-  IIDMExtensions::DestroyFunction<CurrentLimitsPerSeasonIIDMExtension>
-      destroyCurrentLimitsPerSeasonExtension_;  ///< current limit per season IIDM extension destroy function
 };                                                                                  ///< Interface class for Line model
 }  // namespace DYN
 

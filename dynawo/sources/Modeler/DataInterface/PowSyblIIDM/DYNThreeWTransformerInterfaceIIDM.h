@@ -23,9 +23,7 @@
 
 #include "DYNThreeWTransformerInterface.h"
 #include "DYNVoltageLevelInterface.h"
-#include "DYNActiveSeasonIIDMExtension.h"
 #include "DYNCurrentLimitInterface.h"
-#include "DYNIIDMExtensions.hpp"
 
 #include <iidm/ThreeWindingsTransformer.h>
 
@@ -213,8 +211,6 @@ class ThreeWTransformerInterfaceIIDM : public ThreeWTransformerInterface {
   boost::optional<bool> initialConnected1_;  ///< whether the tfo is initially connected at side 1
   boost::optional<bool> initialConnected2_;  ///< whether the tfo is initially connected at side 2
   boost::optional<bool> initialConnected3_;  ///< whether the tfo is initially connected at side 3
-  ActiveSeasonIIDMExtension* activeSeasonExtension_;                                         ///< Active season extension
-  IIDMExtensions::DestroyFunction<ActiveSeasonIIDMExtension> destroyActiveSeasonExtension_;  ///< active season destroy function
 };
 }  // namespace DYN
 

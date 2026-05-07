@@ -26,8 +26,6 @@
 
 #include "DYNGeneratorInterface.h"
 #include "DYNInjectorInterfaceIIDM.h"
-#include "DYNGeneratorActivePowerControlIIDMExtension.h"
-#include "DYNIIDMExtensions.hpp"
 
 #include <iidm/Generator.h>
 
@@ -220,10 +218,6 @@ class GeneratorInterfaceIIDM : public GeneratorInterface, public InjectorInterfa
   std::string country_;  ///< country of the generator
   bool hasActivePowerControl_ = false;  ///< whether the ActivePowerControl extension is attached
   bool hasCoordinatedReactiveControl_ = false;  ///< whether the CoordinatedReactiveControl extension is attached
-
-  GeneratorActivePowerControlIIDMExtension* generatorActivePowerControl_;  ///< generator active power control extension
-  IIDMExtensions::DestroyFunction<GeneratorActivePowerControlIIDMExtension>
-    destroyGeneratorActivePowerControl_;  ///< function to destroy generator active power control extension
 };
 }  // namespace DYN
 

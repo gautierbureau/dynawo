@@ -34,14 +34,9 @@ ThreeWTransformerInterfaceIIDM::ThreeWTransformerInterfaceIIDM(const iidm::Three
 tfoIIDM_(tfo),
 tfoId_(tfo.getId()) {
   setType(ComponentInterface::THREE_WTFO);
-
-  // TODO(iidm-bridge): custom-extension plugin loader is disabled - extensions are no-op stubs.
-  activeSeasonExtension_ = nullptr;
-  destroyActiveSeasonExtension_ = [](ActiveSeasonIIDMExtension*) {};
 }
 
 ThreeWTransformerInterfaceIIDM::~ThreeWTransformerInterfaceIIDM() {
-  destroyActiveSeasonExtension_(activeSeasonExtension_);
 }
 
 void
@@ -196,7 +191,7 @@ ThreeWTransformerInterfaceIIDM::isPartiallyConnected() const {
 
 std::string
 ThreeWTransformerInterfaceIIDM::getActiveSeason() const {
-  return activeSeasonExtension_ ? activeSeasonExtension_->getValue() : std::string("UNDEFINED");
+  return std::string("UNDEFINED");
 }
 
 }  // namespace DYN

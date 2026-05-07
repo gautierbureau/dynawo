@@ -35,9 +35,7 @@ using std::vector;
 
 namespace DYN {
 
-GeneratorInterfaceIIDM::~GeneratorInterfaceIIDM() {
-  destroyGeneratorActivePowerControl_(generatorActivePowerControl_);
-}
+GeneratorInterfaceIIDM::~GeneratorInterfaceIIDM() = default;
 
 GeneratorInterfaceIIDM::GeneratorInterfaceIIDM(const iidm::Generator& generator) :
 GeneratorInterface(false),
@@ -54,12 +52,6 @@ generatorIIDM_(generator) {
   stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);   // connectionState
   hasActivePowerControl_ = generator.hasActivePowerControl();
   hasCoordinatedReactiveControl_ = generator.hasCoordinatedReactiveControl();
-
-  auto libPath = IIDMExtensions::findLibraryPath();
-
-  auto generatorActivePowerControlDef = IIDMExtensions::getExtension<GeneratorActivePowerControlIIDMExtension>(libPath.generic_string());
-  generatorActivePowerControl_ = std::get<IIDMExtensions::CREATE_FUNCTION>(generatorActivePowerControlDef)(generator);
-  destroyGeneratorActivePowerControl_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(generatorActivePowerControlDef);
 }
 
 int
@@ -341,32 +333,21 @@ bool GeneratorInterfaceIIDM::isVoltageRegulationOn() const {
 
 bool
 GeneratorInterfaceIIDM::hasActivePowerControl() const {
-  if (hasActivePowerControl_ || (generatorActivePowerControl_ && generatorActivePowerControl_->exists())) {
-    return true;
-  }
-  return false;
+  return hasActivePowerControl_;
 }
 
 bool
 GeneratorInterfaceIIDM::isParticipating() const {
-  if (hasActivePowerControl()) {
-    if (hasActivePowerControl_) {
-      return generatorIIDM_.getActivePowerControl().isParticipate();
-    } else {
-      return generatorActivePowerControl_->isParticipate().value();
-    }
+  if (hasActivePowerControl_) {
+    return generatorIIDM_.getActivePowerControl().isParticipate();
   }
   return false;
 }
 
 double
 GeneratorInterfaceIIDM::getActivePowerControlDroop() const {
-  if (hasActivePowerControl() && isParticipating()) {
-    if (hasActivePowerControl_) {
-      return generatorIIDM_.getActivePowerControl().getDroop();
-    } else {
-      return generatorActivePowerControl_->getDroop().value();
-    }
+  if (hasActivePowerControl_ && isParticipating()) {
+    return generatorIIDM_.getActivePowerControl().getDroop();
   }
   return 0.;
 }
