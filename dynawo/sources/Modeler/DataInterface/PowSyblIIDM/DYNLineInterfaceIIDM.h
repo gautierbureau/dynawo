@@ -24,9 +24,6 @@
 
 #include "DYNLineInterface.h"
 #include "DYNCurrentLimitInterface.h"
-#include "DYNActiveSeasonIIDMExtension.h"
-#include "DYNCurrentLimitsPerSeasonIIDMExtension.h"
-#include "DYNIIDMExtensions.hpp"
 
 #include <boost/noncopyable.hpp>
 
@@ -337,12 +334,6 @@ class LineInterfaceIIDM : public LineInterface, public boost::noncopyable {
   boost::optional<bool> initialConnected2_;                                         ///< side 2 initially connected
   bool hasConnectionSide1_ = false;                 ///< @b true if the line has an outside connection (i.e, dynamic bus) side 1, @b false else
   bool hasConnectionSide2_ = false;                 ///< @b true if the line has an outside connection (i.e, dynamic bus) side 2, @b false else
-
-  ActiveSeasonIIDMExtension* activeSeasonExtension_;                                         ///< Active season extension
-  IIDMExtensions::DestroyFunction<ActiveSeasonIIDMExtension> destroyActiveSeasonExtension_;  ///< active season destroy function
-  CurrentLimitsPerSeasonIIDMExtension* currentLimitsPerSeasonExtension_;                        ///< current limit per season IIDM extension
-  IIDMExtensions::DestroyFunction<CurrentLimitsPerSeasonIIDMExtension>
-      destroyCurrentLimitsPerSeasonExtension_;  ///< current limit per season IIDM extension destroy function
 };                                                                                  ///< Interface class for Line model
 }  // namespace DYN
 

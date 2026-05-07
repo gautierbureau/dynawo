@@ -62,9 +62,6 @@ TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(const iidm::TwoWindin
   if (tfo.hasRatioTapChanger() || tfo.hasPhaseTapChanger())
     stateVariables_[VAR_TAPINDEX] = StateVariable("tapIndex", StateVariable::INT);
 
-  // TODO(iidm-bridge): custom-extension plugin loader is disabled - extensions are no-op stubs.
-  activeSeasonExtension_ = nullptr;
-  destroyActiveSeasonExtension_ = [](ActiveSeasonIIDMExtension*) {};
   if (!std::isnan(tfoIIDM_.getTerminal1().getP()) || !std::isnan(tfoIIDM_.getTerminal1().getQ()) ||
       !std::isnan(tfoIIDM_.getTerminal2().getP()) || !std::isnan(tfoIIDM_.getTerminal2().getQ())) {
       hasInitialConditions(true);
@@ -72,7 +69,6 @@ TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(const iidm::TwoWindin
 }
 
 TwoWTransformerInterfaceIIDM::~TwoWTransformerInterfaceIIDM() {
-  destroyActiveSeasonExtension_(activeSeasonExtension_);
 }
 
 void
@@ -504,6 +500,6 @@ TwoWTransformerInterfaceIIDM::importStaticParameters() {
 
 std::string
 TwoWTransformerInterfaceIIDM::getActiveSeason() const {
-  return activeSeasonExtension_ ? activeSeasonExtension_->getValue() : std::string("UNDEFINED");
+  return std::string("UNDEFINED");
 }
 }  // namespace DYN

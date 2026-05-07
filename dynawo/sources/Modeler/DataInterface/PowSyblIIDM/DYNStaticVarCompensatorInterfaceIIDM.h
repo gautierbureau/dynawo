@@ -26,8 +26,6 @@
 
 #include "DYNStaticVarCompensatorInterface.h"
 #include "DYNInjectorInterfaceIIDM.h"
-#include "DYNStaticVarCompensatorInterfaceIIDMExtension.h"
-#include "DYNIIDMExtensions.hpp"
 
 namespace DYN {
 
@@ -195,8 +193,6 @@ class StaticVarCompensatorInterfaceIIDM : public StaticVarCompensatorInterface, 
 
  private:
   iidm::StaticVarCompensator staticVarCompensatorIIDM_;  ///< iidm static var compensator instance (value-typed handle)
-  StaticVarCompensatorInterfaceIIDMExtension* extension_;  ///< extension's pointer
-  IIDMExtensions::DestroyFunction<StaticVarCompensatorInterfaceIIDMExtension> destroy_extension_;  ///< function pointer to destroy the extension
   bool hasVoltagePerReactivePowerControl_ = false;  ///< whether the VoltagePerReactivePowerControl extension is attached
 };
 }  // namespace DYN
