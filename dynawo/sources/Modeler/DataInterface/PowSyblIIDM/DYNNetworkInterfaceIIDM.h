@@ -101,7 +101,7 @@ class NetworkInterfaceIIDM : public NetworkInterface {
    */
   NetworkInterfaceIIDM();
 
-  iidm::Network networkIIDM_;                                               ///< iidm network instance (value-typed handle)
+  iidm::Network const& networkIIDM_;                                              ///< iidm network instance - non-copyable, owned by DataInterfaceIIDM
   std::vector<std::shared_ptr<LineInterface> > lines_;                            ///< vector of line interface of the network
   std::vector<std::shared_ptr<TwoWTransformerInterface> > twoWTransformers_;      ///< vector of two windings transformer interface of the network
   std::vector<std::shared_ptr<ThreeWTransformerInterface> > threeWTransformers_;  ///< vector of three windings transformer interface of the network
