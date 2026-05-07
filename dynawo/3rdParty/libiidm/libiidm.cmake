@@ -88,7 +88,7 @@ else()
                       "-DBUILD_SHARED_LIBS=ON"
                       "-DIIDM_BRIDGE_ENABLE_GRAALVM=ON"
                       "-DIIDM_BRIDGE_ENABLE_JNI=ON"
-                      "-DIIDM_BRIDGE_BUILD_TESTS=ON"
+                      "-DIIDM_BRIDGE_BUILD_TESTS=OFF"
                       "-DIIDM_BRIDGE_BUILD_EXAMPLES=OFF"
                       "-DIIDM_BRIDGE_BUILD_JAVA=ON"
                       "-DIIDM_BRIDGE_BUILD_NATIVE=ON"
