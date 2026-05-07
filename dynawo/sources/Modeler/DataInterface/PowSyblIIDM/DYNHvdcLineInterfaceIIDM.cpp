@@ -38,7 +38,7 @@ using std::string;
 
 namespace DYN {
 
-HvdcLineInterfaceIIDM::HvdcLineInterfaceIIDM(iidm::HvdcLine& hvdcLine,
+HvdcLineInterfaceIIDM::HvdcLineInterfaceIIDM(const iidm::HvdcLine& hvdcLine,
                                              const shared_ptr<ConverterInterface>& conv1,
                                              const shared_ptr<ConverterInterface>& conv2) : hvdcLineIIDM_(hvdcLine),
                                                                                             hvdcLineId_(hvdcLine.getId()),

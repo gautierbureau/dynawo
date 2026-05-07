@@ -57,7 +57,7 @@ class GeneratorInterfaceIIDM : public GeneratorInterface, public InjectorInterfa
    * @brief Constructor
    * @param generator generator's iidm instance
    */
-  explicit GeneratorInterfaceIIDM(iidm::Generator& generator);
+  explicit GeneratorInterfaceIIDM(const iidm::Generator& generator);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -216,7 +216,7 @@ class GeneratorInterfaceIIDM : public GeneratorInterface, public InjectorInterfa
   EnergySource_t getEnergySource() const override;
 
  private:
-  iidm::Generator& generatorIIDM_;  ///< reference to the iidm generator instance
+  iidm::Generator generatorIIDM_;  ///< iidm generator instance (value-typed handle)
   std::string country_;  ///< country of the generator
   bool hasActivePowerControl_ = false;  ///< whether the ActivePowerControl extension is attached
   bool hasCoordinatedReactiveControl_ = false;  ///< whether the CoordinatedReactiveControl extension is attached

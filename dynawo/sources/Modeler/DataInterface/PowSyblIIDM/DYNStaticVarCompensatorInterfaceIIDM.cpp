@@ -41,7 +41,7 @@ StaticVarCompensatorInterfaceIIDM::~StaticVarCompensatorInterfaceIIDM() {
   destroy_extension_(extension_);
 }
 
-StaticVarCompensatorInterfaceIIDM::StaticVarCompensatorInterfaceIIDM(StaticVarCompensator& svc) :
+StaticVarCompensatorInterfaceIIDM::StaticVarCompensatorInterfaceIIDM(const StaticVarCompensator& svc) :
 StaticVarCompensatorInterface(false),
 InjectorInterfaceIIDM(svc, svc.getId()),
 staticVarCompensatorIIDM_(svc) {

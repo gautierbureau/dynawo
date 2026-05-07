@@ -34,7 +34,7 @@ using std::string;
 
 namespace DYN {
 
-BusInterfaceIIDM::BusInterfaceIIDM(Bus& bus, VoltageLevel& voltageLevel) :
+BusInterfaceIIDM::BusInterfaceIIDM(const Bus& bus, const VoltageLevel& voltageLevel) :
 BusInterface(false),
 busIIDM_(bus),
 voltageLevel_(voltageLevel),

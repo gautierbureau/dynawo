@@ -48,7 +48,7 @@ class BusInterfaceIIDM : public BusInterface {
    * @param bus : bus' iidm instance
    * @param voltageLevel : voltage level the bus belongs to (needed for limits/nominal V)
    */
-  BusInterfaceIIDM(iidm::Bus& bus, iidm::VoltageLevel& voltageLevel);
+  BusInterfaceIIDM(const iidm::Bus& bus, const iidm::VoltageLevel& voltageLevel);
 
   /**
    * @copydoc BusInterface::getV0() const
@@ -154,8 +154,8 @@ class BusInterfaceIIDM : public BusInterface {
   }
 
  private:
-  iidm::Bus& busIIDM_;                 ///< reference to the iidm bus instance
-  iidm::VoltageLevel& voltageLevel_;   ///< voltage level the bus belongs to
+  iidm::Bus busIIDM_;                  ///< iidm bus instance (value-typed handle)
+  iidm::VoltageLevel voltageLevel_;    ///< voltage level the bus belongs to (value-typed handle)
   std::string busId_;                  ///< cached bus id (iidm-bridge returns by value)
   bool hasConnection_;                 ///< @b true if the bus has an outside connection, @b false else
   // state variables

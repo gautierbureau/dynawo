@@ -36,7 +36,7 @@ using std::vector;
 
 namespace DYN {
 
-BatteryInterfaceIIDM::BatteryInterfaceIIDM(iidm::Battery& battery) :
+BatteryInterfaceIIDM::BatteryInterfaceIIDM(const iidm::Battery& battery) :
 InjectorInterfaceIIDM(battery, battery.getId()),
 batteryIIDM_(battery) {
   setType(ComponentInterface::GENERATOR);

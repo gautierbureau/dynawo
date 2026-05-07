@@ -34,7 +34,7 @@ using std::shared_ptr;
 
 namespace DYN {
 
-NetworkInterfaceIIDM::NetworkInterfaceIIDM(iidm::Network& network) :
+NetworkInterfaceIIDM::NetworkInterfaceIIDM(const iidm::Network& network) :
 networkIIDM_(network) {
 }
 

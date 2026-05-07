@@ -31,7 +31,7 @@
 
 namespace DYN {
 
-LccConverterInterfaceIIDM::LccConverterInterfaceIIDM(iidm::LccConverterStation& lcc) : LccConverterInterface(false),
+LccConverterInterfaceIIDM::LccConverterInterfaceIIDM(const iidm::LccConverterStation& lcc) : LccConverterInterface(false),
                                                                                                 InjectorInterfaceIIDM(lcc, lcc.getId()),
                                                                                                 lccConverterIIDM_(lcc) {
   if (hasQInjector() || hasPInjector()) {

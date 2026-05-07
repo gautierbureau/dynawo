@@ -58,9 +58,9 @@ class InjectorInterfaceIIDM {
    * @param injector Injector's iidm instance
    * @param id Injector's id
    */
-  InjectorInterfaceIIDM(T& injector, const std::string& id) : injectorIIDM_(injector),
-                                                              injectorId_(id),
-                                                              initialConnected_(boost::none) {}
+  InjectorInterfaceIIDM(const T& injector, const std::string& id) : injectorIIDM_(injector),
+                                                                    injectorId_(id),
+                                                                    initialConnected_(boost::none) {}
 
   /**
    * @brief Setter for the injector's bus interface
@@ -193,7 +193,7 @@ class InjectorInterfaceIIDM {
   }
 
  private:
-  T& injectorIIDM_;                                               ///< reference to the iidm injector instance
+  T injectorIIDM_;                                                ///< iidm injector instance (value-typed handle)
   std::shared_ptr<BusInterface> busInterface_;                  ///< busInterface of the bus where the injector is connected
   std::weak_ptr<VoltageLevelInterface> voltageLevelInterface_;  ///< voltageLevel interface where the injector is connected
   std::string injectorId_;                                        ///< injector's id

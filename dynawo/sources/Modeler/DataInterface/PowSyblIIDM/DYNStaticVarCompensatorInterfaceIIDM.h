@@ -56,7 +56,7 @@ class StaticVarCompensatorInterfaceIIDM : public StaticVarCompensatorInterface, 
    * @brief Constructor
    * @param svc static var compensator's iidm instance
    */
-  explicit StaticVarCompensatorInterfaceIIDM(iidm::StaticVarCompensator& svc);
+  explicit StaticVarCompensatorInterfaceIIDM(const iidm::StaticVarCompensator& svc);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -194,7 +194,7 @@ class StaticVarCompensatorInterfaceIIDM : public StaticVarCompensatorInterface, 
   double getSlope() const override;
 
  private:
-  iidm::StaticVarCompensator& staticVarCompensatorIIDM_;  ///< reference to the iidm static var compensator instance
+  iidm::StaticVarCompensator staticVarCompensatorIIDM_;  ///< iidm static var compensator instance (value-typed handle)
   StaticVarCompensatorInterfaceIIDMExtension* extension_;  ///< extension's pointer
   IIDMExtensions::DestroyFunction<StaticVarCompensatorInterfaceIIDMExtension> destroy_extension_;  ///< function pointer to destroy the extension
   bool hasVoltagePerReactivePowerControl_ = false;  ///< whether the VoltagePerReactivePowerControl extension is attached

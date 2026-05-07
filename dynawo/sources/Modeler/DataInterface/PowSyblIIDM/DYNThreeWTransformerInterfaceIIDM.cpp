@@ -30,7 +30,7 @@ using std::vector;
 
 namespace DYN {
 
-ThreeWTransformerInterfaceIIDM::ThreeWTransformerInterfaceIIDM(iidm::ThreeWindingsTransformer& tfo) :
+ThreeWTransformerInterfaceIIDM::ThreeWTransformerInterfaceIIDM(const iidm::ThreeWindingsTransformer& tfo) :
 tfoIIDM_(tfo),
 tfoId_(tfo.getId()) {
   setType(ComponentInterface::THREE_WTFO);

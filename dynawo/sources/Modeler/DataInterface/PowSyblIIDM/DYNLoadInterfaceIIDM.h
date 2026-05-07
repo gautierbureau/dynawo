@@ -51,7 +51,7 @@ class LoadInterfaceIIDM : public LoadInterface, public InjectorInterfaceIIDM<iid
    * @brief Constructor
    * @param load : the load's iidm instance
    */
-  explicit LoadInterfaceIIDM(iidm::Load& load);
+  explicit LoadInterfaceIIDM(const iidm::Load& load);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -152,7 +152,7 @@ class LoadInterfaceIIDM : public LoadInterface, public InjectorInterfaceIIDM<iid
   }
 
  private:
-  iidm::Load& loadIIDM_;  ///< reference to the iidm load instance
+  iidm::Load loadIIDM_;  ///< iidm load instance (value-typed handle)
   double loadPUnderV_;             ///< load power value if voltage is under threshold
   double v0_;                      ///< initial voltage of the bus where the load is connected
   double vNom_;                    ///<  nominal voltage of the bus where the load is connected

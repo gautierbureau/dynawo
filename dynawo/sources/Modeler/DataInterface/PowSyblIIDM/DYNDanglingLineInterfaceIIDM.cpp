@@ -33,7 +33,7 @@ using std::vector;
 
 namespace DYN {
 
-DanglingLineInterfaceIIDM::DanglingLineInterfaceIIDM(iidm::DanglingLine& danglingLine) :
+DanglingLineInterfaceIIDM::DanglingLineInterfaceIIDM(const iidm::DanglingLine& danglingLine) :
 DanglingLineInterface(false),
 InjectorInterfaceIIDM(danglingLine, danglingLine.getId()),
 danglingLineIIDM_(danglingLine) {

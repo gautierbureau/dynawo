@@ -40,7 +40,7 @@ class VscConverterInterfaceIIDM : public VscConverterInterface, public InjectorI
    * @brief Constructor
    * @param vsc vsc converter iidm instance
    */
-  explicit VscConverterInterfaceIIDM(iidm::VscConverterStation& vsc);
+  explicit VscConverterInterfaceIIDM(const iidm::VscConverterStation& vsc);
 
   /**
    * @copydoc ComponentInterface::importStaticParameters()
@@ -154,7 +154,7 @@ class VscConverterInterfaceIIDM : public VscConverterInterface, public InjectorI
   iidm::VscConverterStation& getVscIIDM();
 
  private:
-  iidm::VscConverterStation& vscConverterIIDM_;  ///< reference to the iidm vsc converter instance
+  iidm::VscConverterStation vscConverterIIDM_;  ///< iidm vsc converter instance (value-typed handle)
 };
 }  // namespace DYN
 

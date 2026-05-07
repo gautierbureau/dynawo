@@ -38,7 +38,7 @@ using std::vector;
 
 namespace DYN {
 
-CalculatedBusInterfaceIIDM::CalculatedBusInterfaceIIDM(iidm::VoltageLevel& voltageLevel, const string& name, const int busIndex) :
+CalculatedBusInterfaceIIDM::CalculatedBusInterfaceIIDM(const iidm::VoltageLevel& voltageLevel, const string& name, const int busIndex) :
 busIndex_(busIndex),
 name_(name),
 voltageLevel_(voltageLevel),

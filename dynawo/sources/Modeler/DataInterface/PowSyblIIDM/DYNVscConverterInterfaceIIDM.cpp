@@ -36,7 +36,7 @@ using std::shared_ptr;
 
 namespace DYN {
 
-VscConverterInterfaceIIDM::VscConverterInterfaceIIDM(iidm::VscConverterStation& vsc) : VscConverterInterface(false),
+VscConverterInterfaceIIDM::VscConverterInterfaceIIDM(const iidm::VscConverterStation& vsc) : VscConverterInterface(false),
                                                                                                 InjectorInterfaceIIDM(vsc, vsc.getId()),
                                                                                                 vscConverterIIDM_(vsc) {
   if (hasQInjector() || hasPInjector()) {

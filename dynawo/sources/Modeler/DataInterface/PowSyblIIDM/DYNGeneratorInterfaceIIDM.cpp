@@ -39,7 +39,7 @@ GeneratorInterfaceIIDM::~GeneratorInterfaceIIDM() {
   destroyGeneratorActivePowerControl_(generatorActivePowerControl_);
 }
 
-GeneratorInterfaceIIDM::GeneratorInterfaceIIDM(iidm::Generator& generator) :
+GeneratorInterfaceIIDM::GeneratorInterfaceIIDM(const iidm::Generator& generator) :
 GeneratorInterface(false),
 InjectorInterfaceIIDM(generator, generator.getId()),
 generatorIIDM_(generator) {

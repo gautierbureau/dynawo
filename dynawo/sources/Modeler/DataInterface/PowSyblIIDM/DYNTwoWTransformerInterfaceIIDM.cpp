@@ -40,7 +40,7 @@ using std::vector;
 
 namespace DYN {
 
-TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(iidm::TwoWindingsTransformer& tfo) :
+TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(const iidm::TwoWindingsTransformer& tfo) :
     TwoWTransformerInterface(false),
     tfoIIDM_(tfo),
     tfoId_(tfo.getId()),

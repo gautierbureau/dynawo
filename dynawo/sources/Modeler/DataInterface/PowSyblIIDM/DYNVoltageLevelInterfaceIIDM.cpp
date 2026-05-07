@@ -59,7 +59,7 @@ buildInternalConnectionId(const iidm::InternalConnection& internalConnection, st
   ss << "InternalConnection-" << internalConnection.getNode1() << "-" << internalConnection.getNode2();
 }
 
-VoltageLevelInterfaceIIDM::VoltageLevelInterfaceIIDM(iidm::VoltageLevel& voltageLevel) :
+VoltageLevelInterfaceIIDM::VoltageLevelInterfaceIIDM(const iidm::VoltageLevel& voltageLevel) :
 voltageLevelIIDM_(voltageLevel),
 voltageLevelId_(voltageLevel.getId()) {
   isNodeBreakerTopology_ = (voltageLevelIIDM_.getTopologyKind() == iidm::TopologyKind::NODE_BREAKER);
