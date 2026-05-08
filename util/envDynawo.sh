@@ -566,6 +566,15 @@ set_standard_environment_variables() {
   ld_library_path_prepend $DYNAWO_LIBXML_HOME/lib
   ld_library_path_prepend $DYNAWO_LIBIIDM_HOME/lib
   ld_library_path_prepend $DYNAWO_LIBIIDM_HOME/lib64
+  # libiidmbridge.so is JNI-linked: it has DT_NEEDED entries for libjvm.so /
+  # libjawt.so. The dynamic loader needs $JAVA_HOME/lib and lib/server on
+  # LD_LIBRARY_PATH at runtime so 'dynawo.sh jobs ...' can resolve them.
+  if [ -n "$JAVA_HOME" ] && [ -d "$JAVA_HOME/lib" ]; then
+    ld_library_path_prepend $JAVA_HOME/lib
+    if [ -d "$JAVA_HOME/lib/server" ]; then
+      ld_library_path_prepend $JAVA_HOME/lib/server
+    fi
+  fi
   ld_library_path_prepend $DYNAWO_ADEPT_INSTALL_DIR/lib
   ld_library_path_prepend $DYNAWO_XERCESC_INSTALL_DIR/lib
   ld_library_path_prepend $DYNAWO_INSTALL_DIR/lib
@@ -2264,6 +2273,10 @@ reset_environment_variables() {
   ld_library_path_remove $DYNAWO_LIBXML_HOME/lib
   ld_library_path_remove $DYNAWO_LIBIIDM_HOME/lib64
   ld_library_path_remove $DYNAWO_LIBIIDM_HOME/lib
+  if [ -n "$JAVA_HOME" ]; then
+    ld_library_path_remove $JAVA_HOME/lib/server
+    ld_library_path_remove $JAVA_HOME/lib
+  fi
   ld_library_path_remove $DYNAWO_ADEPT_INSTALL_DIR/lib
   ld_library_path_remove $DYNAWO_XERCESC_INSTALL_DIR/lib
   ld_library_path_remove $DYNAWO_INSTALL_DIR/lib
