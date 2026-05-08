@@ -196,6 +196,7 @@ jobs:
           $CONTAINER_WORKSPACE/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output util/envDynawo.sh build-tests-coverage
 
       - name: Sonarcloud
+        if: false  # disabled while migrating to iidm-bridge; re-enable once branch is merged
         working-directory: ${{ runner.workspace }}/dynawo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

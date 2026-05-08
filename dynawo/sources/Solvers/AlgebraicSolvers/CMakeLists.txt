@@ -78,5 +78,5 @@ install(TARGETS dynawo_SolverKINCommon dynawo_SolverKINSubModel dynawo_SolverKIN
 install(FILES ${SOLVER_KINSOL_INCLUDE_HEADERS} DESTINATION ${INCLUDEDIR_NAME})
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
+  add_subdirectory(test)
 endif()
