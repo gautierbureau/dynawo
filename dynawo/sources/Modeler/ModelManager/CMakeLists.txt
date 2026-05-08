@@ -68,5 +68,5 @@ install(FILES ${MODEL_MANAGER_INCLUDE_HEADERS} DESTINATION ${INCLUDEDIR_NAME})
 add_subdirectory(ModelicaExternalC)
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
+  add_subdirectory(test)
 endif()

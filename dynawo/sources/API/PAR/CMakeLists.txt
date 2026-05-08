@@ -78,5 +78,5 @@ install(TARGETS dynawo_API_PAR EXPORT dynawo-targets DESTINATION ${LIBDIR_NAME})
 install(FILES ${API_PAR_INCLUDE_HEADERS} DESTINATION ${INCLUDEDIR_NAME})
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
+  add_subdirectory(test)
 endif()
