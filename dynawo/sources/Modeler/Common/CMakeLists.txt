@@ -119,5 +119,5 @@ install(TARGETS dynawo_ModelerCommon EXPORT dynawo-targets DESTINATION ${LIBDIR_
 install(FILES ${MODELER_INCLUDE_HEADERS} DESTINATION ${INCLUDEDIR_NAME})
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
+  add_subdirectory(test)
 endif()

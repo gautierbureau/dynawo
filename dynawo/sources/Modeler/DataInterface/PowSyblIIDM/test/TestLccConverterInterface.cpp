@@ -49,7 +49,10 @@ TEST(DataInterfaceTest, LccConverter) {
   ASSERT_EQ(Ifce.getID(), "LCC1");
   ASSERT_EQ(Ifce.getComponentVarIndex("nothing"), -1);
   ASSERT_DOUBLE_EQ(Ifce.getLossFactor(), 2.0);
-  ASSERT_DOUBLE_EQ(Ifce.getPowerFactor(), -0.2L);
+  // The new bridge stores powerFactor as a float on the JVM side, so the
+  // round-trip back to double introduces a small ULP error. Compare with
+  // float precision instead of ASSERT_DOUBLE_EQ.
+  ASSERT_FLOAT_EQ(static_cast<float>(Ifce.getPowerFactor()), -0.2f);
 
   ASSERT_TRUE(Ifce.getInitialConnected());
   Ifce.exportStateVariablesUnitComponent();

@@ -146,5 +146,5 @@ install(FILES ${DYNAWO_DICTIONARIES} ${DYNAWO_DICTIONARIES_MAPPING} DESTINATION 
 install(PROGRAMS ${PYTHON_SCRIPTS_COMMON} DESTINATION ${SBINDIR_NAME})
 
 if(BUILD_TESTS OR BUILD_TESTS_COVERAGE)
-  # add_subdirectory(test)  # TEMP: bisecting PowSyblIIDM segfault
+  add_subdirectory(test)
 endif()
