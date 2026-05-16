@@ -36,3 +36,13 @@ case_description = "Two synchronous zones linked by a VSC-HVDC line, each with a
 job_file = os.path.join(os.path.dirname(__file__), "TwoZones_HVDC", "TwoZones.jobs")
 
 test_cases.append((case_name, case_description, job_file, 20, standardReturnCodeType, standardReturnCode))
+
+#####################################################################
+#   TwoZones AC Islanding - one AC zone split in two by a line trip #
+#####################################################################
+
+case_name = "TwoZones - AC Islanding"
+case_description = "One AC network split into two synchronous zones by tripping the central LINE_MID; keepAllSynchronousComponents keeps both islands alive and DYNModelOmegaRef splits into one barycenter per island"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_Islanding", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))

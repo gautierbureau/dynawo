@@ -130,7 +130,8 @@ ModelCPP("NETWORK"),
 calculatedVarBuffer_(NULL),
 isInit_(false) ,
 isInitModel_(false),
-withNodeBreakerTopology_(false) {
+withNodeBreakerTopology_(false),
+keepAllSynchronousComponents_(false) {
   busContainer_.reset(new ModelBusContainer());
 }
 
@@ -831,7 +832,7 @@ ModelNetwork::analyseComponents() const {
 
   Trace::debug() << DYNLog(KeepSubNetwork, maxIndex) << Trace::endline;
   for (unsigned int i = 0; i < subNetworks.size(); ++i) {
-    if (subNetworksToKeep.find(subNetworks[i]->getNum()) != subNetworksToKeep.end())
+    if (keepAllSynchronousComponents_ || subNetworksToKeep.find(subNetworks[i]->getNum()) != subNetworksToKeep.end())
       subNetworks[i]->turnOnNodes();
     else
       subNetworks[i]->shutDownNodes();
@@ -1268,6 +1269,7 @@ ModelNetwork::defineParameters(vector<ParameterModeler>& parameters) {
   ModelHvdcLink::defineParameters(parameters);
   parameters.push_back(ParameterModeler("startingPointMode", VAR_TYPE_STRING, EXTERNAL_PARAMETER));
   parameters.push_back(ParameterModeler("keepHvdcForeignNodes", VAR_TYPE_BOOL, EXTERNAL_PARAMETER));
+  parameters.push_back(ParameterModeler("keepAllSynchronousComponents", VAR_TYPE_BOOL, EXTERNAL_PARAMETER));
 
   for (const auto& component : getComponents()) {
     component->defineNonGenericParameters(parameters);
@@ -1334,6 +1336,9 @@ ModelNetwork::defineElements(vector<Element>& elements, map<string, int>& mapEle
 
 void
 ModelNetwork::setSubModelParameters() {
+  const ParameterModeler& keepAll = findParameterDynamic("keepAllSynchronousComponents");
+  keepAllSynchronousComponents_ = keepAll.hasValue() ? keepAll.getValue<bool>() : false;
+
   for (const auto& component : getComponents())
     component->setSubModelParameters(parametersDynamic_);
 }
