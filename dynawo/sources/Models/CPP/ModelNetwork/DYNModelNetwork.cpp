@@ -1229,6 +1229,7 @@ ModelNetwork::defineParameters(vector<ParameterModeler>& parameters) {
   ModelTwoWindingsTransformer::defineParameters(parameters);
   ModelHvdcLink::defineParameters(parameters);
   parameters.push_back(ParameterModeler("startingPointMode", VAR_TYPE_STRING, EXTERNAL_PARAMETER));
+  parameters.push_back(ParameterModeler("keepHvdcForeignNodes", VAR_TYPE_BOOL, EXTERNAL_PARAMETER));
 
   for (const auto& component : getComponents()) {
     component->defineNonGenericParameters(parameters);

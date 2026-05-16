@@ -240,8 +240,11 @@ class ModelHvdcLink : public ModelQuadripole {
 
   /**
    * @brief addBusNeighbors
+   * when keepHvdcForeignNodes is enabled, the two buses linked by the HVDC are
+   * declared as neighbors so the connected component analysis does not switch
+   * off the synchronous zone that is not the main one
    */
-  void addBusNeighbors() override { /* not needed */ }
+  void addBusNeighbors() override;
 
   /**
    * @brief get connection status
@@ -492,6 +495,7 @@ class ModelHvdcLink : public ModelQuadripole {
   double ir02_;  ///< initial current real part at point of common coupling 2
   double ii02_;  ///< initial current imaginary part at point of common coupling 2
   startingPointMode_t startingPointMode_;  ///< type of starting point for the model (FLAT,WARM)
+  bool keepHvdcForeignNodes_;  ///< true to keep alive the synchronous zones linked through this HVDC
 };  ///< class for Hvdc link model in network
 
 }  // namespace DYN
