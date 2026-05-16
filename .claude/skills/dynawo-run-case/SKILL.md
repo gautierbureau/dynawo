@@ -40,6 +40,30 @@ Exit 0 and `job '...' succeeded` mean it ran. Outputs go to `outputs/`:
 `curves/curves.csv`, `logs/dynawo.log`, `timeLine/`, `lostEquipments/`,
 `initValues/`.
 
+## IIDM cases need a solved load flow
+
+A case using `<dyn:network iidmFile="...">` needs the IIDM to carry a
+load-flow solution: bus `v`/`angle` and injector `p`/`q`. The dynamic
+models read their start values from it via
+`<reference origData="IIDM" origName="p_pu|q_pu|v_pu|angle_pu"/>` in the
+`.par`. Without it the initialization is inconsistent.
+
+If an IIDM has no load flow, compute one with `pypowsybl`
+(`pip install pypowsybl`):
+
+```python
+import pypowsybl as pp
+n = pp.network.load('network.xiidm')
+pp.loadflow.run_ac(n)
+n.save('network_solved.xiidm', format='XIIDM',
+       parameters={'iidm.export.xml.version': '1.5'})
+```
+
+pypowsybl needs the `iidm:`-prefixed namespace and rejects `--` inside XML
+comments; strip comments / re-serialize with a prefix first if needed.
+The export adds `slackTerminal`/`referenceTerminals` extension blocks —
+remove them, Dynawo's IIDM reader does not need them.
+
 ## Validate against reference
 
 `lostEquipments.xml` should match `reference/outputs/lostEquipments/`.
