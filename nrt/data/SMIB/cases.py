@@ -90,6 +90,16 @@ job_file = os.path.join(os.path.dirname(__file__), "SMIB_BasicTestCases", "SMIB_
 
 test_cases.append((case_name, case_description, job_file, 30, standardReturnCodeType, standardReturnCode))
 
+########################################
+#      SMIB_GeneratorClassical         #
+########################################
+
+case_name = "SMIB - GeneratorClassical"
+case_description = "SMIB test case with the classical second-order generator model and a line disconnection"
+job_file = os.path.join(os.path.dirname(__file__), "SMIB_BasicTestCases", "SMIB_GeneratorClassical", "SMIB.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
 ###############################################
 #           SMIB Test Case 1 ST4B             #
 ###############################################
