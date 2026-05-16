@@ -95,7 +95,7 @@ test_cases.append((case_name, case_description, job_file, 30, standardReturnCode
 ########################################
 
 case_name = "SMIB - GeneratorClassical"
-case_description = "SMIB test case with the classical second-order generator model and a line disconnection"
+case_description = "SMIB test case with the classical second-order generator model and a terminal fault"
 job_file = os.path.join(os.path.dirname(__file__), "SMIB_BasicTestCases", "SMIB_GeneratorClassical", "SMIB.jobs")
 
 test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
