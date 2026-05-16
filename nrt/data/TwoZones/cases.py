@@ -26,3 +26,13 @@ case_description = "Two zones linked by an AC line, each with a classical second
 job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC", "TwoZones.jobs")
 
 test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
+############################################################
+#   TwoZones HVDC - two synchronous zones across an HVDC   #
+############################################################
+
+case_name = "TwoZones - HVDC"
+case_description = "Two synchronous zones linked by a VSC-HVDC line, each with a classical second-order generator and a DYNModelOmegaRef frequency reference; the keepHvdcForeignNodes network parameter keeps both zones energized"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_HVDC", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 20, standardReturnCodeType, standardReturnCode))

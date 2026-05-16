@@ -39,6 +39,7 @@
   </set>
   <!-- Network -->
   <set id="4">
+    <par type="BOOL" name="keepHvdcForeignNodes" value="true"/>
     <par type="DOUBLE" name="capacitor_no_reclosing_delay" value="300"/>
     <par type="DOUBLE" name="dangling_line_currentLimit_maxTimeOperation" value="90"/>
     <par type="DOUBLE" name="line_currentLimit_maxTimeOperation" value="90"/>
