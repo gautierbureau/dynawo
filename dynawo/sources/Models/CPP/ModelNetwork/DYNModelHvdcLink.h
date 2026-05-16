@@ -240,11 +240,18 @@ class ModelHvdcLink : public ModelQuadripole {
 
   /**
    * @brief addBusNeighbors
-   * when keepHvdcForeignNodes is enabled, the two buses linked by the HVDC are
-   * declared as neighbors so the connected component analysis does not switch
-   * off the synchronous zone that is not the main one
+   * an HVDC link does not AC-connect its two buses, so it adds no neighbor:
+   * the two synchronous zones it links stay separate sub-networks
    */
-  void addBusNeighbors() override;
+  void addBusNeighbors() override { /* not needed */ }
+
+  /**
+   * @brief whether the synchronous zones linked by this HVDC must be kept alive
+   * @return @b true if the foreign synchronous zone must not be switched off
+   */
+  inline bool getKeepHvdcForeignNodes() const {
+    return keepHvdcForeignNodes_;
+  }
 
   /**
    * @brief get connection status

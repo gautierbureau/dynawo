@@ -33,6 +33,7 @@ namespace DYN {
 class ModelBusContainer;
 class ModelSwitch;
 class ModelVoltageLevel;
+class ModelHvdcLink;
 class NetworkComponent;
 class NetworkBridgeQuadripole;
 class DataInterface;
@@ -421,6 +422,7 @@ class ModelNetwork : public ModelCPP, private boost::noncopyable {
   std::vector<std::shared_ptr<ModelVoltageLevel> > vLevelInitComponents_;  ///< all voltage level components  (used for init model)
   std::vector<std::shared_ptr<NetworkComponent> > components_;  ///< all network components without dynamic Model
   std::vector<std::shared_ptr<NetworkComponent> > initComponents_;  ///< all network components even components with dynamic model
+  std::vector<std::shared_ptr<ModelHvdcLink> > hvdcComponents_;  ///< all HVDC links, used to keep their synchronous zones connected
   std::unordered_map<std::string, std::shared_ptr<NetworkBridgeQuadripole> > unmappedBridges_;  ///< network bridges yet unassociated with their dynamic model
   std::vector<int> componentIndexByCalculatedVar_;  ///< index of component for each calculated variable
 };

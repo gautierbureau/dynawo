@@ -17,6 +17,7 @@
   <dyn:blackBoxModel id="LOAD1" lib="LoadAlphaBeta" parFile="TwoZones.par" parId="2" staticId="LOAD1"/>
   <dyn:blackBoxModel id="LOAD2" lib="LoadAlphaBeta" parFile="TwoZones.par" parId="2" staticId="LOAD2"/>
   <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="TwoZones.par" parId="3"/>
+  <dyn:blackBoxModel id="fault" lib="NodeFault" parFile="TwoZones.par" parId="5"/>
   <dyn:connect id1="OMEGA_REF" var1="omega_grp_0_value" id2="GEN1" var2="generator_omegaPu"/>
   <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_0_value" id2="GEN1" var2="generator_omegaRefPu"/>
   <dyn:connect id1="OMEGA_REF" var1="numcc_node_0" id2="NETWORK" var2="GEN1_BUS_numcc"/>
@@ -31,4 +32,5 @@
   <dyn:connect id1="GEN2" var1="generator_switchOffSignal1" id2="NETWORK" var2="GEN2_BUS_switchOff"/>
   <dyn:connect id1="LOAD1" var1="load_terminal" id2="NETWORK" var2="LOAD1_BUS_ACPIN"/>
   <dyn:connect id1="LOAD2" var1="load_terminal" id2="NETWORK" var2="LOAD2_BUS_ACPIN"/>
+  <dyn:connect id1="fault" var1="fault_terminal" id2="NETWORK" var2="GEN1_BUS_ACPIN"/>
 </dyn:dynamicModelsArchitecture>

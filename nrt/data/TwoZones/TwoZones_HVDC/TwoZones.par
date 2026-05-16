@@ -31,6 +31,13 @@
     <reference name="load_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
     <reference name="load_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
   </set>
+  <!-- Fault on the GEN1 bus (zone 1), lasting 60 ms -->
+  <set id="5">
+    <par type="DOUBLE" name="fault_tBegin" value="1.0"/>
+    <par type="DOUBLE" name="fault_tEnd" value="1.06"/>
+    <par type="DOUBLE" name="fault_RPu" value="0.0"/>
+    <par type="DOUBLE" name="fault_XPu" value="0.05"/>
+  </set>
   <!-- Frequency handling: one barycenter per synchronous zone -->
   <set id="3">
     <par type="INT" name="nbGen" value="2"/>
