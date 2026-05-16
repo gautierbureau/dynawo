@@ -16,6 +16,9 @@ add_subdirectory(BaseClasses_INIT BI)
 set(MODEL_FILES
   package.mo
   package.order
+  GeneratorClassical.mo
+  GeneratorClassical.extvar
+  GeneratorClassical_INIT.mo
   GeneratorPQ.mo
   GeneratorPQ.extvar
   GeneratorPQ_INIT.mo
