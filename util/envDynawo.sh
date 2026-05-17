@@ -2011,6 +2011,10 @@ deploy_dynawo() {
   cp -r $DYNAWO_CURVES_TO_HTML_DIR/resources/* sbin/curvesToHtml/resources/
   cp -r $DYNAWO_CURVES_TO_HTML_DIR/csvToHtml/*.py sbin/curvesToHtml/csvToHtml/
   cp -r $DYNAWO_CURVES_TO_HTML_DIR/xmlToHtml/*.py sbin/curvesToHtml/xmlToHtml/
+  mkdir -p sbin/curve_visualizer
+  cp $DYNAWO_CURVE_VISUALIZER_DIR/*.py sbin/curve_visualizer/
+  cp $DYNAWO_CURVE_VISUALIZER_DIR/requirements.txt sbin/curve_visualizer/
+  cp $DYNAWO_CURVE_VISUALIZER_DIR/README.md sbin/curve_visualizer/
   mkdir -p sbin/nrt/nrt_diff
   cp -r $DYNAWO_NRT_DIFF_DIR/*.py sbin/nrt/nrt_diff
   cp -r $DYNAWO_NRT_DIR/nrt.py sbin/nrt/.
@@ -2163,6 +2167,7 @@ create_distrib() {
   zip -r -g -y $ZIP_FILE dynawo/dynawo.sh
   zip -r -g -y $ZIP_FILE dynawo/ddb/*.$DYNAWO_SHARED_LIBRARY_SUFFIX dynawo/ddb/*.desc.xml dynawo/ddb/*.extvar
   zip -r -g -y $ZIP_FILE dynawo/sbin/curvesToHtml
+  zip -r -g -y $ZIP_FILE dynawo/sbin/curve_visualizer
   zip -r -g -y $ZIP_FILE dynawo/sbin/xsl
   zip -r -g -y $ZIP_FILE dynawo/sbin/nrt
 
