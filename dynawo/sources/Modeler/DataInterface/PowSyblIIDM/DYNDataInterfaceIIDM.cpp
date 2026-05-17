@@ -562,10 +562,15 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
     auto rtcOpt = twoWTfoIIDM.getRatioTapChanger();
     iidm::Terminal regTerm = rtcOpt.value().getRegulationTerminal();
     if (regTerm.isValid()) {
-      if (regTerm == twoWTfoIIDM.getTerminal1()) {
-        side = "ONE";
-      } else if (regTerm == twoWTfoIIDM.getTerminal2()) {
-        side = "TWO";
+      // The libiidm backend may assign distinct handles to the same physical terminal depending on the
+      // access path, so Terminal equality is unreliable here: compare the connected bus to find the regulated side.
+      const string regBusId = regTerm.getBusId();
+      if (!regBusId.empty()) {
+        if (regBusId == twoWTfoIIDM.getTerminal1().getBusId()) {
+          side = "ONE";
+        } else if (regBusId == twoWTfoIIDM.getTerminal2().getBusId()) {
+          side = "TWO";
+        }
       }
     }
     std::unique_ptr<RatioTapChangerInterfaceIIDM> tapChanger =

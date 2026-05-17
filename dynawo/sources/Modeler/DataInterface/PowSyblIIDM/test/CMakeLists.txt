@@ -23,6 +23,8 @@ set(MODULE_SOURCES
   TestLccConverterInterface.cpp
   TestLineInterface.cpp
   TestLoadInterface.cpp
+  TestPhaseTapChangerInterface.cpp
+  TestRatioTapChangerInterface.cpp
   TestShuntCompensatorInterface.cpp
   TestStaticVarCompensatorInterface.cpp
   TestSwitchInterface.cpp
