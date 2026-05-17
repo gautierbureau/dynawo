@@ -333,10 +333,12 @@ class ModelWriter(ModelWriterBase):
     # @return
     def getHead(self, isLinearize):
         self.file_content.append("#include <limits>\n")
+        self.file_content.append("#include <array>\n")
         self.file_content.append("#include <cassert>\n")
         self.file_content.append("#include <set>\n")
         self.file_content.append("#include <iostream>\n")
         self.file_content.append("#include <string>\n")
+        self.file_content.append("#include <tuple>\n")
         self.file_content.append("#include <vector>\n")
         self.file_content.append("#include <math.h>\n")
         self.file_content.append("\n")

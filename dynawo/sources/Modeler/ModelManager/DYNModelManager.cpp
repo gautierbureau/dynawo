@@ -58,6 +58,27 @@ using parameters::ParametersSetFactory;
 
 namespace DYN {
 
+namespace {
+
+/**
+ * @brief RAII guard flagging the linearize model as the active one for a scope
+ *
+ * While alive, modelModelica()/data()/modelData() resolve to the linearize
+ * model instead of the dynamic one.
+ */
+class LinearizeModelScope {
+ public:
+  explicit LinearizeModelScope(bool& flag) : flag_(flag) { flag_ = true; }
+  ~LinearizeModelScope() { flag_ = false; }
+  LinearizeModelScope(const LinearizeModelScope&) = delete;
+  LinearizeModelScope& operator=(const LinearizeModelScope&) = delete;
+
+ private:
+  bool& flag_;  ///< flag toggled for the scope lifetime
+};
+
+}  // namespace
+
 ModelManager::ModelManager() :
 SubModel(),
 modelInit_(NULL),
@@ -129,8 +150,8 @@ ModelManager::initializeStaticData() {
 
   modelDyn_->initData(dataDyn_);
 
-  // if (withLinearize_)
-  modelLinearize_->initData(dataLinearize_);
+  if (withLinearize_)
+    modelLinearize_->initData(dataLinearize_);
 }
 
 void
@@ -260,22 +281,13 @@ ModelManager::associateBuffers() {
       dataDyn_->localData[0]->integerDoubleVars = &(zLocal_[offset]);
     }
 
-    // if à ajouter
-    dataLinearize_->localData[0]->realVars = &(yLocalLinearize_[0]);
-
-    dataLinearize_->localData[0]->derivativesVars = &(ypLocalLinearize_[0]);
-    dataLinearize_->localData[0]->discreteVars = &(zLocalLinearize_[0]);
-
-    if (dataLinearize_->modelData->nVariablesInteger > 0) {
-      const int offset = dataLinearize_->nbZ;
-      dataLinearize_->localData[0]->integerDoubleVars = &(zLocalLinearize_[offset]);
-    }
+    if (withLinearize_)
+      associateBuffersLinearize();
   }
 }
 
 void
 ModelManager::associateBuffersLinearize() {
-  // if à ajouter
   dataLinearize_->localData[0]->realVars = &(yLocalLinearize_[0]);
 
   dataLinearize_->localData[0]->derivativesVars = &(ypLocalLinearize_[0]);
@@ -301,7 +313,7 @@ ModelManager::getSize() {
 
 void
 ModelManager::getSizeLinearize() {
-  modelLinearizeUsed_ = true;
+  const LinearizeModelScope linearizeScope(modelLinearizeUsed_);
   sizeFLinearize_ = data()->nbF;
   sizeZLinearize_ = static_cast<unsigned int>(data()->nbZ + modelData()->nVariablesInteger);  ///< Z in dynawo = Z in Modelica + I in Modelica
   sizeGLinearize_ = static_cast<unsigned int>(modelData()->nZeroCrossings + data()->nbDelays);
@@ -310,7 +322,6 @@ ModelManager::getSizeLinearize() {
   sizeCalculatedVarLinearize_ = data()->nbCalculatedVars;
   if (calculatedVarsLinearize_.empty() && !modelInitUsed_ && modelLinearizeUsed_)
     calculatedVarsLinearize_.assign(sizeCalculatedVarLinearize_, 0);
-  modelLinearizeUsed_ = false;
 }
 
 void
@@ -393,22 +404,26 @@ ModelManager::evalF(const double t, const vector<adept::adouble>& y,
 
 void
 ModelManager::evalJtAdept(const double t, double* y, double* yp, const double cj, SparseMatrix& Jt, const int rowOffset, const bool complete) {
-  if (sizeY() == 0)
+  // the linearize model has its own (possibly smaller) variable/equation
+  // count, so the Jacobian must be sized with the model actually used
+  const unsigned int nbY = isModelLinearizedUsed() ? sizeYLinearize() : sizeY();
+  const unsigned int nbF = isModelLinearizedUsed() ? sizeFLinearize() : sizeF();
+  if (nbY == 0)
     return;
 
   try {
-    const int nbInput = sizeY() + sizeY();  // Y and Y '
-    const int nbOutput = sizeY();
+    const int nbInput = nbY + nbY;  // Y and Y '
+    const int nbOutput = nbY;
     const int coeff = complete ? 1: 0;  // complete => jacobian @F/@y + cj.@F/@Y' else @F/@Y'
     vector<double> jac(nbInput * nbOutput);
 
     adept::Stack stack;
     stack.activate();
-    vector<adept::adouble> x(sizeY());
-    adept::set_values(&x[0], sizeY(), y);
+    vector<adept::adouble> x(nbY);
+    adept::set_values(&x[0], nbY, y);
 
-    vector<adept::adouble> xp(sizeY());
-    adept::set_values(&xp[0], sizeY(), yp);
+    vector<adept::adouble> xp(nbY);
+    adept::set_values(&xp[0], nbY, yp);
 
     stack.new_recording();
     vector<adept::adouble> output(nbOutput);
@@ -425,15 +440,15 @@ ModelManager::evalJtAdept(const double t, double* y, double* yp, const double cj
     delete timer1;
 #endif
 
-    const int offsetJPrim = sizeY() * sizeY();
+    const int offsetJPrim = nbY * nbY;
 #if defined(_DEBUG_) || defined(PRINT_TIMERS)
     Timer* timer3 = new Timer("ModelManager::evalJtAdept filling");
 #endif
 
-    for (unsigned int i = 0; i < sizeF(); ++i) {
+    for (unsigned int i = 0; i < nbF; ++i) {
       Jt.changeCol();
-      for (unsigned int j = 0; j < sizeY(); ++j) {
-        const int indice = i + j * sizeY();
+      for (unsigned int j = 0; j < nbY; ++j) {
+        const int indice = i + j * nbY;
         const double term = coeff * jac[indice] + cj * jac[indice + offsetJPrim];
 #ifdef _DEBUG_
         if (isnan(term) || isinf(term)) {
@@ -477,9 +492,7 @@ ModelManager::evalJt(const double t, const double cj, const int rowOffset, Spars
 #ifdef _ADEPT_
   if (isModelLinearizedUsed()) {
     evalJtAdept(t, yLocalLinearize_, yLocalLinearize_, cj, jt, rowOffset, true);
-    // std::cout << "evalJtAdept Linearize" << std::endl;
   } else {
-    // std::cout << "evalJtAdept normal" << std::endl;
     evalJtAdept(t, yLocal_, ypLocal_, cj, jt, rowOffset, true);
   }
 
@@ -497,10 +510,8 @@ ModelManager::evalJtPrim(const double t, const double cj, const int rowOffset, S
 
 #ifdef _ADEPT_
   if (isModelLinearizedUsed()) {
-    // std::cout << "evalJtAdept Linearize prim" << std::endl;
     evalJtAdept(t, yLocalLinearize_, yLocalLinearize_, cj, jtPrim, rowOffset, false);
   } else {
-    // std::cout << "evalJtAdept normal prim" << std::endl;
     evalJtAdept(t, yLocal_, ypLocal_, cj, jtPrim, rowOffset, false);
   }
 #else
@@ -560,30 +571,26 @@ ModelManager::evalDynamicFType() {
 
 void
 ModelManager::evalStaticYTypeLinearize() {
-  modelLinearizeUsed_ = true;
+  const LinearizeModelScope linearizeScope(modelLinearizeUsed_);
   modelModelica()->evalStaticYType_omc(yTypeLinearize_);
-  modelLinearizeUsed_ = false;
 }
 
 void
 ModelManager::evalStaticFTypeLinearize() {
-  modelLinearizeUsed_ = true;
+  const LinearizeModelScope linearizeScope(modelLinearizeUsed_);
   modelModelica()->evalStaticFType_omc(fTypeLinearize_);
-  modelLinearizeUsed_ = false;
 }
 
 void
 ModelManager::evalDynamicYTypeLinearize() {
-  modelLinearizeUsed_ = true;
+  const LinearizeModelScope linearizeScope(modelLinearizeUsed_);
   modelModelica()->evalDynamicYType_omc(yTypeLinearize_);
-  modelLinearizeUsed_ = false;
 }
 
 void
 ModelManager::evalDynamicFTypeLinearize() {
-  modelLinearizeUsed_ = true;
+  const LinearizeModelScope linearizeScope(modelLinearizeUsed_);
   modelModelica()->evalDynamicFType_omc(fTypeLinearize_);
-  modelLinearizeUsed_ = false;
 }
 
 void
@@ -601,7 +608,8 @@ ModelManager::setSharedParametersDefaultValues(const bool isInit, const bool isl
   else
     model = modelModelicaDynamic();
   const std::shared_ptr<parameters::ParametersSet> sharedParametersInitialValues = model->setSharedParametersDefaultValues();
-  const std::unordered_map<string, ParameterModeler>& parameters = isInit ? getParametersInit() : getParametersDynamic();
+  const std::unordered_map<string, ParameterModeler>& parameters =
+      isInit ? getParametersInit() : (islinearize ? getParametersLinearize() : getParametersDynamic());
 
   for (const auto& parameterPair : parameters) {
     const ParameterModeler& currentParameter = parameterPair.second;

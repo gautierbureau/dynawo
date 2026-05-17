@@ -1,4 +1,18 @@
-import os, sys
+import os
+import re
+import sys
+
+# A component instantiation declares an instance of a qualified class:
+#   "<Upper.Qualified.Type> <lowercaseInstanceName> ...".
+# Class paths are UpperCamelCase per segment while instance names are
+# lowerCamelCase; that convention separates instantiations from
+# parameter/variable declarations (named UpperCamelCase in the Dynawo
+# library) and from comments and equations.
+_INSTANCE_RE = re.compile(r'([A-Z]\w*(?:\.[A-Z]\w*)+)\s+[a-z]\w*')
+
+# Qualified paths that are unit/constant/icon definitions, not blocks.
+_NON_BLOCK_SEGMENTS = ('Types', 'SIunits', 'Units', 'Constants', 'Icons')
+
 
 def find_mo_files(directory):
     mo_files = []
@@ -9,37 +23,28 @@ def find_mo_files(directory):
                     mo_files.append(os.path.join(root, file))
     return mo_files
 
-def is_line_empty(line):
-    return not line.strip()
+
+def _is_block_path(path):
+    return not any(segment in _NON_BLOCK_SEGMENTS for segment in path.split('.'))
+
+
+def find_blocks_in_file(mo_file):
+    blocks = set()
+    with open(mo_file, 'r', errors='ignore') as file:
+        for line in file:
+            match = _INSTANCE_RE.match(line.strip())
+            if match and _is_block_path(match.group(1)):
+                blocks.add(match.group(1))
+    return blocks
+
 
 def findAllBlocks(directory):
-    mo_files = find_mo_files(directory)
+    blocks = set()
+    for mo_file in find_mo_files(directory):
+        blocks |= find_blocks_in_file(mo_file)
+    for block in sorted(blocks):
+        print(block)
 
-    excluded_keys = []
-    with open('excluded_lines.txt', 'r') as exclude_lines_file:
-        lines = exclude_lines_file.readlines()
-        for line in lines:
-            excluded_keys.append(line.strip())
-
-    for mo_file in mo_files:
-        with open(mo_file, 'r') as file:
-            lines = file.readlines()
-            inside_model_section = False
-            start_equation = False
-
-            for line in lines:
-                line = line.strip()
-                if 'model' in line and not start_equation:
-                    inside_model_section = True
-                if 'equation' in line:
-                    inside_model_section = False
-                    start_equation = True
-
-                if inside_model_section:
-                    if not any(excluded_key in line for excluded_key in excluded_keys) and not is_line_empty(line):
-                        if line != 'annotation(':
-                            print(line)
 
 if __name__ == "__main__":
-    directory = sys.argv[1]
-    findAllBlocks(directory)
+    findAllBlocks(sys.argv[1])

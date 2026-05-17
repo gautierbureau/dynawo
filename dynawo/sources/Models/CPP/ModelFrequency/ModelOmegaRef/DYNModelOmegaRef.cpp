@@ -138,37 +138,6 @@ ModelOmegaRef::getSize() {
   calculatedVars_.assign(nbCalculatedVars_, 0);
 }
 
-void ModelOmegaRef::evalStaticYTypeLinearize() {
-  std::copy(yType_, yType_ + sizeY(), yTypeLinearize_);
-}
-
-void ModelOmegaRef::evalDynamicYTypeLinearize() {
-}
-
-void ModelOmegaRef::evalStaticFTypeLinearize() {
-  std::copy(fType_, fType_ + sizeY(), fTypeLinearize_);
-}
-
-void ModelOmegaRef::evalDynamicFTypeLinearize() {
-}
-
-void ModelOmegaRef::getSizeLinearize() {
-  sizeFLinearize_ = sizeF_;
-  sizeYLinearize_ = sizeY_;
-  sizeZLinearize_ = sizeZ_;
-  sizeGLinearize_ = sizeG_;
-  sizeModeLinearize_ = sizeMode_;
-
-  calculatedVarsLinearize_.assign(calculatedVars_.size(), 0);
-}
-
-void ModelOmegaRef::defineVariablesLinearize(std::vector<boost::shared_ptr<Variable> >& variables) {
-  defineVariables(variables);
-}
-
-void ModelOmegaRef::defineParametersLinearize(std::vector<ParameterModeler>& /*parameters*/) {
-}
-
 void
 ModelOmegaRef::calculateInitialState() {
   sortGenByCC();

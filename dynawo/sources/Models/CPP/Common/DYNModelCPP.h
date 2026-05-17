@@ -273,6 +273,41 @@ class ModelCPP : public SubModel {
   void initSubBuffersLinearize() override { /* no internal buffers for CPP models excepted the network model */ }
 
   /**
+   * @copydoc SubModel::evalStaticYTypeLinearize()
+   */
+  void evalStaticYTypeLinearize() override;
+
+  /**
+   * @copydoc SubModel::evalDynamicYTypeLinearize()
+   */
+  void evalDynamicYTypeLinearize() override { /* nothing to do by default */ }
+
+  /**
+   * @copydoc SubModel::evalStaticFTypeLinearize()
+   */
+  void evalStaticFTypeLinearize() override;
+
+  /**
+   * @copydoc SubModel::evalDynamicFTypeLinearize()
+   */
+  void evalDynamicFTypeLinearize() override { /* nothing to do by default */ }
+
+  /**
+   * @copydoc SubModel::getSizeLinearize()
+   */
+  void getSizeLinearize() override;
+
+  /**
+   * @copydoc SubModel::defineVariablesLinearize(std::vector<boost::shared_ptr<Variable> >& variables)
+   */
+  void defineVariablesLinearize(std::vector<boost::shared_ptr<Variable> >& variables) override;
+
+  /**
+   * @copydoc SubModel::defineParametersLinearize(std::vector<ParameterModeler>& parameters)
+   */
+  void defineParametersLinearize(std::vector<ParameterModeler>& parameters) override;
+
+  /**
    * @copydoc SubModel::notifyTimeStep()
    */
   void notifyTimeStep() override {

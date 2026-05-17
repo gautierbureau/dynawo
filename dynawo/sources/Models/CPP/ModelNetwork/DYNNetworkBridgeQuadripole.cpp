@@ -69,7 +69,7 @@ NetworkBridgeQuadripole::getDynamicState() {
     throw DYNError(Error::MODELER, UnmappedNetworkBridge, id());
 
   // Modelica and CPP enums match and are liable to break much more than this if they change
-  return static_cast<State>(dynModel_->getVariableValue(stateVarPrefix_+"_state"));
+  return static_cast<State>(dynModel_->getVariableValue(stateVarPrefix_+"_state", false, true));
 }
 
 }  // namespace DYN

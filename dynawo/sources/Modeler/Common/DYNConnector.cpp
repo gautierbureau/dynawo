@@ -748,7 +748,7 @@ ConnectorContainer::initYUpdatableValues() {
         if (it != itInput) {
           double sign = it->negated_ ? -1 : 1;
           double value = yLocal_[it->subModel()->getVariableIndexGlobal(it->variable())];
-          itInput->subModel()->setParameterValue(UPDATABLE_INPUT_NAME, DYN::FINAL, sign * value, false);
+          itInput->subModel()->setParameterValue(UPDATABLE_INPUT_NAME, DYN::FINAL, sign * value, false, false);
           itInput->subModel()->setSubModelParameters();
         }
       }
@@ -795,7 +795,7 @@ ConnectorContainer::initZUpdatableValues() {
       if (it != itInput) {
         double sign = it->negated_ ? -1 : 1;
         double value = zLocal_[it->subModel()->getVariableIndexGlobal(it->variable())];
-        itInput->subModel()->setParameterValue(UPDATABLE_INPUT_NAME, DYN::FINAL, sign * value, false);
+        itInput->subModel()->setParameterValue(UPDATABLE_INPUT_NAME, DYN::FINAL, sign * value, false, false);
         itInput->subModel()->setSubModelParameters();
       }
     }

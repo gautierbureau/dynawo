@@ -81,7 +81,9 @@ zConnectedLocalLinearize_(nullptr),
 silentZInitialized_(false),
 updatablesInitialized_(false),
 withLinearize_(false),
-tLinearize_(std::numeric_limits<double>::lowest()) {
+tLinearize_(std::numeric_limits<double>::lowest()),
+useLinearizeModel_(false),
+isLinearizeProcess_(false) {
   connectorContainer_.reset(new ConnectorContainer());
   connectorContainerLinearize_.reset(new ConnectorContainer());
 }
@@ -122,34 +124,46 @@ ModelMulti::setActionBuffer(const std::shared_ptr<ActionBuffer> actionBuffer) {
 
 void
 ModelMulti::addSubModel(const shared_ptr<SubModel>& sub, const string& libName) {
+  // propagate the linearization request so the submodel builds its linearize
+  // data only when a linearization is requested
+  if (withLinearize_)
+    sub->setWithLinearize(tLinearize_);
+
   sub->defineVariablesInit();
   sub->defineParametersInit();  // only for modelica models
   sub->defineNamesInit();
   sub->setSharedParametersDefaultValuesInit();
 
   sub->defineParameters();
-  sub->defineParametersLinearize();
+  if (withLinearize_)
+    sub->defineParametersLinearize();
 
   sub->setSharedParametersDefaultValues();
-  sub->setIsLinearizeProcess(true);
-  sub->setSharedParametersDefaultValuesLinearize();
-  sub->setIsLinearizeProcess(false);
+  if (withLinearize_) {
+    sub->setIsLinearizeProcess(true);
+    sub->setSharedParametersDefaultValuesLinearize();
+    sub->setIsLinearizeProcess(false);
+  }
 
   sub->setParametersFromPARFile();
 
   sub->setSubModelParameters();
-  sub->setIsLinearizeProcess(true);
-  sub->setSubModelParameters();
-  sub->setIsLinearizeProcess(false);
+  if (withLinearize_) {
+    sub->setIsLinearizeProcess(true);
+    sub->setSubModelParameters();
+    sub->setIsLinearizeProcess(false);
+  }
 
   sub->initStaticData();
 
   sub->defineVariables();
-  sub->defineVariablesLinearize();
   sub->defineNames();
-  sub->defineNamesLinearize();
   sub->defineElements();
-  sub->defineElementsLinearize();
+  if (withLinearize_) {
+    sub->defineVariablesLinearize();
+    sub->defineNamesLinearize();
+    sub->defineElementsLinearize();
+  }
 
   subModelByName_[sub->name()] = subModels_.size();
   if (!libName.empty()) {
@@ -165,24 +179,25 @@ ModelMulti::initBuffers() {
   for (const auto& subModel : subModels_)
     subModel->initSize(sizeY_, sizeZ_, sizeMode_, sizeF_, sizeG_);
 
-  // if (withLinearize_) {
-  for (const auto& subModel : subModels_) {
-    subModel->setIsLinearizeProcess(true);
-    subModel->initSizeLinearize(sizeYLinearize_, sizeZLinearize_, sizeModeLinearize_, sizeFLinearize_, sizeGLinearize_);
-    subModel->setIsLinearizeProcess(false);
+  if (withLinearize_) {
+    for (const auto& subModel : subModels_) {
+      subModel->setIsLinearizeProcess(true);
+      subModel->initSizeLinearize(sizeYLinearize_, sizeZLinearize_, sizeModeLinearize_, sizeFLinearize_, sizeGLinearize_);
+      subModel->setIsLinearizeProcess(false);
+    }
   }
-  // }
 
   connectorContainer_->setOffsetModel(sizeF_);
   connectorContainer_->setSizeY(sizeY_);
   connectorContainer_->mergeConnectors();
-  // if (withLinearize_) {
-  connectorContainerLinearize_->setOffsetModel(sizeFLinearize_);
-  connectorContainerLinearize_->setSizeY(sizeYLinearize_);
-  connectorContainerLinearize_->mergeConnectors();
-  // }
+  if (withLinearize_) {
+    connectorContainerLinearize_->setOffsetModel(sizeFLinearize_);
+    connectorContainerLinearize_->setSizeY(sizeYLinearize_);
+    connectorContainerLinearize_->mergeConnectors();
+  }
   evalStaticYType();
-  evalStaticYTypeLinearize();
+  if (withLinearize_)
+    evalStaticYTypeLinearize();
 
   numVarsOptional_.clear();
   for (int i = 0; i < sizeY_; ++i) {
@@ -194,25 +209,30 @@ ModelMulti::initBuffers() {
     }
   }
   numVarsOptionalLinearize_.clear();
-  for (int i = 0; i < sizeYLinearize_; ++i) {
-    if (yTypeLinearize_[i] == OPTIONAL_EXTERNAL) {
-      const bool isConnected = connectorContainerLinearize_->isConnected(i);
-      if (!isConnected) {
-        numVarsOptionalLinearize_.insert(i);
+  if (withLinearize_) {
+    for (int i = 0; i < sizeYLinearize_; ++i) {
+      if (yTypeLinearize_[i] == OPTIONAL_EXTERNAL) {
+        const bool isConnected = connectorContainerLinearize_->isConnected(i);
+        if (!isConnected) {
+          numVarsOptionalLinearize_.insert(i);
+        }
       }
     }
   }
 
   sizeF_ += connectorContainer_->nbContinuousConnectors();
-  sizeFLinearize_ += connectorContainerLinearize_->nbContinuousConnectors();
+  if (withLinearize_)
+    sizeFLinearize_ += connectorContainerLinearize_->nbContinuousConnectors();
 
   offsetFOptional_ = sizeF_;
   sizeF_ += numVarsOptional_.size();  /// fictitious equation will be added for unconnected optional external variables
   evalStaticFType();
 
-  offsetFOptionalLinearize_ = sizeFLinearize_;
-  sizeFLinearize_ += numVarsOptionalLinearize_.size();  /// fictitious equation will be added for unconnected optional external variables
-  evalStaticFTypeLinearize();
+  if (withLinearize_) {
+    offsetFOptionalLinearize_ = sizeFLinearize_;
+    sizeFLinearize_ += numVarsOptionalLinearize_.size();  /// fictitious equation will be added for unconnected optional external variables
+    evalStaticFTypeLinearize();
+  }
 
   if (withLinearize_)
     sizeG_ += + 1;
@@ -231,13 +251,15 @@ ModelMulti::initBuffers() {
     silentZ_[i].setFlags(NotSilent);
   }
 
-  fLocalLinearize_ = std::vector<double>(sizeFLinearize_);
-  gLocalLinearize_ = std::vector<state_g>(sizeGLinearize_, ROOT_DOWN);
-  yLocalLinearize_ = std::vector<double>(sizeYLinearize_);
-  ypLocalLinearize_ = std::vector<double>(sizeYLinearize_);
-  zLocalLinearize_ = std::vector<double>(sizeZLinearize_);
-  zConnectedLocalLinearize_ = new bool[sizeZLinearize_];
-  std::fill_n(zConnectedLocalLinearize_, sizeZLinearize_, false);
+  if (withLinearize_) {
+    fLocalLinearize_ = std::vector<double>(sizeFLinearize_);
+    gLocalLinearize_ = std::vector<state_g>(sizeGLinearize_, ROOT_DOWN);
+    yLocalLinearize_ = std::vector<double>(sizeYLinearize_);
+    ypLocalLinearize_ = std::vector<double>(sizeYLinearize_);
+    zLocalLinearize_ = std::vector<double>(sizeZLinearize_);
+    zConnectedLocalLinearize_ = new bool[sizeZLinearize_];
+    std::fill_n(zConnectedLocalLinearize_, sizeZLinearize_, false);
+  }
 
   int offsetF = 0;
   int offsetG = 0;
@@ -279,53 +301,57 @@ ModelMulti::initBuffers() {
   connectorContainer_->propagateZConnectionInfoToModel();
   std::fill(fLocal_.begin() + offsetFOptional_, fLocal_.begin() + sizeF_, 0.);
 
-  int offsetFLinearize = 0;
-  int offsetGLinearize = 0;
-  int offsetYLinearize = 0;
-  int offsetZLinearize = 0;
-  for (unsigned int i = 0; i < subModels_.size(); ++i) {
-    const auto& subModel = subModels_[i];
-    const int sizeYLinearize = subModel->sizeYLinearize();
-    if (sizeYLinearize > 0)
-      subModel->setBufferYLinearize(yLocalLinearize_.data(), ypLocalLinearize_.data(), offsetYLinearize);
-    offsetYLinearize += sizeYLinearize;
+  if (withLinearize_) {
+    int offsetFLinearize = 0;
+    int offsetGLinearize = 0;
+    int offsetYLinearize = 0;
+    int offsetZLinearize = 0;
+    for (unsigned int i = 0; i < subModels_.size(); ++i) {
+      const auto& subModel = subModels_[i];
+      const int sizeYLinearize = subModel->sizeYLinearize();
+      if (sizeYLinearize > 0)
+        subModel->setBufferYLinearize(yLocalLinearize_.data(), ypLocalLinearize_.data(), offsetYLinearize);
+      offsetYLinearize += sizeYLinearize;
 
-    const int sizeFLinearize = subModel->sizeFLinearize();
-    if (sizeFLinearize > 0) {
-      subModel->setBufferFLinearize(fLocalLinearize_.data(), offsetFLinearize);
-      for (int j = offsetFLinearize; j < offsetFLinearize + sizeFLinearize; ++j)
-        mapAssociationFLinearize_[j] = i;
+      const int sizeFLinearize = subModel->sizeFLinearize();
+      if (sizeFLinearize > 0) {
+        subModel->setBufferFLinearize(fLocalLinearize_.data(), offsetFLinearize);
+        for (int j = offsetFLinearize; j < offsetFLinearize + sizeFLinearize; ++j)
+          mapAssociationFLinearize_[j] = i;
 
-      offsetFLinearize += sizeFLinearize;
+        offsetFLinearize += sizeFLinearize;
+      }
+
+      const int sizeGLinearize = subModel->sizeGLinearize();
+      if (sizeGLinearize > 0) {
+        subModel->setBufferGLinearize(gLocalLinearize_.data(), offsetGLinearize);
+        for (int j = offsetGLinearize; j < offsetGLinearize + sizeGLinearize; ++j)
+          mapAssociationGLinearize_[j] = i;
+
+        offsetGLinearize += sizeGLinearize;
+      }
+
+      const int sizeZLinearize = subModel->sizeZLinearize();
+      if (sizeZLinearize > 0)
+        subModels_[i]->setBufferZLinearize(zLocalLinearize_.data(), zConnectedLocalLinearize_, offsetZLinearize);
+      offsetZLinearize += sizeZLinearize;
     }
-
-    const int sizeGLinearize = subModel->sizeGLinearize();
-    if (sizeGLinearize > 0) {
-      subModel->setBufferGLinearize(gLocalLinearize_.data(), offsetGLinearize);
-      for (int j = offsetGLinearize; j < offsetGLinearize + sizeGLinearize; ++j)
-        mapAssociationGLinearize_[j] = i;
-
-      offsetGLinearize += sizeGLinearize;
-    }
-
-    const int sizeZLinearize = subModel->sizeZLinearize();
-    if (sizeZLinearize > 0)
-      subModels_[i]->setBufferZLinearize(zLocalLinearize_.data(), zConnectedLocalLinearize_, offsetZLinearize);
-    offsetZLinearize += sizeZLinearize;
+    connectorContainerLinearize_->setBufferF(fLocalLinearize_.data(), offsetFLinearize);
+    connectorContainerLinearize_->setBufferY(yLocalLinearize_.data(), ypLocalLinearize_.data());  // connectors access to the whole y Buffer
+    connectorContainerLinearize_->setBufferZ(zLocalLinearize_.data(), zConnectedLocalLinearize_);  // connectors access to the whole z buffer
+    connectorContainerLinearize_->propagateZConnectionInfoToModel();
+    std::fill(fLocalLinearize_.begin() + offsetFOptionalLinearize_, fLocalLinearize_.begin() + sizeFLinearize_, 0.);
   }
-  connectorContainerLinearize_->setBufferF(fLocalLinearize_.data(), offsetFLinearize);
-  connectorContainerLinearize_->setBufferY(yLocalLinearize_.data(), ypLocalLinearize_.data());  // connectors access to the whole y Buffer
-  connectorContainerLinearize_->setBufferZ(zLocalLinearize_.data(), zConnectedLocalLinearize_);  // connectors access to the whole z buffer
-  connectorContainerLinearize_->propagateZConnectionInfoToModel();
-  std::fill(fLocalLinearize_.begin() + offsetFOptionalLinearize_, fLocalLinearize_.begin() + sizeFLinearize_, 0.);
 
   // (3) init buffers of each sub-model (useful for the network model)
   // (4) release elements that were used and declared only for connections
   for (const auto& subModel : subModels_) {
     subModel->initSubBuffers();
     subModel->releaseElements();
-    subModel->initSubBuffersLinearize();
-    subModel->releaseElementsLinearize();
+    if (withLinearize_) {
+      subModel->initSubBuffersLinearize();
+      subModel->releaseElementsLinearize();
+    }
   }
 }
 
@@ -545,12 +571,20 @@ ModelMulti::evalJt(const double t, const double cj, SparseMatrix& jt) {
     }
   }
 
-  connectorContainer_->evalJtConnector(jt);
-
-  // add Jacobian for optional variables X = 0
-  for (const auto numVarOptional : numVarsOptional_) {
-    jt.changeCol();
-    jt.addTerm(numVarOptional, +1);  // d(f)/d(Y) = +1;
+  if (isLinearizeProcess_) {
+    connectorContainerLinearize_->evalJtConnector(jt);
+    // add Jacobian for optional variables X = 0
+    for (const auto numVarOptional : numVarsOptionalLinearize_) {
+      jt.changeCol();
+      jt.addTerm(numVarOptional, +1);  // d(f)/d(Y) = +1;
+    }
+  } else {
+    connectorContainer_->evalJtConnector(jt);
+    // add Jacobian for optional variables X = 0
+    for (const auto numVarOptional : numVarsOptional_) {
+      jt.changeCol();
+      jt.addTerm(numVarOptional, +1);  // d(f)/d(Y) = +1;
+    }
   }
 }
 
@@ -564,10 +598,15 @@ ModelMulti::evalJtPrim(const double t, const double cj, SparseMatrix& jtPrim) {
     }
   }
 
-  connectorContainer_->evalJtPrimConnector(jtPrim);
-
-  for (unsigned int i = 0; i < numVarsOptional_.size(); ++i)
-    jtPrim.changeCol();
+  if (isLinearizeProcess_) {
+    connectorContainerLinearize_->evalJtPrimConnector(jtPrim);
+    for (unsigned int i = 0; i < numVarsOptionalLinearize_.size(); ++i)
+      jtPrim.changeCol();
+  } else {
+    connectorContainer_->evalJtPrimConnector(jtPrim);
+    for (unsigned int i = 0; i < numVarsOptional_.size(); ++i)
+      jtPrim.changeCol();
+  }
 }
 
 void
@@ -1000,19 +1039,22 @@ ModelMulti::createConnection(const shared_ptr<SubModel>& subModel1, const string
     switch (typeVar1) {
       case FLOW: {
         connectorContainer_->addFlowConnector(connector);
-        connectorContainerLinearize_->addFlowConnector(connector);
+        if (withLinearize_)
+          connectorContainerLinearize_->addFlowConnector(connector);
         break;
       }
       case CONTINUOUS: {
         connectorContainer_->addContinuousConnector(connector);
-        connectorContainerLinearize_->addContinuousConnector(connector);
+        if (withLinearize_)
+          connectorContainerLinearize_->addContinuousConnector(connector);
         break;
       }
       case DISCRETE:
       case INTEGER:
       case BOOLEAN: {
         connectorContainer_->addDiscreteConnector(connector);
-        connectorContainerLinearize_->addDiscreteConnector(connector);
+        if (withLinearize_)
+          connectorContainerLinearize_->addDiscreteConnector(connector);
         break;
       }
       case UNDEFINED_TYPE:
@@ -1123,6 +1165,7 @@ ModelMulti::setIsInitProcess(bool isInitProcess) {
 
 void
 ModelMulti::setIsLinearizeProcess(bool isLinearizeProcess) {
+  isLinearizeProcess_ = isLinearizeProcess;
   for (const auto& subModel : subModels_)
     subModel->setIsLinearizeProcess(isLinearizeProcess);
 }
@@ -1528,8 +1571,13 @@ void ModelMulti::evalLinearize(const double t, const std::string& path) {
     setIsLinearizeProcess(true);
   }
 
+  // the linearize model can have fewer variables than the full model (e.g.
+  // linear blocks substituted in introduce alias equations), so the matrices
+  // and the variable/equation listings must follow the model actually used
+  const int matrixSize = useLinearizeModel_ ? sizeYLinearize() : sizeY();
+
   SparseMatrix smj;
-  smj.init(sizeY(), sizeY());
+  smj.init(matrixSize, matrixSize);
   evalJt(t, 0, smj);
   smj.printToFile(true, linearizePath.string(), filename.str());
   stringstream prefix;
@@ -1540,10 +1588,8 @@ void ModelMulti::evalLinearize(const double t, const std::string& path) {
   smj.printToFile(false, linearizePath.string(), filenameFull.str());
 
   SparseMatrix smjPrim;
-  smjPrim.init(sizeY(), sizeY());
-  // std::cout << "evalJtPrim" << std::endl;
+  smjPrim.init(matrixSize, matrixSize);
   evalJtPrim(t, 1, smjPrim);
-  // std::cout << "end evalJtPrim" << std::endl;
   stringstream filenamePrim;
   filenamePrim << "linearize_prim_" << t << ".txt";
   smjPrim.printToFile(true, linearizePath.string(), filenamePrim.str());
@@ -1561,7 +1607,7 @@ void ModelMulti::evalLinearize(const double t, const std::string& path) {
     std::ofstream fileVariablesType;
     fileVariablesType.open(completePathVariablesType.string(), std::ofstream::out);
 
-    const auto& modelYType = getYType();
+    const auto& modelYType = useLinearizeModel_ ? getYTypeLinearize() : getYType();
     for (unsigned int j = 0; j < modelYType.size(); ++j) {
       fileVariablesType << j << ";" << propertyVar2Str(modelYType[j]) << std::endl;
     }
@@ -1577,7 +1623,8 @@ void ModelMulti::evalLinearize(const double t, const std::string& path) {
 
     int nVar = 0;
     for (const auto& subModel : subModels_) {
-      for (const auto& xName : subModel->xNames()) {
+      const auto& xNames = useLinearizeModel_ ? subModel->xNamesLinearize() : subModel->xNames();
+      for (const auto& xName : xNames) {
         const std::string subModelName = subModel->name();
         const std::string varName = subModelName + "_" + xName;
         fileVariablesName << nVar << ";" << varName << ";" << subModelName << std::endl;
@@ -1594,7 +1641,7 @@ void ModelMulti::evalLinearize(const double t, const std::string& path) {
     std::ofstream fileEquationsType;
     fileEquationsType.open(completePathEquationsType.string(), std::ofstream::out);
 
-    const auto& modelFType = getFType();
+    const auto& modelFType = useLinearizeModel_ ? getFTypeLinearize() : getFType();
     for (unsigned int j = 0 ; j < modelFType.size() ; ++j) {
       fileEquationsType << j << ";" << propertyEquation2Str(modelFType[j]) << std::endl;
     }

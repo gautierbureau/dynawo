@@ -409,13 +409,8 @@ class ModelNetwork : public ModelCPP, private boost::noncopyable {
   */
   void addBridge(const std::shared_ptr<NetworkBridgeQuadripole> & bridge);
 
-  void evalStaticYTypeLinearize() override;
   void evalDynamicYTypeLinearize() override;
-  void evalStaticFTypeLinearize() override;
   void evalDynamicFTypeLinearize() override;
-  void getSizeLinearize() override;
-  void defineVariablesLinearize(std::vector<boost::shared_ptr<Variable> >& variables) override;
-  void defineParametersLinearize(std::vector<ParameterModeler>& parameters) override;
 
  private:
   double* calculatedVarBuffer_;  ///< calculated variable buffer

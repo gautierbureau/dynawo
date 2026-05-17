@@ -61,6 +61,22 @@ using curves::Curve;
 
 namespace DYN {
 
+namespace {
+
+/**
+ * @brief point a local buffer at a slice of a global buffer, or null it if the global buffer is null
+ *
+ * @param localBuffer local buffer pointer to (re)bind
+ * @param globalBuffer global buffer the local buffer is a view of
+ * @param offset offset of the local buffer inside the global buffer
+ */
+template <typename T>
+void bindBuffer(T*& localBuffer, T* globalBuffer, const int offset) {
+  localBuffer = (globalBuffer != nullptr) ? &globalBuffer[offset] : nullptr;
+}
+
+}  // namespace
+
 SubModel::SubModel() :
 sizeF_(0),
 sizeZ_(0),
@@ -205,9 +221,11 @@ SubModel::initSub(const double t0, const std::shared_ptr<parameters::ParametersS
   }
 
   init(t0);
-  setIsLinearizeProcess(true);
-  initLinearize(t0);
-  setIsLinearizeProcess(false);
+  if (withLinearize_) {
+    setIsLinearizeProcess(true);
+    initLinearize(t0);
+    setIsLinearizeProcess(false);
+  }
 
 #ifdef _DEBUG_
   if (readPARParameters_) {
@@ -303,36 +321,41 @@ SubModel::releaseElements() {
 
 vector<Element>
 SubModel::getElements(const string& nameElement) const {
-  const auto& iter = mapElement_.find(nameElement);
-  if (iter == mapElement_.end()) {
-    dumpUserReadableElementList(nameElement);
-    throw DYNError(Error::MODELER, SubModelUnknownElement, nameElement, name(), modelType());
-  } else {
-    vector<Element> elements;
-    const Element& element = elements_[iter->second];
-    if (element.getTypeElement() == Element::STRUCTURE) {
-      vector<Element> subElements = getSubElements(element);
-      elements.insert(elements.begin(), subElements.begin(), subElements.end());
-    } else {
-      elements.push_back(element);
-    }
-    return elements;
-  }
+  return getElementsImpl(nameElement, elements_, mapElement_);
 }
 
 vector<Element>
-SubModel::getSubElements(const Element& element) const {
-  vector<Element> elements;
+SubModel::getElementsImpl(const string& nameElement,
+    const vector<Element>& elements, const map<string, int>& mapElement) const {
+  const auto& iter = mapElement.find(nameElement);
+  if (iter == mapElement.end()) {
+    dumpUserReadableElementList(nameElement);
+    throw DYNError(Error::MODELER, SubModelUnknownElement, nameElement, name(), modelType());
+  }
+  vector<Element> result;
+  const Element& element = elements[iter->second];
+  if (element.getTypeElement() == Element::STRUCTURE) {
+    const vector<Element> subElements = getSubElements(element, elements);
+    result.insert(result.begin(), subElements.begin(), subElements.end());
+  } else {
+    result.push_back(element);
+  }
+  return result;
+}
+
+vector<Element>
+SubModel::getSubElements(const Element& element, const vector<Element>& elements) const {
+  vector<Element> result;
   for (const auto subElementsNum : element.subElementsNum()) {
-    Element sub = elements_[subElementsNum];
+    const Element& sub = elements[subElementsNum];
     if (sub.getTypeElement() == Element::STRUCTURE) {
-      vector<Element> subElements = getSubElements(sub);
-      elements.insert(elements.begin(), subElements.begin(), subElements.end());
+      const vector<Element> subElements = getSubElements(sub, elements);
+      result.insert(result.begin(), subElements.begin(), subElements.end());
     } else {
-      elements.push_back(sub);
+      result.push_back(sub);
     }
   }
-  return elements;
+  return result;
 }
 
 void
@@ -342,44 +365,15 @@ SubModel::defineElementsLinearize() {
   defineElements(elementsLinearize_, mapElementLinearize_);
 }
 
-  void
+void
 SubModel::releaseElementsLinearize() {
-vector<Element >().swap(elementsLinearize_);  /// clear erase elements, but do not reduce size
+  vector<Element >().swap(elementsLinearize_);  /// clear erase elements, but do not reduce size
   mapElementLinearize_.clear();
 }
 
 vector<Element>
 SubModel::getElementsLinearize(const string& nameElement) const {
-  const auto& iter = mapElementLinearize_.find(nameElement);
-  if (iter == mapElementLinearize_.end()) {
-    dumpUserReadableElementList(nameElement);
-    throw DYNError(Error::MODELER, SubModelUnknownElement, nameElement, name(), modelType());
-  } else {
-    vector<Element> elements;
-    const Element& element = elementsLinearize_[iter->second];
-    if (element.getTypeElement() == Element::STRUCTURE) {
-      vector<Element> subElements = getSubElements(element);
-      elements.insert(elements.begin(), subElements.begin(), subElements.end());
-    } else {
-      elements.push_back(element);
-    }
-    return elements;
-  }
-}
-
-vector<Element>
-SubModel::getSubElementsLinearize(const Element& element) const {
-  vector<Element> elements;
-  for (const auto subElementsNum : element.subElementsNum()) {
-    Element sub = elementsLinearize_[subElementsNum];
-    if (sub.getTypeElement() == Element::STRUCTURE) {
-      vector<Element> subElements = getSubElements(sub);
-      elements.insert(elements.begin(), subElements.begin(), subElements.end());
-    } else {
-      elements.push_back(sub);
-    }
-  }
-  return elements;
+  return getElementsImpl(nameElement, elementsLinearize_, mapElementLinearize_);
 }
 
 void
@@ -472,7 +466,6 @@ SubModel::getVariableValue(const shared_ptr<Variable>& variable, bool differenti
 
 int
 SubModel::getVariableIndexGlobal(const shared_ptr<Variable>& variable) const {
-  const int varNum = variable->getIndex();
   const typeVar_t typeVar = variable->getType();
   const bool isState = variable->isState();
 
@@ -481,15 +474,30 @@ SubModel::getVariableIndexGlobal(const shared_ptr<Variable>& variable) const {
     throw DYNError(Error::MODELER, SubModelBadVariableTypeForVariableIndex, name(), modelType(), variable->getName());
   }
 
+  int varNum = variable->getIndex();
+  int yOffset = yDeb();
+  int zOffset = zDeb();
+  if (isLinearizeProcess_) {
+    // during a linearization the connectors must address the linearize model,
+    // whose variable layout and offsets differ from the dynamic model
+    const auto& iter = variablesByNameLinearize_.find(variable->getName());
+    if (iter == variablesByNameLinearize_.end()) {
+      throw DYNError(Error::MODELER, ModelFuncError, "linearize variable " + variable->getName() + " not found in " + name());
+    }
+    varNum = iter->second->getIndex();
+    yOffset = yDebLinearize();
+    zOffset = zDebLinearize();
+  }
+
   switch (typeVar) {
     case CONTINUOUS:
     case FLOW: {
-      return yDeb() + varNum;
+      return yOffset + varNum;
     }
     case DISCRETE:
     case BOOLEAN:
     case INTEGER: {  // Z vector contains DISCRETE variables and then INTEGER variables
-      return zDeb() + varNum;
+      return zOffset + varNum;
     }
     case UNDEFINED_TYPE:
     {
@@ -689,7 +697,8 @@ SubModel::setParametersFromPARFile() {
   setParametersFromPARFile(false, false);
 
   // set linearize parameters from .par file
-  setParametersFromPARFile(false, true);
+  if (withLinearize_)
+    setParametersFromPARFile(false, true);
 }
 
 const std::unordered_map<std::string, ParameterModeler>&
@@ -865,8 +874,10 @@ SubModel::printModelValues(const std::string& directory, const std::string& dump
   if (file.is_open()) {
     printValuesVariables(file);
     printValuesParameters(file);
-    printLinearizeValuesParameters(file);
-    printLinearizeValuesParameters(file);
+    if (withLinearize_) {
+      printLinearizeValuesVariables(file);
+      printLinearizeValuesParameters(file);
+    }
 
     file.close();
   }
@@ -1025,99 +1036,67 @@ SubModel::evalZSub(const double t) {
 
 void
 SubModel::setBufferFType(propertyF_t* fType, const int offsetFType) {
-  fType_ = static_cast<propertyF_t*>(0);
-  if (fType)
-    fType_ = &(fType[offsetFType]);
+  bindBuffer(fType_, fType, offsetFType);
 }
 
 void
 SubModel::setBufferYType(propertyContinuousVar_t* yType, const int offsetYType) {
-  yType_ = static_cast<propertyContinuousVar_t*>(0);
-  if (yType)
-    yType_ = &(yType[offsetYType]);
+  bindBuffer(yType_, yType, offsetYType);
 }
 
 void
 SubModel::setBufferF(double* f, const int offsetF) {
-  fLocal_ = static_cast<double*>(0);
-  if (f)
-    fLocal_ = &(f[offsetF]);
+  bindBuffer(fLocal_, f, offsetF);
 }
 
 void
 SubModel::setBufferG(state_g* g, const int offsetG) {
-  gLocal_ = static_cast<state_g*>(0);
-  if (g)
-    gLocal_ = &(g[offsetG]);
+  bindBuffer(gLocal_, g, offsetG);
 }
 
 void
 SubModel::setBufferY(double* y, double* yp, const int offsetY) {
-  yLocal_ = static_cast<double*>(0);
-  if (y)
-    yLocal_ = &(y[offsetY]);
-  ypLocal_ = static_cast<double*>(0);
-  if (yp)
-    ypLocal_ = &(yp[offsetY]);
+  bindBuffer(yLocal_, y, offsetY);
+  bindBuffer(ypLocal_, yp, offsetY);
 }
 
 void
 SubModel::setBufferZ(double* z, bool* zConnected, int offsetZ) {
-  zLocal_ = static_cast<double*>(0);
-  if (z)
-    zLocal_ = &(z[offsetZ]);
-  zLocalConnected_ = static_cast<bool*>(0);
-  if (zConnected)
-    zLocalConnected_ = &(zConnected[offsetZ]);
+  bindBuffer(zLocal_, z, offsetZ);
+  bindBuffer(zLocalConnected_, zConnected, offsetZ);
 }
 
-  void
+void
 SubModel::setBufferFTypeLinearize(propertyF_t* fType, const int offsetFType) {
-  fTypeLinearize_ = static_cast<propertyF_t*>(0);
-  if (fType)
-    fTypeLinearize_ = &(fType[offsetFType]);
+  bindBuffer(fTypeLinearize_, fType, offsetFType);
 }
 
 void
 SubModel::setBufferYTypeLinearize(propertyContinuousVar_t* yType, const int offsetYType) {
-  yTypeLinearize_ = static_cast<propertyContinuousVar_t*>(0);
-  if (yType)
-    yTypeLinearize_ = &(yType[offsetYType]);
+  bindBuffer(yTypeLinearize_, yType, offsetYType);
 }
 
 void
 SubModel::setBufferFLinearize(double* f, const int offsetF) {
-  fLocalLinearize_ = static_cast<double*>(0);
-  if (f)
-    fLocalLinearize_ = &(f[offsetF]);
+  bindBuffer(fLocalLinearize_, f, offsetF);
 }
 
 void
 SubModel::setBufferGLinearize(state_g* g, const int offsetG) {
-  gLocalLinearize_ = static_cast<state_g*>(0);
-  if (g)
-    gLocalLinearize_ = &(g[offsetG]);
+  bindBuffer(gLocalLinearize_, g, offsetG);
 }
 
 void
 SubModel::setBufferYLinearize(double* y, double* yp, const int offsetY) {
-  yLocalLinearize_ = static_cast<double*>(0);
-  if (y)
-    yLocalLinearize_ = &(y[offsetY]);
-  ypLocalLinearize_ = static_cast<double*>(0);
-  if (yp)
-    ypLocalLinearize_ = &(yp[offsetY]);
+  bindBuffer(yLocalLinearize_, y, offsetY);
+  bindBuffer(ypLocalLinearize_, yp, offsetY);
   offsetYLinearize_ = offsetY;
 }
 
 void
 SubModel::setBufferZLinearize(double* z, bool* zConnected, int offsetZ) {
-  zLocalLinearize_ = static_cast<double*>(0);
-  if (z)
-    zLocalLinearize_ = &(z[offsetZ]);
-  zLocalConnectedLinearize_ = static_cast<bool*>(0);
-  if (zConnected)
-    zLocalConnectedLinearize_ = &(zConnected[offsetZ]);
+  bindBuffer(zLocalLinearize_, z, offsetZ);
+  bindBuffer(zLocalConnectedLinearize_, zConnected, offsetZ);
 }
 
 void
@@ -1174,14 +1153,14 @@ void
 SubModel::evalJtSub(const double t, const double cj, int& rowOffset, SparseMatrix& jt) {
   setCurrentTime(t);
   evalJt(t, cj, rowOffset, jt);
-  rowOffset += sizeY();
+  rowOffset += isLinearizeProcess_ ? sizeYLinearize() : sizeY();
 }
 
 void
 SubModel::evalJtPrimSub(const double t, const double cj, int& rowOffset, SparseMatrix& jtPrim) {
   setCurrentTime(t);
   evalJtPrim(t, cj,  rowOffset, jtPrim);
-  rowOffset += sizeY();
+  rowOffset += isLinearizeProcess_ ? sizeYLinearize() : sizeY();
 }
 
 modeChangeType_t
@@ -1603,7 +1582,7 @@ SubModel::getInitSubModelParameterValue(const string& nameParameter, std::string
 
 void
 SubModel::getLinearizeSubModelParameterValue(const string& nameParameter, std::string& value, bool& found) const {
-  constexpr bool isInitParam = true;
+  constexpr bool isInitParam = false;
   constexpr bool isLinearizeParam = true;
   const ParameterModeler& parameter = findParameter(nameParameter, isInitParam, isLinearizeParam);
   if (!parameter.hasValue()) {

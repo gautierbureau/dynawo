@@ -70,6 +70,11 @@ void
 Modeler::initSystem() {
   model_ = std::make_shared<ModelMulti>();
 
+  // must be set before any submodel is added so the linearize model is built
+  // only when a linearization is requested
+  if (withLinearize_)
+    model_->setWithLinearize(tLinearize_, useLinearizeModel_);
+
   if (data_ && data_->instantiateNetwork())
     initNetwork();
 

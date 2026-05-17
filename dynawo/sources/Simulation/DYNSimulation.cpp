@@ -793,7 +793,10 @@ Simulation::initFromData(const shared_ptr<DataInterface>& data, const shared_ptr
   std::unique_ptr<Modeler> modeler = createModeler();
   modeler->setDataInterface(data);
   modeler->setDynamicData(dyd);
-  // il faudrait passer le tLinearize_ ici pour faire le set we withLinearize sinon il est fait trop tard
+  // pass the linearization request before initSystem() so the linearize model
+  // is built only when the linearise job output is requested
+  if (tLinearize_.has_value())
+    modeler->setWithLinearize(tLinearize_.value(), useLinearizeModel_);
   modeler->initSystem();
 
   model_ = modeler->getModel();
@@ -842,9 +845,10 @@ Simulation::init() {
   // Simulation::initFromData==>Modeler::initSystem==>Modeler::initModelDescription(dyd,data)
   initFromData(data_, dyd_);
 
+  // model_->setWithLinearize is done earlier, in Modeler::initSystem, so the
+  // linearize model is built during initSystem only when requested
   if (tLinearize_.has_value()) {
     solver_->setWithLinearize(tLinearize_.value());
-    model_->setWithLinearize(tLinearize_.value(), useLinearizeModel_);
   }
 
   initStructure();

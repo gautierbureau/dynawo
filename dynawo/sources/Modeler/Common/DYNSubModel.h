@@ -1769,7 +1769,7 @@ class SubModel {
    * @brief get index of this submodel in the global continuous variable table
    * @return index of this submodel in the global continuous variable table
    */
-  int getOffsetY() const { return offsetY_; }
+  int getOffsetY() const { return offsetYLinearize_; }
 
   void setWithLinearize(double tLinearize);
 
@@ -1890,22 +1890,26 @@ class SubModel {
   void restoreData();
 
   /**
-   * @brief get the subElements contains in one element
+   * @brief look up the elements bound to a variable/structure name in a given element container
    *
-   * @param element element where we should analyze and find the subElements
+   * @param nameElement name of the variable/structure
+   * @param elements element container to look the name up in
+   * @param mapElement map from element name to index in @p elements
    *
-   * @return list of subElements contains in element
+   * @return elements associated to the variable/structure
    */
-  std::vector<Element> getSubElements(const Element& element) const;
+  std::vector<Element> getElementsImpl(const std::string& nameElement,
+      const std::vector<Element>& elements, const std::map<std::string, int>& mapElement) const;
 
   /**
-   * @brief get the subElements contains in one element
+   * @brief get the subElements contained in one element
    *
    * @param element element where we should analyze and find the subElements
+   * @param elements element container the subElements are looked up in
    *
-   * @return list of subElements contains in element
+   * @return list of subElements contained in element
    */
-  std::vector<Element> getSubElementsLinearize(const Element& element) const;
+  std::vector<Element> getSubElements(const Element& element, const std::vector<Element>& elements) const;
 
   /**
    * @brief get the map of index of equation and equation in string format (init or dynamic ones)

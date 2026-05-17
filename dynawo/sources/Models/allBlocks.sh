@@ -1,3 +1,4 @@
 #!/bin/bash
 
-python3 findAllBlocks.py Modelica/Dynawo | sort | cut -d ' ' -f 1 | uniq > allBlocks.txt
+# findAllBlocks.py already emits a sorted, de-duplicated list of block types.
+python3 findAllBlocks.py Modelica/Dynawo > allBlocks.txt

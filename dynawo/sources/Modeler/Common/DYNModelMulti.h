@@ -436,6 +436,11 @@ class ModelMulti : public Model, private boost::noncopyable {
 
  public:
   /**
+   * @copydoc Model::setWithLinearize
+   */
+  void setWithLinearize(double tLinearize, bool useLinearizeModel) override;
+
+  /**
    * @brief add a sub model to the model multi container
    *
    * @param sub sub model to add
@@ -649,11 +654,6 @@ class ModelMulti : public Model, private boost::noncopyable {
    */
   void collectSilentZ();
 
-  /**
-   * @copydoc Model::setWithLinearize
-   */
-  void setWithLinearize(double tLinearize, bool useLinearizeModel) override;
-
   void updateVariableValuesForLinearizeModel();
 
  private:
@@ -722,7 +722,8 @@ class ModelMulti : public Model, private boost::noncopyable {
 
   bool withLinearize_;  ///< withLinearize
   double tLinearize_;  ///< tLinearize
-  bool useLinearizeModel_;  ///< tLinearize
+  bool useLinearizeModel_;  ///< whether the linearize model (and not the full model) is used for the linearization
+  bool isLinearizeProcess_;  ///< whether a linearization is currently being processed
 };  ///< Class for Multiple-Model
 
 
