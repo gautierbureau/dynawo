@@ -392,6 +392,9 @@ def replace_dynamic_indexing(body):
     body_to_return = []
     depend_vars = []
     integer_array_create_tmp = {}
+    # a constant 1-dimensional subscript: calc_base_index_dims_subs(1, dim, ((modelica_integer) sub))
+    # is just the flat (0-based) index sub - 1
+    ptrn_const_index = re.compile(r'calc_base_index_dims_subs\(1, [0-9]+, \(\(modelica_integer\) (?P<sub>[0-9]+)\)\)')
     for line in body:
         if ("calc_base_index_dims_subs" not in line):
             body_to_return.append(line)
@@ -400,6 +403,13 @@ def replace_dynamic_indexing(body):
                     table, index, var_name, size = integer_array_create_tmp[tmp]
                     for i in range(0, int(size)):
                         body_to_return.append("    data->localData[0]->" + table + "[" + str(int(index) + i) + "] /* " + var_name + "[" + str(i + 1) +"] DISCRETE */" + " = integer_get(" + tmp + ", " + str(i) + ");\n")
+            continue
+        # parameter arrays initialised through a function call (e.g. PadeDelay
+        # coefficients): the indexing is done on data->simulationInfo->...Parameter[..]
+        # rather than on data->localData[..]. Resolve the constant subscript and
+        # keep the line so the function call is preserved for initRpar.
+        if "simulationInfo->" in line:
+            body_to_return.append(re.sub(ptrn_const_index, lambda m: str(int(m.group('sub')) - 1), line))
             continue
         ptrn_var_dynamic_index = re.compile(r'\(&data->localData\[[0-9]+\]->(?P<var>[\w\[\]]+)[ ]*\/\* (?P<varName>[ \w\$\.()\[\],]*) [\w\(\),\.]+ \*\/\)\[calc_base_index_dims_subs\([0-9]+, (?P<size>[0-9]+), (?P<expr>.*)\)\]')
         match = ptrn_var_dynamic_index.findall(line)

@@ -13,13 +13,6 @@
 -->
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
   <set id="1">
-    <par name="fixedDelay_a1_0_" type="DOUBLE" value="1"/>
-    <par name="fixedDelay_a1_1_" type="DOUBLE" value="1"/>
-    <par name="fixedDelay_b11" type="DOUBLE" value="1"/>
-    <par name="fixedDelay_c_0_" type="DOUBLE" value="1"/>
-    <par name="fixedDelay_c_1_" type="DOUBLE" value="1"/>
-    <par name="fixedDelay_d" type="DOUBLE" value="1"/>
-    <par name="fixedDelay_s_0_" type="DOUBLE" value="1"/>
     <par name="test_fixedDelay_n" type="INT" value="2"/>
     <par name="test_fixedDelay_m" type="INT" value="1"/>
   </set>
