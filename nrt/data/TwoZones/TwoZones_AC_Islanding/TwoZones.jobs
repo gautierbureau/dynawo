@@ -20,7 +20,7 @@
         <dyn:precompiledModels useStandardModels="true"/>
         <dyn:modelicaModels useStandardModels="true"/>
       </dyn:modeler>
-      <dyn:simulation startTime="0" stopTime="10"/>
+      <dyn:simulation startTime="0" stopTime="25"/>
       <dyn:outputs directory="outputs">
         <dyn:curves inputFile="TwoZones.crv" exportMode="CSV"/>
         <dyn:logs>

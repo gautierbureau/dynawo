@@ -67,4 +67,10 @@
     <par type="BOOL" name="event_disconnectOrigin" value="true"/>
     <par type="BOOL" name="event_disconnectExtremity" value="true"/>
   </set>
+  <!-- Reconnection of the central line LINE_MID at t = 11 s (back to a single synchronous component) -->
+  <set id="6">
+    <par type="DOUBLE" name="event_tEvent" value="11.0"/>
+    <par type="BOOL" name="event_connectOrigin" value="true"/>
+    <par type="BOOL" name="event_connectExtremity" value="true"/>
+  </set>
 </parametersSet>
