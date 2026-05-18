@@ -297,4 +297,9 @@
     <par type="BOOL" name="event_disconnectOrigin" value="true"/>
     <par type="BOOL" name="event_disconnectExtremity" value="true"/>
   </set>
+  <set id="10">
+    <par type="DOUBLE" name="event_tEvent" value="11"/>
+    <par type="BOOL" name="event_connectOrigin" value="true"/>
+    <par type="BOOL" name="event_connectExtremity" value="true"/>
+  </set>
 </parametersSet>
