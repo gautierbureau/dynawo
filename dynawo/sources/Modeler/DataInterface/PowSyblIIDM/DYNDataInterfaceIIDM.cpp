@@ -512,6 +512,29 @@ DataInterfaceIIDM::importShuntCompensator(iidm::ShuntCompensator& shuntIIDM) con
   return shunt;
 }
 
+// Builds the ordered current limit interfaces for one CurrentLimits set: the permanent limit first,
+// then non-fictitious temporary limits, then fictitious ones. The network model's staircase logic
+// (DYNModelLine) stops at the first fictitious limit, so a non-fictitious limit placed after a
+// fictitious one would be silently dropped.
+static std::vector<std::unique_ptr<CurrentLimitInterfaceIIDM> >
+buildCurrentLimitInterfaces(const iidm::CurrentLimits& currentLimits) {
+  std::vector<std::unique_ptr<CurrentLimitInterfaceIIDM> > limits;
+  if (!std::isnan(currentLimits.getPermanentLimit())) {
+    limits.push_back(DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
+                                                                 std::numeric_limits<unsigned long>::max(), false));
+  }
+  const std::vector<iidm::TemporaryLimit> temporaryLimits = currentLimits.getTemporaryLimits();
+  for (const bool fictitiousPass : {false, true}) {
+    for (const auto& temporaryLimit : temporaryLimits) {
+      if (temporaryLimit.fictitious == fictitiousPass) {
+        limits.push_back(DYN::make_unique<CurrentLimitInterfaceIIDM>(temporaryLimit.value, temporaryLimit.acceptableDuration,
+                                                                     temporaryLimit.fictitious, temporaryLimit.name));
+      }
+    }
+  }
+  return limits;
+}
+
 std::unique_ptr<DanglingLineInterfaceIIDM>
 DataInterfaceIIDM::importDanglingLine(iidm::DanglingLine& danglingLineIIDM) const {
   std::unique_ptr<DanglingLineInterfaceIIDM> danglingLine = DYN::make_unique<DanglingLineInterfaceIIDM>(danglingLineIIDM);
@@ -519,20 +542,7 @@ DataInterfaceIIDM::importDanglingLine(iidm::DanglingLine& danglingLineIIDM) cons
 
   auto currentLimitsOpt = danglingLineIIDM.getCurrentLimits();
   if (currentLimitsOpt) {
-    iidm::CurrentLimits currentLimits = currentLimitsOpt.value();
-
-    if (!std::isnan(currentLimits.getPermanentLimit())) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
-                                                                                                      std::numeric_limits<unsigned long>::max(),
-                                                                                                      false);
-      danglingLine->addCurrentLimitInterface(std::move(cLimit));
-    }
-
-    for (auto& currentLimit : currentLimits.getTemporaryLimits()) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                      currentLimit.acceptableDuration,
-                                                                                                      currentLimit.fictitious,
-                                                                                                      currentLimit.name);
+    for (auto& cLimit : buildCurrentLimitInterfaces(currentLimitsOpt.value())) {
       danglingLine->addCurrentLimitInterface(std::move(cLimit));
     }
   }
@@ -586,40 +596,14 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
 
   auto cl1Opt = twoWTfoIIDM.getCurrentLimits1();
   if (cl1Opt) {
-    iidm::CurrentLimits currentLimits = cl1Opt.value();
-
-    if (!std::isnan(currentLimits.getPermanentLimit())) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
-                                                                                                      std::numeric_limits<unsigned long>::max(),
-                                                                                                      false);
-      twoWTfo->addCurrentLimitInterface1(std::move(cLimit));
-    }
-
-    for (auto& currentLimit : currentLimits.getTemporaryLimits()) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                      currentLimit.acceptableDuration,
-                                                                                                      currentLimit.fictitious,
-                                                                                                      currentLimit.name);
+    for (auto& cLimit : buildCurrentLimitInterfaces(cl1Opt.value())) {
       twoWTfo->addCurrentLimitInterface1(std::move(cLimit));
     }
   }
 
   auto cl2Opt = twoWTfoIIDM.getCurrentLimits2();
   if (cl2Opt) {
-    iidm::CurrentLimits currentLimits = cl2Opt.value();
-
-    if (!std::isnan(currentLimits.getPermanentLimit())) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
-                                                                                                      std::numeric_limits<unsigned long>::max(),
-                                                                                                      false);
-      twoWTfo->addCurrentLimitInterface2(std::move(cLimit));
-    }
-
-    for (auto& currentLimit : currentLimits.getTemporaryLimits()) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                      currentLimit.acceptableDuration,
-                                                                                                      currentLimit.fictitious,
-                                                                                                      currentLimit.name);
+    for (auto& cLimit : buildCurrentLimitInterfaces(cl2Opt.value())) {
       twoWTfo->addCurrentLimitInterface2(std::move(cLimit));
     }
   }
@@ -690,18 +674,7 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
     }
     auto currentLimitsOpt = leg.value().getCurrentLimits();
     if (currentLimitsOpt) {
-      iidm::CurrentLimits currentLimits = currentLimitsOpt.value();
-      if (!std::isnan(currentLimits.getPermanentLimit())) {
-        std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits.getPermanentLimit(),
-                                                                                                        std::numeric_limits<unsigned long>::max(),
-                                                                                                        false);
-        fictTwoWTransf->addCurrentLimitInterface2(std::move(cLimit));
-      }
-      for (auto& currentLimit : currentLimits.getTemporaryLimits()) {
-        std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                        currentLimit.acceptableDuration,
-                                                                                                        currentLimit.fictitious,
-                                                                                                        currentLimit.name);
+      for (auto& cLimit : buildCurrentLimitInterfaces(currentLimitsOpt.value())) {
         fictTwoWTransf->addCurrentLimitInterface2(std::move(cLimit));
       }
     }
@@ -722,36 +695,14 @@ DataInterfaceIIDM::importLine(iidm::Line& lineIIDM) const {
 
   auto cl1Opt = lineIIDM.getCurrentLimits1();
   if (cl1Opt) {
-    iidm::CurrentLimits currentLimits1 = cl1Opt.value();
-    if (!std::isnan(currentLimits1.getPermanentLimit())) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits1.getPermanentLimit(),
-                                                                                                      std::numeric_limits<unsigned long>::max(),
-                                                                                                      false);
-      line->addCurrentLimitInterface1(std::move(cLimit));
-    }
-    for (auto& currentLimit : currentLimits1.getTemporaryLimits()) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                      currentLimit.acceptableDuration,
-                                                                                                      currentLimit.fictitious,
-                                                                                                      currentLimit.name);
+    for (auto& cLimit : buildCurrentLimitInterfaces(cl1Opt.value())) {
       line->addCurrentLimitInterface1(std::move(cLimit));
     }
   }
 
   auto cl2Opt = lineIIDM.getCurrentLimits2();
   if (cl2Opt) {
-    iidm::CurrentLimits currentLimits2 = cl2Opt.value();
-    if (!std::isnan(currentLimits2.getPermanentLimit())) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimits2.getPermanentLimit(),
-                                                                                                      std::numeric_limits<unsigned long>::max(),
-                                                                                                      false);
-      line->addCurrentLimitInterface2(std::move(cLimit));
-    }
-    for (auto& currentLimit : currentLimits2.getTemporaryLimits()) {
-      std::unique_ptr<CurrentLimitInterfaceIIDM> cLimit = DYN::make_unique<CurrentLimitInterfaceIIDM>(currentLimit.value,
-                                                                                                      currentLimit.acceptableDuration,
-                                                                                                      currentLimit.fictitious,
-                                                                                                      currentLimit.name);
+    for (auto& cLimit : buildCurrentLimitInterfaces(cl2Opt.value())) {
       line->addCurrentLimitInterface2(std::move(cLimit));
     }
   }
