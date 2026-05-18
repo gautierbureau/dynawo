@@ -46,3 +46,14 @@ case_description = "One AC network split into two synchronous zones by tripping 
 job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_Islanding", "TwoZones.jobs")
 
 test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
+###########################################################################
+#   TwoZones AC FourGenerators - two classical machines per zone, with a  #
+#   genuine DYNModelOmegaRef barycenter per island                        #
+###########################################################################
+
+case_name = "TwoZones - AC FourGenerators"
+case_description = "Two zones with two classical generators each, all with distinct inertia and damping; the central LINE_MID is tripped at t = 1 s and reclosed at t = 11 s. While islanded, the net-exporter zone 1 and net-importer zone 2 settle at two distinct frequencies, each a genuine DYNModelOmegaRef barycenter of its two machines"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_FourGenerators", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
