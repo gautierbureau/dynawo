@@ -20,4 +20,6 @@
   <curve model="GEN2" variable="generator_omegaPu"/>
   <curve model="GEN2" variable="generator_PGenPu"/>
   <curve model="GEN2" variable="generator_UPu"/>
+  <curve model="OMEGA_REF" variable="omegaRef_grp_0_value"/>
+  <curve model="OMEGA_REF" variable="omegaRef_grp_1_value"/>
 </curvesInput>
