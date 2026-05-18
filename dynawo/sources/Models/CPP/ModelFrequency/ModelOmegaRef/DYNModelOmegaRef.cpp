@@ -268,10 +268,11 @@ ModelOmegaRef::collectSilentZ(BitMask* silentZTable) {
 modeChangeType_t
 ModelOmegaRef::evalMode(const double /*t*/) {
   // mode change = number of subNetwork change or grp status change
-  if (numCCNodeOld_.size() == 0) {
+  // First call: snapshot both references together. Initializing them on
+  // separate calls would let the call carrying the first topology change be
+  // consumed by a lazy initialization, leaving the other reference stale.
+  if (numCCNodeOld_.size() == 0 || runningGrpOld_.size() == 0) {
     numCCNodeOld_.assign(numCCNode_.begin(), numCCNode_.end());
-    sortGenByCC();
-  } else if (runningGrpOld_.size() == 0) {
     runningGrpOld_.assign(runningGrp_.begin(), runningGrp_.end());
     sortGenByCC();
   } else if (!std::equal(numCCNode_.begin(), numCCNode_.end(), numCCNodeOld_.begin())) {
