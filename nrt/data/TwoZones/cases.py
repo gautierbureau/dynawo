@@ -57,3 +57,14 @@ case_description = "Two zones with two classical generators each, all with disti
 job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_FourGenerators", "TwoZones.jobs")
 
 test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
+###########################################################################
+#   TwoZones AC OppositeDrift - islanding with a large transfer so the    #
+#   two island frequencies diverge in opposite directions                #
+###########################################################################
+
+case_name = "TwoZones - AC OppositeDrift"
+case_description = "Four-generator TwoZones islanding with a large pre-split transfer (~215 MW) across LINE_MID; when the line trips at t = 1 s the net-exporter zone 1 frequency rises while the net-importer zone 2 frequency falls. The classical generators have no governor so the two islands diverge in opposite directions without reconnection"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_OppositeDrift", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
