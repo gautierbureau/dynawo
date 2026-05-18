@@ -68,3 +68,14 @@ case_description = "Four-generator TwoZones islanding with a large pre-split tra
 job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_OppositeDrift", "TwoZones.jobs")
 
 test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
+###########################################################################
+#   TwoZones AC OppositeDriftReconnection - same opposite-drift split,    #
+#   with the latest reclose the solver still survives (test coverage)     #
+###########################################################################
+
+case_name = "TwoZones - AC OppositeDriftReconnection"
+case_description = "TwoZones_AC_OppositeDrift with LINE_MID reclosed at t = 3 s, the latest reconnection the solver survives before the islands slip too far out of step; exercises the disconnection, reconnection and DYNModelOmegaRef component-merge path. The reunited generators resynchronise but, having no governor, the merged system keeps drifting (no recovery to nominal expected)"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_OppositeDriftReconnection", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))

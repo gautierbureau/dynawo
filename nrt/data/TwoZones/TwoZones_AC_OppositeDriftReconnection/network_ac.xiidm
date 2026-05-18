@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_5" id="network_ac" caseDate="2024-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="IIDM">
+    <iidm:substation id="GEN1A_SUB" country="FR" tso="TSO1">
+        <iidm:voltageLevel id="GEN1A_VL" nominalV="400.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="GEN1A_BUS" v="400.0" angle="5.772955260661658"/>
+            </iidm:busBreakerTopology>
+            <iidm:generator id="GEN1A" energySource="OTHER" minP="0.0" maxP="550.0" voltageRegulatorOn="true" targetP="540.0" targetV="400.0" targetQ="0.0" bus="GEN1A_BUS" connectableBus="GEN1A_BUS" p="-533.7467513973644" q="-26.347953957609604">
+                <iidm:reactiveCapabilityCurve>
+                    <iidm:point p="-550.0" minQ="-275.0" maxQ="275.0"/>
+                    <iidm:point p="0.0" minQ="-275.0" maxQ="275.0"/>
+                    <iidm:point p="550.0" minQ="-275.0" maxQ="275.0"/>
+                </iidm:reactiveCapabilityCurve>
+            </iidm:generator>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:substation id="GEN1B_SUB" country="FR" tso="TSO1">
+        <iidm:voltageLevel id="GEN1B_VL" nominalV="400.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="GEN1B_BUS" v="400.0" angle="4.203017860088835"/>
+            </iidm:busBreakerTopology>
+            <iidm:generator id="GEN1B" energySource="OTHER" minP="0.0" maxP="400.0" voltageRegulatorOn="true" targetP="395.0" targetV="400.0" targetQ="0.0" bus="GEN1B_BUS" connectableBus="GEN1B_BUS" p="-390.45218283444683" q="-28.15525618140029">
+                <iidm:reactiveCapabilityCurve>
+                    <iidm:point p="-400.0" minQ="-200.0" maxQ="200.0"/>
+                    <iidm:point p="0.0" minQ="-200.0" maxQ="200.0"/>
+                    <iidm:point p="400.0" minQ="-200.0" maxQ="200.0"/>
+                </iidm:reactiveCapabilityCurve>
+            </iidm:generator>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:substation id="LOAD1_SUB" country="FR" tso="TSO1">
+        <iidm:voltageLevel id="LOAD1_VL" nominalV="400.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="LOAD1_BUS" v="394.2201795310254" angle="0.0"/>
+            </iidm:busBreakerTopology>
+            <iidm:load id="LOAD1" loadType="UNDEFINED" p0="700.0" q0="90.0" bus="LOAD1_BUS" connectableBus="LOAD1_BUS" p="700.0" q="90.0"/>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:substation id="GEN2A_SUB" country="FR" tso="TSO2">
+        <iidm:voltageLevel id="GEN2A_VL" nominalV="400.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="GEN2A_BUS" v="400.0" angle="2.608165595307187"/>
+            </iidm:busBreakerTopology>
+            <iidm:generator id="GEN2A" energySource="OTHER" minP="0.0" maxP="480.0" voltageRegulatorOn="true" targetP="360.0" targetV="400.0" targetQ="0.0" bus="GEN2A_BUS" connectableBus="GEN2A_BUS" p="-354.5426194013362" q="-32.80820782777596">
+                <iidm:reactiveCapabilityCurve>
+                    <iidm:point p="-480.0" minQ="-240.0" maxQ="240.0"/>
+                    <iidm:point p="0.0" minQ="-240.0" maxQ="240.0"/>
+                    <iidm:point p="480.0" minQ="-240.0" maxQ="240.0"/>
+                </iidm:reactiveCapabilityCurve>
+            </iidm:generator>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:substation id="GEN2B_SUB" country="FR" tso="TSO2">
+        <iidm:voltageLevel id="GEN2B_VL" nominalV="400.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="GEN2B_BUS" v="400.0" angle="2.392525500036063"/>
+            </iidm:busBreakerTopology>
+            <iidm:generator id="GEN2B" energySource="OTHER" minP="0.0" maxP="450.0" voltageRegulatorOn="true" targetP="340.0" targetV="400.0" targetQ="0.0" bus="GEN2B_BUS" connectableBus="GEN2B_BUS" p="-334.8837056887527" q="-33.498233344707984">
+                <iidm:reactiveCapabilityCurve>
+                    <iidm:point p="-450.0" minQ="-225.0" maxQ="225.0"/>
+                    <iidm:point p="0.0" minQ="-225.0" maxQ="225.0"/>
+                    <iidm:point p="450.0" minQ="-225.0" maxQ="225.0"/>
+                </iidm:reactiveCapabilityCurve>
+            </iidm:generator>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:substation id="LOAD2_SUB" country="FR" tso="TSO2">
+        <iidm:voltageLevel id="LOAD2_VL" nominalV="400.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="LOAD2_BUS" v="393.950153144849" angle="-1.1999935665617458"/>
+            </iidm:busBreakerTopology>
+            <iidm:load id="LOAD2" loadType="UNDEFINED" p0="900.0" q0="110.0" bus="LOAD2_BUS" connectableBus="LOAD2_BUS" p="900.0" q="110.0"/>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:line id="LINE_GEN1A_LOAD1" r="3.0" x="30.0" g1="0.0" b1="1.5E-4" g2="0.0" b2="1.5E-4" voltageLevelId1="GEN1A_VL" bus1="GEN1A_BUS" connectableBus1="GEN1A_BUS" voltageLevelId2="LOAD1_VL" bus2="LOAD1_BUS" connectableBus2="LOAD1_BUS" p1="533.7454630479037" q1="26.347953957609604" p2="-528.3563542518053" q2="-19.76829848904305"/>
+    <iidm:line id="LINE_GEN1B_LOAD1" r="3.0" x="30.0" g1="0.0" b1="1.5E-4" g2="0.0" b2="1.5E-4" voltageLevelId1="GEN1B_VL" bus1="GEN1B_BUS" connectableBus1="GEN1B_BUS" voltageLevelId2="LOAD1_VL" bus2="LOAD1_BUS" connectableBus2="LOAD1_BUS" p1="390.45130725788226" q1="28.15525618140029" p2="-387.54182486875663" q2="-46.371864782559044"/>
+    <iidm:line id="LINE_GEN2A_LOAD2" r="3.0" x="30.0" g1="0.0" b1="1.5E-4" g2="0.0" b2="1.5E-4" voltageLevelId1="GEN2A_VL" bus1="GEN2A_BUS" connectableBus1="GEN2A_BUS" voltageLevelId2="LOAD2_VL" bus2="LOAD2_BUS" connectableBus2="LOAD2_BUS" p1="354.54201786082064" q1="32.80820782777596" p2="-352.1246325813444" q2="-55.91386350743641"/>
+    <iidm:line id="LINE_GEN2B_LOAD2" r="3.0" x="30.0" g1="0.0" b1="1.5E-4" g2="0.0" b2="1.5E-4" voltageLevelId1="GEN2B_VL" bus1="GEN2B_BUS" connectableBus1="GEN2B_BUS" voltageLevelId2="LOAD2_VL" bus2="LOAD2_BUS" connectableBus2="LOAD2_BUS" p1="334.88314620209076" q1="33.498233344707984" p2="-332.718406793692" q2="-59.13034773514134"/>
+    <iidm:line id="LINE_MID" r="1.5" x="15.0" g1="0.0" b1="7.5E-5" g2="0.0" b2="7.5E-5" voltageLevelId1="LOAD1_VL" bus1="LOAD1_BUS" connectableBus1="LOAD1_BUS" voltageLevelId2="LOAD2_VL" bus2="LOAD2_BUS" connectableBus2="LOAD2_BUS" p1="215.6076765199086" q1="-23.8491491315484" p2="-215.15755601578078" q2="5.05488368942063"/>
+</iidm:network>
