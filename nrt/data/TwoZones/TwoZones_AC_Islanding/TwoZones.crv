@@ -24,4 +24,6 @@
   <curve model="NETWORK" variable="GEN2_BUS_numcc_value"/>
   <curve model="OMEGA_REF" variable="omegaRef_grp_0_value"/>
   <curve model="OMEGA_REF" variable="omegaRef_grp_1_value"/>
+  <curve model="OMEGA_REF" variable="omegaRef_0_value"/>
+  <curve model="OMEGA_REF" variable="omegaRef_1_value"/>
 </curvesInput>
