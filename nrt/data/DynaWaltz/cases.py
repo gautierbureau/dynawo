@@ -27,6 +27,15 @@ job_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.
 
 test_cases.append((case_name, case_description, job_file, 1, standardReturnCodeType, standardReturnCode))
 
+##########################################################################################
+#     Nordic Test System islanded on the North-Central corridor (realistic collapse)     #
+##########################################################################################
+case_name = "DynaWaltz - Nordic Test System - islanding"
+case_description = "Nordic Test System split into two synchronous islands by tripping the three North-Central corridor branches (L4011-4021, L4022-4031a/b); the North keeps its ~2500 MW surplus and stays governed near nominal while the import-starved Central island suffers a frequency collapse"
+job_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "examples", "DynaWaltz", "Nordic_Islanding", "Nordic.jobs")
+
+test_cases.append((case_name, case_description, job_file, 1, standardReturnCodeType, standardReturnCode))
+
 ###################################################################################################################
 #     Nordic Test System with a fault, the tripping of a line and a voltage collapse avoided thanks to the TCB    #
 ###################################################################################################################
