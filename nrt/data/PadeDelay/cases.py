@@ -26,3 +26,9 @@ case_description = "Padde Delay"
 job_file = os.path.join(os.path.dirname(__file__), "TestDelay.jobs")
 
 test_cases.append((case_name, case_description, job_file, 1, standardReturnCodeType, standardReturnCode))
+
+case_name = "Padde Delay 2"
+case_description = "Padde Delay with a higher approximation order"
+job_file = os.path.join(os.path.dirname(__file__), "TestDelay2.jobs")
+
+test_cases.append((case_name, case_description, job_file, 1, standardReturnCodeType, standardReturnCode))
