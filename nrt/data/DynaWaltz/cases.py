@@ -27,9 +27,15 @@ job_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.
 
 test_cases.append((case_name, case_description, job_file, 1, standardReturnCodeType, standardReturnCode))
 
-##########################################################################################
-#     Nordic Test System islanded on the North-Central corridor (realistic collapse)     #
-##########################################################################################
+##############################################################################################
+#     Nordic Test System islanded on the North-Central corridor (re-dispatched, survivable)  #
+##############################################################################################
+case_name = "DynaWaltz - Nordic Test System - islanding survivable"
+case_description = "Nordic Test System split on the same three North-Central corridor branches as the collapse case, but from a re-dispatched operating point (North generation reduced, Central load reduced) so the pre-split transfer is only ~280 MW; when the corridor trips the Central island frequency dips and recovers to a degraded steady value instead of collapsing"
+job_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "examples", "DynaWaltz", "Nordic_IslandingSurvivable", "Nordic.jobs")
+
+test_cases.append((case_name, case_description, job_file, 1, standardReturnCodeType, standardReturnCode))
+
 case_name = "DynaWaltz - Nordic Test System - islanding"
 case_description = "Nordic Test System split into two synchronous islands by tripping the three North-Central corridor branches (L4011-4021, L4022-4031a/b); the North keeps its ~2500 MW surplus and stays governed near nominal while the import-starved Central island suffers a frequency collapse"
 job_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "examples", "DynaWaltz", "Nordic_Islanding", "Nordic.jobs")
