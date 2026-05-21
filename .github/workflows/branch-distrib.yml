@@ -2,6 +2,7 @@ name: Branch Distribution
 
 on:
   workflow_dispatch:
+  push:
 
 defaults:
   run:
