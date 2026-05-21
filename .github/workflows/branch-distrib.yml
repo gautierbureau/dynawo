@@ -1,0 +1,46 @@
+name: Branch Distribution
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  distribution-gcc11:
+    name: Branch Distribution Linux GCC11 (Release)
+    runs-on: ubuntu-latest
+    container: dynawo/dynawo-distribution-gcc11:latest
+    env:
+      DYNAWO_INSTALL_OPENMODELICA: /opt/OpenModelica/Install
+      DYNAWO_SRC_OPENMODELICA: /opt/OpenModelica/Source
+      DYNAWO_RESULTS_SHOW: "false"
+      DYNAWO_BUILD_TYPE: Release
+      DYNAWO_COMPILER: GCC
+      DYNAWO_NB_PROCESSORS_USED: 2
+      DYNAWO_PYTHON_COMMAND: python3
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          export DYNAWO_HOME=$(pwd)
+          util/envDynawo.sh build-user
+
+      - name: Create omc distribution
+        run: |
+          export DYNAWO_HOME=$(pwd)
+          util/envDynawo.sh distrib-omc
+
+      - name: INFO. Files created in distributions folder
+        run: du -hs distributions/*
+
+      - name: Upload distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dynawo-distribution-${{ github.ref_name }}-${{ github.sha }}
+          path: distributions/*.zip
+          retention-days: 14
+          if-no-files-found: error
