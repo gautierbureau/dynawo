@@ -41,6 +41,7 @@
 #include "DYNServiceManagerInterfaceIIDM.h"
 #include <powsybl/iidm/Network.hpp>
 
+#include <iosfwd>
 #include <mutex>
 
 namespace DYN {
@@ -57,6 +58,14 @@ class DataInterfaceIIDM : public DataInterfaceImpl {
    * @return The data interface built from the input file
    */
   static boost::shared_ptr<DataInterface> build(const std::string& iidmFilePath, unsigned int nbVariants = 1);
+
+  /**
+   * @brief Build an instance of this class by reading an IIDM XML stream
+   * @param iidmStream stream containing IIDM XML content
+   * @param nbVariants number of variants of the network
+   * @return The data interface built from the input stream
+   */
+  static boost::shared_ptr<DataInterface> build(std::istream& iidmStream, unsigned int nbVariants = 1);
 
   /**
    * @brief Constructor
@@ -253,6 +262,14 @@ class DataInterfaceIIDM : public DataInterfaceImpl {
   std::shared_ptr<BusInterface> findBusInterface(const powsybl::iidm::Terminal& terminal) const;
 
  private:
+  /**
+   * @brief shared post-parse logic for both build() overloads: applies variants and runs initFromIIDM
+   * @param networkIIDM the IIDM network already parsed by libIIDM
+   * @param nbVariants number of variants of the network
+   * @return The data interface built from the given network
+   */
+  static boost::shared_ptr<DataInterface> buildFromNetwork(const boost::shared_ptr<powsybl::iidm::Network>& networkIIDM, unsigned int nbVariants);
+
   /**
    * @brief find a bus interface thanks to its iidm
    * @param bus bus interface to find

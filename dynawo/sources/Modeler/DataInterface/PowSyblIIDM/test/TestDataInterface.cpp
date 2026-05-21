@@ -44,6 +44,7 @@
 #include "DYNLoadInterfaceIIDM.h"
 #include "PARParametersSetFactory.h"
 
+#include "DYNDataInterfaceFactory.h"
 #include "TestUtil.h"
 
 #include <powsybl/iidm/Network.hpp>
@@ -2177,5 +2178,44 @@ TEST(DataInterfaceIIDMTest, testFindLostEquipments) {
   ASSERT_TRUE(++itLostEquipment == lostEquipments->cend());
   connectedComponents = data->findConnectedComponents();
   ASSERT_EQ(connectedComponents->size(), 2);
+}
+
+TEST(DataInterfaceIIDMTest, testBuildFromStream) {
+  shared_ptr<DataInterfaceIIDM> dataOutput = createDataItfFromNetwork(createNodeBreakerNetworkIIDM());
+  std::stringstream ss;
+  ASSERT_NO_THROW(dataOutput->dumpToFile(ss));
+
+  shared_ptr<DataInterface> dataInputStream = DataInterfaceIIDM::build(ss);
+  ASSERT_TRUE(dataInputStream);
+  shared_ptr<DataInterfaceIIDM> dataInputStreamIIDM = boost::dynamic_pointer_cast<DataInterfaceIIDM>(dataInputStream);
+  ASSERT_TRUE(dataInputStreamIIDM);
+
+  const powsybl::iidm::Network& outputNetwork = dataOutput->getNetworkIIDM();
+  const powsybl::iidm::Network& inputNetwork = dataInputStreamIIDM->getNetworkIIDM();
+  ASSERT_EQ(outputNetwork.getId(), inputNetwork.getId());
+  ASSERT_EQ(outputNetwork.getSubstationCount(), inputNetwork.getSubstationCount());
+  ASSERT_EQ(outputNetwork.getVoltageLevelCount(), inputNetwork.getVoltageLevelCount());
+
+  shared_ptr<NetworkInterfaceIIDM> outputItf = boost::dynamic_pointer_cast<NetworkInterfaceIIDM>(dataOutput->getNetwork());
+  shared_ptr<NetworkInterfaceIIDM> inputItf = boost::dynamic_pointer_cast<NetworkInterfaceIIDM>(dataInputStreamIIDM->getNetwork());
+  ASSERT_EQ(outputItf->getLines().size(), inputItf->getLines().size());
+  ASSERT_EQ(outputItf->getVoltageLevels().size(), inputItf->getVoltageLevels().size());
+}
+
+TEST(DataInterfaceIIDMTest, testBuildFromStreamEmpty) {
+  std::stringstream empty;
+  ASSERT_THROW_DYNAWO(DataInterfaceIIDM::build(empty), Error::GENERAL, KeyError_t::XmlFileParsingError);
+}
+
+TEST(DataInterfaceIIDMTest, testFactoryBuildFromStream) {
+  shared_ptr<DataInterfaceIIDM> dataOutput = createDataItfFromNetwork(createNodeBreakerNetworkIIDM());
+  std::stringstream ss;
+  ASSERT_NO_THROW(dataOutput->dumpToFile(ss));
+
+  shared_ptr<DataInterface> dataInput = DataInterfaceFactory::build(DataInterfaceFactory::DATAINTERFACE_IIDM, ss);
+  ASSERT_TRUE(dataInput);
+  shared_ptr<DataInterfaceIIDM> dataInputIIDM = boost::dynamic_pointer_cast<DataInterfaceIIDM>(dataInput);
+  ASSERT_TRUE(dataInputIIDM);
+  ASSERT_EQ(dataOutput->getNetworkIIDM().getId(), dataInputIIDM->getNetworkIIDM().getId());
 }
 }  // namespace DYN
