@@ -31,19 +31,19 @@ Action::apply() {
   for (auto& parameterTuple : parameterValueSet_) {
     switch (std::get<2>(parameterTuple)) {
       case VAR_TYPE_DOUBLE: {
-        subModel_->setParameterValue(std::get<0>(parameterTuple), DYN::FINAL, boost::any_cast<double>(std::get<1>(parameterTuple)), false);
+        subModel_->setParameterValue(std::get<0>(parameterTuple), DYN::FINAL, boost::any_cast<double>(std::get<1>(parameterTuple)), false, false);
         break;
       }
       case VAR_TYPE_INT: {
-        subModel_->setParameterValue(std::get<0>(parameterTuple), DYN::FINAL, boost::any_cast<int>(std::get<1>(parameterTuple)), false);
+        subModel_->setParameterValue(std::get<0>(parameterTuple), DYN::FINAL, boost::any_cast<int>(std::get<1>(parameterTuple)), false, false);
         break;
       }
       case VAR_TYPE_BOOL: {
-        subModel_->setParameterValue(std::get<0>(parameterTuple), DYN::FINAL, boost::any_cast<bool>(std::get<1>(parameterTuple)), false);
+        subModel_->setParameterValue(std::get<0>(parameterTuple), DYN::FINAL, boost::any_cast<bool>(std::get<1>(parameterTuple)), false, false);
         break;
       }
       case VAR_TYPE_STRING: {
-        subModel_->setParameterValue(std::get<0>(parameterTuple), DYN::FINAL, boost::any_cast<std::string>(std::get<1>(parameterTuple)), false);
+        subModel_->setParameterValue(std::get<0>(parameterTuple), DYN::FINAL, boost::any_cast<std::string>(std::get<1>(parameterTuple)), false, false);
         break;
       }
       default:

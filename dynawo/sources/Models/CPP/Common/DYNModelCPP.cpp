@@ -17,6 +17,7 @@
  * @brief
  *
  */
+#include <algorithm>
 #include <sstream>
 
 #include <boost/archive/binary_iarchive.hpp>
@@ -42,6 +43,42 @@ isStartingFromDump_(false) {
 ModelCPP::ModelCPP(const std::string& modelType) :
 isStartingFromDump_(false),
 modelType_(modelType) {
+}
+
+void
+ModelCPP::initLinearize(const double /*t0*/) {
+  // no initialization needed
+}
+
+void
+ModelCPP::evalStaticYTypeLinearize() {
+  std::copy(yType_, yType_ + sizeY(), yTypeLinearize_);
+}
+
+void
+ModelCPP::evalStaticFTypeLinearize() {
+  std::copy(fType_, fType_ + sizeY(), fTypeLinearize_);
+}
+
+void
+ModelCPP::getSizeLinearize() {
+  sizeFLinearize_ = sizeF_;
+  sizeYLinearize_ = sizeY_;
+  sizeZLinearize_ = sizeZ_;
+  sizeGLinearize_ = sizeG_;
+  sizeModeLinearize_ = sizeMode_;
+
+  calculatedVarsLinearize_.assign(calculatedVars_.size(), 0);
+}
+
+void
+ModelCPP::defineVariablesLinearize(std::vector<boost::shared_ptr<Variable> >& variables) {
+  defineVariables(variables);
+}
+
+void
+ModelCPP::defineParametersLinearize(std::vector<ParameterModeler>& /*parameters*/) {
+  // no parameters by default
 }
 
 void

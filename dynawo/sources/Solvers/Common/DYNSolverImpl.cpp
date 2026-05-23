@@ -92,7 +92,9 @@ printReinitResiduals_(false),
 printResiduals_(false),
 multipleStrategiesForAlgebraicRestoration_(false),
 tSolve_(0.),
-startFromDump_(false) {
+startFromDump_(false),
+withLinearize_(false),
+tLinearize_(std::numeric_limits<double>::lowest()) {
   if (SUNContext_Create(NULL, &sundialsContext_) != 0)
     throw DYNError(Error::SUNDIALS_ERROR, SolverContextCreationError);
 }
@@ -155,6 +157,8 @@ Solver::Impl::printHeader() const {
   Trace::info() << DYNLog(SolverNbYVar, model_->sizeY()) << Trace::endline;
   Trace::info() << DYNLog(SolverNbZVar, model_->sizeZ()) << Trace::endline;
   Trace::info() << DYNLog(NbRootFunctions, model_->sizeG()) << Trace::endline;
+  Trace::info() << "number of continuous variables linearize : " << model_->sizeYLinearize() << Trace::endline;
+  Trace::info() << "number of discrete variables : " << model_->sizeZLinearize() << Trace::endline;
 
   Trace::info() << "-----------------------------------------------------------------------" << Trace::endline;
   stringstream ss;
@@ -605,6 +609,11 @@ Solver::Impl::printEnd() const {
   Trace::info() << DYNLog(SolverNbAlgebraicJacEval, stats_.njeAlgebraic_) << Trace::endline;
   Trace::info() << DYNLog(SolverNbAlgebraicPrimResEval, stats_.nreAlgebraicPrim_) << Trace::endline;
   Trace::info() << DYNLog(SolverNbAlgebraicPrimJacEval, stats_.njeAlgebraicPrim_) << Trace::endline;
+}
+
+void Solver::Impl::setWithLinearize(double tLinearize) {
+  withLinearize_ = true;
+  tLinearize_ = tLinearize;
 }
 
 }  // end namespace DYN

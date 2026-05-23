@@ -74,6 +74,21 @@ class Modeler {
   }
 
   /**
+   * @brief enable model linearization and provide its parameters
+   *
+   * Must be called before initSystem() so the linearize model is built only
+   * when a linearization is actually requested.
+   *
+   * @param tLinearize time of the linearization
+   * @param useLinearizeModel whether the linearize model (and not the full model) is used
+   */
+  void setWithLinearize(const double tLinearize, const bool useLinearizeModel) {
+    withLinearize_ = true;
+    tLinearize_ = tLinearize;
+    useLinearizeModel_ = useLinearizeModel;
+  }
+
+  /**
    * @brief build the model thanks to the data interface and the dynamic data
    */
   void initSystem();
@@ -167,6 +182,10 @@ class Modeler {
   boost::shared_ptr<DynamicData> dyd_;  ///< dynamic data used to build the model multi
   std::shared_ptr<ActionBuffer> actionBuffer_;  ///< action buffer to add to model multi
   std::shared_ptr<ModelMulti> model_;  ///< model created thanks to previous data
+
+  bool withLinearize_ = false;  ///< whether the linearize model must be built
+  double tLinearize_ = 0.;  ///< time of the linearization
+  bool useLinearizeModel_ = false;  ///< whether the linearize model is used for the linearization
 
   std::map<std::string, boost::shared_ptr<SubModel> > subModels_;  ///< association between name and subModel : usefull when the connectors should be created
   boost::shared_ptr<SubModel> modelNetwork_ = nullptr;  ///< pointer to the special NETWORK submodel, if present

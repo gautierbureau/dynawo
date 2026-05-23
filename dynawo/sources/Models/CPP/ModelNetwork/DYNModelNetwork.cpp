@@ -1509,5 +1509,14 @@ ModelNetwork::mapToNetworkBridge(const boost::shared_ptr<SubModel> & submodel) {
   }
 }
 
+void ModelNetwork::evalDynamicYTypeLinearize() {
+  // network variable properties are dynamic, so the linearize buffer must be
+  // refreshed here; the refresh itself is the same copy as the static case
+  evalStaticYTypeLinearize();
+}
+
+void ModelNetwork::evalDynamicFTypeLinearize() {
+  evalStaticFTypeLinearize();
+}
 
 }  // namespace DYN

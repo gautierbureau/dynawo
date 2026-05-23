@@ -26,6 +26,7 @@
 #include <cmath>
 #include <iostream>
 #include <iomanip>
+#include <set>
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
@@ -410,6 +411,10 @@ void SolverCommonFixedTimeStep::updateTimeStep(double& tNxt) {
   hNew_ = min(hNew_, tEnd_ - (tSolve_ + hNew_));
   // tNxt is the initial time step value (corresponding to the current time step done)
   tNxt = tSolve_ + h_;
+  if (withLinearize_) {
+    if (tNxt < tLinearize_ && tNxt + hNew_ > tLinearize_ && !doubleEquals(tNxt, tLinearize_))
+      hNew_ = tLinearize_ - tNxt;
+  }
 
   if (std::abs(tSolve_ - tNxt) < minimalAcceptableStep_) {
     ++nbLastTimeSimulated_;

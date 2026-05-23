@@ -29,6 +29,16 @@ job_file = os.path.join(os.path.dirname(__file__), "SMIB_BasicTestCases", "SMIB_
 test_cases.append((case_name, case_description, job_file, 30, standardReturnCodeType, standardReturnCode))
 
 ########################################
+#           SMIB_Linearize             #
+########################################
+
+case_name = "SMIB - Linearize"
+case_description = "SMIB test case exercising the linearise job output (linearized matrices for modal analysis)"
+job_file = os.path.join(os.path.dirname(__file__), "SMIB_BasicTestCases", "SMIB_Linearize", "SMIB.jobs")
+
+test_cases.append((case_name, case_description, job_file, 30, standardReturnCodeType, standardReturnCode))
+
+########################################
 #           SMIB_1_StepPm_IIDM         #
 ########################################
 

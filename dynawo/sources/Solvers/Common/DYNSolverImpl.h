@@ -336,6 +336,11 @@ class Solver::Impl : public Solver, private boost::noncopyable {
     return printResiduals_;
   }
 
+  /**
+  * @copydoc Solver::setWithLinearize
+  */
+  void setWithLinearize(double tLinearize) override;
+
  protected:
   /**
    * @brief Integrate the DAE over an interval in t
@@ -408,6 +413,9 @@ class Solver::Impl : public Solver, private boost::noncopyable {
   BitMask state_;  ///< current state value of the solver
 
   bool startFromDump_;  ///< is solver starting from dump
+
+  bool withLinearize_;  ///< withLinearize
+  double tLinearize_;  ///< tLinearize
 };
 
 }  // end of namespace DYN

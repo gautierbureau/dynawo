@@ -293,14 +293,15 @@ ModelAreaShedding::setSubModelParameters() {
   deltaTime_ = findParameterDynamic("deltaTime").getValue<double>();
 
   constexpr bool isInitParam = false;
+  constexpr bool isLinearizeParam = false;
   bool shedPowersSet = true;
-  const ParameterModeler& PShedParameter = findParameter("PShed", isInitParam);
+  const ParameterModeler& PShedParameter = findParameter("PShed", isInitParam, isLinearizeParam);
   if (PShedParameter.hasValue()) {
     PShed_ = PShedParameter.getDoubleValue();
   } else {
     shedPowersSet = false;
   }
-  const ParameterModeler& QShedparameter = findParameter("QShed", isInitParam);
+  const ParameterModeler& QShedparameter = findParameter("QShed", isInitParam, isLinearizeParam);
   if (QShedparameter.hasValue()) {
     QShed_ = QShedparameter.getDoubleValue();
   } else {

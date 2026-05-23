@@ -460,11 +460,12 @@ ModelOmegaRef::setSubModelParameters() {
 
   // Get omegaRefMin and omegaRefMax parameters from the par file if they exist
   constexpr bool isInitParam = false;
-  const ParameterModeler& parameter = findParameter("omegaRefMin", isInitParam);
+  constexpr bool isLinearizeParam = false;
+  const ParameterModeler& parameter = findParameter("omegaRefMin", isInitParam, isLinearizeParam);
   if (parameter.hasValue()) {
     omegaRefMin_ = parameter.getDoubleValue();
   }
-  const ParameterModeler& parameter2 = findParameter("omegaRefMax", isInitParam);
+  const ParameterModeler& parameter2 = findParameter("omegaRefMax", isInitParam, isLinearizeParam);
   if (parameter2.hasValue()) {
     omegaRefMax_ = parameter2.getDoubleValue();
   }
