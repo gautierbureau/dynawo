@@ -17,6 +17,7 @@ set(MODULE_SOURCES
   TestCurvesCollection.cpp
   TestXmlImporter.cpp
   TestExporters.cpp
+  TestBinaryCurves.cpp
 )
 
 add_executable(${MODULE_NAME} ${MODULE_SOURCES})
