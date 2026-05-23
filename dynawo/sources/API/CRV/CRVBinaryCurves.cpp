@@ -28,6 +28,17 @@ namespace curves {
 
 namespace {
 
+#if defined(_WIN32) || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+constexpr bool kHostIsLittleEndian = true;
+#else
+constexpr bool kHostIsLittleEndian = false;
+#endif
+
+// 4 MiB I/O buffer for the ofstream. Default filebuf is ~8 KB, which makes
+// libstdc++/libc++ copy even large os.write() calls through that tiny buffer
+// instead of going straight to the file — by far the bulk of the slowdown.
+constexpr std::size_t kStreamBufBytes = 4u * 1024u * 1024u;
+
 void write_u32_le(std::ostream& os, uint32_t v) {
   const unsigned char buf[4] = {
       static_cast<unsigned char>(v & 0xFFu),
@@ -56,9 +67,13 @@ double roundToCsvPrecision(double v) {
 }  // namespace
 
 BinaryCurves::BinaryCurves(const std::string& filename, const std::vector<std::string>& names)
-  : stream_(filename, std::ios::binary),
+  : stream_buf_(kStreamBufBytes),
+    stream_(),
     nVars_(names.size()),
     buf_((1 + names.size()) * sizeof(double)) {
+  // pubsetbuf only takes effect before the file is opened.
+  stream_.rdbuf()->pubsetbuf(stream_buf_.data(), static_cast<std::streamsize>(stream_buf_.size()));
+  stream_.open(filename, std::ios::binary);
   if (!stream_)
     throw std::runtime_error("BinaryCurves: cannot open '" + filename + "' for writing");
   writeHeader(names);
@@ -78,9 +93,21 @@ void BinaryCurves::record(double t, const std::vector<double>& y) {
   if (y.size() < nVars_)
     throw std::out_of_range("BinaryCurves::record: y vector smaller than registered variables");
 
-  encode_f64_le(buf_.data(), roundToCsvPrecision(t));
-  for (std::size_t i = 0; i < nVars_; ++i)
-    encode_f64_le(buf_.data() + (1 + i) * sizeof(double), roundToCsvPrecision(y[i]));
+  const double rt = roundToCsvPrecision(t);
+  if (kHostIsLittleEndian) {
+    // On little-endian hosts the on-disk layout is byte-identical to the
+    // in-memory double, so memcpy the rounded doubles straight into the row
+    // buffer and skip the shift/mask encode entirely.
+    std::memcpy(buf_.data(), &rt, sizeof(double));
+    for (std::size_t i = 0; i < nVars_; ++i) {
+      const double v = roundToCsvPrecision(y[i]);
+      std::memcpy(buf_.data() + (1 + i) * sizeof(double), &v, sizeof(double));
+    }
+  } else {
+    encode_f64_le(buf_.data(), rt);
+    for (std::size_t i = 0; i < nVars_; ++i)
+      encode_f64_le(buf_.data() + (1 + i) * sizeof(double), roundToCsvPrecision(y[i]));
+  }
   stream_.write(buf_.data(), static_cast<std::streamsize>(buf_.size()));
 }
 

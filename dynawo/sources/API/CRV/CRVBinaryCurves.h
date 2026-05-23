@@ -78,6 +78,10 @@ class BinaryCurves {
  private:
   void writeHeader(const std::vector<std::string>& names);
 
+  // stream_buf_ MUST be declared before stream_ so it is destroyed last:
+  // ~ofstream flushes through this buffer, and using freed memory there
+  // silently produces an empty file.
+  std::vector<char> stream_buf_;
   std::ofstream stream_;
   std::size_t nVars_;
   std::vector<char> buf_;
