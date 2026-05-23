@@ -104,30 +104,28 @@ def read_header(f: BinaryIO) -> Header:
     )
 
 
-# ── Time window resolution ───────────────────────────────────────────────────
+# ── Start-record resolution ──────────────────────────────────────────────────
 
-def _resolve_time_range(
+def _resolve_start_record(
     data: np.ndarray,
     t_min: Optional[float],
-    t_max: Optional[float],
-) -> tuple[int, int]:
-    """Return inclusive (start, stop) record indices for a time window.
+    record_min: Optional[int],
+) -> int:
+    """Return the first record index to emit.
 
-    Assumes the time column (``data[:, 0]``) is monotonic non-decreasing, which
-    is the contract of the simulator's writer. Both ``t_min`` and ``t_max`` are
-    inclusive: records with ``time == t_min`` or ``time == t_max`` are kept.
-    Either bound may be ``None``. If the window is empty (``t_min > t_max``,
-    or no records fall inside) an empty range is returned, never raised.
+    Both bounds are optional and compose by ``max`` (the more restrictive
+    start wins). ``t_min`` is matched against the monotonic non-decreasing
+    time column via ``np.searchsorted`` (zero-copy strided view of the mmap,
+    ~log N page touches). ``record_min`` is a direct index, clamped to
+    ``[0, n_records]`` so callers needn't pre-clamp it.
     """
     n = data.shape[0]
-    if n == 0 or (t_min is None and t_max is None):
-        return 0, n
-    if t_min is not None and t_max is not None and t_min > t_max:
-        return 0, 0
-    times = data[:, 0]  # zero-copy strided view of the mmap
-    start = 0 if t_min is None else int(np.searchsorted(times, t_min, side="left"))
-    stop = n if t_max is None else int(np.searchsorted(times, t_max, side="right"))
-    return min(start, stop), stop
+    start = 0
+    if t_min is not None and n > 0:
+        start = max(start, int(np.searchsorted(data[:, 0], t_min, side="left")))
+    if record_min is not None:
+        start = max(start, max(0, min(record_min, n)))
+    return start
 
 
 # ── Whole-file loader (used by the Streamlit app) ────────────────────────────
@@ -251,14 +249,16 @@ def extract_to_csv(
     chunk_bytes: int = DEFAULT_CHUNK_BYTES,
     fmt: str = "%.7g",
     t_min: Optional[float] = None,
-    t_max: Optional[float] = None,
+    record_min: Optional[int] = None,
 ) -> tuple[int, int]:
     """Extract columns matching ``patterns`` or ``contains`` to ``csv_path``.
 
     The file is streamed chunk-by-chunk so files larger than RAM are handled
     without issue. Each row starts with ``time`` followed by the matching
-    variables in their original order. ``t_min`` / ``t_max`` (inclusive)
-    restrict the output to records whose time stamp falls in the window.
+    variables in their original order. ``t_min`` (inclusive) drops records
+    earlier than the given time; ``record_min`` is a direct index for
+    "last N points" use cases. When both are given the more restrictive
+    start wins.
 
     Returns ``(n_matched_columns, n_records_written)``.
     """
@@ -294,14 +294,13 @@ def extract_to_csv(
             offset=header.data_offset,
             shape=(n_records, 1 + header.n_vars),
         )
-        start_rec, stop_rec = _resolve_time_range(data, t_min, t_max)
-        # Convert byte budget to a record budget, capped at the window size.
+        start_rec = _resolve_start_record(data, t_min, record_min)
         per_chunk = max(1, chunk_bytes // header.record_size)
-        for chunk_start in range(start_rec, stop_rec, per_chunk):
-            chunk_stop = min(chunk_start + per_chunk, stop_rec)
+        for chunk_start in range(start_rec, n_records, per_chunk):
+            chunk_stop = min(chunk_start + per_chunk, n_records)
             sub = data[chunk_start:chunk_stop, selected_cols]
             np.savetxt(out, sub, fmt=fmt, delimiter=",")
-        return len(matched), stop_rec - start_rec
+        return len(matched), n_records - start_rec
 
 
 def extract_to_bin(
@@ -313,7 +312,7 @@ def extract_to_bin(
     contains: Sequence[str] = (),
     chunk_records: int = 1_000_000,
     t_min: Optional[float] = None,
-    t_max: Optional[float] = None,
+    record_min: Optional[int] = None,
 ) -> tuple[int, int]:
     """Extract columns matching ``patterns`` or ``contains`` to a new .bin file.
 
@@ -323,8 +322,10 @@ def extract_to_bin(
     on large files, and the result can be re-fed into any reader in this
     module — including this same extractor for further sub-selection.
 
-    ``t_min`` / ``t_max`` (inclusive) restrict the output to records whose
-    time stamp falls in the window. Either or both may be ``None``.
+    ``t_min`` (inclusive) drops records earlier than the given time. ``record_min``
+    is an absolute record index — useful for "give me the last N points" without
+    a time lookup (set ``record_min = n_records - N``). When both are given,
+    the more restrictive start wins.
 
     Returns ``(n_matched_columns, n_records_written)``.
     """
@@ -371,10 +372,10 @@ def extract_to_bin(
             offset=header.data_offset,
             shape=(n_records, 1 + header.n_vars),
         )
-        start_rec, stop_rec = _resolve_time_range(data, t_min, t_max)
-        n_emitted = stop_rec - start_rec
-        for chunk_start in range(start_rec, stop_rec, chunk_records):
-            chunk_stop = min(chunk_start + chunk_records, stop_rec)
+        start_rec = _resolve_start_record(data, t_min, record_min)
+        n_emitted = n_records - start_rec
+        for chunk_start in range(start_rec, n_records, chunk_records):
+            chunk_stop = min(chunk_start + chunk_records, n_records)
             # ascontiguousarray forces the fancy-indexed slice into a single
             # C-contiguous block so tofile() emits one bulk write.
             np.ascontiguousarray(data[chunk_start:chunk_stop, selected_cols]).tofile(out)
@@ -389,6 +390,42 @@ def _default_output(input_path: str, new_ext: str) -> str:
     return base + new_ext
 
 
+def _resolve_tail_args(
+    input_path: str, args: argparse.Namespace
+) -> tuple[Optional[float], Optional[int]]:
+    """Translate CLI --tail / --tail-time / --t-min into (t_min, record_min).
+
+    --tail N         : last N records → record_min = n_records - N
+    --tail-time DT   : last DT seconds → t_min = last_record_time - DT
+    --t-min T        : passed through; composes with the tail bound by
+                       letting _resolve_start_record take the max.
+    """
+    t_min = args.t_min
+    record_min: Optional[int] = None
+    if args.tail is None and args.tail_time is None:
+        return t_min, record_min
+
+    # Need the file's record count (and maybe its last time) to translate.
+    with open(input_path, "rb") as f:
+        header = read_header(f)
+    file_size = os.path.getsize(input_path)
+    n_records = (file_size - header.data_offset) // header.record_size
+
+    if args.tail is not None:
+        record_min = max(0, n_records - args.tail)
+    else:  # args.tail_time is not None
+        if n_records > 0:
+            data = np.memmap(
+                input_path, dtype="<f8", mode="r",
+                offset=header.data_offset,
+                shape=(n_records, 1 + header.n_vars),
+            )
+            t_last = float(data[-1, 0])
+            tail_t_min = t_last - args.tail_time
+            t_min = tail_t_min if t_min is None else max(t_min, tail_t_min)
+    return t_min, record_min
+
+
 def _cmd_names(args: argparse.Namespace) -> int:
     out = args.output or _default_output(args.input, ".names.txt")
     count = write_variable_names(args.input, out)
@@ -400,6 +437,7 @@ def _cmd_extract(args: argparse.Namespace) -> int:
     if not args.pattern and not args.contains:
         raise SystemExit("extract: provide at least one --pattern or --contains")
     out = args.output or _default_output(args.input, ".extract.csv")
+    t_min, record_min = _resolve_tail_args(args.input, args)
     n_cols, n_rows = extract_to_csv(
         args.input,
         out,
@@ -408,8 +446,8 @@ def _cmd_extract(args: argparse.Namespace) -> int:
         contains=args.contains,
         chunk_bytes=args.chunk_bytes,
         fmt=args.fmt,
-        t_min=args.t_min,
-        t_max=args.t_max,
+        t_min=t_min,
+        record_min=record_min,
     )
     print(
         f"Wrote {n_cols} variable(s) × {n_rows} record(s) to {out}",
@@ -422,6 +460,7 @@ def _cmd_extract_bin(args: argparse.Namespace) -> int:
     if not args.pattern and not args.contains:
         raise SystemExit("extract-bin: provide at least one --pattern or --contains")
     out = args.output or _default_output(args.input, ".extract.bin")
+    t_min, record_min = _resolve_tail_args(args.input, args)
     n_cols, n_rows = extract_to_bin(
         args.input,
         out,
@@ -429,8 +468,8 @@ def _cmd_extract_bin(args: argparse.Namespace) -> int:
         regex=args.regex,
         contains=args.contains,
         chunk_records=args.chunk_records,
-        t_min=args.t_min,
-        t_max=args.t_max,
+        t_min=t_min,
+        record_min=record_min,
     )
     print(
         f"Wrote {n_cols} variable(s) × {n_rows} record(s) to {out}",
@@ -503,11 +542,21 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Keep only records with time >= this value (inclusive).",
     )
-    extract.add_argument(
-        "--t-max",
+    extract_tail = extract.add_mutually_exclusive_group()
+    extract_tail.add_argument(
+        "--tail",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Keep only the last N records of the trajectory.",
+    )
+    extract_tail.add_argument(
+        "--tail-time",
         type=float,
         default=None,
-        help="Keep only records with time <= this value (inclusive).",
+        metavar="DT",
+        help="Keep only records within the last DT seconds of the trajectory "
+             "(uses the last record's time as the reference end).",
     )
     extract.set_defaults(func=_cmd_extract)
 
@@ -553,11 +602,21 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Keep only records with time >= this value (inclusive).",
     )
-    extract_bin.add_argument(
-        "--t-max",
+    extract_bin_tail = extract_bin.add_mutually_exclusive_group()
+    extract_bin_tail.add_argument(
+        "--tail",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Keep only the last N records of the trajectory.",
+    )
+    extract_bin_tail.add_argument(
+        "--tail-time",
         type=float,
         default=None,
-        help="Keep only records with time <= this value (inclusive).",
+        metavar="DT",
+        help="Keep only records within the last DT seconds of the trajectory "
+             "(uses the last record's time as the reference end).",
     )
     extract_bin.set_defaults(func=_cmd_extract_bin)
 
