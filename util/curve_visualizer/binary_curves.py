@@ -15,19 +15,22 @@ File layout (all integers little-endian):
       time   : f64
       values : f64[n_vars]
 
-The module exposes three things:
+The module exposes:
 
 * ``load_bin(data)``        — parse a whole file given as ``bytes`` and return
                               a pandas DataFrame. Used by the Streamlit app.
 * ``read_header(f)``        — parse just the header of an open file. Cheap
                               even on 5 GB files because the record section
                               is skipped.
-* a command-line interface with two sub-commands:
+* ``count_records(path)``   — number of records, header-only cost.
+* a command-line interface:
 
-      python binary_curves.py names   <input.bin> [-o names.txt]
-      python binary_curves.py extract <input.bin> -p PATTERN ... [-o out.csv]
+      python binary_curves.py names       <input.bin> [-o names.txt]
+      python binary_curves.py count       <input.bin>
+      python binary_curves.py extract     <input.bin> -p PATTERN ... [-o out.csv]
+      python binary_curves.py extract-bin <input.bin> -p PATTERN ... [-o out.bin]
 
-The ``extract`` command streams the record section in fixed-size chunks so it
+The ``extract`` commands stream the record section in fixed-size chunks so they
 can handle files that do not fit in RAM.
 """
 
@@ -126,6 +129,36 @@ def _resolve_start_record(
     if record_min is not None:
         start = max(start, max(0, min(record_min, n)))
     return start
+
+
+# ── Record count ─────────────────────────────────────────────────────────────
+
+def _read_header_and_count(path: str) -> tuple[Header, int]:
+    """Parse the header and compute the number of records in one pass.
+
+    Touches only the names section (proportional to ``n_vars``) plus one
+    ``stat`` for the file size — no record bytes are read.
+    """
+    with open(path, "rb") as f:
+        header = read_header(f)
+    file_size = os.path.getsize(path)
+    data_bytes = file_size - header.data_offset
+    if data_bytes < 0 or data_bytes % header.record_size != 0:
+        raise ValueError(
+            f"Trailing partial record: {data_bytes} byte(s) past header is "
+            f"not a multiple of record size {header.record_size}"
+        )
+    return header, data_bytes // header.record_size
+
+
+def count_records(path: str) -> int:
+    """Return the number of records in a Dynawo .bin file.
+
+    Header-only cost: a read proportional to the names section (microseconds
+    for typical models, a few ms for very wide ones) plus one ``stat`` call.
+    No record data is read.
+    """
+    return _read_header_and_count(path)[1]
 
 
 # ── Whole-file loader (used by the Streamlit app) ────────────────────────────
@@ -406,10 +439,7 @@ def _resolve_tail_args(
         return t_min, record_min
 
     # Need the file's record count (and maybe its last time) to translate.
-    with open(input_path, "rb") as f:
-        header = read_header(f)
-    file_size = os.path.getsize(input_path)
-    n_records = (file_size - header.data_offset) // header.record_size
+    header, n_records = _read_header_and_count(input_path)
 
     if args.tail is not None:
         record_min = max(0, n_records - args.tail)
@@ -430,6 +460,12 @@ def _cmd_names(args: argparse.Namespace) -> int:
     out = args.output or _default_output(args.input, ".names.txt")
     count = write_variable_names(args.input, out)
     print(f"Wrote {count} variable names to {out}", file=sys.stderr)
+    return 0
+
+
+def _cmd_count(args: argparse.Namespace) -> int:
+    n = count_records(args.input)
+    print(n)
     return 0
 
 
@@ -494,6 +530,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Output .txt file (default: <input>.names.txt)",
     )
     names.set_defaults(func=_cmd_names)
+
+    count = sub.add_parser(
+        "count",
+        help="Print the number of records in a .bin file (header-only cost). "
+             "Output goes to stdout for shell scripting.",
+    )
+    count.add_argument("input", help="Path to the .bin file")
+    count.set_defaults(func=_cmd_count)
 
     extract = sub.add_parser(
         "extract",

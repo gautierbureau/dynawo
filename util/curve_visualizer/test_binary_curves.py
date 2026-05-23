@@ -53,6 +53,50 @@ def _read_bin(path: Path):
     return header.names, arr[:, 0].copy(), arr[:, 1:].copy()
 
 
+# ── count_records / `count` CLI ──────────────────────────────────────────────
+
+def test_count_records_returns_record_count(tmp_path):
+    src = tmp_path / "src.bin"
+    _write_bin(
+        src, ["a", "b", "c"],
+        np.arange(7) * 0.1,
+        np.arange(21, dtype="<f8").reshape(7, 3),
+    )
+    assert bc.count_records(str(src)) == 7
+
+
+def test_count_records_zero_for_header_only(tmp_path):
+    src = tmp_path / "src.bin"
+    _write_bin(src, ["a"], np.array([]), np.empty((0, 1)))
+    assert bc.count_records(str(src)) == 0
+
+
+def test_count_records_detects_trailing_partial(tmp_path):
+    """Truncating the data section mid-record must be flagged, not rounded."""
+    src = tmp_path / "src.bin"
+    _write_bin(src, ["a"], np.array([0.0, 1.0]), np.array([[1.0], [2.0]]))
+    # Drop 3 bytes from the end to leave a partial record.
+    with open(src, "r+b") as f:
+        f.seek(0, 2)
+        n = f.tell()
+        f.truncate(n - 3)
+    with pytest.raises(ValueError):
+        bc.count_records(str(src))
+
+
+def test_count_cli_prints_integer_to_stdout(tmp_path, capsys):
+    src = tmp_path / "src.bin"
+    _write_bin(
+        src, ["x", "y"],
+        np.arange(42) * 0.1,
+        np.zeros((42, 2)),
+    )
+    rc = bc.main(["count", str(src)])
+    assert rc == 0
+    out = capsys.readouterr().out.strip()
+    assert out == "42"
+
+
 # ── Tests ────────────────────────────────────────────────────────────────────
 
 def test_extract_bin_round_trip_subset(tmp_path):
