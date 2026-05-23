@@ -18,6 +18,7 @@
  */
 #include "CRVBinaryCurves.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
@@ -34,10 +35,18 @@ constexpr bool kHostIsLittleEndian = true;
 constexpr bool kHostIsLittleEndian = false;
 #endif
 
-// 4 MiB I/O buffer for the ofstream. Default filebuf is ~8 KB, which makes
-// libstdc++/libc++ copy even large os.write() calls through that tiny buffer
-// instead of going straight to the file — by far the bulk of the slowdown.
-constexpr std::size_t kStreamBufBytes = 4u * 1024u * 1024u;
+// Pick an I/O buffer size for the ofstream. The default filebuf is ~8 KB
+// and an os.write() that exceeds the buffer is still copied through it
+// (libstdc++/libc++), so for large rows we must hand the stream a buffer
+// at least one row wide; small rows just want enough headroom to coalesce
+// many writes into one syscall.
+std::size_t pickStreamBufSize(std::size_t nVars) {
+  const std::size_t rowBytes = (1u + nVars) * sizeof(double);
+  constexpr std::size_t kMin = 64u * 1024u;         // 64 KiB floor
+  constexpr std::size_t kMax = 8u * 1024u * 1024u;  // 8 MiB cap
+  const std::size_t want = rowBytes * 16u;          // ~16 rows per syscall
+  return std::min(kMax, std::max(kMin, want));
+}
 
 void write_u32_le(std::ostream& os, uint32_t v) {
   const unsigned char buf[4] = {
@@ -67,7 +76,7 @@ double roundToCsvPrecision(double v) {
 }  // namespace
 
 BinaryCurves::BinaryCurves(const std::string& filename, const std::vector<std::string>& names)
-  : stream_buf_(kStreamBufBytes),
+  : stream_buf_(pickStreamBufSize(names.size())),
     stream_(),
     nVars_(names.size()),
     buf_((1 + names.size()) * sizeof(double)) {
