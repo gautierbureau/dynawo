@@ -262,6 +262,77 @@ def extract_to_csv(
     return len(matched), n_written
 
 
+def extract_to_bin(
+    bin_path: str,
+    out_path: str,
+    patterns: Sequence[str] = (),
+    *,
+    regex: bool = False,
+    contains: Sequence[str] = (),
+    chunk_records: int = 1_000_000,
+) -> tuple[int, int]:
+    """Extract columns matching ``patterns`` or ``contains`` to a new .bin file.
+
+    The output is itself a valid Dynawo .bin file (same DYNB header layout)
+    containing ``time`` plus the matched variables in their original order.
+    Bypassing text formatting makes this much faster than ``extract_to_csv``
+    on large files, and the result can be re-fed into any reader in this
+    module — including this same extractor for further sub-selection.
+
+    Returns ``(n_matched_columns, n_records_written)``.
+    """
+    if not patterns and not contains:
+        raise ValueError("extract_to_bin: provide at least one pattern or substring")
+    with open(bin_path, "rb") as f:
+        header = read_header(f)
+    matched = select_indices(header.names, patterns, regex=regex, contains=contains)
+    if not matched:
+        raise SystemExit(
+            "No variable names matched the given patterns.\n"
+            "Use the 'names' subcommand to list what's available."
+        )
+    # +1 shift because column 0 in a record row is time; we always emit time.
+    selected_cols = np.array([0] + [i + 1 for i in matched], dtype=np.intp)
+    out_names = [header.names[i] for i in matched]
+
+    file_size = os.path.getsize(bin_path)
+    data_bytes = file_size - header.data_offset
+    if data_bytes % header.record_size != 0:
+        raise ValueError(
+            f"Data section size {data_bytes} is not a multiple of "
+            f"record size {header.record_size}"
+        )
+    n_records = data_bytes // header.record_size
+
+    with open(out_path, "wb") as out:
+        # New DYNB header for the subset.
+        out.write(MAGIC)
+        out.write(struct.pack("<I", VERSION))
+        out.write(struct.pack("<I", len(out_names)))
+        for name in out_names:
+            encoded = name.encode("utf-8")
+            out.write(struct.pack("<I", len(encoded)))
+            out.write(encoded)
+
+        if n_records == 0:
+            return len(matched), 0
+
+        # mmap the data section so column slicing is a zero-copy view and
+        # the OS pages in only what we touch.
+        data = np.memmap(
+            bin_path, dtype="<f8", mode="r",
+            offset=header.data_offset,
+            shape=(n_records, 1 + header.n_vars),
+        )
+        for start in range(0, n_records, chunk_records):
+            stop = min(start + chunk_records, n_records)
+            # ascontiguousarray forces the fancy-indexed slice into a single
+            # C-contiguous block so tofile() emits one bulk write.
+            np.ascontiguousarray(data[start:stop, selected_cols]).tofile(out)
+
+    return len(matched), n_records
+
+
 # ── Command-line interface ───────────────────────────────────────────────────
 
 def _default_output(input_path: str, new_ext: str) -> str:
@@ -288,6 +359,25 @@ def _cmd_extract(args: argparse.Namespace) -> int:
         contains=args.contains,
         chunk_bytes=args.chunk_bytes,
         fmt=args.fmt,
+    )
+    print(
+        f"Wrote {n_cols} variable(s) × {n_rows} record(s) to {out}",
+        file=sys.stderr,
+    )
+    return 0
+
+
+def _cmd_extract_bin(args: argparse.Namespace) -> int:
+    if not args.pattern and not args.contains:
+        raise SystemExit("extract-bin: provide at least one --pattern or --contains")
+    out = args.output or _default_output(args.input, ".extract.bin")
+    n_cols, n_rows = extract_to_bin(
+        args.input,
+        out,
+        args.pattern,
+        regex=args.regex,
+        contains=args.contains,
+        chunk_records=args.chunk_records,
     )
     print(
         f"Wrote {n_cols} variable(s) × {n_rows} record(s) to {out}",
@@ -355,6 +445,44 @@ def _build_parser() -> argparse.ArgumentParser:
         help="printf-style format for numeric values (default: %%.7g).",
     )
     extract.set_defaults(func=_cmd_extract)
+
+    extract_bin = sub.add_parser(
+        "extract-bin",
+        help="Like 'extract' but writes a Dynawo .bin file instead of CSV. "
+             "Much faster on large inputs because no text formatting is done; "
+             "the output is itself a valid .bin file.",
+    )
+    extract_bin.add_argument("input", help="Path to the .bin file")
+    extract_bin.add_argument(
+        "-p", "--pattern",
+        action="append",
+        default=[],
+        help="fnmatch-style pattern (can be repeated; OR-combined). "
+             "Examples: '*voltage*', 'bus?_V'. Use --regex for regular expressions.",
+    )
+    extract_bin.add_argument(
+        "-c", "--contains",
+        action="append",
+        default=[],
+        help="Plain substring filter (can be repeated; OR-combined with --pattern).",
+    )
+    extract_bin.add_argument(
+        "--regex",
+        action="store_true",
+        help="Treat --pattern values as Python regular expressions (re.search).",
+    )
+    extract_bin.add_argument(
+        "-o", "--output",
+        help="Output .bin file (default: <input>.extract.bin)",
+    )
+    extract_bin.add_argument(
+        "--chunk-records",
+        type=int,
+        default=1_000_000,
+        help="Records processed per mmap slice (default: 1,000,000). "
+             "Bounds the transient memory of the column-slice copy.",
+    )
+    extract_bin.set_defaults(func=_cmd_extract_bin)
 
     return p
 
