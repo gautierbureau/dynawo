@@ -181,6 +181,7 @@ iidmFile_(""),
 networkParFile_(""),
 networkParSet_(""),
 initialStateFile_(""),
+initialStateArchive_(),
 exportCurvesMode_(EXPORT_CURVES_NONE),
 curvesInputFile_(""),
 curvesOutputFile_(""),
@@ -858,11 +859,15 @@ Simulation::init() {
   Trace::info() << DYNLog(ModelBuildingEnd) << Trace::endline;
   Trace::info() << "-----------------------------------------------------------------------" << Trace::endline<< Trace::endline;
 
-  if (!initialStateFile_.empty()) {
+  if (initialStateArchive_ || !initialStateFile_.empty()) {
     Trace::info() << "-----------------------------------------------------------------------" << Trace::endline;
     Trace::info() << DYNLog(ModelInitialStateLoad) << Trace::endline;
     Trace::info() << "-----------------------------------------------------------------------" << Trace::endline;
-    t0 = loadState(initialStateFile_);  // loadState and return initial time
+    if (initialStateArchive_) {
+      t0 = loadState(initialStateArchive_);  // in-memory archive wins over file
+    } else {
+      t0 = loadState(initialStateFile_);  // loadState and return initial time
+    }
     Trace::info() << DYNLog(ModelInitialStateLoadEnd) << Trace::endline;
     Trace::info() << "-----------------------------------------------------------------------" << Trace::endline<< Trace::endline;
   }

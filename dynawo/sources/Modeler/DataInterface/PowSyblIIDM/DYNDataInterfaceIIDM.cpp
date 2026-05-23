@@ -104,7 +104,6 @@ DataInterfaceIIDM::loadExtensions(const std::vector<std::string>& paths) {
 
 boost::shared_ptr<DataInterface>
 DataInterfaceIIDM::build(const std::string& iidmFilePath, unsigned int nbVariants) {
-  boost::shared_ptr<DataInterfaceIIDM> data;
   try {
     stdcxx::Properties properties;
     powsybl::iidm::converter::ImportOptions options(properties);
@@ -123,21 +122,52 @@ DataInterfaceIIDM::build(const std::string& iidmFilePath, unsigned int nbVariant
 
     auto networkIIDM = boost::make_shared<powsybl::iidm::Network>(powsybl::iidm::Network::readXml(boost::filesystem::path(iidmFilePath), options));
 
-    if (nbVariants > 1) {
-      auto& manager = networkIIDM->getVariantManager();
-      manager.allowVariantMultiThreadAccess(true);
-      constexpr bool overwrite = true;
-      for (unsigned int i = 0; i < nbVariants; ++i) {
-        const std::string& variantName = std::to_string(i);
-        manager.cloneVariant(powsybl::iidm::VariantManager::getInitialVariantId(), variantName, overwrite);
-      }
-    }
-
-    data.reset(new DataInterfaceIIDM(networkIIDM));
-    data->initFromIIDM();
+    return buildFromNetwork(networkIIDM, nbVariants);
   } catch (const powsybl::PowsyblException& exp) {
     throw DYNError(Error::GENERAL, XmlFileParsingError, iidmFilePath, exp.what());
   }
+}
+
+boost::shared_ptr<DataInterface>
+DataInterfaceIIDM::build(std::istream& iidmStream, unsigned int nbVariants) {
+  try {
+    stdcxx::Properties properties;
+    powsybl::iidm::converter::ImportOptions options(properties);
+
+    std::string extensionsPaths = getMandatoryEnvVar("DYNAWO_LIBIIDM_EXTENSIONS");
+    vector<string> paths;
+    std::string splitCharacter;
+#ifdef _WIN32
+    splitCharacter = ";";
+#else
+    splitCharacter = ":";
+#endif
+    boost::split(paths, extensionsPaths, boost::is_any_of(splitCharacter));
+
+    loadExtensions(paths);
+
+    auto networkIIDM = boost::make_shared<powsybl::iidm::Network>(powsybl::iidm::Network::readXml("<stream>", iidmStream, options));
+
+    return buildFromNetwork(networkIIDM, nbVariants);
+  } catch (const powsybl::PowsyblException& exp) {
+    throw DYNError(Error::GENERAL, XmlFileParsingError, "<stream>", exp.what());
+  }
+}
+
+boost::shared_ptr<DataInterface>
+DataInterfaceIIDM::buildFromNetwork(const boost::shared_ptr<powsybl::iidm::Network>& networkIIDM, unsigned int nbVariants) {
+  if (nbVariants > 1) {
+    auto& manager = networkIIDM->getVariantManager();
+    manager.allowVariantMultiThreadAccess(true);
+    constexpr bool overwrite = true;
+    for (unsigned int i = 0; i < nbVariants; ++i) {
+      const std::string& variantName = std::to_string(i);
+      manager.cloneVariant(powsybl::iidm::VariantManager::getInitialVariantId(), variantName, overwrite);
+    }
+  }
+
+  boost::shared_ptr<DataInterfaceIIDM> data(new DataInterfaceIIDM(networkIIDM));
+  data->initFromIIDM();
   return data;
 }
 

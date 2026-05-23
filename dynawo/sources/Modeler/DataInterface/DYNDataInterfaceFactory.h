@@ -16,6 +16,7 @@
 
 #include "DYNDataInterface.h"
 #include <boost/shared_ptr.hpp>
+#include <iosfwd>
 
 namespace DYN {
 
@@ -39,6 +40,15 @@ class DataInterfaceFactory {
    * @return The data interface built from the input file
    */
   static boost::shared_ptr<DataInterface> build(dataInterfaceType_t type, const std::string& filepath, unsigned int nbVariants = 1);
+
+  /**
+   * @brief Build an instance of a static network by reading a stream
+   * @param type format of the stream content
+   * @param stream input stream containing the network description
+   * @param nbVariants number of variants to handle (relevant only with basic network models with variant)
+   * @return The data interface built from the input stream
+   */
+  static boost::shared_ptr<DataInterface> build(dataInterfaceType_t type, std::istream& stream, unsigned int nbVariants = 1);
 };
 }  // namespace DYN
 

@@ -50,6 +50,7 @@ target_link_libraries(${MODULE_NAME}
   dynawo_ModelerCommon
   dynawo_DataInterfaceIIDM
   dynawo_DataInterface
+  dynawo_DataInterfaceFactory
   IIDM::iidm
   dynawo_Test)
 

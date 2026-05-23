@@ -34,4 +34,13 @@ DataInterfaceFactory::build(dataInterfaceType_t type, const string& filepath, un
   }
   return boost::shared_ptr<DataInterface>();
 }
+
+shared_ptr<DataInterface>
+DataInterfaceFactory::build(dataInterfaceType_t type, std::istream& stream, unsigned int nbVariants) {
+  switch (type) {
+  case DATAINTERFACE_IIDM:
+    return DataInterfaceIIDM::build(stream, nbVariants);
+  }
+  return boost::shared_ptr<DataInterface>();
+}
 }  // namespace DYN

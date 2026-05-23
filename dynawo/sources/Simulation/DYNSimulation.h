@@ -539,6 +539,26 @@ class Simulation {
   }
 
   /**
+   * @brief setter for an in-memory initial state archive to load
+   *
+   * When set, init() will load the simulation state from this in-memory
+   * archive instead of from the path passed to setInitialStateFile().
+   * The archive takes priority over the file path if both are set.
+   * @param archive in-memory dump archive to restore from
+   */
+  inline void setInitialStateArchive(const boost::shared_ptr<zip::ZipFile>& archive) {
+    initialStateArchive_ = archive;
+  }
+
+  /**
+   * @brief getter for the in-memory initial state archive
+   * @return the archive set via setInitialStateArchive (null if unset)
+   */
+  inline const boost::shared_ptr<zip::ZipFile>& getInitialStateArchive() const {
+    return initialStateArchive_;
+  }
+
+  /**
    * @brief setter for the input iidm file
    * @param file input iidm file
    */
@@ -709,6 +729,7 @@ class Simulation {
   std::string networkParFile_;  ///< file containing all parameters for the network
   std::string networkParSet_;  ///< id of the set of parameters to use for the network
   std::string initialStateFile_;  ///< dump to load for each state variable
+  boost::shared_ptr<zip::ZipFile> initialStateArchive_;  ///< in-memory dump archive to restore from (takes priority over initialStateFile_)
   std::unordered_map<std::string,
           std::shared_ptr<parameters::ParametersSetCollection> > referenceParameters_;  ///< association between file name and parameters collection
 
