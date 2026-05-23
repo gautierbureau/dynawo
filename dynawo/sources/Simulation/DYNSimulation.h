@@ -86,7 +86,8 @@ class Simulation {
     EXPORT_CURVES_NONE,  ///< Export zero curves
     EXPORT_CURVES_XML,  ///< Export curves selected in input file in XML mode in output file
     EXPORT_CURVES_CSV,  ///< Export curves selected in input file in CSV mode in output file
-    EXPORT_CURVES_BINARY  ///< Stream the full solution vector to a binary file
+    EXPORT_CURVES_BINARY,  ///< Stream the full solution vector to a binary file (values rounded to CSV precision)
+    EXPORT_CURVES_BINARY_FAST  ///< Stream the full solution vector to a binary file (raw IEEE-754, no rounding)
   } exportCurvesMode_t;
 
   /**

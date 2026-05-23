@@ -75,11 +75,14 @@ double roundToCsvPrecision(double v) {
 
 }  // namespace
 
-BinaryCurves::BinaryCurves(const std::string& filename, const std::vector<std::string>& names)
+BinaryCurves::BinaryCurves(const std::string& filename,
+                           const std::vector<std::string>& names,
+                           Precision precision)
   : stream_buf_(pickStreamBufSize(names.size())),
     stream_(),
     nVars_(names.size()),
-    buf_((1 + names.size()) * sizeof(double)) {
+    buf_((1 + names.size()) * sizeof(double)),
+    precision_(precision) {
   // pubsetbuf only takes effect before the file is opened.
   stream_.rdbuf()->pubsetbuf(stream_buf_.data(), static_cast<std::streamsize>(stream_buf_.size()));
   stream_.open(filename, std::ios::binary);
@@ -102,20 +105,31 @@ void BinaryCurves::record(double t, const std::vector<double>& y) {
   if (y.size() < nVars_)
     throw std::out_of_range("BinaryCurves::record: y vector smaller than registered variables");
 
-  const double rt = roundToCsvPrecision(t);
-  if (kHostIsLittleEndian) {
-    // On little-endian hosts the on-disk layout is byte-identical to the
-    // in-memory double, so memcpy the rounded doubles straight into the row
-    // buffer and skip the shift/mask encode entirely.
-    std::memcpy(buf_.data(), &rt, sizeof(double));
-    for (std::size_t i = 0; i < nVars_; ++i) {
-      const double v = roundToCsvPrecision(y[i]);
-      std::memcpy(buf_.data() + (1 + i) * sizeof(double), &v, sizeof(double));
+  if (precision_ == Precision::CSV_ROUNDED) {
+    const double rt = roundToCsvPrecision(t);
+    if (kHostIsLittleEndian) {
+      // On little-endian hosts the on-disk layout is byte-identical to the
+      // in-memory double, so memcpy the rounded doubles straight into the row
+      // buffer and skip the shift/mask encode entirely.
+      std::memcpy(buf_.data(), &rt, sizeof(double));
+      for (std::size_t i = 0; i < nVars_; ++i) {
+        const double v = roundToCsvPrecision(y[i]);
+        std::memcpy(buf_.data() + (1 + i) * sizeof(double), &v, sizeof(double));
+      }
+    } else {
+      encode_f64_le(buf_.data(), rt);
+      for (std::size_t i = 0; i < nVars_; ++i)
+        encode_f64_le(buf_.data() + (1 + i) * sizeof(double), roundToCsvPrecision(y[i]));
     }
-  } else {
-    encode_f64_le(buf_.data(), rt);
-    for (std::size_t i = 0; i < nVars_; ++i)
-      encode_f64_le(buf_.data() + (1 + i) * sizeof(double), roundToCsvPrecision(y[i]));
+  } else {  // Precision::FULL: store raw IEEE-754 bits, no rounding.
+    if (kHostIsLittleEndian) {
+      std::memcpy(buf_.data(), &t, sizeof(double));
+      std::memcpy(buf_.data() + sizeof(double), y.data(), nVars_ * sizeof(double));
+    } else {
+      encode_f64_le(buf_.data(), t);
+      for (std::size_t i = 0; i < nVars_; ++i)
+        encode_f64_le(buf_.data() + (1 + i) * sizeof(double), y[i]);
+    }
   }
   stream_.write(buf_.data(), static_cast<std::streamsize>(buf_.size()));
 }

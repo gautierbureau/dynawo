@@ -302,6 +302,91 @@ TEST(APICRVTest, BinaryCurvesLargeStreamStride) {
 }
 
 //-----------------------------------------------------
+// Precision::FULL stores raw IEEE-754 bits — no rounding, lossless.
+//-----------------------------------------------------
+TEST(APICRVTest, BinaryCurvesFullPrecisionLossless) {
+  const std::string path = "TestBinaryCurves_full.bin";
+  std::vector<std::string> names = {"x", "y"};
+  // Values that demonstrably do NOT survive the CSV round-trip.
+  const double t = 0.123456789012345;
+  const std::vector<double> row = {1234.123456789012, 9.876543210987e-7};
+  {
+    BinaryCurves bc(path, names, Precision::FULL);
+    bc.record(t, row);
+  }
+  const auto buf = readFile(path);
+  uint32_t n = 0;
+  std::vector<std::string> got;
+  const std::size_t off = parseHeader(buf, &n, &got);
+  // Exact bit-for-bit equality, not ASSERT_DOUBLE_EQ (which allows 4 ULPs).
+  ASSERT_EQ(readF64LE(&buf[off]), t);
+  ASSERT_EQ(readF64LE(&buf[off + sizeof(double)]), row[0]);
+  ASSERT_EQ(readF64LE(&buf[off + 2 * sizeof(double)]), row[1]);
+  std::remove(path.c_str());
+}
+
+//-----------------------------------------------------
+// CSV_ROUNDED and FULL produce different bytes for a value that the CSV
+// rounding would change, and agree on a value that survives the round-trip.
+//-----------------------------------------------------
+TEST(APICRVTest, BinaryCurvesPrecisionModesDiffer) {
+  std::vector<std::string> names = {"x"};
+  const double raw = 1234.123456789;  // changed by CSV rounding
+  const double safe = 0.5;             // exactly representable, survives rounding
+
+  const std::string pCsv = "TestBinaryCurves_csvmode.bin";
+  const std::string pFull = "TestBinaryCurves_fullmode.bin";
+  {
+    BinaryCurves bc(pCsv, names, Precision::CSV_ROUNDED);
+    bc.record(safe, std::vector<double>{raw});
+    BinaryCurves bf(pFull, names, Precision::FULL);
+    bf.record(safe, std::vector<double>{raw});
+  }
+  const auto csv = readFile(pCsv);
+  const auto full = readFile(pFull);
+  ASSERT_EQ(csv.size(), full.size());
+  uint32_t n = 0;
+  std::vector<std::string> got;
+  const std::size_t off = parseHeader(csv, &n, &got);
+
+  // Time field is identical (safe value).
+  ASSERT_EQ(readF64LE(&csv[off]), readF64LE(&full[off]));
+  ASSERT_EQ(readF64LE(&csv[off]), safe);
+
+  // Value field differs because CSV rounding actually changes raw.
+  const double csvVal = readF64LE(&csv[off + sizeof(double)]);
+  const double fullVal = readF64LE(&full[off + sizeof(double)]);
+  ASSERT_EQ(fullVal, raw);
+  ASSERT_NE(csvVal, raw);
+  ASSERT_NE(csvVal, fullVal);
+  std::remove(pCsv.c_str());
+  std::remove(pFull.c_str());
+}
+
+//-----------------------------------------------------
+// CSV_ROUNDED is the default (preserves existing behavior at call sites
+// that haven't been updated).
+//-----------------------------------------------------
+TEST(APICRVTest, BinaryCurvesCsvRoundedIsDefault) {
+  std::vector<std::string> names = {"x"};
+  const double raw = 1234.123456789;
+
+  const std::string pDef = "TestBinaryCurves_default.bin";
+  const std::string pExp = "TestBinaryCurves_explicit.bin";
+  {
+    BinaryCurves bc(pDef, names);  // no precision arg
+    bc.record(0.0, std::vector<double>{raw});
+    BinaryCurves bx(pExp, names, Precision::CSV_ROUNDED);
+    bx.record(0.0, std::vector<double>{raw});
+  }
+  const auto a = readFile(pDef);
+  const auto b = readFile(pExp);
+  ASSERT_EQ(a, b);
+  std::remove(pDef.c_str());
+  std::remove(pExp.c_str());
+}
+
+//-----------------------------------------------------
 // Variable names with zero length are encoded as just a u32(0).
 //-----------------------------------------------------
 TEST(APICRVTest, BinaryCurvesEmptyNameString) {

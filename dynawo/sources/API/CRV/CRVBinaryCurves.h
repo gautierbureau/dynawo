@@ -41,6 +41,20 @@
 namespace curves {
 
 /**
+ * @brief Precision policy for recorded values.
+ *
+ * CSV_ROUNDED rounds each value to the textual precision used by the CSV/XML
+ * exporters (via DYN::double2String), so the binary file matches those
+ * exports byte-for-byte numerically. FULL skips the rounding entirely and
+ * stores the raw 64-bit IEEE-754 doubles — losslessly and far faster, at
+ * the cost of byte-level parity with CSV/XML output.
+ */
+enum class Precision {
+  CSV_ROUNDED,
+  FULL
+};
+
+/**
  * @brief Streams the full solution vector to a compact binary file.
  *
  * The output file is opened and the header flushed at construction time; each
@@ -51,11 +65,15 @@ class BinaryCurves {
  public:
   /**
    * @brief Open @p filename for writing and emit the header.
-   * @param filename Output file path.
-   * @param names    Variable names in y[] order (size = number of variables).
+   * @param filename  Output file path.
+   * @param names     Variable names in y[] order (size = number of variables).
+   * @param precision Whether to round values to CSV/XML decimal precision
+   *                  before writing, or store the raw IEEE-754 bits.
    * @throws std::runtime_error if the file cannot be opened.
    */
-  BinaryCurves(const std::string& filename, const std::vector<std::string>& names);
+  BinaryCurves(const std::string& filename,
+               const std::vector<std::string>& names,
+               Precision precision = Precision::CSV_ROUNDED);
 
   ~BinaryCurves();
 
@@ -85,6 +103,7 @@ class BinaryCurves {
   std::ofstream stream_;
   std::size_t nVars_;
   std::vector<char> buf_;
+  Precision precision_;
 };
 
 }  // namespace curves
