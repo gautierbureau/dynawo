@@ -104,6 +104,32 @@ def read_header(f: BinaryIO) -> Header:
     )
 
 
+# ── Time window resolution ───────────────────────────────────────────────────
+
+def _resolve_time_range(
+    data: np.ndarray,
+    t_min: Optional[float],
+    t_max: Optional[float],
+) -> tuple[int, int]:
+    """Return inclusive (start, stop) record indices for a time window.
+
+    Assumes the time column (``data[:, 0]``) is monotonic non-decreasing, which
+    is the contract of the simulator's writer. Both ``t_min`` and ``t_max`` are
+    inclusive: records with ``time == t_min`` or ``time == t_max`` are kept.
+    Either bound may be ``None``. If the window is empty (``t_min > t_max``,
+    or no records fall inside) an empty range is returned, never raised.
+    """
+    n = data.shape[0]
+    if n == 0 or (t_min is None and t_max is None):
+        return 0, n
+    if t_min is not None and t_max is not None and t_min > t_max:
+        return 0, 0
+    times = data[:, 0]  # zero-copy strided view of the mmap
+    start = 0 if t_min is None else int(np.searchsorted(times, t_min, side="left"))
+    stop = n if t_max is None else int(np.searchsorted(times, t_max, side="right"))
+    return min(start, stop), stop
+
+
 # ── Whole-file loader (used by the Streamlit app) ────────────────────────────
 
 def load_bin(data: bytes):
@@ -224,12 +250,15 @@ def extract_to_csv(
     contains: Sequence[str] = (),
     chunk_bytes: int = DEFAULT_CHUNK_BYTES,
     fmt: str = "%.7g",
+    t_min: Optional[float] = None,
+    t_max: Optional[float] = None,
 ) -> tuple[int, int]:
     """Extract columns matching ``patterns`` or ``contains`` to ``csv_path``.
 
     The file is streamed chunk-by-chunk so files larger than RAM are handled
     without issue. Each row starts with ``time`` followed by the matching
-    variables in their original order.
+    variables in their original order. ``t_min`` / ``t_max`` (inclusive)
+    restrict the output to records whose time stamp falls in the window.
 
     Returns ``(n_matched_columns, n_records_written)``.
     """
@@ -237,29 +266,42 @@ def extract_to_csv(
         raise ValueError("extract_to_csv: provide at least one pattern or substring")
     with open(bin_path, "rb") as f:
         header = read_header(f)
-        matched = select_indices(
-            header.names, patterns, regex=regex, contains=contains
+    matched = select_indices(header.names, patterns, regex=regex, contains=contains)
+    if not matched:
+        raise SystemExit(
+            "No variable names matched the given patterns.\n"
+            "Use the 'names' subcommand to list what's available."
         )
-        if not matched:
-            raise SystemExit(
-                "No variable names matched the given patterns.\n"
-                "Use the 'names' subcommand to list what's available."
-            )
-        # +1 shift because column 0 in a record row is time.
-        selected_cols = np.array([0] + [i + 1 for i in matched], dtype=np.intp)
-        out_header = ["time"] + [header.names[i] for i in matched]
+    # +1 shift because column 0 in a record row is time.
+    selected_cols = np.array([0] + [i + 1 for i in matched], dtype=np.intp)
+    out_header = ["time"] + [header.names[i] for i in matched]
 
-        n_written = 0
-        # ``np.savetxt`` in append mode: open once, write header, then write
-        # chunks via savetxt so formatting stays vectorised.
-        with open(csv_path, "wb") as out:
-            out.write((",".join(out_header) + "\n").encode("utf-8"))
-            for chunk in iter_chunks(f, header, chunk_bytes=chunk_bytes):
-                sub = chunk[:, selected_cols]
-                np.savetxt(out, sub, fmt=fmt, delimiter=",")
-                n_written += sub.shape[0]
+    file_size = os.path.getsize(bin_path)
+    data_bytes = file_size - header.data_offset
+    if data_bytes % header.record_size != 0:
+        raise ValueError(
+            f"Data section size {data_bytes} is not a multiple of "
+            f"record size {header.record_size}"
+        )
+    n_records = data_bytes // header.record_size
 
-    return len(matched), n_written
+    with open(csv_path, "wb") as out:
+        out.write((",".join(out_header) + "\n").encode("utf-8"))
+        if n_records == 0:
+            return len(matched), 0
+        data = np.memmap(
+            bin_path, dtype="<f8", mode="r",
+            offset=header.data_offset,
+            shape=(n_records, 1 + header.n_vars),
+        )
+        start_rec, stop_rec = _resolve_time_range(data, t_min, t_max)
+        # Convert byte budget to a record budget, capped at the window size.
+        per_chunk = max(1, chunk_bytes // header.record_size)
+        for chunk_start in range(start_rec, stop_rec, per_chunk):
+            chunk_stop = min(chunk_start + per_chunk, stop_rec)
+            sub = data[chunk_start:chunk_stop, selected_cols]
+            np.savetxt(out, sub, fmt=fmt, delimiter=",")
+        return len(matched), stop_rec - start_rec
 
 
 def extract_to_bin(
@@ -270,6 +312,8 @@ def extract_to_bin(
     regex: bool = False,
     contains: Sequence[str] = (),
     chunk_records: int = 1_000_000,
+    t_min: Optional[float] = None,
+    t_max: Optional[float] = None,
 ) -> tuple[int, int]:
     """Extract columns matching ``patterns`` or ``contains`` to a new .bin file.
 
@@ -278,6 +322,9 @@ def extract_to_bin(
     Bypassing text formatting makes this much faster than ``extract_to_csv``
     on large files, and the result can be re-fed into any reader in this
     module — including this same extractor for further sub-selection.
+
+    ``t_min`` / ``t_max`` (inclusive) restrict the output to records whose
+    time stamp falls in the window. Either or both may be ``None``.
 
     Returns ``(n_matched_columns, n_records_written)``.
     """
@@ -324,13 +371,15 @@ def extract_to_bin(
             offset=header.data_offset,
             shape=(n_records, 1 + header.n_vars),
         )
-        for start in range(0, n_records, chunk_records):
-            stop = min(start + chunk_records, n_records)
+        start_rec, stop_rec = _resolve_time_range(data, t_min, t_max)
+        n_emitted = stop_rec - start_rec
+        for chunk_start in range(start_rec, stop_rec, chunk_records):
+            chunk_stop = min(chunk_start + chunk_records, stop_rec)
             # ascontiguousarray forces the fancy-indexed slice into a single
             # C-contiguous block so tofile() emits one bulk write.
-            np.ascontiguousarray(data[start:stop, selected_cols]).tofile(out)
+            np.ascontiguousarray(data[chunk_start:chunk_stop, selected_cols]).tofile(out)
 
-    return len(matched), n_records
+    return len(matched), n_emitted
 
 
 # ── Command-line interface ───────────────────────────────────────────────────
@@ -359,6 +408,8 @@ def _cmd_extract(args: argparse.Namespace) -> int:
         contains=args.contains,
         chunk_bytes=args.chunk_bytes,
         fmt=args.fmt,
+        t_min=args.t_min,
+        t_max=args.t_max,
     )
     print(
         f"Wrote {n_cols} variable(s) × {n_rows} record(s) to {out}",
@@ -378,6 +429,8 @@ def _cmd_extract_bin(args: argparse.Namespace) -> int:
         regex=args.regex,
         contains=args.contains,
         chunk_records=args.chunk_records,
+        t_min=args.t_min,
+        t_max=args.t_max,
     )
     print(
         f"Wrote {n_cols} variable(s) × {n_rows} record(s) to {out}",
@@ -444,6 +497,18 @@ def _build_parser() -> argparse.ArgumentParser:
         default="%.7g",
         help="printf-style format for numeric values (default: %%.7g).",
     )
+    extract.add_argument(
+        "--t-min",
+        type=float,
+        default=None,
+        help="Keep only records with time >= this value (inclusive).",
+    )
+    extract.add_argument(
+        "--t-max",
+        type=float,
+        default=None,
+        help="Keep only records with time <= this value (inclusive).",
+    )
     extract.set_defaults(func=_cmd_extract)
 
     extract_bin = sub.add_parser(
@@ -481,6 +546,18 @@ def _build_parser() -> argparse.ArgumentParser:
         default=1_000_000,
         help="Records processed per mmap slice (default: 1,000,000). "
              "Bounds the transient memory of the column-slice copy.",
+    )
+    extract_bin.add_argument(
+        "--t-min",
+        type=float,
+        default=None,
+        help="Keep only records with time >= this value (inclusive).",
+    )
+    extract_bin.add_argument(
+        "--t-max",
+        type=float,
+        default=None,
+        help="Keep only records with time <= this value (inclusive).",
     )
     extract_bin.set_defaults(func=_cmd_extract_bin)
 

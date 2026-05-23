@@ -200,6 +200,111 @@ def test_extract_bin_full_precision_preserved(tmp_path):
     assert out_vals[0, 0] == raw
 
 
+# ── Time-window tests ────────────────────────────────────────────────────────
+
+def _windowed_fixture(tmp_path):
+    """Source with 10 evenly-spaced records (times 0.0, 0.1, …, 0.9)."""
+    src = tmp_path / "src.bin"
+    names = ["a", "b"]
+    times = np.round(np.arange(10) * 0.1, 8)
+    values = np.column_stack([np.arange(10) * 1.0, np.arange(10) * 10.0])
+    _write_bin(src, names, times, values)
+    return src, names, times, values
+
+
+def test_extract_bin_t_max_only(tmp_path):
+    src, _, times, values = _windowed_fixture(tmp_path)
+    out = tmp_path / "out.bin"
+    n_cols, n_rows = bc.extract_to_bin(
+        str(src), str(out), patterns=["a", "b"], t_max=0.4
+    )
+    # Inclusive: times 0.0, 0.1, 0.2, 0.3, 0.4 -> 5 records.
+    assert (n_cols, n_rows) == (2, 5)
+    _, out_times, out_vals = _read_bin(out)
+    np.testing.assert_array_equal(out_times, times[:5])
+    np.testing.assert_array_equal(out_vals, values[:5])
+
+
+def test_extract_bin_t_min_only(tmp_path):
+    src, _, times, values = _windowed_fixture(tmp_path)
+    out = tmp_path / "out.bin"
+    n_cols, n_rows = bc.extract_to_bin(
+        str(src), str(out), patterns=["a"], t_min=0.7
+    )
+    # Inclusive: times 0.7, 0.8, 0.9 -> 3 records.
+    assert (n_cols, n_rows) == (1, 3)
+    _, out_times, out_vals = _read_bin(out)
+    np.testing.assert_array_equal(out_times, times[7:])
+    np.testing.assert_array_equal(out_vals.ravel(), values[7:, 0])
+
+
+def test_extract_bin_t_window(tmp_path):
+    src, _, times, values = _windowed_fixture(tmp_path)
+    out = tmp_path / "out.bin"
+    n_cols, n_rows = bc.extract_to_bin(
+        str(src), str(out), patterns=["a"], t_min=0.3, t_max=0.6
+    )
+    # Inclusive on both sides: 0.3, 0.4, 0.5, 0.6 -> 4 records.
+    assert (n_cols, n_rows) == (1, 4)
+    _, out_times, _ = _read_bin(out)
+    np.testing.assert_array_equal(out_times, times[3:7])
+
+
+def test_extract_bin_window_outside_data(tmp_path):
+    """A window entirely outside the recorded range writes header only."""
+    src, _, _, _ = _windowed_fixture(tmp_path)
+    out = tmp_path / "out.bin"
+    n_cols, n_rows = bc.extract_to_bin(
+        str(src), str(out), patterns=["a"], t_min=10.0
+    )
+    assert (n_cols, n_rows) == (1, 0)
+    out_names, out_times, _ = _read_bin(out)
+    assert out_names == ["a"]
+    assert out_times.size == 0
+
+
+def test_extract_bin_inverted_window(tmp_path):
+    """t_min > t_max yields an empty extract, not an error."""
+    src, _, _, _ = _windowed_fixture(tmp_path)
+    out = tmp_path / "out.bin"
+    n_cols, n_rows = bc.extract_to_bin(
+        str(src), str(out), patterns=["a"], t_min=0.8, t_max=0.2
+    )
+    assert (n_cols, n_rows) == (1, 0)
+
+
+def test_extract_csv_t_window(tmp_path):
+    """CSV path honours the same window semantics; result matches a manual
+    slice + savetxt of the source."""
+    src, _, times, values = _windowed_fixture(tmp_path)
+    out_csv = tmp_path / "out.csv"
+    bc.extract_to_csv(
+        str(src), str(out_csv), patterns=["b"], t_min=0.2, t_max=0.5
+    )
+    got = out_csv.read_text().splitlines()
+    assert got[0] == "time,b"
+    # Times 0.2, 0.3, 0.4, 0.5 -> 4 rows.
+    assert len(got) == 5
+    # Each row is "time,b" with the same %.7g formatting.
+    for row, t, v in zip(got[1:], times[2:6], values[2:6, 1]):
+        expected_t = ("%.7g" % t)
+        expected_v = ("%.7g" % v)
+        assert row == f"{expected_t},{expected_v}"
+
+
+def test_extract_bin_cli_with_time_window(tmp_path):
+    src, _, times, _ = _windowed_fixture(tmp_path)
+    out = tmp_path / "out.bin"
+    rc = bc.main([
+        "extract-bin", str(src), "-p", "a",
+        "--t-min", "0.4", "--t-max", "0.7",
+        "-o", str(out),
+    ])
+    assert rc == 0
+    _, out_times, _ = _read_bin(out)
+    np.testing.assert_array_equal(out_times, times[4:8])
+
+
 def test_extract_bin_cli(tmp_path, monkeypatch, capsys):
     """End-to-end check of the extract-bin CLI subcommand."""
     src = tmp_path / "src.bin"
