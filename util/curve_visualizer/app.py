@@ -685,7 +685,7 @@ with tab_overlay:
                         c1, c2 = st.columns([1, 2])
                         with c1:
                             enabled = st.checkbox(
-                                "Show", value=True,
+                                "Show", value=False,
                                 key=safe_key("ov_show", fi, col),
                             )
                         with c2:
@@ -797,7 +797,6 @@ with tab_grid:
             st.caption(
                 f"{len(all_curve_cols)} curves — use the pickers below to assign variables to panels."
             )
-        curve_file_idx = 0   # global index for default panel distribution
         for fi, (label, df) in enumerate(files.items()):
             curve_cols = list(df.columns[1:])
             with st.expander(f"**{label}**", expanded=not many_curves):
@@ -847,7 +846,7 @@ with tab_grid:
                             panel = st.selectbox(
                                 "Panel",
                                 options=["—"] + panel_labels,
-                                index=min(curve_file_idx % n_panels + 1, n_panels),
+                                index=0,
                                 key=safe_key("gr_panel", fi, col),
                                 label_visibility="collapsed",
                             )
@@ -863,7 +862,6 @@ with tab_grid:
                             "panel": None if panel == "—" else panel_labels.index(panel),
                             "axis":  "Left" if axis == "L" else "Right",
                         }
-                        curve_file_idx += 1
 
     with plot_col:
         specs = [[{"secondary_y": True} for _ in range(n_cols)] for _ in range(n_rows)]
