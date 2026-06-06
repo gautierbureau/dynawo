@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="SynchronousGenerator">
+    <par type="DOUBLE" name="generator_H" value="4.0"/>
+    <par type="DOUBLE" name="generator_DPu" value="1.0"/>
+    <par type="DOUBLE" name="generator_RaPu" value="0.003"/>
+    <par type="DOUBLE" name="generator_XdPu" value="2.0"/>
+    <par type="DOUBLE" name="generator_XpdPu" value="0.3"/>
+    <par type="DOUBLE" name="generator_XqPu" value="1.9"/>
+    <par type="DOUBLE" name="generator_Tpd0" value="7.0"/>
+    <par type="DOUBLE" name="generator_SNom" value="100.0"/>
+    <par type="DOUBLE" name="generator_P0Pu" value="-0.7"/>
+    <par type="DOUBLE" name="generator_Q0Pu" value="0.0"/>
+    <par type="DOUBLE" name="generator_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="generator_UPhase0" value="0.0"/>
+    <!-- Governor (GovCT2) -->
+    <par type="DOUBLE" name="governor_R"     value="0.05"/>
+    <par type="DOUBLE" name="governor_Rdown" value="-99.0"/>
+    <par type="DOUBLE" name="governor_Rup"   value="99.0"/>
+    <par type="DOUBLE" name="governor_Kpgov" value="10.0"/>
+    <par type="DOUBLE" name="governor_Kigov" value="2.0"/>
+    <par type="DOUBLE" name="governor_Kdgov" value="0.0"/>
+    <par type="DOUBLE" name="governor_Kpload" value="2.0"/>
+    <par type="DOUBLE" name="governor_Kiload" value="0.67"/>
+    <par type="DOUBLE" name="governor_Kimw"  value="0.0"/>
+    <par type="DOUBLE" name="governor_Ka"    value="10.0"/>
+    <par type="DOUBLE" name="governor_tA"    value="0.1"/>
+    <par type="DOUBLE" name="governor_tAct"  value="0.5"/>
+    <par type="DOUBLE" name="governor_tB"    value="0.5"/>
+    <par type="DOUBLE" name="governor_tC"    value="0.0"/>
+    <par type="DOUBLE" name="governor_tDgov" value="1.0"/>
+    <par type="DOUBLE" name="governor_tEng"  value="0.0"/>
+    <par type="DOUBLE" name="governor_tF"    value="0.05"/>
+    <par type="DOUBLE" name="governor_tNo"   value="0.0"/>
+    <par type="DOUBLE" name="governor_tSa"   value="4.0"/>
+    <par type="DOUBLE" name="governor_tSb"   value="5.0"/>
+    <par type="DOUBLE" name="governor_VMax"  value="1.0"/>
+    <par type="DOUBLE" name="governor_VMin"  value="0.15"/>
+    <par type="DOUBLE" name="governor_Uo"    value="0.1"/>
+    <par type="DOUBLE" name="governor_Uc"    value="-0.1"/>
+    <par type="DOUBLE" name="governor_Db"    value="0.0"/>
+    <par type="DOUBLE" name="governor_Dm"    value="0.0"/>
+    <par type="DOUBLE" name="governor_Aset"  value="0.01"/>
+    <par type="DOUBLE" name="governor_Ldref" value="1.0"/>
+    <par type="DOUBLE" name="governor_Pmwset" value="0.0"/>
+    <par type="DOUBLE" name="governor_Ropen" value="0.1"/>
+    <par type="DOUBLE" name="governor_Rclose" value="-0.1"/>
+    <par type="DOUBLE" name="governor_Wfnl"  value="0.2"/>
+    <par type="BOOL"   name="governor_Wfspd" value="false"/>
+    <par type="BOOL"   name="governor_Prate" value="false"/>
+  </set>
+  <set id="OmegaRef">
+    <par type="INT" name="nbGen" value="1"/>
+    <par type="DOUBLE" name="weight_gen_0" value="100.0"/>
+  </set>
+  <set id="Load">
+    <par type="DOUBLE" name="load_P0Pu" value="0.7"/>
+    <par type="DOUBLE" name="load_Q0Pu" value="0.0"/>
+    <par type="DOUBLE" name="load_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="load_UPhase0" value="0.0"/>
+    <par type="DOUBLE" name="load_alpha" value="2.0"/>
+    <par type="DOUBLE" name="load_beta" value="2.0"/>
+  </set>
+  <set id="StepP">
+    <par type="DOUBLE" name="step_Value0" value="0.7"/>
+    <par type="DOUBLE" name="step_Height" value="0.05"/>
+    <par type="DOUBLE" name="step_tStep" value="1.0"/>
+  </set>
+  <set id="IDA">
+    <par type="INT" name="order" value="2"/>
+    <par type="DOUBLE" name="initStep" value="0.000001"/>
+    <par type="DOUBLE" name="minStep" value="0.000001"/>
+    <par type="DOUBLE" name="maxStep" value="1"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-6"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-6"/>
+  </set>
+</parametersSet>

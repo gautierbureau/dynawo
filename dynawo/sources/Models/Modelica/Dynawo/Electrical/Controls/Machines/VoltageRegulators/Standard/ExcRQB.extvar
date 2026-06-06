@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<external_variables xmlns="http://www.rte-france.com/dynawo">
+  <variable id="UsPu" type="continuous"/>
+  <variable id="UsRefPu" type="continuous" optional="true"/>
+</external_variables>

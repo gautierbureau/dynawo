@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="Controller">
+    <par type="DOUBLE" name="dec_tW5"      value="5.0"/>
+    <par type="DOUBLE" name="dec_VtcPu"    value="0.9"/>
+    <par type="DOUBLE" name="dec_eSigmaC"  value="0.001"/>
+    <par type="DOUBLE" name="dec_tAn"      value="2.0"/>
+    <par type="DOUBLE" name="dec_kAn"      value="50.0"/>
+    <par type="DOUBLE" name="dec_VanMaxPu" value="0.1"/>
+    <par type="DOUBLE" name="dec_VtLmtPu"  value="1.1"/>
+    <par type="DOUBLE" name="dec_tL2"      value="0.05"/>
+    <par type="DOUBLE" name="dec_kEtl"     value="5.0"/>
+    <par type="DOUBLE" name="dec_VOmaxPu"  value="0.2"/>
+    <par type="DOUBLE" name="dec_VsMaxPu"  value="0.15"/>
+    <par type="DOUBLE" name="dec_VsMinPu"  value="-0.15"/>
+  </set>
+  <set id="VtStep">
+    <par type="DOUBLE" name="step_Value0" value="1.0"/>
+    <par type="DOUBLE" name="step_Height" value="-0.2"/>
+    <par type="DOUBLE" name="step_tStep"  value="1.0"/>
+  </set>
+  <set id="OmegaStep">
+    <par type="DOUBLE" name="step_Value0" value="1.0"/>
+    <par type="DOUBLE" name="step_Height" value="0.005"/>
+    <par type="DOUBLE" name="step_tStep"  value="1.0"/>
+  </set>
+  <set id="VstSP">
+    <par type="DOUBLE" name="setPoint_Value0" value="0.02"/>
+  </set>
+  <set id="IDAOrder2">
+    <par type="INT"    name="order" value="2"/>
+    <par type="DOUBLE" name="initStep"    value="0.000001"/>
+    <par type="DOUBLE" name="minStep"     value="0.000001"/>
+    <par type="DOUBLE" name="maxStep"     value="1"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-4"/>
+  </set>
+</parametersSet>

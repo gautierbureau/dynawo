@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    All parameters mapped 1:1 from the ENTSO-E MicroGrid BE-MAS CGMES DY profile
+    (20210420T1730Z_1D_BE_DY_001.xml) into Dynawo Modelica parameter names.
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source suite
+    of simulation tools for power systems.
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+
+  <!-- ============== Network (load flow propagation) ============== -->
+  <set id="Network">
+    <par type="DOUBLE" name="capacitor_no_reclosing_delay" value="300"/>
+    <par type="DOUBLE" name="dangling_line_currentLimit_maxTimeOperation" value="240"/>
+    <par type="DOUBLE" name="line_currentLimit_maxTimeOperation" value="240"/>
+    <par type="DOUBLE" name="load_Tp" value="90"/>
+    <par type="DOUBLE" name="load_Tq" value="90"/>
+    <par type="DOUBLE" name="load_alpha" value="1"/>
+    <par type="DOUBLE" name="load_alphaLong" value="0"/>
+    <par type="DOUBLE" name="load_beta" value="2"/>
+    <par type="DOUBLE" name="load_betaLong" value="0"/>
+    <par type="BOOL"   name="load_isControllable" value="false"/>
+    <par type="BOOL"   name="load_isRestorative" value="false"/>
+    <par type="DOUBLE" name="load_zPMax" value="100"/>
+    <par type="DOUBLE" name="load_zQMax" value="100"/>
+    <par type="DOUBLE" name="reactance_no_reclosing_delay" value="0"/>
+    <par type="DOUBLE" name="transformer_currentLimit_maxTimeOperation" value="240"/>
+    <par type="DOUBLE" name="transformer_t1st_HT" value="60"/>
+    <par type="DOUBLE" name="transformer_t1st_THT" value="30"/>
+    <par type="DOUBLE" name="transformer_tNext_HT" value="10"/>
+    <par type="DOUBLE" name="transformer_tNext_THT" value="10"/>
+    <par type="DOUBLE" name="transformer_tolV" value="0.014999999700000001"/>
+  </set>
+
+  <!-- ============== Loads (alpha-beta) ============== -->
+  <set id="Load">
+    <par type="DOUBLE" name="load_alpha" value="1.5"/>
+    <par type="DOUBLE" name="load_beta"  value="2.5"/>
+    <reference name="load_P0Pu"     origData="IIDM" origName="p_pu"     type="DOUBLE"/>
+    <reference name="load_Q0Pu"     origData="IIDM" origName="q_pu"     type="DOUBLE"/>
+    <reference name="load_U0Pu"     origData="IIDM" origName="v_pu"     type="DOUBLE"/>
+    <reference name="load_UPhase0"  origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+  </set>
+
+  <!-- ============== BE_G1 (CGMES SMTCR 8aa9d8c1, with full ExcAC4A + Pss2B + VComp1 + GovSteam1) ============== -->
+  <set id="BE_G1">
+    <reference name="generator_P0Pu"     origData="IIDM" origName="p_pu"     type="DOUBLE"/>
+    <reference name="generator_Q0Pu"     origData="IIDM" origName="q_pu"     type="DOUBLE"/>
+    <reference name="generator_U0Pu"     origData="IIDM" origName="v_pu"     type="DOUBLE"/>
+    <reference name="generator_UPhase0"  origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+    <!-- Synchronous machine (CGMES SynchronousMachineTimeConstantReactance 8aa9d8c1) -->
+    <par type="DOUBLE" name="generator_H"        value="4.25"/>
+    <par type="DOUBLE" name="generator_DPu"      value="0"/>
+    <par type="DOUBLE" name="generator_RaPu"     value="0"/>
+    <par type="DOUBLE" name="generator_XlPu"    value="0.16"/>
+    <par type="DOUBLE" name="generator_Se1Pu"   value="0.02"/>
+    <par type="DOUBLE" name="generator_Se12Pu"  value="0.12"/>
+    <par type="DOUBLE" name="generator_XdPu"    value="1.97"/>
+    <par type="DOUBLE" name="generator_XpdPu"   value="0.29"/>
+    <par type="DOUBLE" name="generator_XppdPu"  value="0.2"/>
+    <par type="DOUBLE" name="generator_XqPu"    value="1.97"/>
+    <par type="DOUBLE" name="generator_XpqPu"   value="0.29"/>
+    <par type="DOUBLE" name="generator_XppqPu"  value="0.2"/>
+    <par type="DOUBLE" name="generator_Tpd0"    value="6.4"/>
+    <par type="DOUBLE" name="generator_Tppd0"   value="0.12"/>
+    <par type="DOUBLE" name="generator_Tpq0"    value="6.4"/>
+    <par type="DOUBLE" name="generator_Tppq0"   value="0.12"/>
+    <par type="DOUBLE" name="generator_SNom"    value="300"/>
+    <!-- VCompIEEEType1 (CGMES VCompIEEEType1 BE-G1-Vcomp) -->
+    <par type="DOUBLE" name="compensator_RcPu"  value="0"/>
+    <par type="DOUBLE" name="compensator_XcPu"  value="0"/>
+    <par type="DOUBLE" name="compensator_SNom"  value="300"/>
+    <!-- ExcIEEEAC4A (CGMES ExcIEEEAC4A BE-G1-ExcAC4A); CGMES VCompIEEEType1.tr (=0) feeds Dynawo voltageRegulator_tR -->
+    <par type="DOUBLE" name="voltageRegulator_Ka"      value="200"/>
+    <par type="DOUBLE" name="voltageRegulator_tA"      value="0.07"/>
+    <par type="DOUBLE" name="voltageRegulator_tB"      value="8.5"/>
+    <par type="DOUBLE" name="voltageRegulator_tC"      value="1.8"/>
+    <par type="DOUBLE" name="voltageRegulator_tR"      value="0.001"/>
+    <par type="DOUBLE" name="voltageRegulator_VImaxPu" value="0.1"/>
+    <par type="DOUBLE" name="voltageRegulator_VIminPu" value="-0.1"/>
+    <par type="DOUBLE" name="voltageRegulator_VrMaxPu" value="5"/>
+    <par type="DOUBLE" name="voltageRegulator_VrMinPu" value="-4.65"/>
+    <par type="INT"    name="voltageRegulator_PositionUel" value="0"/>
+    <!-- PssIEEE2B (CGMES PssIEEE2B BE-G1-PSSB), input1 = rotorAngularFrequencyDeviation, input2 = (none specified -> 0) -->
+    <par type="DOUBLE" name="pss_KOmega"     value="1"/>
+    <par type="DOUBLE" name="pss_KOmegaRef"  value="-1"/>
+    <par type="DOUBLE" name="pss_Ks1"        value="16"/>
+    <par type="DOUBLE" name="pss_Ks2"        value="0.31"/>
+    <par type="DOUBLE" name="pss_Ks3"        value="1"/>
+    <par type="INT"    name="pss_M"          value="5"/>
+    <par type="INT"    name="pss_N"          value="1"/>
+    <par type="DOUBLE" name="pss_OmegaMaxPu" value="999"/>
+    <par type="DOUBLE" name="pss_OmegaMinPu" value="-999"/>
+    <par type="DOUBLE" name="pss_PGenMaxPu"  value="999"/>
+    <par type="DOUBLE" name="pss_PGenMinPu"  value="-999"/>
+    <par type="DOUBLE" name="pss_t1"  value="0.2"/>
+    <par type="DOUBLE" name="pss_t2"  value="0.02"/>
+    <par type="DOUBLE" name="pss_t3"  value="0.45"/>
+    <par type="DOUBLE" name="pss_t4"  value="0.02"/>
+    <par type="DOUBLE" name="pss_t6"  value="0.001"/>
+    <par type="DOUBLE" name="pss_t7"  value="2"/>
+    <par type="DOUBLE" name="pss_t8"  value="0.2"/>
+    <par type="DOUBLE" name="pss_t9"  value="0.1"/>
+    <par type="DOUBLE" name="pss_t10" value="0.001"/>
+    <par type="DOUBLE" name="pss_t11" value="0.001"/>
+    <par type="DOUBLE" name="pss_tW1" value="2"/>
+    <par type="DOUBLE" name="pss_tW2" value="2"/>
+    <par type="DOUBLE" name="pss_tW3" value="2"/>
+    <par type="DOUBLE" name="pss_tW4" value="0"/>
+    <par type="DOUBLE" name="pss_VPssMaxPu" value="0.1"/>
+    <par type="DOUBLE" name="pss_VPssMinPu" value="-0.1"/>
+    <par type="DOUBLE" name="pss_SNom" value="300"/>
+    <!-- GovSteam1 / IEEEG1 (CGMES GovSteam1 BE-G1-TurbIEEEEG1) -->
+    <par type="DOUBLE" name="governor_K"   value="25"/>
+    <par type="DOUBLE" name="governor_K1"  value="0.25"/>
+    <par type="DOUBLE" name="governor_K2"  value="0"/>
+    <par type="DOUBLE" name="governor_K3"  value="0.6"/>
+    <par type="DOUBLE" name="governor_K4"  value="0"/>
+    <par type="DOUBLE" name="governor_K5"  value="0.15"/>
+    <par type="DOUBLE" name="governor_K6"  value="0"/>
+    <par type="DOUBLE" name="governor_K7"  value="0"/>
+    <par type="DOUBLE" name="governor_K8"  value="0"/>
+    <par type="DOUBLE" name="governor_t1"  value="5"/>
+    <par type="DOUBLE" name="governor_t2"  value="1.5"/>
+    <par type="DOUBLE" name="governor_t3"  value="0.3"/>
+    <par type="DOUBLE" name="governor_t4"  value="0.15"/>
+    <par type="DOUBLE" name="governor_t5"  value="2"/>
+    <par type="DOUBLE" name="governor_t6"  value="0.1"/>
+    <par type="DOUBLE" name="governor_t7"  value="0.00001"/>
+    <par type="DOUBLE" name="governor_Db1" value="0"/>
+    <par type="DOUBLE" name="governor_Db2" value="0"/>
+    <par type="DOUBLE" name="governor_Eps" value="0"/>
+    <par type="BOOL"   name="governor_H0"  value="false"/>
+    <par type="BOOL"   name="governor_Sdb1" value="true"/>
+    <par type="BOOL"   name="governor_Sdb2" value="true"/>
+    <par type="DOUBLE" name="governor_PMaxPu" value="1.05"/>
+    <par type="DOUBLE" name="governor_PMinPu" value="0"/>
+    <par type="DOUBLE" name="governor_Uc"  value="-1.05"/>
+    <par type="DOUBLE" name="governor_Uo"  value="1"/>
+    <par type="DOUBLE" name="governor_PNomTurb" value="255"/>
+    <par type="BOOL"   name="governor_ValveOn" value="true"/>
+    <par type="STRING" name="governor_PgvTableName"    value="Pgv"/>
+    <par type="STRING" name="governor_PgvInvTableName" value="PgvInv"/>
+    <par type="STRING" name="governor_TablesFile"      value="Gain_power.txt"/>
+  </set>
+
+  <!-- ============== BE_G2 (CGMES SMTCR 4f810658, no DY-defined regulators) ============== -->
+  <set id="BE_G2">
+    <reference name="generator_P0Pu"     origData="IIDM" origName="p_pu"     type="DOUBLE"/>
+    <reference name="generator_Q0Pu"     origData="IIDM" origName="q_pu"     type="DOUBLE"/>
+    <reference name="generator_U0Pu"     origData="IIDM" origName="v_pu"     type="DOUBLE"/>
+    <reference name="generator_UPhase0"  origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+    <par type="DOUBLE" name="generator_H"       value="5"/>
+    <par type="DOUBLE" name="generator_DPu"     value="0.01"/>
+    <par type="DOUBLE" name="generator_RaPu"    value="0"/>
+    <par type="DOUBLE" name="generator_XlPu"    value="0.15"/>
+    <par type="DOUBLE" name="generator_Se1Pu"   value="0.02"/>
+    <par type="DOUBLE" name="generator_Se12Pu"  value="0.12"/>
+    <par type="DOUBLE" name="generator_XdPu"    value="1.81"/>
+    <par type="DOUBLE" name="generator_XpdPu"   value="0.3"/>
+    <par type="DOUBLE" name="generator_XppdPu"  value="0.23"/>
+    <par type="DOUBLE" name="generator_XqPu"    value="1.76"/>
+    <par type="DOUBLE" name="generator_XpqPu"   value="0.65"/>
+    <par type="DOUBLE" name="generator_XppqPu"  value="0.25"/>
+    <par type="DOUBLE" name="generator_Tpd0"    value="8"/>
+    <par type="DOUBLE" name="generator_Tppd0"   value="0.03"/>
+    <par type="DOUBLE" name="generator_Tpq0"    value="1"/>
+    <par type="DOUBLE" name="generator_Tppq0"   value="0.07"/>
+    <par type="DOUBLE" name="generator_SNom"    value="300"/>
+  </set>
+
+  <!-- ============== Frequency barycenter for the BE AC island ============== -->
+  <set id="OmegaRef">
+    <par type="INT"    name="nbGen" value="2"/>
+    <par type="DOUBLE" name="weight_gen_0" value="1275"/>  <!-- H * SNom for BE_G1 (4.25*300) -->
+    <par type="DOUBLE" name="weight_gen_1" value="1500"/>  <!-- H * SNom for BE_G2 (5*300) -->
+  </set>
+
+  <!-- ============== +10% step on LOAD_1 active power at t = 1 s ============== -->
+  <set id="LoadStep">
+    <par type="DOUBLE" name="step_Value0" value="0"/>
+    <par type="DOUBLE" name="step_Height" value="0.1"/>
+    <par type="DOUBLE" name="step_tStep"  value="1.0"/>
+  </set>
+
+  <!-- ============== Bolted three-phase fault on the 110 kV bus, 70 ms duration ============== -->
+  <set id="Fault">
+    <par type="DOUBLE" name="fault_tBegin" value="100"/>
+    <par type="DOUBLE" name="fault_tEnd"   value="100.07"/>
+    <par type="DOUBLE" name="fault_RPu"    value="0.0"/>
+    <par type="DOUBLE" name="fault_XPu"    value="0.001"/>
+  </set>
+
+  <set id="OmegaRefSP">
+    <par type="DOUBLE" name="setPoint_Value0" value="1.0"/>
+  </set>
+</parametersSet>

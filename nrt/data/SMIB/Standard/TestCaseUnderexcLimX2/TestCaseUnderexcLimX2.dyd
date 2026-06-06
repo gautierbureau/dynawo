@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="UEL" lib="UnderexcLimX2" parFile="TestCaseUnderexcLimX2.par" parId="Limiter"/>
+  <dyn:blackBoxModel id="QStep" lib="Step" parFile="TestCaseUnderexcLimX2.par" parId="QStep"/>
+  <dyn:blackBoxModel id="PSP" lib="SetPoint" parFile="TestCaseUnderexcLimX2.par" parId="PSP"/>
+  <dyn:blackBoxModel id="UsSP" lib="SetPoint" parFile="TestCaseUnderexcLimX2.par" parId="UsSP"/>
+  <dyn:connect id1="QStep" var1="step_step" id2="UEL" var2="limiter_QGenPu"/>
+  <dyn:connect id1="PSP" var1="setPoint_setPoint" id2="UEL" var2="limiter_PGenPu"/>
+  <dyn:connect id1="UsSP" var1="setPoint_setPoint" id2="UEL" var2="limiter_UsPu"/>
+</dyn:dynamicModelsArchitecture>

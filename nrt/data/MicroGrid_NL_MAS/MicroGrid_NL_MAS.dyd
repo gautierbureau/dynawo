@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+
+  <!-- NL-G1 (sync bd63d5d8, salientPole): GENSAE + VComp + Ac1a + Pss2b + GovHydro2 (IEEEG3) -->
+  <dyn:blackBoxModel id="NL_G1" lib="GeneratorSalientPoleExpVCompIEEEType1Ac1aPss2bGovHydro2"
+                     parFile="MicroGrid_NL_MAS.par" parId="NL_G1"
+                     staticId="9c3b8f97-7972-477d-9dc8-87365cc0ad0e"/>
+
+  <!-- NL-G2 (sync e58068fe, salientPole): GENSAE + VComp + St1a + Pss2b + GovHydro1 -->
+  <dyn:blackBoxModel id="NL_G2" lib="GeneratorSalientPoleExpVCompIEEEType1St1aPss2bGovHydro1"
+                     parFile="MicroGrid_NL_MAS.par" parId="NL_G2"
+                     staticId="2844585c-0d35-488d-a449-685bcd57afbf"/>
+
+  <!-- NL-G3 (sync f450a965, salientPole): GENSAE + VComp + St1a + Pss2b + GovHydro1 (same stack as NL-G2) -->
+  <dyn:blackBoxModel id="NL_G3" lib="GeneratorSalientPoleExpVCompIEEEType1St1aPss2bGovHydro1"
+                     parFile="MicroGrid_NL_MAS.par" parId="NL_G3"
+                     staticId="1dc9afba-23b5-41a0-8540-b479ed8baf4b"/>
+
+  <!-- Loads -->
+  <dyn:blackBoxModel id="LOAD_1" lib="LoadAlphaBeta" parFile="MicroGrid_NL_MAS.par" parId="Load" staticId="69add5b4-70bd-4360-8a93-286256c0d38b"/>
+  <dyn:blackBoxModel id="LOAD_2" lib="LoadAlphaBeta" parFile="MicroGrid_NL_MAS.par" parId="Load" staticId="25ab1b5b-6803-47e2-805a-ab7b2072e034"/>
+  <dyn:blackBoxModel id="LOAD_3" lib="LoadAlphaBeta" parFile="MicroGrid_NL_MAS.par" parId="Load" staticId="b1e03a8f-6a11-4454-af58-4a4a680e857f"/>
+
+  <!-- Frequency barycenter across the three synchronous machines (all on the same 15.8 kV bus) -->
+  <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="MicroGrid_NL_MAS.par" parId="OmegaRef"/>
+
+  <!-- +10 % step on NL-Load_3 active power at t = 1 s (the largest load, on the 220 kV bus) -->
+  <dyn:blackBoxModel id="LOADSTEP" lib="Step" parFile="MicroGrid_NL_MAS.par" parId="LoadStep"/>
+
+  <!-- Rotor current = 0 placeholder for Ac1a / St1a (GENROE doesn't expose IRotorPu); Klr and Kd*Ir terms are negligible/zero here -->
+  <dyn:blackBoxModel id="NL_G1_IR" lib="SetPoint" parFile="MicroGrid_NL_MAS.par" parId="ZeroIr"/>
+  <dyn:blackBoxModel id="NL_G2_IR" lib="SetPoint" parFile="MicroGrid_NL_MAS.par" parId="ZeroIr"/>
+  <dyn:blackBoxModel id="NL_G3_IR" lib="SetPoint" parFile="MicroGrid_NL_MAS.par" parId="ZeroIr"/>
+
+  <!-- Terminals: explicit NETWORK ACPIN wiring -->
+  <dyn:connect id1="NL_G1" var1="generator_terminal"         id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_ACPIN"/>
+  <dyn:connect id1="NL_G1" var1="generator_switchOffSignal1" id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_switchOff"/>
+  <dyn:connect id1="NL_G2" var1="generator_terminal"         id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_ACPIN"/>
+  <dyn:connect id1="NL_G2" var1="generator_switchOffSignal1" id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_switchOff"/>
+  <dyn:connect id1="NL_G3" var1="generator_terminal"         id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_ACPIN"/>
+  <dyn:connect id1="NL_G3" var1="generator_switchOffSignal1" id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_switchOff"/>
+  <dyn:connect id1="LOAD_1" var1="load_terminal" id2="NETWORK" var2="b7998ae6-0cc6-4dfe-8fec-0b549b07b6c3_0_ACPIN"/>
+  <dyn:connect id1="LOAD_2" var1="load_terminal" id2="NETWORK" var2="b7998ae6-0cc6-4dfe-8fec-0b549b07b6c3_0_ACPIN"/>
+  <dyn:connect id1="LOAD_3" var1="load_terminal" id2="NETWORK" var2="d77b61ef-61aa-4b22-95f6-b56ca080788d_0_ACPIN"/>
+
+  <!-- Disturbance: 10% step on NL-Load_3 -->
+  <dyn:connect id1="LOADSTEP" var1="step_step" id2="LOAD_3" var2="load_deltaP"/>
+
+  <!-- IrPu wiring -->
+  <dyn:connect id1="NL_G1_IR" var1="setPoint_setPoint" id2="NL_G1" var2="voltageRegulator_IrPu"/>
+  <dyn:connect id1="NL_G2_IR" var1="setPoint_setPoint" id2="NL_G2" var2="voltageRegulator_IrPu"/>
+  <dyn:connect id1="NL_G3_IR" var1="setPoint_setPoint" id2="NL_G3" var2="voltageRegulator_IrPu"/>
+
+  <!-- OmegaRef barycenter -->
+  <dyn:connect id1="OMEGA_REF" var1="omega_grp_0_value"    id2="NL_G1" var2="generator_omegaPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_0_value" id2="NL_G1" var2="generator_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_0_value" id2="NL_G1" var2="pss_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="numcc_node_0"         id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_numcc"/>
+  <dyn:connect id1="OMEGA_REF" var1="running_grp_0"        id2="NL_G1" var2="generator_running"/>
+  <dyn:connect id1="OMEGA_REF" var1="omega_grp_1_value"    id2="NL_G2" var2="generator_omegaPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_1_value" id2="NL_G2" var2="generator_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_1_value" id2="NL_G2" var2="pss_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="numcc_node_1"         id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_numcc"/>
+  <dyn:connect id1="OMEGA_REF" var1="running_grp_1"        id2="NL_G2" var2="generator_running"/>
+  <dyn:connect id1="OMEGA_REF" var1="omega_grp_2_value"    id2="NL_G3" var2="generator_omegaPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_2_value" id2="NL_G3" var2="generator_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_2_value" id2="NL_G3" var2="pss_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="numcc_node_2"         id2="NETWORK" var2="8d8a82ba-b5b0-4e94-861a-192af055f2b8_0_numcc"/>
+  <dyn:connect id1="OMEGA_REF" var1="running_grp_2"        id2="NL_G3" var2="generator_running"/>
+</dyn:dynamicModelsArchitecture>

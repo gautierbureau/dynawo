@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="VARC" lib="PFVArType1IEEEVArController" parFile="TestCasePFVArType1IEEEVArController.par" parId="Controller"/>
+  <dyn:blackBoxModel id="QStep" lib="Step" parFile="TestCasePFVArType1IEEEVArController.par" parId="QStep"/>
+  <dyn:connect id1="QStep" var1="step_step" id2="VARC" var2="controller_QGenPu"/>
+</dyn:dynamicModelsArchitecture>

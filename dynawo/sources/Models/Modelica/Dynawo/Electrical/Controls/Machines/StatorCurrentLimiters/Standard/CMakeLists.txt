@@ -20,6 +20,8 @@ set(MODEL_FILES
   Scl2c.mo
   Scl2c.extvar
   Scl2c_INIT.mo
+  SCIEEEOperationalLimiter.mo
+  SCIEEEOperationalLimiter.extvar
   )
 
 #

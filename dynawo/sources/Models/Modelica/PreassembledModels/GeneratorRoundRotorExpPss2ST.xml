@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:modelicaModel id="GeneratorRoundRotorExpPss2ST">
+    <dyn:unitDynamicModel id="generator" name="Dynawo.Electrical.Machines.OmegaRef.GeneratorRoundRotorExp" initName="Dynawo.Electrical.Machines.OmegaRef.GeneratorRoundRotorExp_INIT"/>
+    <dyn:unitDynamicModel id="pss" name="Dynawo.Electrical.Controls.Machines.PowerSystemStabilizers.Standard.Pss2ST" initName="Dynawo.Electrical.Controls.Machines.PowerSystemStabilizers.Pss_INIT"/>
+    <dyn:initConnect id1="pss" var1="PGen0Pu" id2="generator" var2="PGen0Pu"/>
+    <dyn:connect id1="pss" var1="omegaPu" id2="generator" var2="omegaPu"/>
+    <dyn:connect id1="pss" var1="PGenPu" id2="generator" var2="PGenPu"/>
+  </dyn:modelicaModel>
+</dyn:dynamicModelsArchitecture>

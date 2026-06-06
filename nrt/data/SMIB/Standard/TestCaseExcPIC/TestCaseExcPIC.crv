@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="SM" variable="generator_omegaPu"/>
+  <curve model="SM" variable="generator_PGenPu"/>
+  <curve model="SM" variable="generator_UPu"/>
+  <curve model="SM" variable="generator_efdPu"/>
+</curvesInput>

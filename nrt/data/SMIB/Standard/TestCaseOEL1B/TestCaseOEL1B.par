@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="Limiter">
+    <par type="DOUBLE" name="limiter_Hyst"    value="0.02"/>
+    <par type="DOUBLE" name="limiter_IfdH"    value="1.0"/>
+    <par type="DOUBLE" name="limiter_IfdL"    value="0.9"/>
+    <par type="DOUBLE" name="limiter_IfdRef"  value="0.95"/>
+    <par type="DOUBLE" name="limiter_Koel"    value="-2.0"/>
+    <par type="DOUBLE" name="limiter_Kramp"   value="2.0"/>
+    <par type="DOUBLE" name="limiter_VrMaxPu" value="0.0"/>
+    <par type="DOUBLE" name="limiter_VrMinPu" value="-5.0"/>
+  </set>
+  <set id="IfdStep">
+    <par type="DOUBLE" name="step_Value0" value="0.8"/>
+    <par type="DOUBLE" name="step_Height" value="0.5"/>
+    <par type="DOUBLE" name="step_tStep"  value="1.0"/>
+  </set>
+  <set id="IDAOrder2">
+    <par type="INT"    name="order" value="2"/>
+    <par type="DOUBLE" name="initStep"    value="0.000001"/>
+    <par type="DOUBLE" name="minStep"     value="0.000001"/>
+    <par type="DOUBLE" name="maxStep"     value="1"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-4"/>
+  </set>
+</parametersSet>

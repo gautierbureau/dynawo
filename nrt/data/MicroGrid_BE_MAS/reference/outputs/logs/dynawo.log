@@ -1,0 +1,270 @@
+2026-06-02 17:30:30 | INFO |  ============================================================ 
+2026-06-02 17:30:30 | INFO | DYNAWO VERSION  :     1.8.0
+2026-06-02 17:30:30 | INFO | DYNAWO REVISION :  test_cgmes-41d7e3a8e3d
+2026-06-02 17:30:30 | INFO |  ============================================================ 
+2026-06-02 17:30:30 | INFO | 
+2026-06-02 17:30:30 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:30 | INFO | building model from input files
+2026-06-02 17:30:30 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | model was built successfully
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | 
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | starting local initialization
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | DEBUG | keep SubNetworks num : 0
+2026-06-02 17:30:31 | INFO | ... loading "PgvInv" from "nrt/data/MicroGrid_BE_MAS/Gain_power.txt"
+2026-06-02 17:30:31 | DEBUG | ------------------------------
+2026-06-02 17:30:31 | DEBUG | starting local initialization of model BE_G1
+2026-06-02 17:30:31 | DEBUG | local initialization of model BE_G1 ended successfully
+2026-06-02 17:30:31 | INFO | ... loading "Pgv" from "nrt/data/MicroGrid_BE_MAS/Gain_power.txt"
+2026-06-02 17:30:31 | DEBUG | ------------------------------
+2026-06-02 17:30:31 | DEBUG | starting local initialization of model BE_G2
+2026-06-02 17:30:31 | DEBUG | local initialization of model BE_G2 ended successfully
+2026-06-02 17:30:31 | DEBUG | ------------------------------
+2026-06-02 17:30:31 | DEBUG | starting local initialization of model LOAD_1
+2026-06-02 17:30:31 | DEBUG | local initialization of model LOAD_1 ended successfully
+2026-06-02 17:30:31 | DEBUG | ------------------------------
+2026-06-02 17:30:31 | DEBUG | starting local initialization of model LOAD_2
+2026-06-02 17:30:31 | DEBUG | local initialization of model LOAD_2 ended successfully
+2026-06-02 17:30:31 | DEBUG | ------------------------------
+2026-06-02 17:30:31 | DEBUG | starting local initialization of model LOAD_3
+2026-06-02 17:30:31 | DEBUG | local initialization of model LOAD_3 ended successfully
+2026-06-02 17:30:31 | INFO | end of local initialization
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | 
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | starting global initialization
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | DEBUG | initialization of IDA solver : ok
+2026-06-02 17:30:31 | DEBUG | Algebraic mode change for model BE_G1 at t = 0
+2026-06-02 17:30:31 | DEBUG | Algebraic mode change for model LOADSTEP at t = 0
+2026-06-02 17:30:31 | INFO | Algebraic mode change at t = 0
+2026-06-02 17:30:31 | DEBUG | call of SolverReInit i.e. a new symbolic and numerical factorization will be performed
+2026-06-02 17:30:31 | DEBUG | call of SolverReInit i.e. a new symbolic and numerical factorization will be performed
+2026-06-02 17:30:31 | INFO | 
+2026-06-02 17:30:31 | INFO | execution statistics :
+2026-06-02 17:30:31 | INFO | 
+2026-06-02 17:30:31 | INFO | number of time iterations                                  = 0
+2026-06-02 17:30:31 | INFO | number of residual evaluations                             = 2
+2026-06-02 17:30:31 | INFO | number of Jacobian evaluations                             = 2
+2026-06-02 17:30:31 | INFO | number of nonlinear iterations                             = 0
+2026-06-02 17:30:31 | INFO | number of error test failures                              = 0
+2026-06-02 17:30:31 | INFO | number of nonlinear convergence failures                   = 0
+2026-06-02 17:30:31 | INFO | number of solver root functions evaluations                = 0
+2026-06-02 17:30:31 | INFO | number of internal root functions evaluations              = 2
+2026-06-02 17:30:31 | INFO | number of discrete variables evaluations                   = 2
+2026-06-02 17:30:31 | INFO | number of mode evaluations                                 = 2
+2026-06-02 17:30:31 | INFO | number of differential mode                                = 0
+2026-06-02 17:30:31 | INFO | number of algebraic mode                                   = 0
+2026-06-02 17:30:31 | INFO | number of algebraic J update mode                          = 0
+2026-06-02 17:30:31 | INFO | number of algebraic restoration residual evaluations       = 3
+2026-06-02 17:30:31 | INFO | number of algebraic restoration Jacobian evaluations       = 1
+2026-06-02 17:30:31 | INFO | number of algebraic prim restoration residual evaluations  = 3
+2026-06-02 17:30:31 | INFO | number of algebraic prim restoration Jacobian evaluations  = 1
+2026-06-02 17:30:31 | INFO | end of global initialization
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | 
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | starting curve initialization
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G1; curve: generator_omegaPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G1; curve: generator_PGenPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G1; curve: generator_QGenPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G1; curve: generator_UPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G1; curve: generator_efdPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G1; curve: compensator_VcPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G1; curve: pss_VPssPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G1; curve: governor_Pm1Pu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G2; curve: generator_omegaPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G2; curve: generator_PGenPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G2; curve: generator_QGenPu found. (exact name)
+2026-06-02 17:30:31 | DEBUG | adding curve : Id: BE_G2; curve: generator_UPu found. (exact name)
+2026-06-02 17:30:31 | INFO | end of curve initialization, added 12 curves
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | 
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | starting simulation with solver IDASolver
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO | number of continuous variables : 270
+2026-06-02 17:30:31 | INFO | number of discrete variables : 125
+2026-06-02 17:30:31 | INFO | number of root functions : 134
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO |         time ¦ iter num   order (k)      time step (h)
+2026-06-02 17:30:31 | INFO | -----------------------------------------------------------------------
+2026-06-02 17:30:31 | INFO |        0.000 ¦        0           0              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦        1           1              0.000 
+2026-06-02 17:30:31 | DEBUG | largest derivative values (truncated to the first 10) at the current iteration
+2026-06-02 17:30:31 | DEBUG | YP[189]=1135.15 (variable=BE_G1_voltageRegulator_limitedFirstOrder_G_y)
+2026-06-02 17:30:31 | DEBUG | YP[191]=1135.15 (variable=BE_G1_voltageRegulator_limitedFirstOrder_I_u)
+2026-06-02 17:30:31 | DEBUG | YP[85]=-303.428 (variable=BE_G1_pss_washout3_derivative_x)
+2026-06-02 17:30:31 | DEBUG | YP[190]=79.462 (variable=BE_G1_voltageRegulator_limitedFirstOrder_Gk_y)
+2026-06-02 17:30:31 | DEBUG | YP[188]=79.4608 (variable=BE_G1_voltageRegulator_limitedFirstOrder_G_u)
+2026-06-02 17:30:31 | DEBUG | YP[94]=-5.7405 (variable=BE_G1_compensator_adder_u2Internal_im)
+2026-06-02 17:30:31 | DEBUG | YP[193]=1.87618 (variable=BE_G1_voltageRegulator_limiter_u)
+2026-06-02 17:30:31 | DEBUG | YP[197]=1.87618 (variable=BE_G1_voltageRegulator_sum1_u_0_)
+2026-06-02 17:30:31 | DEBUG | YP[196]=1.87618 (variable=BE_G1_voltageRegulator_max1_y)
+2026-06-02 17:30:31 | DEBUG | YP[195]=1.87618 (variable=BE_G1_voltageRegulator_max1_u_1_)
+2026-06-02 17:30:31 | INFO |        0.000 ¦        2           1              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦        3           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦        4           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦        5           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦        6           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦        7           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦        8           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦        9           1              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦       10           1              0.000 
+2026-06-02 17:30:31 | INFO |        0.000 ¦       11           1              0.000 
+2026-06-02 17:30:31 | DEBUG | Algebraic mode change for model BE_G1 at t = 0.000508714
+2026-06-02 17:30:31 | INFO | Algebraic mode change at t = 0.000508714
+2026-06-02 17:30:31 | INFO |        0.001 ¦       12           1              0.000 
+2026-06-02 17:30:31 | INFO | calculation of the new starting point of the simulation.
+2026-06-02 17:30:31 | DEBUG | call of SolverReInit i.e. a new symbolic and numerical factorization will be performed
+2026-06-02 17:30:31 | INFO |        0.001 ¦        0           0              0.000 
+2026-06-02 17:30:31 | DEBUG | largest derivative values (truncated to the first 10) at the current iteration
+2026-06-02 17:30:31 | DEBUG | YP[81]=0.677438 (variable=BE_G1_pss_transferFunction2_x_scaled_0_)
+2026-06-02 17:30:31 | DEBUG | YP[89]=0.556564 (variable=BE_G1_voltageRegulator_limitedFirstOrder_I_y)
+2026-06-02 17:30:31 | DEBUG | YP[207]=0.0130977 (variable=BE_G2_generator_psi2q)
+2026-06-02 17:30:31 | DEBUG | YP[206]=0.00907714 (variable=BE_G2_generator_psi1d)
+2026-06-02 17:30:31 | DEBUG | YP[88]=-0.00861139 (variable=BE_G1_voltageRegulator_firstOrder_y)
+2026-06-02 17:30:31 | DEBUG | YP[85]=-0.00818015 (variable=BE_G1_pss_washout3_derivative_x)
+2026-06-02 17:30:31 | DEBUG | YP[201]=-0.00367269 (variable=BE_G2_generator_edPPu)
+2026-06-02 17:30:31 | DEBUG | YP[40]=0.00290509 (variable=BE_G1_generator_psi1d)
+2026-06-02 17:30:31 | DEBUG | YP[41]=0.00252006 (variable=BE_G1_generator_psi2q)
+2026-06-02 17:30:31 | DEBUG | YP[80]=0.00204073 (variable=BE_G1_pss_transferFunction1_x_scaled_0_)
+2026-06-02 17:30:31 | DEBUG | call of SolverReInit i.e. a new symbolic and numerical factorization will be performed
+2026-06-02 17:30:31 | INFO |        0.001 ¦        1           1              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        2           1              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        3           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        4           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        5           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        6           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        7           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        8           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        9           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦       10           2              0.000 
+2026-06-02 17:30:31 | DEBUG | Algebraic mode (with J recalculation) change for model BE_G1 at t = 0.0010381
+2026-06-02 17:30:31 | INFO | Algebraic mode (with J recalculation) change at t = 0.0010381
+2026-06-02 17:30:31 | INFO |        0.001 ¦       11           2              0.001 
+2026-06-02 17:30:31 | INFO | calculation of the new starting point of the simulation.
+2026-06-02 17:30:31 | DEBUG | Algebraic mode change for model BE_G1 at t = 0.0010381
+2026-06-02 17:30:31 | INFO | Algebraic mode change at t = 0.0010381
+2026-06-02 17:30:31 | INFO |        0.001 ¦        0           0              0.000 
+2026-06-02 17:30:31 | DEBUG | largest derivative values (truncated to the first 10) at the current iteration
+2026-06-02 17:30:31 | DEBUG | YP[81]=1.11532 (variable=BE_G1_pss_transferFunction2_x_scaled_0_)
+2026-06-02 17:30:31 | DEBUG | YP[89]=1.10888 (variable=BE_G1_voltageRegulator_limitedFirstOrder_I_y)
+2026-06-02 17:30:31 | DEBUG | YP[207]=0.0129791 (variable=BE_G2_generator_psi2q)
+2026-06-02 17:30:31 | DEBUG | YP[85]=-0.00986605 (variable=BE_G1_pss_washout3_derivative_x)
+2026-06-02 17:30:31 | DEBUG | YP[206]=0.00892185 (variable=BE_G2_generator_psi1d)
+2026-06-02 17:30:31 | DEBUG | YP[88]=-0.00495089 (variable=BE_G1_voltageRegulator_firstOrder_y)
+2026-06-02 17:30:31 | DEBUG | YP[80]=0.00408029 (variable=BE_G1_pss_transferFunction1_x_scaled_0_)
+2026-06-02 17:30:31 | DEBUG | YP[201]=-0.00364807 (variable=BE_G2_generator_edPPu)
+2026-06-02 17:30:31 | DEBUG | YP[40]=0.00290022 (variable=BE_G1_generator_psi1d)
+2026-06-02 17:30:31 | DEBUG | YP[41]=0.00251738 (variable=BE_G1_generator_psi2q)
+2026-06-02 17:30:31 | INFO |        0.001 ¦        1           1              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        1           1              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        2           1              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        3           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        4           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        5           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        6           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        7           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        8           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.001 ¦        9           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.002 ¦       10           2              0.000 
+2026-06-02 17:30:31 | INFO |        0.002 ¦       11           2              0.001 
+2026-06-02 17:30:31 | INFO |        0.003 ¦       12           2              0.001 
+2026-06-02 17:30:31 | INFO |        0.005 ¦       13           2              0.002 
+2026-06-02 17:30:31 | INFO |        0.007 ¦       14           2              0.002 
+2026-06-02 17:30:31 | INFO |        0.009 ¦       15           2              0.002 
+2026-06-02 17:30:31 | INFO |        0.011 ¦       16           2              0.002 
+2026-06-02 17:30:31 | INFO |        0.015 ¦       17           2              0.004 
+2026-06-02 17:30:31 | INFO |        0.019 ¦       18           2              0.004 
+2026-06-02 17:30:31 | INFO |        0.023 ¦       19           2              0.004 
+2026-06-02 17:30:31 | INFO |        0.026 ¦       20           2              0.004 
+2026-06-02 17:30:31 | INFO |        0.030 ¦       21           2              0.004 
+2026-06-02 17:30:31 | INFO |        0.034 ¦       22           2              0.004 
+2026-06-02 17:30:31 | INFO |        0.041 ¦       23           2              0.007 
+2026-06-02 17:30:31 | INFO |        0.049 ¦       24           2              0.007 
+2026-06-02 17:30:31 | INFO |        0.063 ¦       25           2              0.015 
+2026-06-02 17:30:31 | INFO |        0.076 ¦       26           2              0.012 
+2026-06-02 17:30:31 | INFO |        0.088 ¦       27           2              0.012 
+2026-06-02 17:30:31 | INFO |        0.099 ¦       28           2              0.011 
+2026-06-02 17:30:31 | INFO |        0.110 ¦       29           2              0.011 
+2026-06-02 17:30:31 | INFO |        0.121 ¦       30           2              0.011 
+2026-06-02 17:30:31 | INFO |        0.132 ¦       31           1              0.011 
+2026-06-02 17:30:31 | INFO |        0.142 ¦       32           1              0.009 
+2026-06-02 17:30:31 | INFO |        0.150 ¦       33           1              0.008 
+2026-06-02 17:30:31 | INFO |        0.158 ¦       34           1              0.007 
+2026-06-02 17:30:31 | INFO |        0.164 ¦       35           1              0.007 
+2026-06-02 17:30:31 | INFO |        0.171 ¦       36           1              0.007 
+2026-06-02 17:30:31 | INFO |        0.178 ¦       37           1              0.007 
+2026-06-02 17:30:31 | INFO |        0.191 ¦       38           2              0.013 
+2026-06-02 17:30:31 | INFO |        0.205 ¦       39           2              0.013 
+2026-06-02 17:30:31 | INFO |        0.218 ¦       40           2              0.013 
+2026-06-02 17:30:31 | INFO |        0.231 ¦       41           2              0.013 
+2026-06-02 17:30:31 | INFO |        0.245 ¦       42           2              0.013 
+2026-06-02 17:30:31 | INFO |        0.258 ¦       43           2              0.013 
+2026-06-02 17:30:31 | INFO |        0.272 ¦       44           2              0.013 
+2026-06-02 17:30:31 | INFO |        0.285 ¦       45           2              0.013 
+2026-06-02 17:30:31 | INFO |        0.296 ¦       46           1              0.011 
+2026-06-02 17:30:31 | INFO |        0.307 ¦       47           1              0.011 
+2026-06-02 17:30:31 | INFO |        0.318 ¦       48           1              0.011 
+2026-06-02 17:30:31 | INFO |        0.341 ¦       49           2              0.022 
+2026-06-02 17:30:31 | INFO |        0.363 ¦       50           2              0.022 
+2026-06-02 17:30:31 | INFO |        0.385 ¦       51           2              0.022 
+2026-06-02 17:30:31 | INFO |        0.407 ¦       52           2              0.022 
+2026-06-02 17:30:31 | INFO |        0.430 ¦       53           2              0.022 
+2026-06-02 17:30:31 | INFO |        0.452 ¦       54           2              0.022 
+2026-06-02 17:30:31 | INFO |        0.474 ¦       55           2              0.022 
+2026-06-02 17:30:31 | INFO |        0.493 ¦       56           1              0.019 
+2026-06-02 17:30:31 | INFO |        0.512 ¦       57           1              0.019 
+2026-06-02 17:30:31 | INFO |        0.531 ¦       58           1              0.019 
+2026-06-02 17:30:31 | INFO |        0.568 ¦       59           2              0.038 
+2026-06-02 17:30:31 | INFO |        0.606 ¦       60           2              0.038 
+2026-06-02 17:30:31 | INFO |        0.650 ¦       61           1              0.044 
+2026-06-02 17:30:31 | INFO |        0.687 ¦       62           1              0.037 
+2026-06-02 17:30:31 | INFO |        0.760 ¦       63           1              0.073 
+2026-06-02 17:30:31 | INFO |        0.833 ¦       64           1              0.073 
+2026-06-02 17:30:31 | INFO |        0.907 ¦       65           1              0.073 
+2026-06-02 17:30:31 | INFO |        1.054 ¦       66           2              0.147 
+2026-06-02 17:30:31 | INFO |        1.201 ¦       67           1              0.147 
+2026-06-02 17:30:31 | INFO |        1.327 ¦       68           1              0.126 
+2026-06-02 17:30:31 | INFO |        1.441 ¦       69           1              0.114 
+2026-06-02 17:30:31 | INFO |        1.554 ¦       70           1              0.114 
+2026-06-02 17:30:31 | INFO |        1.668 ¦       71           1              0.114 
+2026-06-02 17:30:31 | INFO |        1.895 ¦       72           1              0.227 
+2026-06-02 17:30:31 | INFO |        2.122 ¦       73           1              0.227 
+2026-06-02 17:30:31 | INFO |        2.349 ¦       74           1              0.227 
+2026-06-02 17:30:31 | INFO |        2.804 ¦       75           1              0.454 
+2026-06-02 17:30:31 | INFO |        3.258 ¦       76           1              0.454 
+2026-06-02 17:30:31 | INFO |        4.167 ¦       77           1              0.909 
+2026-06-02 17:30:31 | INFO |        4.167 ¦       78           1              0.818 
+2026-06-02 17:30:31 | INFO |        4.985 ¦       78           1              0.818 
+2026-06-02 17:30:31 | INFO |        5.803 ¦       79           1              0.818 
+2026-06-02 17:30:31 | INFO |        6.620 ¦       80           1              0.818 
+2026-06-02 17:30:31 | INFO |        8.256 ¦       81           1              1.636 
+2026-06-02 17:30:31 | INFO |        9.892 ¦       82           1              1.636 
+2026-06-02 17:30:31 | INFO |       10.000 ¦       83           1              0.108 
+2026-06-02 17:30:31 | INFO | 
+2026-06-02 17:30:31 | INFO | execution statistics :
+2026-06-02 17:30:31 | INFO | 
+2026-06-02 17:30:31 | INFO | number of time iterations                                  = 106
+2026-06-02 17:30:31 | INFO | number of residual evaluations                             = 187
+2026-06-02 17:30:31 | INFO | number of Jacobian evaluations                             = 43
+2026-06-02 17:30:31 | INFO | number of nonlinear iterations                             = 187
+2026-06-02 17:30:31 | INFO | number of error test failures                              = 3
+2026-06-02 17:30:31 | INFO | number of nonlinear convergence failures                   = 1
+2026-06-02 17:30:31 | INFO | number of solver root functions evaluations                = 224
+2026-06-02 17:30:31 | INFO | number of internal root functions evaluations              = 7
+2026-06-02 17:30:31 | INFO | number of discrete variables evaluations                   = 5
+2026-06-02 17:30:31 | INFO | number of mode evaluations                                 = 5
+2026-06-02 17:30:31 | INFO | number of differential mode                                = 0
+2026-06-02 17:30:31 | INFO | number of algebraic mode                                   = 0
+2026-06-02 17:30:31 | INFO | number of algebraic J update mode                          = 0
+2026-06-02 17:30:31 | INFO | number of algebraic restoration residual evaluations       = 3
+2026-06-02 17:30:31 | INFO | number of algebraic restoration Jacobian evaluations       = 3
+2026-06-02 17:30:31 | INFO | number of algebraic prim restoration residual evaluations  = 5
+2026-06-02 17:30:31 | INFO | number of algebraic prim restoration Jacobian evaluations  = 3
+2026-06-02 17:30:31 | INFO | end of job 'MicroGrid_BE_MAS'

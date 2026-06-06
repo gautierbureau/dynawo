@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="SCL" lib="SCIEEEOperationalLimiter" parFile="TestCaseSCIEEEOperationalLimiter.par" parId="Limiter"/>
+  <dyn:blackBoxModel id="IStep" lib="Step" parFile="TestCaseSCIEEEOperationalLimiter.par" parId="IStep"/>
+  <dyn:connect id1="IStep" var1="step_step" id2="SCL" var2="limiter_ISclPu"/>
+</dyn:dynamicModelsArchitecture>

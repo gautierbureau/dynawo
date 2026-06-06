@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2024, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source suite
+    of simulation tools for power systems.
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <!-- Third-order synchronous machine with a GovCT1 (GGOV1) governor -->
+  <set id="SynchronousGenerator">
+    <!-- Generator -->
+    <par type="DOUBLE" name="generator_H" value="4.0"/>
+    <par type="DOUBLE" name="generator_DPu" value="1.0"/>
+    <par type="DOUBLE" name="generator_RaPu" value="0.003"/>
+    <par type="DOUBLE" name="generator_XdPu" value="2.0"/>
+    <par type="DOUBLE" name="generator_XpdPu" value="0.3"/>
+    <par type="DOUBLE" name="generator_XqPu" value="1.9"/>
+    <par type="DOUBLE" name="generator_Tpd0" value="7.0"/>
+    <par type="DOUBLE" name="generator_SNom" value="100.0"/>
+    <par type="DOUBLE" name="generator_P0Pu" value="-0.7"/>
+    <par type="DOUBLE" name="generator_Q0Pu" value="0.0"/>
+    <par type="DOUBLE" name="generator_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="generator_UPhase0" value="0.0"/>
+    <!-- Governor -->
+    <par type="DOUBLE" name="governor_R" value="0.05"/>
+    <par type="DOUBLE" name="governor_Tpelec" value="1.0"/>
+    <par type="DOUBLE" name="governor_MaxErr" value="0.05"/>
+    <par type="DOUBLE" name="governor_MinErr" value="-0.05"/>
+    <par type="DOUBLE" name="governor_Kpgov" value="10.0"/>
+    <par type="DOUBLE" name="governor_Kigov" value="2.0"/>
+    <par type="DOUBLE" name="governor_Kdgov" value="0.0"/>
+    <par type="DOUBLE" name="governor_Tdgov" value="1.0"/>
+    <par type="DOUBLE" name="governor_VMax" value="1.0"/>
+    <par type="DOUBLE" name="governor_VMin" value="0.15"/>
+    <par type="DOUBLE" name="governor_DeltaOmegaDbPu" value="0.0"/>
+    <par type="DOUBLE" name="governor_Ropen" value="0.1"/>
+    <par type="DOUBLE" name="governor_Rclose" value="-0.1"/>
+    <par type="DOUBLE" name="governor_Tact" value="0.5"/>
+    <par type="DOUBLE" name="governor_Kturb" value="1.5"/>
+    <par type="DOUBLE" name="governor_Wfnl" value="0.2"/>
+    <par type="DOUBLE" name="governor_Tb" value="0.5"/>
+    <par type="DOUBLE" name="governor_Tc" value="0.0"/>
+    <par type="DOUBLE" name="governor_Dm" value="0.0"/>
+    <par type="DOUBLE" name="governor_Tfload" value="3.0"/>
+    <par type="DOUBLE" name="governor_Kpload" value="2.0"/>
+    <par type="DOUBLE" name="governor_Kiload" value="0.67"/>
+    <par type="DOUBLE" name="governor_Ldref" value="1.0"/>
+    <par type="DOUBLE" name="governor_Rup" value="99.0"/>
+    <par type="DOUBLE" name="governor_Rdown" value="-99.0"/>
+    <par type="DOUBLE" name="governor_Aset" value="0.01"/>
+    <par type="DOUBLE" name="governor_Ka" value="10.0"/>
+    <par type="DOUBLE" name="governor_Ta" value="0.1"/>
+    <par type="DOUBLE" name="governor_Kimw" value="0.0"/>
+    <par type="INT" name="governor_Rselect" value="1"/>
+  </set>
+  <!-- OmegaRef -->
+  <set id="OmegaRef">
+    <par type="INT" name="nbGen" value="1"/>
+    <par type="DOUBLE" name="weight_gen_0" value="100.0"/>
+  </set>
+  <!-- Load -->
+  <set id="Load">
+    <par type="DOUBLE" name="load_P0Pu" value="0.7"/>
+    <par type="DOUBLE" name="load_Q0Pu" value="0.0"/>
+    <par type="DOUBLE" name="load_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="load_UPhase0" value="0.0"/>
+    <par type="DOUBLE" name="load_alpha" value="2.0"/>
+    <par type="DOUBLE" name="load_beta" value="2.0"/>
+  </set>
+  <!-- Step on active load -->
+  <set id="StepP">
+    <par type="DOUBLE" name="step_Value0" value="0.7"/>
+    <par type="DOUBLE" name="step_Height" value="0.05"/>
+    <par type="DOUBLE" name="step_tStep" value="1.0"/>
+  </set>
+  <!-- IDA order 2 solver -->
+  <set id="IDA">
+    <par type="INT" name="order" value="2"/>
+    <par type="DOUBLE" name="initStep" value="0.000001"/>
+    <par type="DOUBLE" name="minStep" value="0.000001"/>
+    <par type="DOUBLE" name="maxStep" value="1"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-6"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-6"/>
+  </set>
+</parametersSet>

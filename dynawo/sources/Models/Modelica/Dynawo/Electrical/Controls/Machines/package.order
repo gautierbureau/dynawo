@@ -1,5 +1,7 @@
 Protections
 VoltageRegulators
+VoltageCompensators
+DiscontinuousExcitationControls
 Governors
 OverExcitationLimiters
 PowerSystemStabilizers

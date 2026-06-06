@@ -18,8 +18,19 @@ set(MODEL_FILES
   Ac1a.mo
   Ac1a.extvar
   Ac1a_INIT.mo
+  Ac1a_NoIr_INIT.mo
   Ac1c.mo
   Ac1c.extvar
+  Ac2a.mo
+  Ac2a.extvar
+  Ac3a.mo
+  Ac3a.extvar
+  Ac4a.mo
+  Ac4a.extvar
+  Ac4c.mo
+  Ac4c.extvar
+  Ac5a.mo
+  Ac5a.extvar
   Ac6a.mo
   Ac6a.extvar
   Ac6c.mo
@@ -40,11 +51,109 @@ set(MODEL_FILES
   Dc1a.extvar
   Dc1c.mo
   Dc1c.extvar
+  Dc2a.mo
+  Dc2a.extvar
+  Dc2c.mo
+  Dc2c.extvar
+  Dc3a.mo
+  Dc3a.extvar
+  Dc4b.mo
+  Dc4b.extvar
   ExAc1.mo
   ExAc1.extvar
   ExAc1_INIT.mo
+  ExcAVR1.mo
+  ExcAVR1.extvar
+  ExcAVR2.mo
+  ExcAVR2.extvar
+  ExcAVR3.mo
+  ExcAVR3.extvar
+  ExcAVR4.mo
+  ExcAVR4.extvar
+  ExcAVR5.mo
+  ExcAVR5.extvar
+  ExcAVR7.mo
+  ExcAVR7.extvar
+  ExcAC1A.mo
+  ExcAC1A.extvar
+  ExcAC2A.mo
+  ExcAC2A.extvar
+  ExcAC2C.mo
+  ExcAC2C.extvar
+  ExcAC3A.mo
+  ExcAC3A.extvar
+  ExcAC3C.mo
+  ExcAC3C.extvar
+  ExcAC4A.mo
+  ExcAC4A.extvar
+  ExcAC4C.mo
+  ExcAC4C.extvar
+  ExcAC5A.mo
+  ExcAC5A.extvar
+  ExcAC5C.mo
+  ExcAC5C.extvar
+  ExcAC6A.mo
+  ExcAC6A.extvar
+  ExcAC8B.mo
+  ExcAC8B.extvar
+  ExcAC9C.mo
+  ExcAC9C.extvar
+  ExcCZ.mo
+  ExcCZ.extvar
+  ExcDC1A.mo
+  ExcDC1A.extvar
+  ExcDC2A.mo
+  ExcDC2A.extvar
+  ExcDC3A.mo
+  ExcDC3A.extvar
+  ExcDC2C.mo
+  ExcDC2C.extvar
+  ExcDC3C.mo
+  ExcDC3C.extvar
+  ExcDC4C.mo
+  ExcDC4C.extvar
+  ExcELIN1.mo
+  ExcELIN1.extvar
+  ExcELIN2.mo
+  ExcELIN2.extvar
+  ExcHU.mo
+  ExcHU.extvar
+  ExcNI.mo
+  ExcNI.extvar
+  ExcOEX3T.mo
+  ExcOEX3T.extvar
+  ExcPIC.mo
+  ExcPIC.extvar
+  ExcREXS.mo
+  ExcREXS.extvar
+  ExcRQB.mo
+  ExcRQB.extvar
+  ExcSK.mo
+  ExcSK.extvar
+  ExcST1A.mo
+  ExcST1A.extvar
+  ExcST2A.mo
+  ExcST2A.extvar
+  ExcST2C.mo
+  ExcST2C.extvar
+  ExcST3.mo
+  ExcST3.extvar
+  ExcST3C.mo
+  ExcST3C.extvar
+  ExcST4B.mo
+  ExcST4B.extvar
+  ExcST6B.mo
+  ExcST6B.extvar
+  ExcST7B.mo
+  ExcST7B.extvar
+  ExcST8C.mo
+  ExcST8C.extvar
+  ExcSYMPTR.mo
+  ExcSYMPTR.extvar
   IEEET1.mo
   IEEET1.extvar
+  IEEET2.mo
+  IEEET2.extvar
   IEEEX2.mo
   IEEEX2.extvar
   IEEX2A.mo
@@ -52,6 +161,20 @@ set(MODEL_FILES
   MAXEX2.mo
   MAXEX2.extvar
   MAXEX2_INIT.mo
+  OEL1B.mo
+  OEL1B.extvar
+  OverexcLimIEEE.mo
+  OverexcLimIEEE.extvar
+  OverexcLimX.mo
+  OverexcLimX.extvar
+  UnderexcLimIEEE1.mo
+  UnderexcLimIEEE1.extvar
+  UnderexcLimIEEE2.mo
+  UnderexcLimIEEE2.extvar
+  UnderexcLimX1.mo
+  UnderexcLimX1.extvar
+  UnderexcLimX2.mo
+  UnderexcLimX2.extvar
   SCRX.mo
   SCRX.extvar
   SCRX_INIT.mo
@@ -61,6 +184,11 @@ set(MODEL_FILES
   St1a.extvar
   St1c.mo
   St1c.extvar
+  St2a.mo
+  St2a.extvar
+  St2a_INIT.mo
+  St3a.mo
+  St3a.extvar
   St15c_INIT.mo
   St4b.mo
   St4b.extvar

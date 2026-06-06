@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:modelicaModel id="OEL1B">
+    <dyn:unitDynamicModel id="limiter" name="Dynawo.Electrical.Controls.Machines.VoltageRegulators.Standard.OEL1B"/>
+  </dyn:modelicaModel>
+</dyn:dynamicModelsArchitecture>

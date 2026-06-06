@@ -15,11 +15,43 @@ set(MODEL_FILES
   package.order
   Gast.mo
   Gast.extvar
+  GovCT1.mo
+  GovCT1.extvar
+  GovCT2.mo
+  GovCT2.extvar
+  GovGAST1.mo
+  GovGAST1.extvar
+  GovGAST2.mo
+  GovGAST2.extvar
+  GovGAST3.mo
+  GovGAST3.extvar
+  GovGAST4.mo
+  GovGAST4.extvar
+  GovGASTWD.mo
+  GovGASTWD.extvar
+  GovSteamBB.mo
+  GovSteamBB.extvar
+  GovSteamIEEE1.mo
+  GovSteamIEEE1.extvar
+  GovSteam0.mo
+  GovSteam0.extvar
   GovSteam1.mo
   GovSteam1.extvar
   GovSteam1_INIT.mo
+  GovSteam2.mo
+  GovSteam2.extvar
+  GovSteamCC.mo
+  GovSteamCC.extvar
   GovSteamEu.mo
   GovSteamEu.extvar
+  GovSteamFV2.mo
+  GovSteamFV2.extvar
+  GovSteamFV3.mo
+  GovSteamFV3.extvar
+  GovSteamFV4.mo
+  GovSteamFV4.extvar
+  GovSteamSGO.mo
+  GovSteamSGO.extvar
   IEEEG1.mo
   IEEEG1.extvar
   IEEEG2.mo

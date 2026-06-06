@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <!-- GeneratorClassical (TwoZones-style swing-equation machine, no governor, no AVR) -->
+  <set id="Generator">
+    <par type="DOUBLE" name="generator_H" value="5.0"/>
+    <par type="DOUBLE" name="generator_DPu" value="2.0"/>
+    <par type="DOUBLE" name="generator_RaPu" value="0.0"/>
+    <par type="DOUBLE" name="generator_XdPu" value="0.2"/>
+    <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+    <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+    <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
+    <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+  </set>
+  <set id="Load">
+    <reference name="load_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+    <reference name="load_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+    <reference name="load_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
+    <reference name="load_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+  </set>
+  <set id="OmegaRef">
+    <par type="INT" name="nbGen" value="1"/>
+    <par type="DOUBLE" name="weight_gen_0" value="100"/>
+  </set>
+  <set id="Network">
+    <par type="DOUBLE" name="capacitor_no_reclosing_delay" value="300"/>
+    <par type="DOUBLE" name="dangling_line_currentLimit_maxTimeOperation" value="90"/>
+    <par type="DOUBLE" name="line_currentLimit_maxTimeOperation" value="90"/>
+    <par type="DOUBLE" name="load_Tp" value="90"/>
+    <par type="DOUBLE" name="load_Tq" value="90"/>
+    <par type="DOUBLE" name="load_alpha" value="1"/>
+    <par type="DOUBLE" name="load_alphaLong" value="0"/>
+    <par type="DOUBLE" name="load_beta" value="2"/>
+    <par type="DOUBLE" name="load_betaLong" value="0"/>
+    <par type="BOOL" name="load_isControllable" value="false"/>
+    <par type="BOOL" name="load_isRestorative" value="false"/>
+    <par type="DOUBLE" name="load_zPMax" value="100"/>
+    <par type="DOUBLE" name="load_zQMax" value="100"/>
+    <par type="DOUBLE" name="reactance_no_reclosing_delay" value="0"/>
+    <par type="DOUBLE" name="transformer_currentLimit_maxTimeOperation" value="90"/>
+    <par type="DOUBLE" name="transformer_t1st_HT" value="60"/>
+    <par type="DOUBLE" name="transformer_t1st_THT" value="30"/>
+    <par type="DOUBLE" name="transformer_tNext_HT" value="10"/>
+    <par type="DOUBLE" name="transformer_tNext_THT" value="10"/>
+    <par type="DOUBLE" name="transformer_tolV" value="0.014999999700000001"/>
+  </set>
+  <!-- Step on the load's active-power reference: 1.0 -> 1.2 pu at t = 0.5 s -->
+  <set id="StepP">
+    <par type="DOUBLE" name="step_Value0" value="1.0"/>
+    <par type="DOUBLE" name="step_Height" value="0.2"/>
+    <par type="DOUBLE" name="step_tStep" value="0.5"/>
+  </set>
+  <!-- IDA solver (variable step) -->
+  <set id="SolverIDA">
+    <par type="INT" name="order" value="2"/>
+    <par type="DOUBLE" name="initStep" value="0.000001"/>
+    <par type="DOUBLE" name="minStep" value="0.000001"/>
+    <par type="DOUBLE" name="maxStep" value="10"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-4"/>
+  </set>
+  <!-- SIM solver (simplified, fixed-step Newton) -->
+  <set id="SolverSIM">
+    <par type="BOOL" name="enableSilentZ" value="true"/>
+    <par type="DOUBLE" name="hMin" value="0.001"/>
+    <par type="DOUBLE" name="hMax" value="0.1"/>
+    <par type="DOUBLE" name="kReduceStep" value="0.5"/>
+    <par type="INT" name="maxNewtonTry" value="10"/>
+    <par type="INT" name="maximumNumberSlowStepIncrease" value="40"/>
+    <par type="DOUBLE" name="minimalAcceptableStep" value="0.001"/>
+    <par type="STRING" name="minimumModeChangeTypeForAlgebraicRestoration" value="ALGEBRAIC_J_UPDATE"/>
+    <par type="DOUBLE" name="fnormtol" value="1e-3"/>
+    <par type="DOUBLE" name="fnormtolAlg" value="1e-3"/>
+    <par type="DOUBLE" name="fnormtolAlgInit" value="1e-3"/>
+    <par type="DOUBLE" name="fnormtolAlgJ" value="1e-3"/>
+    <par type="DOUBLE" name="initialaddtol" value="1"/>
+    <par type="DOUBLE" name="initialaddtolAlg" value="1"/>
+    <par type="DOUBLE" name="initialaddtolAlgInit" value="1"/>
+    <par type="DOUBLE" name="initialaddtolAlgJ" value="1"/>
+    <par type="INT" name="msbset" value="0"/>
+    <par type="INT" name="msbsetAlg" value="5"/>
+    <par type="INT" name="msbsetAlgInit" value="1"/>
+    <par type="INT" name="msbsetAlgJ" value="1"/>
+    <par type="INT" name="mxiter" value="15"/>
+    <par type="INT" name="mxiterAlg" value="30"/>
+    <par type="INT" name="mxiterAlgInit" value="50"/>
+    <par type="INT" name="mxiterAlgJ" value="50"/>
+    <par type="DOUBLE" name="mxnewtstep" value="100000"/>
+    <par type="DOUBLE" name="mxnewtstepAlg" value="100000"/>
+    <par type="DOUBLE" name="mxnewtstepAlgInit" value="100000"/>
+    <par type="DOUBLE" name="mxnewtstepAlgJ" value="100000"/>
+    <par type="BOOL" name="optimizeAlgebraicResidualsEvaluations" value="true"/>
+    <par type="BOOL" name="optimizeReinitAlgebraicResidualsEvaluations" value="true"/>
+    <par type="INT" name="printfl" value="0"/>
+    <par type="INT" name="printflAlg" value="0"/>
+    <par type="INT" name="printflAlgInit" value="0"/>
+    <par type="INT" name="printflAlgJ" value="0"/>
+    <par type="DOUBLE" name="scsteptol" value="1e-3"/>
+    <par type="DOUBLE" name="scsteptolAlg" value="1e-3"/>
+    <par type="DOUBLE" name="scsteptolAlgInit" value="1e-3"/>
+    <par type="DOUBLE" name="scsteptolAlgJ" value="1e-3"/>
+    <par type="BOOL" name="skipNRIfInitialGuessOK" value="true"/>
+  </set>
+</parametersSet>

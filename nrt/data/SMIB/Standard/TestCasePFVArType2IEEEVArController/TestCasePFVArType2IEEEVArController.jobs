@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:job name="TestCasePFVArType2IEEEVArController - Step on QGen drives Q away from QRef">
+    <dyn:solver lib="dynawo_SolverIDA" parFile="TestCasePFVArType2IEEEVArController.par" parId="IDAOrder2"/>
+    <dyn:modeler compileDir="outputsTestCasePFVArType2IEEEVArController/compilation">
+      <dyn:dynModels dydFile="TestCasePFVArType2IEEEVArController.dyd"/>
+      <dyn:precompiledModels useStandardModels="true"/>
+      <dyn:modelicaModels useStandardModels="true">
+        <dyn:directory path="." recursive="false"/>
+      </dyn:modelicaModels>
+    </dyn:modeler>
+    <dyn:simulation startTime="0" stopTime="60"/>
+    <dyn:outputs directory="outputsTestCasePFVArType2IEEEVArController">
+      <dyn:curves inputFile="TestCasePFVArType2IEEEVArController.crv" exportMode="CSV"/>
+      <dyn:logs><dyn:appender tag="" file="dynawo.log" lvlFilter="INFO"/></dyn:logs>
+    </dyn:outputs>
+  </dyn:job>
+</dyn:jobs>

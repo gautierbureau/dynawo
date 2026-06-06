@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:modelicaModel id="DiscExcContIEEEDEC2A">
+    <dyn:unitDynamicModel id="dec" name="Dynawo.Electrical.Controls.Machines.DiscontinuousExcitationControls.Standard.DiscExcContIEEEDEC2A"/>
+  </dyn:modelicaModel>
+</dyn:dynamicModelsArchitecture>

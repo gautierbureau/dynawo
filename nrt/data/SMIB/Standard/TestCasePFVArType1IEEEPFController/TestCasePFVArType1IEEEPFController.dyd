@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="PFC" lib="PFVArType1IEEEPFController" parFile="TestCasePFVArType1IEEEPFController.par" parId="Controller"/>
+  <dyn:blackBoxModel id="PSP" lib="SetPoint" parFile="TestCasePFVArType1IEEEPFController.par" parId="PSP"/>
+  <dyn:blackBoxModel id="QStep" lib="Step" parFile="TestCasePFVArType1IEEEPFController.par" parId="QStep"/>
+  <dyn:connect id1="PSP" var1="setPoint_setPoint" id2="PFC" var2="controller_PGenPu"/>
+  <dyn:connect id1="QStep" var1="step_step" id2="PFC" var2="controller_QGenPu"/>
+</dyn:dynamicModelsArchitecture>

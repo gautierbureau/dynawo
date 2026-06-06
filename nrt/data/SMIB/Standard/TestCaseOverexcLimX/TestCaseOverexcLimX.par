@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="Limiter">
+    <par type="DOUBLE" name="limiter_Efd1Pu"    value="2.5"/>
+    <par type="DOUBLE" name="limiter_Efd2Pu"    value="3.0"/>
+    <par type="DOUBLE" name="limiter_Efd3Pu"    value="4.0"/>
+    <par type="DOUBLE" name="limiter_EfdDesPu"  value="2.0"/>
+    <par type="DOUBLE" name="limiter_EfdRatedPu" value="2.5"/>
+    <par type="DOUBLE" name="limiter_Kmx"       value="1.0"/>
+    <par type="DOUBLE" name="limiter_Srew"      value="0.2"/>
+    <par type="DOUBLE" name="limiter_t1"        value="0.5"/>
+    <par type="DOUBLE" name="limiter_t2"        value="0.5"/>
+    <par type="DOUBLE" name="limiter_t3"        value="0.5"/>
+    <par type="DOUBLE" name="limiter_VLowPu"    value="0.5"/>
+  </set>
+  <set id="EfdStep">
+    <par type="DOUBLE" name="step_Value0" value="1.5"/>
+    <par type="DOUBLE" name="step_Height" value="1.0"/>
+    <par type="DOUBLE" name="step_tStep"  value="1.0"/>
+  </set>
+  <set id="UsSP">
+    <par type="DOUBLE" name="setPoint_Value0" value="1.0"/>
+  </set>
+  <set id="IDAOrder2">
+    <par type="INT"    name="order" value="2"/>
+    <par type="DOUBLE" name="initStep"    value="0.000001"/>
+    <par type="DOUBLE" name="minStep"     value="0.000001"/>
+    <par type="DOUBLE" name="maxStep"     value="1"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-4"/>
+  </set>
+</parametersSet>
