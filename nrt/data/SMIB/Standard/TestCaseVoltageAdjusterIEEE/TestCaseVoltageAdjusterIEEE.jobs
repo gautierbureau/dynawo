@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:job name="TestCaseVoltageAdjusterIEEE - Step on VRefIn ramps the adjuster up at AdjSlew then clamps">
+    <dyn:solver lib="dynawo_SolverIDA" parFile="TestCaseVoltageAdjusterIEEE.par" parId="IDAOrder2"/>
+    <dyn:modeler compileDir="outputsTestCaseVoltageAdjusterIEEE/compilation">
+      <dyn:dynModels dydFile="TestCaseVoltageAdjusterIEEE.dyd"/>
+      <dyn:precompiledModels useStandardModels="true"/>
+      <dyn:modelicaModels useStandardModels="true">
+        <dyn:directory path="." recursive="false"/>
+      </dyn:modelicaModels>
+    </dyn:modeler>
+    <dyn:simulation startTime="0" stopTime="30"/>
+    <dyn:outputs directory="outputsTestCaseVoltageAdjusterIEEE">
+      <dyn:curves inputFile="TestCaseVoltageAdjusterIEEE.crv" exportMode="CSV"/>
+      <dyn:logs><dyn:appender tag="" file="dynawo.log" lvlFilter="INFO"/></dyn:logs>
+    </dyn:outputs>
+  </dyn:job>
+</dyn:jobs>

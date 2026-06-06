@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<external_variables xmlns="http://www.rte-france.com/dynawo">
+  <variable id="IrPu" type="continuous"/>
+  <variable id="itPu" type="continuous"/>
+  <variable id="running" type="discrete"/>
+  <variable id="UOelPu" type="continuous" optional="true"/>
+  <variable id="UPssPu" type="continuous" optional="true"/>
+  <variable id="USclOelPu" type="continuous" optional="true"/>
+  <variable id="USclUelPu" type="continuous" optional="true"/>
+  <variable id="UsPu" type="continuous"/>
+  <variable id="UsRefPu" type="continuous" optional="true"/>
+  <variable id="utPu" type="continuous"/>
+  <variable id="UUelPu" type="continuous" optional="true"/>
+</external_variables>

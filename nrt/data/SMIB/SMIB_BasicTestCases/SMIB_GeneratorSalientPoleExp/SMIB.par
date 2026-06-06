@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <!-- Infinite bus -->
+  <set id="1">
+    <par type="DOUBLE" name="infiniteBus_UPu" value="1.0"/>
+    <par type="DOUBLE" name="infiniteBus_UPhase" value="0.0"/>
+  </set>
+  <!-- Line between the infinite bus and the machine -->
+  <set id="2">
+    <par type="DOUBLE" name="line_RPu" value="0.0"/>
+    <par type="DOUBLE" name="line_XPu" value="0.15"/>
+    <par type="DOUBLE" name="line_BPu" value="0.0"/>
+    <par type="DOUBLE" name="line_GPu" value="0.0"/>
+  </set>
+  <!-- Fifth-order salient-pole synchronous machine -->
+  <set id="3">
+    <par type="DOUBLE" name="generator_H" value="4.0"/>
+    <par type="DOUBLE" name="generator_DPu" value="1.0"/>
+    <par type="DOUBLE" name="generator_RaPu" value="0.003"/>
+    <par type="DOUBLE" name="generator_XdPu" value="1.0"/>
+    <par type="DOUBLE" name="generator_XpdPu" value="0.3"/>
+    <par type="DOUBLE" name="generator_XppdPu" value="0.2"/>
+    <par type="DOUBLE" name="generator_XqPu" value="0.6"/>
+    <par type="DOUBLE" name="generator_XppqPu" value="0.2"/>
+    <par type="DOUBLE" name="generator_XlPu" value="0.15"/>
+    <par type="DOUBLE" name="generator_Tpd0" value="5.0"/>
+    <par type="DOUBLE" name="generator_Tppd0" value="0.05"/>
+    <par type="DOUBLE" name="generator_Tppq0" value="0.1"/>
+    <par type="DOUBLE" name="generator_Se1Pu" value="0.1"/>
+    <par type="DOUBLE" name="generator_Se12Pu" value="0.3"/>
+    <par type="DOUBLE" name="generator_SNom" value="100.0"/>
+    <par type="DOUBLE" name="generator_P0Pu" value="-0.665556"/>
+    <par type="DOUBLE" name="generator_Q0Pu" value="-0.033305"/>
+    <par type="DOUBLE" name="generator_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="generator_UPhase0" value="0.1"/>
+  </set>
+  <!-- Angular reference frequency set point -->
+  <set id="4">
+    <par type="DOUBLE" name="setPoint_Value0" value="1.0"/>
+  </set>
+  <!-- Bolted fault at the machine terminal, lasting 70 ms -->
+  <set id="5">
+    <par type="DOUBLE" name="fault_tBegin" value="1.0"/>
+    <par type="DOUBLE" name="fault_tEnd" value="1.07"/>
+    <par type="DOUBLE" name="fault_RPu" value="0.0"/>
+    <par type="DOUBLE" name="fault_XPu" value="0.0"/>
+  </set>
+</parametersSet>

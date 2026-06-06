@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:job name="MicroGrid_NL_MAS">
+    <dyn:solver lib="dynawo_SolverIDA" parFile="solvers.par" parId="2"/>
+    <dyn:modeler compileDir="outputs/compilation">
+      <dyn:network iidmFile="MicroGrid_NL_MAS.iidm" parFile="MicroGrid_NL_MAS.par" parId="Network"/>
+      <dyn:dynModels dydFile="MicroGrid_NL_MAS.dyd"/>
+      <dyn:precompiledModels useStandardModels="true"/>
+      <dyn:modelicaModels useStandardModels="true"/>
+    </dyn:modeler>
+    <dyn:simulation startTime="0" stopTime="10"/>
+    <dyn:outputs directory="outputs">
+      <dyn:curves inputFile="MicroGrid_NL_MAS.crv" exportMode="CSV"/>
+      <dyn:logs>
+        <dyn:appender tag="" file="dynawo.log" lvlFilter="INFO"/>
+      </dyn:logs>
+    </dyn:outputs>
+  </dyn:job>
+</dyn:jobs>

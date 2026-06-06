@@ -1,0 +1,3 @@
+  <set id="OmegaRefSP">
+    <par type="DOUBLE" name="setPoint_Value0" value="1.0"/>
+  </set>

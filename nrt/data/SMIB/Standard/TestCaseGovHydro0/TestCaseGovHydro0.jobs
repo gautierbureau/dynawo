@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
+ <dyn:job name="TestCaseGovHydro0 - Active power variation on the load">
+      <dyn:solver lib="dynawo_SolverIDA" parFile="TestCaseGovHydro0.par" parId="IDA"/>
+      <dyn:modeler compileDir="outputsTestCaseGovHydro0/compilation">
+        <dyn:dynModels dydFile="TestCaseGovHydro0.dyd"/>
+        <dyn:precompiledModels useStandardModels="true"/>
+        <dyn:modelicaModels useStandardModels="true">
+          <dyn:directory path="." recursive="false"/>
+        </dyn:modelicaModels>
+      </dyn:modeler>
+      <dyn:simulation startTime="0" stopTime="10"/>
+      <dyn:outputs directory="outputsTestCaseGovHydro0">
+        <dyn:curves inputFile="TestCaseGovHydro0.crv" exportMode="CSV"/>
+        <dyn:logs> <dyn:appender tag="" file="dynawo.log" lvlFilter="INFO"/> </dyn:logs>
+      </dyn:outputs>
+  </dyn:job>
+</dyn:jobs>

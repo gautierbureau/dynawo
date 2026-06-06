@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <!-- GeneratorAlphaBeta: injects 100 MW / 20 Mvar (receptor-convention start
+       values are negative for a generator) at U = 1 pu -->
+  <set id="Generator">
+    <par type="DOUBLE" name="generator_P0Pu" value="-1.0"/>
+    <par type="DOUBLE" name="generator_Q0Pu" value="-0.2"/>
+    <par type="DOUBLE" name="generator_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="generator_UPhase0" value="0.0"/>
+    <par type="DOUBLE" name="generator_Alpha" value="1.0"/>
+    <par type="DOUBLE" name="generator_Beta" value="2.0"/>
+  </set>
+  <!-- LoadPQ: draws the same 100 MW / 20 Mvar at U = 1 pu -->
+  <set id="Load">
+    <par type="DOUBLE" name="load_P0Pu" value="1.0"/>
+    <par type="DOUBLE" name="load_Q0Pu" value="0.2"/>
+    <par type="DOUBLE" name="load_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="load_UPhase0" value="0.0"/>
+  </set>
+  <!-- InfiniteBus: holds the voltage reference (magnitude and angle) so the
+       purely algebraic network is well posed; it exchanges ~0 power because
+       the generator is dispatched to exactly cover the load -->
+  <set id="InfiniteBus">
+    <par type="DOUBLE" name="infiniteBus_UPu" value="1.0"/>
+    <par type="DOUBLE" name="infiniteBus_UPhase" value="0.0"/>
+  </set>
+  <!-- IDA solver -->
+  <set id="Solver">
+    <par type="INT" name="order" value="2"/>
+    <par type="DOUBLE" name="initStep" value="0.000001"/>
+    <par type="DOUBLE" name="minStep" value="0.000001"/>
+    <par type="DOUBLE" name="maxStep" value="10"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-4"/>
+  </set>
+</parametersSet>

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="infBus" lib="InfiniteBus" parFile="TestCaseExcDC2C.par" parId="1"/>
+  <dyn:blackBoxModel id="line1" lib="Line" parFile="TestCaseExcDC2C.par" parId="2"/>
+  <dyn:blackBoxModel id="line2" lib="Line" parFile="TestCaseExcDC2C.par" parId="3"/>
+  <dyn:blackBoxModel id="tfo" lib="TransformerFixedRatio" parFile="TestCaseExcDC2C.par" parId="4"/>
+  <dyn:blackBoxModel id="SM" lib="GeneratorSynchronousFourWindingsPmConstExcDC2C" parFile="TestCaseExcDC2C.par" parId="5"/>
+  <dyn:blackBoxModel id="OmegaRef" lib="SetPoint" parFile="TestCaseExcDC2C.par" parId="6"/>
+  <dyn:blackBoxModel id="fault1" lib="NodeFault" parFile="TestCaseExcDC2C.par" parId="7"/>
+  <dyn:connect id1="infBus" var1="infiniteBus_terminal" id2="line1" var2="line_terminal1"/>
+  <dyn:connect id1="infBus" var1="infiniteBus_terminal" id2="line2" var2="line_terminal1"/>
+  <dyn:connect id1="line1" var1="line_terminal2" id2="tfo" var2="transformer_terminal1"/>
+  <dyn:connect id1="line2" var1="line_terminal2" id2="tfo" var2="transformer_terminal1"/>
+  <dyn:connect id1="tfo" var1="transformer_terminal1" id2="fault1" var2="fault_terminal"/>
+  <dyn:connect id1="tfo" var1="transformer_terminal2" id2="SM" var2="generator_terminal"/>
+  <dyn:connect id1="OmegaRef" var1="setPoint_setPoint" id2="SM" var2="generator_omegaRefPu"/>
+</dyn:dynamicModelsArchitecture>

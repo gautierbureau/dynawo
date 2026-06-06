@@ -38,12 +38,30 @@ set(MODELICA_PREASSEMBLED_MODELS
   EventSetPointReal.xml
   EventSetPointDoubleReal.xml
   GeneratorAlphaBeta.xml
+  GeneratorClassical.xml
   GeneratorPQ.xml
   GeneratorPQPropSignalN.xml
   GeneratorPQPropSignalNSFR.xml
   GeneratorPQPropDiagramPQSignalN.xml
   GeneratorPQPropDiagramPQSignalNSFR.xml
   GeneratorPTanPhi.xml
+  GeneratorThirdOrder.xml
+  GeneratorFourthOrder.xml
+  GeneratorSalientPole.xml
+  GeneratorRoundRotor.xml
+  GeneratorRoundRotorExp.xml
+  GeneratorSalientPoleExp.xml
+  GeneratorRoundRotorTypeF.xml
+  GeneratorRoundRotorTypeJ.xml
+  GeneratorSalientPoleTypeF.xml
+  GeneratorSalientPoleTypeJ.xml
+  GeneratorThirdOrderGovHydro1.xml
+  GeneratorThirdOrderGovHydro2.xml
+  GeneratorThirdOrderGovHydro3.xml
+  GeneratorThirdOrderGovHydroDD.xml
+  GeneratorThirdOrderGovCT1.xml
+  GeneratorThirdOrderGovSteam2.xml
+  GeneratorThirdOrderGovSteamSGO.xml
   GeneratorPV.xml
   GeneratorPVFixed.xml
   GeneratorPVDiagramPQ.xml
@@ -80,10 +98,16 @@ set(MODELICA_PREASSEMBLED_MODELS
   GeneratorSynchronousFourWindingsPmConstAc6aPss3b.xml
   GeneratorSynchronousFourWindingsPmConstAc7bPss3b.xml
   GeneratorSynchronousFourWindingsPmConstAc7cPss2c.xml
+  GeneratorSynchronousFourWindingsPmConstAc4a.xml
+  GeneratorSynchronousFourWindingsPmConstAc4c.xml
   GeneratorSynchronousFourWindingsPmConstAc8b.xml
   GeneratorSynchronousFourWindingsPmConstAc8bPss3b.xml
   GeneratorSynchronousFourWindingsPmConstDc1a.xml
+  GeneratorSynchronousFourWindingsPmConstDc2a.xml
+  GeneratorSynchronousFourWindingsPmConstDc2c.xml
+  GeneratorSynchronousFourWindingsPmConstExcDC2C.xml
   GeneratorSynchronousFourWindingsPmConstIEEX2A.xml
+  GeneratorSynchronousFourWindingsPmConstIeeeT2.xml
   GeneratorSynchronousFourWindingsPmConstSt5bPss2b.xml
   GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl1c.xml
   GeneratorSynchronousFourWindingsPmConstSt5cPss2bScl2c.xml
@@ -106,6 +130,155 @@ set(MODELICA_PREASSEMBLED_MODELS
   GeneratorSynchronousFourWindingsTGov3IEEX2A.xml
   GeneratorSynchronousFourWindingsVRKundur.xml
   GeneratorSynchronousFourWindingsVRKundurPssKundur.xml
+  GeneratorSynchronousFourWindingsVRKundurPss1.xml
+  GeneratorSynchronousFourWindingsVRKundurPss5.xml
+  GeneratorSynchronousFourWindingsVRKundurPssPTIST1.xml
+  GeneratorSynchronousFourWindingsVRKundurPssPTIST3.xml
+  GeneratorSynchronousFourWindingsVRKundurPssRQB.xml
+  GeneratorSynchronousFourWindingsVCompIEEEType1VRKundurPssRQB.xml
+  GeneratorRoundRotorExpVCompIEEEType1Ac4aPss2bGovSteam1.xml
+  GeneratorRoundRotorExpVCompIEEEType1Ac4aPss2b.xml
+  GeneratorRoundRotorExpAc4aPss2b.xml
+  GeneratorRoundRotorExpAc4a.xml
+  GeneratorRoundRotorExpAc5a.xml
+  GeneratorRoundRotorExpAc2a.xml
+  GeneratorRoundRotorExpAc3a.xml
+  GeneratorRoundRotorExpDc3a.xml
+  GeneratorRoundRotorExpDc4b.xml
+  GeneratorRoundRotorExpSt2a.xml
+  GeneratorRoundRotorExpSt3a.xml
+  GeneratorRoundRotorExpPssIEEE4B.xml
+  GeneratorRoundRotorExpGovHydroIEEE2.xml
+  GeneratorRoundRotorExpExcAVR1.xml
+  GeneratorRoundRotorExpExcAVR2.xml
+  GeneratorRoundRotorExpExcAVR3.xml
+  GeneratorRoundRotorExpExcAVR4.xml
+  GeneratorRoundRotorExpExcAVR5.xml
+  GeneratorRoundRotorExpExcAVR7.xml
+  GeneratorRoundRotorExpGovHydroFrancis.xml
+  GeneratorRoundRotorExpGovHydroPID.xml
+  GeneratorRoundRotorExpGovHydroPID2.xml
+  GeneratorRoundRotorExpGovHydroPelton.xml
+  GeneratorRoundRotorExpGovHydroR.xml
+  GeneratorRoundRotorExpGovHydroWEH.xml
+  GeneratorRoundRotorExpGovHydroWPID.xml
+  GeneratorThirdOrderGovHydroIEEE2.xml
+  GeneratorThirdOrderGovCT2.xml
+  GeneratorThirdOrderGovGAST1.xml
+  GeneratorThirdOrderGovGAST2.xml
+  GeneratorThirdOrderGovGAST3.xml
+  GeneratorThirdOrderGovGAST4.xml
+  GeneratorThirdOrderGovGASTWD.xml
+  GeneratorThirdOrderGovHydroFrancis.xml
+  GeneratorThirdOrderGovHydroPID.xml
+  GeneratorThirdOrderGovHydroPID2.xml
+  GeneratorThirdOrderGovHydroPelton.xml
+  GeneratorThirdOrderGovHydroR.xml
+  GeneratorThirdOrderGovHydroWEH.xml
+  GeneratorThirdOrderGovHydroWPID.xml
+  GeneratorThirdOrderGovHydro0.xml
+  GeneratorThirdOrderGovSteamBB.xml
+  GeneratorThirdOrderGovSteamIEEE1.xml
+  GeneratorThirdOrderGovSteam0.xml
+  GeneratorThirdOrderGovSteamCC.xml
+  GeneratorThirdOrderGovSteamFV2.xml
+  GeneratorThirdOrderGovSteamFV3.xml
+  GeneratorThirdOrderGovSteamFV4.xml
+  GeneratorSynchronousFourWindingsPmConstExcAVR1.xml
+  GeneratorSynchronousFourWindingsPmConstExcAVR2.xml
+  GeneratorSynchronousFourWindingsPmConstExcAVR3.xml
+  GeneratorSynchronousFourWindingsPmConstExcAVR4.xml
+  GeneratorSynchronousFourWindingsPmConstExcAVR5.xml
+  GeneratorSynchronousFourWindingsPmConstExcAVR7.xml
+  GeneratorSynchronousFourWindingsPmConstAc5a.xml
+  GeneratorSynchronousFourWindingsPmConstExcAC5C.xml
+  GeneratorSynchronousFourWindingsPmConstDc3a.xml
+  GeneratorSynchronousFourWindingsPmConstDc4b.xml
+  GeneratorSynchronousFourWindingsPmConstSt2a.xml
+  GeneratorSynchronousFourWindingsPmConstExcST2C.xml
+  GeneratorSynchronousFourWindingsPmConstSt3a.xml
+  GeneratorSynchronousFourWindingsPmConstAc2a.xml
+  GeneratorSynchronousFourWindingsPmConstAc3a.xml
+  GeneratorSynchronousFourWindingsPmConstExcCZ.xml
+  GeneratorSynchronousFourWindingsPmConstExcELIN1.xml
+  GeneratorSynchronousFourWindingsPmConstExcELIN2.xml
+  GeneratorSynchronousFourWindingsPmConstExcHU.xml
+  GeneratorSynchronousFourWindingsPmConstExcNI.xml
+  GeneratorSynchronousFourWindingsPmConstExcOEX3T.xml
+  GeneratorSynchronousFourWindingsPmConstExcPIC.xml
+  GeneratorSynchronousFourWindingsPmConstExcREXS.xml
+  GeneratorSynchronousFourWindingsPmConstExcRQB.xml
+  GeneratorSynchronousFourWindingsPmConstExcSK.xml
+  GeneratorSynchronousFourWindingsPmConstExcSYMPTR.xml
+  GeneratorSynchronousFourWindingsVRKundurPssIEEE4B.xml
+  GeneratorSynchronousFourWindingsVRKundurPss4C.xml
+  GeneratorSynchronousFourWindingsVRKundurPssIEEE1A.xml
+  GeneratorSynchronousFourWindingsVRKundurPss1A.xml
+  GeneratorSynchronousFourWindingsVRKundurPss2ST.xml
+  GeneratorRoundRotorExpGovGAST1.xml
+  GeneratorRoundRotorExpGovGAST2.xml
+  GeneratorRoundRotorExpGovGAST3.xml
+  GeneratorRoundRotorExpGovGAST4.xml
+  GeneratorRoundRotorExpGovGASTWD.xml
+  GeneratorRoundRotorExpGovCT2.xml
+  GeneratorRoundRotorExpGovSteam0.xml
+  GeneratorRoundRotorExpGovSteamCC.xml
+  GeneratorRoundRotorExpGovSteamFV2.xml
+  GeneratorRoundRotorExpGovSteamFV3.xml
+  GeneratorRoundRotorExpGovSteamFV4.xml
+  OEL1B.xml
+  PFVArType1IEEEPFController.xml
+  PFVArType1IEEEVArController.xml
+  PFVArType2Common1.xml
+  PFVArType2IEEEPFController.xml
+  PFVArType2IEEEVArController.xml
+  VoltageAdjusterIEEE.xml
+  SCIEEEOperationalLimiter.xml
+  DiscExcContIEEEDEC1A.xml
+  DiscExcContIEEEDEC2A.xml
+  DiscExcContIEEEDEC3A.xml
+  OverexcLimIEEE.xml
+  OverexcLimX.xml
+  UnderexcLimIEEE1.xml
+  UnderexcLimIEEE2.xml
+  UnderexcLimX1.xml
+  UnderexcLimX2.xml
+  GeneratorRoundRotorExpPssIEEE1A.xml
+  GeneratorRoundRotorExpPss1A.xml
+  GeneratorRoundRotorExpPss2ST.xml
+  GeneratorRoundRotorExpExcAC1A.xml
+  GeneratorRoundRotorExpExcAC2A.xml
+  GeneratorRoundRotorExpExcAC3A.xml
+  GeneratorRoundRotorExpExcAC4A.xml
+  GeneratorRoundRotorExpExcAC5A.xml
+  GeneratorRoundRotorExpExcAC6A.xml
+  GeneratorRoundRotorExpExcAC8B.xml
+  GeneratorRoundRotorExpExcCZ.xml
+  GeneratorRoundRotorExpExcDC1A.xml
+  GeneratorRoundRotorExpExcDC2A.xml
+  GeneratorRoundRotorExpExcDC3A.xml
+  GeneratorRoundRotorExpExcELIN1.xml
+  GeneratorRoundRotorExpExcELIN2.xml
+  GeneratorRoundRotorExpExcHU.xml
+  GeneratorRoundRotorExpExcNI.xml
+  GeneratorRoundRotorExpExcOEX3T.xml
+  GeneratorRoundRotorExpExcPIC.xml
+  GeneratorRoundRotorExpExcREXS.xml
+  GeneratorRoundRotorExpExcRQB.xml
+  GeneratorRoundRotorExpExcSK.xml
+  GeneratorRoundRotorExpExcST1A.xml
+  GeneratorRoundRotorExpExcST2A.xml
+  GeneratorRoundRotorExpExcST3.xml
+  GeneratorRoundRotorExpExcSYMPTR.xml
+  GeneratorRoundRotorExpVCompIEEEType1Ac1aPss2bGovHydro2.xml
+  GeneratorRoundRotorExpVCompIEEEType1St1aPss2bGovHydro1.xml
+  GeneratorSalientPoleExpVCompIEEEType1Ac1aPss2bGovHydro2.xml
+  GeneratorSalientPoleExpVCompIEEEType1St1aPss2bGovHydro1.xml
+  GeneratorSynchronousFourWindingsVRKundurPssELIN2.xml
+  GeneratorSynchronousFourWindingsVRKundurPssSB4.xml
+  GeneratorSynchronousFourWindingsVRKundurPssSH.xml
+  GeneratorSynchronousFourWindingsVRKundurPssSK.xml
+  GeneratorSynchronousFourWindingsVRKundurPssWECC.xml
   GeneratorSynchronousProportionalRegulationsInternalParameters.xml
   GeneratorSynchronousThreeWindings.xml
   GeneratorSynchronousThreeWindingsDTRI8.xml

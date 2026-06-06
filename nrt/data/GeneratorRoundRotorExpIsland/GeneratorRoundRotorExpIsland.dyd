@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+
+    Two different sixth-order round-rotor synchronous machines, both with
+    magnetic saturation, feed a common load through a line. There is no infinite
+    bus: the two machines form a balanced island whose frequency reference is a
+    constant set point. The operating point is a consistent load flow and no
+    disturbance is applied, so a correctly initialized model stays exactly at its
+    steady state for the whole run. This is an initialization regression test.
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="G1" lib="GeneratorRoundRotorExp" parFile="GeneratorRoundRotorExpIsland.par" parId="G1"/>
+  <dyn:blackBoxModel id="G2" lib="GeneratorRoundRotorExp" parFile="GeneratorRoundRotorExpIsland.par" parId="G2"/>
+  <dyn:blackBoxModel id="LINE" lib="Line" parFile="GeneratorRoundRotorExpIsland.par" parId="LINE"/>
+  <dyn:blackBoxModel id="LOAD" lib="LoadAlphaBeta" parFile="GeneratorRoundRotorExpIsland.par" parId="LOAD"/>
+  <dyn:blackBoxModel id="omegaRef" lib="SetPoint" parFile="GeneratorRoundRotorExpIsland.par" parId="OMEGAREF"/>
+
+  <!-- Node A (machine bus): G1, G2 and the line; Node B (load bus): line and load -->
+  <dyn:connect id1="G1" var1="generator_terminal" id2="LINE" var2="line_terminal1"/>
+  <dyn:connect id1="G2" var1="generator_terminal" id2="LINE" var2="line_terminal1"/>
+  <dyn:connect id1="LINE" var1="line_terminal2" id2="LOAD" var2="load_terminal"/>
+
+  <!-- Constant frequency reference for the island -->
+  <dyn:connect id1="omegaRef" var1="setPoint_setPoint" id2="G1" var2="generator_omegaRefPu"/>
+  <dyn:connect id1="omegaRef" var1="setPoint_setPoint" id2="G2" var2="generator_omegaRefPu"/>
+</dyn:dynamicModelsArchitecture>

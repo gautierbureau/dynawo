@@ -17,6 +17,18 @@ set(MODEL_FILES
     ReactivePowerControlLoop2.mo
     ReactivePowerControlLoop2.extvar
     ReactivePowerControlLoop_INIT.mo
+    PFVArType1IEEEPFController.mo
+    PFVArType1IEEEPFController.extvar
+    PFVArType1IEEEVArController.mo
+    PFVArType1IEEEVArController.extvar
+    PFVArType2Common1.mo
+    PFVArType2Common1.extvar
+    PFVArType2IEEEPFController.mo
+    PFVArType2IEEEPFController.extvar
+    PFVArType2IEEEVArController.mo
+    PFVArType2IEEEVArController.extvar
+    VoltageAdjusterIEEE.mo
+    VoltageAdjusterIEEE.extvar
     )
 
 #

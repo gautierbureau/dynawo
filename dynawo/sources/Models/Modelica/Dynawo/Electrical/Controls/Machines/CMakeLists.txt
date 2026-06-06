@@ -10,6 +10,8 @@
 
 add_subdirectory(Protections P)
 add_subdirectory(VoltageRegulators V)
+add_subdirectory(VoltageCompensators VC)
+add_subdirectory(DiscontinuousExcitationControls D)
 add_subdirectory(Governors G)
 add_subdirectory(OverExcitationLimiters O)
 add_subdirectory(PowerSystemStabilizers PSS)

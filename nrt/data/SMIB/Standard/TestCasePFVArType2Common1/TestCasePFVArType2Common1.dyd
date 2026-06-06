@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="VADJ" lib="PFVArType2Common1" parFile="TestCasePFVArType2Common1.par" parId="Adjuster"/>
+  <dyn:blackBoxModel id="ErrStep" lib="Step" parFile="TestCasePFVArType2Common1.par" parId="ErrStep"/>
+  <dyn:connect id1="ErrStep" var1="step_step" id2="VADJ" var2="adjuster_errPu"/>
+</dyn:dynamicModelsArchitecture>

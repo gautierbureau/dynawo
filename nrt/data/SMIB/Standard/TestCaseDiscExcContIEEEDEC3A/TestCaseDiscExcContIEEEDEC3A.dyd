@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="DEC" lib="DiscExcContIEEEDEC3A" parFile="TestCaseDiscExcContIEEEDEC3A.par" parId="Controller"/>
+  <dyn:blackBoxModel id="VtStep" lib="Step" parFile="TestCaseDiscExcContIEEEDEC3A.par" parId="VtStep"/>
+  <dyn:blackBoxModel id="VstSP" lib="SetPoint" parFile="TestCaseDiscExcContIEEEDEC3A.par" parId="VstSP"/>
+  <dyn:connect id1="VtStep" var1="step_step" id2="DEC" var2="dec_VtPu"/>
+  <dyn:connect id1="VstSP" var1="setPoint_setPoint" id2="DEC" var2="dec_VstPu"/>
+</dyn:dynamicModelsArchitecture>

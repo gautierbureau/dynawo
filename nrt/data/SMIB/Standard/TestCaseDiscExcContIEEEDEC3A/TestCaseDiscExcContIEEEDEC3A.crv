@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="DEC" variable="dec_VtPu"/>
+  <curve model="DEC" variable="dec_VstPu"/>
+  <curve model="DEC" variable="dec_Vs1Pu"/>
+</curvesInput>

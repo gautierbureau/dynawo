@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="Controller">
+    <par type="DOUBLE" name="controller_QRef"    value="0.3"/>
+    <par type="DOUBLE" name="controller_Vbw"     value="0.02"/>
+    <par type="DOUBLE" name="controller_tPf"     value="5.0"/>
+    <par type="DOUBLE" name="controller_VrMaxPu" value="0.1"/>
+    <par type="DOUBLE" name="controller_VrMinPu" value="-0.1"/>
+  </set>
+  <set id="QStep">
+    <par type="DOUBLE" name="step_Value0" value="0.3"/>
+    <par type="DOUBLE" name="step_Height" value="-0.2"/>
+    <par type="DOUBLE" name="step_tStep"  value="1.0"/>
+  </set>
+  <set id="IDAOrder2">
+    <par type="INT"    name="order" value="2"/>
+    <par type="DOUBLE" name="initStep"    value="0.000001"/>
+    <par type="DOUBLE" name="minStep"     value="0.000001"/>
+    <par type="DOUBLE" name="maxStep"     value="1"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-4"/>
+  </set>
+</parametersSet>

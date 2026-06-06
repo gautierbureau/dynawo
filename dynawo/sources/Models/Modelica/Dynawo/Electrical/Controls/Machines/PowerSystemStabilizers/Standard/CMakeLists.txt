@@ -15,6 +15,10 @@ add_subdirectory(BaseClasses B)
 set(MODEL_FILES
     package.mo
     package.order
+    Pss1.mo
+    Pss1.extvar
+    Pss1A.mo
+    Pss1A.extvar
     Pss1aOmega.mo
     Pss1aOmega.extvar
     Pss1aPGen.mo
@@ -25,14 +29,46 @@ set(MODEL_FILES
     Pss2b.extvar
     Pss2c.mo
     Pss2c.extvar
+    Pss2ST.mo
+    Pss2ST.extvar
     Pss3b.mo
     Pss3b.extvar
     Pss3c.mo
     Pss3c.extvar
+    Pss4C.mo
+    Pss4C.extvar
+    Pss5.mo
+    Pss5.extvar
+    Pss5C.mo
+    Pss5C.extvar
     Pss6c.mo
     Pss6c.extvar
+    Pss6C.mo
+    Pss6C.extvar
+    Pss7C.mo
+    Pss7C.extvar
+    PssIEEE1A.mo
+    PssIEEE1A.extvar
+    PssIEEE4B.mo
+    PssIEEE4B.extvar
     PssKundur.mo
     PssKundur.extvar
+    PssPTIST1.mo
+    PssPTIST1.extvar
+    PssPTIST3.mo
+    PssPTIST3.extvar
+    PssRQB.mo
+    PssRQB.extvar
+    PssWECC.mo
+    PssWECC.extvar
+    PssELIN2.mo
+    PssELIN2.extvar
+    PssSB4.mo
+    PssSB4.extvar
+    PssSH.mo
+    PssSH.extvar
+    PssSK.mo
+    PssSK.extvar
     )
 
 #

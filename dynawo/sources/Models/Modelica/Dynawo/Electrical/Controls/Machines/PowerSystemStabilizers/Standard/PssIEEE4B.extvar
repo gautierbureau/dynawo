@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<external_variables xmlns="http://www.rte-france.com/dynawo">
+  <variable id="omegaPu" type="continuous"/>
+  <variable id="omegaRefPu" type="continuous"/>
+</external_variables>

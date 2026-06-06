@@ -16,6 +16,39 @@ add_subdirectory(BaseClasses_INIT BI)
 set(MODEL_FILES
   package.mo
   package.order
+  GeneratorClassical.mo
+  GeneratorClassical.extvar
+  GeneratorClassical_INIT.mo
+  GeneratorThirdOrder.mo
+  GeneratorThirdOrder.extvar
+  GeneratorThirdOrder_INIT.mo
+  GeneratorFourthOrder.mo
+  GeneratorFourthOrder.extvar
+  GeneratorFourthOrder_INIT.mo
+  GeneratorSalientPole.mo
+  GeneratorSalientPole.extvar
+  GeneratorSalientPole_INIT.mo
+  GeneratorRoundRotor.mo
+  GeneratorRoundRotor.extvar
+  GeneratorRoundRotor_INIT.mo
+  GeneratorRoundRotorExp.mo
+  GeneratorRoundRotorExp.extvar
+  GeneratorRoundRotorExp_INIT.mo
+  GeneratorSalientPoleExp.mo
+  GeneratorSalientPoleExp.extvar
+  GeneratorSalientPoleExp_INIT.mo
+  GeneratorRoundRotorTypeF.mo
+  GeneratorRoundRotorTypeF.extvar
+  GeneratorRoundRotorTypeF_INIT.mo
+  GeneratorRoundRotorTypeJ.mo
+  GeneratorRoundRotorTypeJ.extvar
+  GeneratorRoundRotorTypeJ_INIT.mo
+  GeneratorSalientPoleTypeF.mo
+  GeneratorSalientPoleTypeF.extvar
+  GeneratorSalientPoleTypeF_INIT.mo
+  GeneratorSalientPoleTypeJ.mo
+  GeneratorSalientPoleTypeJ.extvar
+  GeneratorSalientPoleTypeJ_INIT.mo
   GeneratorPQ.mo
   GeneratorPQ.extvar
   GeneratorPQ_INIT.mo

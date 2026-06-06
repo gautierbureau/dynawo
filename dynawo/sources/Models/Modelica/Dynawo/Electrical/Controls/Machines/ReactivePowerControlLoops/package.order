@@ -1,3 +1,9 @@
 ReactivePowerControlLoop
 ReactivePowerControlLoop2
 ReactivePowerControlLoop_INIT
+PFVArType1IEEEPFController
+PFVArType1IEEEVArController
+PFVArType2Common1
+PFVArType2IEEEPFController
+PFVArType2IEEEVArController
+VoltageAdjusterIEEE

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="OEL" lib="OverexcLimX" parFile="TestCaseOverexcLimX.par" parId="Limiter"/>
+  <dyn:blackBoxModel id="EfdStep" lib="Step" parFile="TestCaseOverexcLimX.par" parId="EfdStep"/>
+  <dyn:blackBoxModel id="UsSP" lib="SetPoint" parFile="TestCaseOverexcLimX.par" parId="UsSP"/>
+  <dyn:connect id1="EfdStep" var1="step_step" id2="OEL" var2="limiter_EfdPu"/>
+  <dyn:connect id1="UsSP" var1="setPoint_setPoint" id2="OEL" var2="limiter_UsPu"/>
+</dyn:dynamicModelsArchitecture>

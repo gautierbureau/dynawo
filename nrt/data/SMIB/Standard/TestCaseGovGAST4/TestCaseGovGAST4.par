@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    SPDX-License-Identifier: MPL-2.0
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="SynchronousGenerator">
+    <par type="DOUBLE" name="generator_H" value="4.0"/>
+    <par type="DOUBLE" name="generator_DPu" value="1.0"/>
+    <par type="DOUBLE" name="generator_RaPu" value="0.003"/>
+    <par type="DOUBLE" name="generator_XdPu" value="2.0"/>
+    <par type="DOUBLE" name="generator_XpdPu" value="0.3"/>
+    <par type="DOUBLE" name="generator_XqPu" value="1.9"/>
+    <par type="DOUBLE" name="generator_Tpd0" value="7.0"/>
+    <par type="DOUBLE" name="generator_SNom" value="100.0"/>
+    <par type="DOUBLE" name="generator_P0Pu" value="-0.7"/>
+    <par type="DOUBLE" name="generator_Q0Pu" value="0.0"/>
+    <par type="DOUBLE" name="generator_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="generator_UPhase0" value="0.0"/>
+    <!-- Governor (GovGAST4: alternative gas turbine with Bp/Tr droop integrator and rate limits) -->
+    <par type="DOUBLE" name="governor_R"       value="0.05"/>
+    <par type="DOUBLE" name="governor_At"      value="1.0"/>
+    <par type="DOUBLE" name="governor_Bp"      value="0.0"/>
+    <par type="DOUBLE" name="governor_DTurb"   value="0.5"/>
+    <par type="DOUBLE" name="governor_Kt"      value="3.0"/>
+    <par type="DOUBLE" name="governor_RLimMax" value="0.1"/>
+    <par type="DOUBLE" name="governor_RLimMin" value="-0.1"/>
+    <par type="DOUBLE" name="governor_t1"      value="0.4"/>
+    <par type="DOUBLE" name="governor_t2"      value="0.1"/>
+    <par type="DOUBLE" name="governor_t3"      value="3.0"/>
+    <par type="DOUBLE" name="governor_tR"      value="1.0"/>
+    <par type="DOUBLE" name="governor_VMax"    value="1.0"/>
+    <par type="DOUBLE" name="governor_VMin"    value="-0.1"/>
+  </set>
+  <set id="OmegaRef">
+    <par type="INT" name="nbGen" value="1"/>
+    <par type="DOUBLE" name="weight_gen_0" value="100.0"/>
+  </set>
+  <set id="Load">
+    <par type="DOUBLE" name="load_P0Pu" value="0.7"/>
+    <par type="DOUBLE" name="load_Q0Pu" value="0.0"/>
+    <par type="DOUBLE" name="load_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="load_UPhase0" value="0.0"/>
+    <par type="DOUBLE" name="load_alpha" value="2.0"/>
+    <par type="DOUBLE" name="load_beta" value="2.0"/>
+  </set>
+  <set id="StepP">
+    <par type="DOUBLE" name="step_Value0" value="0.7"/>
+    <par type="DOUBLE" name="step_Height" value="0.02"/>
+    <par type="DOUBLE" name="step_tStep" value="1.0"/>
+  </set>
+  <set id="IDA">
+    <par type="INT" name="order" value="2"/>
+    <par type="DOUBLE" name="initStep" value="0.000001"/>
+    <par type="DOUBLE" name="minStep" value="0.000001"/>
+    <par type="DOUBLE" name="maxStep" value="1"/>
+    <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+    <par type="DOUBLE" name="relAccuracy" value="1e-4"/>
+  </set>
+</parametersSet>

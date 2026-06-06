@@ -14,8 +14,34 @@
 set(MODEL_FILES
   package.mo
   package.order
+  GovHydro0.mo
+  GovHydro0.extvar
+  GovHydro1.mo
+  GovHydro1.extvar
+  GovHydro2.mo
+  GovHydro2.extvar
+  GovHydro3.mo
+  GovHydro3.extvar
+  GovHydroDD.mo
+  GovHydroDD.extvar
   GovHydro4.mo
   GovHydro4.extvar
+  GovHydroFrancis.mo
+  GovHydroFrancis.extvar
+  GovHydroIEEE2.mo
+  GovHydroIEEE2.extvar
+  GovHydroPID.mo
+  GovHydroPID.extvar
+  GovHydroPID2.mo
+  GovHydroPID2.extvar
+  GovHydroPelton.mo
+  GovHydroPelton.extvar
+  GovHydroR.mo
+  GovHydroR.extvar
+  GovHydroWEH.mo
+  GovHydroWEH.extvar
+  GovHydroWPID.mo
+  GovHydroWPID.extvar
   HyGov.mo
   HyGov.extvar
   )

@@ -16,6 +16,7 @@ set(MODEL_FILES
   package.mo
   package.order
   Pss_INIT.mo
+  PssSK_INIT.mo
   )
 
 #
