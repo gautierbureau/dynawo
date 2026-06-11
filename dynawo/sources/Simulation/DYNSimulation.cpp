@@ -57,6 +57,7 @@
 #include "CRVCurve.h"
 #include "CRVXmlExporter.h"
 #include "CRVCsvExporter.h"
+#include "CRVBinaryCurves.h"
 
 #include "FSVFinalStateValuesCollectionFactory.h"
 #include "FSVFinalStateValuesCollection.h"
@@ -239,6 +240,8 @@ wasLoggingEnabled_(false) {
   configureCriteria();
 }
 
+Simulation::~Simulation() = default;
+
 void
 Simulation::configureSimulationInputs() {
   //---- dydFile ----
@@ -418,6 +421,12 @@ Simulation::configureCurveOutputs() {
     } else if (exportMode == "XML") {
       exportModeFlag = Simulation::EXPORT_CURVES_XML;
       outputFile = createAbsolutePath("curves.xml", curvesDir);
+    } else if (exportMode == "BINARY") {
+      exportModeFlag = Simulation::EXPORT_CURVES_BINARY;
+      outputFile = createAbsolutePath("curves.bin", curvesDir);
+    } else if (exportMode == "BINARY_FAST") {
+      exportModeFlag = Simulation::EXPORT_CURVES_BINARY_FAST;
+      outputFile = createAbsolutePath("curves.bin", curvesDir);
     } else {
       throw DYNError(Error::MODELER, UnknownCurvesExport, exportMode);
     }
@@ -890,6 +899,9 @@ Simulation::init() {
   Trace::info() << "-----------------------------------------------------------------------" << Trace::endline;
   Trace::info() << DYNLog(CurveInit) << Trace::endline;
   Trace::info() << "-----------------------------------------------------------------------" << Trace::endline;
+  // Expand shortcut <curve model="..."/> and <curve variable="..."/> entries
+  // against the composed model now that subModels are fully built.
+  model_->expandCurvesCollection(curvesCollection_);
   const std::vector<double>& y = solver_->getCurrentY();
   unsigned nbCurves = 0;
   for (const auto& curve : curvesCollection_->getCurves()) {
@@ -984,6 +996,17 @@ Simulation::simulate() {
   if (exportCurvesMode_ != EXPORT_CURVES_NONE) {
     // This is a workaround to update the calculated variables with initial values of y and yp as they are not accessible at this level
     model_->evalCalculatedVariables(tCurrent_, solver_->getCurrentY(), solver_->getCurrentYP(), zCurrent_);
+  }
+  if ((exportCurvesMode_ == EXPORT_CURVES_BINARY || exportCurvesMode_ == EXPORT_CURVES_BINARY_FAST) &&
+      !curvesOutputFile_.empty()) {
+    std::vector<std::string> names;
+    names.reserve(model_->sizeY());
+    for (int i = 0; i < model_->sizeY(); ++i)
+      names.push_back(model_->getVariableName(i));
+    const curves::Precision precision = (exportCurvesMode_ == EXPORT_CURVES_BINARY_FAST)
+                                            ? curves::Precision::FULL
+                                            : curves::Precision::CSV_ROUNDED;
+    binaryCurves_.reset(new curves::BinaryCurves(curvesOutputFile_, names, precision));
   }
   constexpr bool updateCalculatedVariable = false;
   updateCurves(updateCalculatedVariable);  // initial curves
@@ -1218,6 +1241,9 @@ Simulation::updateCurves(const bool updateCalculatedVariable) const {
     model_->updateCalculatedVarForCurves();
 
   curvesCollection_->updateCurves(tCurrent_);
+
+  if (binaryCurves_)
+    binaryCurves_->record(tCurrent_, solver_->getCurrentY());
 }
 
 void
@@ -1274,7 +1300,12 @@ Simulation::terminate() {
 #endif
   updateParametersValues();   // update parameter curves' value
 
-  if (!curvesOutputFile_.empty()) {
+  if (binaryCurves_)
+    binaryCurves_.reset();  // flush and close the streaming binary curves file
+
+  if (!curvesOutputFile_.empty() &&
+      exportCurvesMode_ != EXPORT_CURVES_BINARY &&
+      exportCurvesMode_ != EXPORT_CURVES_BINARY_FAST) {
     ofstream fileCurves;
     openFileStream(fileCurves, curvesOutputFile_);
     printCurves(fileCurves);
@@ -1359,6 +1390,10 @@ Simulation::printCurves(std::ostream& stream) const {
       csvExporter.exportToStream(curvesCollection_, stream);
       break;
     }
+    case EXPORT_CURVES_BINARY:
+    case EXPORT_CURVES_BINARY_FAST:
+      // Records are streamed to disk by BinaryCurves as the simulation runs; nothing to do here.
+      break;
   }
 }
 

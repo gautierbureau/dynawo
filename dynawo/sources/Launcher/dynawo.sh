@@ -120,15 +120,23 @@ jobs() {
   return ${RETURN_CODE}
 }
 
-verify_browser() {
-  if [ ! -x "$(command -v "$DYNAWO_BROWSER")" ]; then
-    error_exit "Specified browser DYNAWO_BROWSER=$DYNAWO_BROWSER not found. Use export DYNAWO_BROWSER="
-  fi
-}
-
 curves_visu() {
-  verify_browser
-  $DYNAWO_PYTHON_COMMAND "$DYNAWO_INSTALL_DIR"/sbin/curvesToHtml/curvesToHtml.py --jobsFile=$("$DYNAWO_PYTHON_COMMAND" -c "import os; print(os.path.realpath('$1'))") --withoutOffset --htmlBrowser="$DYNAWO_BROWSER" || return 1
+  local app_dir="$DYNAWO_INSTALL_DIR/sbin/curve_visualizer"
+  if ! ${DYNAWO_PYTHON_COMMAND} -c "import streamlit" >/dev/null 2>&1; then
+    error_exit "Streamlit is not installed. Run: ${DYNAWO_PYTHON_COMMAND} -m pip install -r $app_dir/requirements.txt"
+  fi
+  local resolved_paths=()
+  for f in "$@"; do
+    if [ ! -f "$f" ]; then
+      error_exit "File not found: $f"
+    fi
+    case "${f,,}" in
+      *.csv|*.bin|*.jobs) ;;
+      *) error_exit "Unsupported file type: $f (expected .csv, .bin or .jobs)" ;;
+    esac
+    resolved_paths+=("$("$DYNAWO_PYTHON_COMMAND" -c "import os; print(os.path.realpath('$f'))")")
+  done
+  ${DYNAWO_PYTHON_COMMAND} -m streamlit run "$app_dir/app.py" --server.maxUploadSize 1024 -- "${resolved_paths[@]}" || return 1
 }
 
 jobs_with_curves() {
@@ -144,9 +152,8 @@ jobs_with_curves() {
 curves() {
   set_environment
 
-  echo "Generating curves visualization pages"
-  curves_visu "$@" || error_exit "Error during curves visualisation page generation"
-  echo "End of generating curves visualization pages"
+  echo "Launching curves visualizer app"
+  curves_visu "$@" || error_exit "Error launching curves visualizer app"
   RETURN_CODE=$?
   return ${RETURN_CODE}
 }

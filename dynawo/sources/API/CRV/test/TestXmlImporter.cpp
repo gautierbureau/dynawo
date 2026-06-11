@@ -68,4 +68,34 @@ TEST(APICRVTest, testXmlStreamImporter) {
   ASSERT_NO_THROW(curves = importer->importFromStream(goodStream));
 }
 
+TEST(APICRVTest, testXmlStreamImporterShortcutForms) {
+  // Curve entries with only @model or only @variable are now allowed; the
+  // parsed values are kept verbatim for the downstream expansion step.
+  const std::unique_ptr<XmlImporter> importer = DYN::make_unique<XmlImporter>();
+  std::shared_ptr<CurvesCollection> curves;
+  std::istringstream goodInputStream(
+    "<?xml version='1.0' encoding='UTF-8'?>"
+    "<curvesInput xmlns=\"http://www.rte-france.com/dynawo\">"
+    "<curve model=\"GeneratorId\"/>"
+    "<curve variable=\"generator_PGen\"/>"
+    "<curve model=\"GeneratorId\" variable=\"generator_PGen\"/>"
+    "</curvesInput>");
+  std::istream goodStream(goodInputStream.rdbuf());
+  ASSERT_NO_THROW(curves = importer->importFromStream(goodStream));
+  ASSERT_NE(curves, nullptr);
+  ASSERT_EQ(curves->getCurves().size(), 3u);
+
+  const auto& c0 = curves->getCurves()[0];
+  ASSERT_EQ(c0->getModelName(), "GeneratorId");
+  ASSERT_TRUE(c0->getVariable().empty());
+
+  const auto& c1 = curves->getCurves()[1];
+  ASSERT_TRUE(c1->getModelName().empty());
+  ASSERT_EQ(c1->getVariable(), "generator_PGen");
+
+  const auto& c2 = curves->getCurves()[2];
+  ASSERT_EQ(c2->getModelName(), "GeneratorId");
+  ASSERT_EQ(c2->getVariable(), "generator_PGen");
+}
+
 }  // namespace curves
