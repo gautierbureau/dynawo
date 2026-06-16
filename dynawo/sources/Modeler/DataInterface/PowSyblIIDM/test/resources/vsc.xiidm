@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_5" id="test" caseDate="2022-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="test">
+    <iidm:substation id="S1" country="FR">
+        <iidm:voltageLevel id="VL1" nominalV="388.0" lowVoltageLimit="340.0" highVoltageLimit="420.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="VL1_BUS1"/>
+                <iidm:bus id="BUS1" v="410.0" angle="3.14"/>
+            </iidm:busBreakerTopology>
+            <iidm:vscConverterStation id="VSC1" name="VSC1" lossFactor="3.0"
+                voltageRegulatorOn="true" voltageSetpoint="4.0" reactivePowerSetpoint="5.0"
+                bus="VL1_BUS1" connectableBus="VL1_BUS1">
+                <iidm:reactiveCapabilityCurve>
+                    <iidm:point p="-2000.0" minQ="10.0" maxQ="10.0"/>
+                    <iidm:point p="0.0" minQ="10.0" maxQ="20.0"/>
+                    <iidm:point p="2000.0" minQ="10.0" maxQ="10.0"/>
+                </iidm:reactiveCapabilityCurve>
+            </iidm:vscConverterStation>
+            <iidm:vscConverterStation id="VSC2" name="VSC2" lossFactor="3.0"
+                voltageRegulatorOn="false" voltageSetpoint="-4.0" reactivePowerSetpoint="-5.0"
+                bus="VL1_BUS1" connectableBus="VL1_BUS1">
+                <iidm:minMaxReactiveLimits minQ="-9999.0" maxQ="9999.0"/>
+            </iidm:vscConverterStation>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:hvdcLine id="HVDC1" name="HVDC1" r="14.0" nominalV="13.0"
+        convertersMode="SIDE_1_RECTIFIER_SIDE_2_INVERTER"
+        activePowerSetpoint="111.1" maxP="12.0"
+        converterStation1="VSC1" converterStation2="VSC2"/>
+</iidm:network>

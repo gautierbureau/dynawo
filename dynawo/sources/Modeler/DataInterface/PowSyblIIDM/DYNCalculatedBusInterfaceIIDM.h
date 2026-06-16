@@ -16,8 +16,9 @@
 
 #include "DYNBusInterface.h"
 
-#include <powsybl/iidm/VoltageLevel.hpp>
-#include <powsybl/iidm/Bus.hpp>
+#include <iidm/VoltageLevel.h>
+#include <iidm/Bus.h>
+#include <iidm/BusbarSection.h>
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
@@ -47,7 +48,7 @@ class CalculatedBusInterfaceIIDM : public BusInterface {
    * @param name name of the calculated bus
    * @param busIndex index of the calculated bus
    */
-  CalculatedBusInterfaceIIDM(powsybl::iidm::VoltageLevel& voltageLevel, const std::string& name, const int busIndex);
+  CalculatedBusInterfaceIIDM(const iidm::VoltageLevel& voltageLevel, const std::string& name, const int busIndex);
 
   /**
    * @copydoc BusInterface::getV0() const
@@ -200,11 +201,11 @@ class CalculatedBusInterfaceIIDM : public BusInterface {
   boost::optional<double> angle0_;  ///< initial value of the voltage angle
   std::string name_;  ///< name of the calculated bus
   std::set<int> nodes_;  ///< index of the nodes associated to the bus
-  powsybl::iidm::VoltageLevel& voltageLevel_;  ///< IIDM voltage level instance
+  iidm::VoltageLevel voltageLevel_;  ///< IIDM voltage level instance (value-typed handle)
   bool hasConnection_;  ///< @b true if the bus has an outside connection, @b false else
   std::string country_;  ///< country of the bus
   std::vector<std::string> bbsIdentifiers_;  ///< identifiers of the bus bar sections
-  std::vector<stdcxx::Reference<powsybl::iidm::BusbarSection>> bbs_;  ///< bus bar sections
+  std::vector<iidm::BusbarSection> bbs_;  ///< bus bar sections
 };  ///< Interface class for CalculatedBusInterface
 
 std::ostream& operator<<(std::ostream& stream, const CalculatedBusInterfaceIIDM& calculatedBus);

@@ -41,15 +41,9 @@ set(DATA_INTERFACE_IIDM_SOURCES
   DYNVoltageLevelInterfaceIIDM.cpp
   DYNVscConverterInterfaceIIDM.cpp
   DYNServiceManagerInterfaceIIDM.cpp
-  DYNIIDMExtensionsTraits.cpp
-  DYNIIDMExtensions.cpp
 )
 
 set(DATA_INTERFACE_IIDM_HEADERS
-  DYNStaticVarCompensatorInterfaceIIDMExtension.h
-  DYNActiveSeasonIIDMExtension.h
-  DYNCurrentLimitsPerSeasonIIDMExtension.h
-  DYNGeneratorActivePowerControlIIDMExtension.h
   DYNGeneratorInterfaceIIDM.h
   DYNDataInterfaceIIDM.h
   DYNSwitchInterfaceIIDM.h
@@ -69,8 +63,6 @@ set(DATA_INTERFACE_IIDM_HEADERS
   DYNNetworkInterfaceIIDM.h
   DYNServiceManagerInterfaceIIDM.h
   DYNInjectorInterfaceIIDM.h
-  DYNIIDMExtensions.hpp
-  DYNIIDMExtensionsTraits.hpp
   DYNVoltageLevelInterfaceIIDM.h
   DYNCurrentLimitInterfaceIIDM.h
   DYNFictBusInterfaceIIDM.h
@@ -103,8 +95,7 @@ target_link_libraries(dynawo_DataInterfaceIIDM
     dynawo_API_LEQ
     ${CMAKE_DL_LIBS}
   PUBLIC
-    IIDM::iidm
-    IIDM::ext-iidm
+    IidmBridge::iidmbridge
   )
 
 set_target_properties(dynawo_DataInterfaceIIDM PROPERTIES VERSION ${DATA_INTERFACE_IIDM_VERSION_STRING}

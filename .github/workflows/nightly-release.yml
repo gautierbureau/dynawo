@@ -205,6 +205,22 @@ jobs:
           cd \OpenModelica\dynawo
           7z a ${{ github.workspace }}\OpenModelica-windows.zip -r OpenModelica\*
 
+      - name: Install GraalVM (JDK 21)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Maven
+        shell: cmd
+        run: |
+          curl -L -o C:\maven.zip https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip
+          7z x C:\maven.zip -oC:\
+          del C:\maven.zip
+          echo MAVEN_HOME=C:\apache-maven-3.9.6>>%GITHUB_ENV%
+          echo C:\apache-maven-3.9.6\bin>>%GITHUB_PATH%
+
       # We are forced to change the path to avoid too long commands when compiling
       - name: Build Dynawo Third Parties
         shell: cmd
@@ -212,6 +228,7 @@ jobs:
           PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          set "PATH=%JAVA_HOME%\bin;%MAVEN_HOME%\bin;%PATH%"
           cd \dynawo
           cmake -Wno-dev -S dynawo/3rdParty -B b-3-p -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../d-3-p -DOPENMODELICA_INSTALL=../OpenModelica/dynawo/OpenModelica -DOPENMODELICA_SRC=../OpenModelica/Source -DOMDEV_HOME=../OMDev -G "Ninja"
           cmake --build b-3-p --target openmodelica
@@ -231,6 +248,7 @@ jobs:
           PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          set "PATH=%JAVA_HOME%\bin;%MAVEN_HOME%\bin;%PATH%"
           cd \dynawo
           cmake -Wno-dev -S dynawo -B b -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../d-i -DDYNAWO_HOME=.. -DINSTALL_OPENMODELICA=../../OpenModelica/dynawo/OpenModelica -DDYNAWO_THIRD_PARTY_DIR=../../d-3-p -G "Ninja"
           cmake --build b --target install || exit /b 1

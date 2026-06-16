@@ -565,6 +565,16 @@ set_standard_environment_variables() {
   ld_library_path_prepend $DYNAWO_LIBZIP_HOME/lib
   ld_library_path_prepend $DYNAWO_LIBXML_HOME/lib
   ld_library_path_prepend $DYNAWO_LIBIIDM_HOME/lib
+  ld_library_path_prepend $DYNAWO_LIBIIDM_HOME/lib64
+  # libiidmbridge.so is JNI-linked: it has DT_NEEDED entries for libjvm.so /
+  # libjawt.so. The dynamic loader needs $JAVA_HOME/lib and lib/server on
+  # LD_LIBRARY_PATH at runtime so 'dynawo.sh jobs ...' can resolve them.
+  if [ -n "$JAVA_HOME" ] && [ -d "$JAVA_HOME/lib" ]; then
+    ld_library_path_prepend $JAVA_HOME/lib
+    if [ -d "$JAVA_HOME/lib/server" ]; then
+      ld_library_path_prepend $JAVA_HOME/lib/server
+    fi
+  fi
   ld_library_path_prepend $DYNAWO_ADEPT_INSTALL_DIR/lib
   ld_library_path_prepend $DYNAWO_XERCESC_INSTALL_DIR/lib
   ld_library_path_prepend $DYNAWO_INSTALL_DIR/lib
@@ -1766,7 +1776,12 @@ deploy_dynawo() {
   echo "deploying libxml libraries"
   cp -P $DYNAWO_LIBXML_HOME/lib/*.* lib/
   echo "deploying libiidm libraries"
-  cp -P $DYNAWO_LIBIIDM_HOME/lib/*.* lib/
+  if [ -d "$DYNAWO_LIBIIDM_HOME/lib" ]; then
+    cp -P $DYNAWO_LIBIIDM_HOME/lib/*.* lib/ 2>/dev/null || true
+  fi
+  if [ -d "$DYNAWO_LIBIIDM_HOME/lib64" ]; then
+    cp -P $DYNAWO_LIBIIDM_HOME/lib64/*.* lib/ 2>/dev/null || true
+  fi
   if [ -d "$DYNAWO_LIBIIDM_HOME/bin" ]; then
     cp -n -R -P $DYNAWO_LIBIIDM_HOME/bin/* bin/
   fi
@@ -1795,11 +1810,8 @@ deploy_dynawo() {
   echo "deploying libxml include folder"
   cp -n -R -P $DYNAWO_LIBXML_HOME/include/xml include/
   echo "deploying libiidm include folder"
-  if [ -d "$DYNAWO_LIBIIDM_HOME/include/IIDM" ]; then
-    cp -n -R -P $DYNAWO_LIBIIDM_HOME/include/IIDM include/
-  fi
-  if [ -d "$DYNAWO_LIBIIDM_HOME/include/powsybl" ]; then
-    cp -n -R -P $DYNAWO_LIBIIDM_HOME/include/powsybl include/
+  if [ -d "$DYNAWO_LIBIIDM_HOME/include/iidm" ]; then
+    cp -n -R -P $DYNAWO_LIBIIDM_HOME/include/iidm include/
   fi
   echo "deploying gtest include folder"
   if [ "$DYNAWO_BUILD_TYPE" = "Debug" ]; then
@@ -1811,12 +1823,12 @@ deploy_dynawo() {
 
   mkdir -p share
   cp -R -P $DYNAWO_LIBXML_HOME/share/cmake share/
-  if [ -d "$DYNAWO_LIBIIDM_HOME/share" ]; then
-    cp -R -P $DYNAWO_LIBIIDM_HOME/share/cmake share/
-    cp -R -P $DYNAWO_LIBIIDM_HOME/share/iidm share/
-  fi
-  if [ -d "$DYNAWO_LIBIIDM_HOME/LibIIDM" ]; then
-    cp -R -P $DYNAWO_LIBIIDM_HOME/LibIIDM/cmake share/
+  if [ -d "$DYNAWO_LIBIIDM_HOME/lib/cmake/IidmBridge" ]; then
+    mkdir -p share/cmake
+    cp -R -P $DYNAWO_LIBIIDM_HOME/lib/cmake/IidmBridge share/cmake/
+  elif [ -d "$DYNAWO_LIBIIDM_HOME/lib64/cmake/IidmBridge" ]; then
+    mkdir -p share/cmake
+    cp -R -P $DYNAWO_LIBIIDM_HOME/lib64/cmake/IidmBridge share/cmake/
   fi
 
   mkdir -p cmake
@@ -2259,7 +2271,12 @@ reset_environment_variables() {
   ld_library_path_remove $DYNAWO_SUNDIALS_INSTALL_DIR/lib
   ld_library_path_remove $DYNAWO_LIBZIP_HOME/lib
   ld_library_path_remove $DYNAWO_LIBXML_HOME/lib
+  ld_library_path_remove $DYNAWO_LIBIIDM_HOME/lib64
   ld_library_path_remove $DYNAWO_LIBIIDM_HOME/lib
+  if [ -n "$JAVA_HOME" ]; then
+    ld_library_path_remove $JAVA_HOME/lib/server
+    ld_library_path_remove $JAVA_HOME/lib
+  fi
   ld_library_path_remove $DYNAWO_ADEPT_INSTALL_DIR/lib
   ld_library_path_remove $DYNAWO_XERCESC_INSTALL_DIR/lib
   ld_library_path_remove $DYNAWO_INSTALL_DIR/lib

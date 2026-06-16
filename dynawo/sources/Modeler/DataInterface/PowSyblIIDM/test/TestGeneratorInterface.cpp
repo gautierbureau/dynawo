@@ -17,73 +17,39 @@
 #include "DYNCommon.h"
 #include "DYNVoltageLevelInterfaceIIDM.h"
 
-#include <powsybl/iidm/Bus.hpp>
-#include <powsybl/iidm/Generator.hpp>
-#include <powsybl/iidm/GeneratorAdder.hpp>
-#include <powsybl/iidm/Network.hpp>
-#include <powsybl/iidm/Substation.hpp>
-#include <powsybl/iidm/extensions/iidm/ActivePowerControl.hpp>
-#include <powsybl/iidm/extensions/iidm/ActivePowerControlAdder.hpp>
-#include <powsybl/iidm/extensions/iidm/CoordinatedReactiveControl.hpp>
-#include <powsybl/iidm/extensions/iidm/CoordinatedReactiveControlAdder.hpp>
-#include <powsybl/iidm/ExtensionProviders.hpp>
+#include <iidm/Network.h>
+#include <iidm/NetworkFactory.h>
+#include <iidm/Generator.h>
+#include <iidm/VoltageLevel.h>
+#include <iidm/Bus.h>
 
 #include "make_unique.hpp"
 #include "gtest_dynawo.h"
 
-namespace powsybl {
-namespace iidm {
-
-static Network
-createGeneratorNetwork() {
-  Network network("test", "test");
-  Substation& substation = network.newSubstation()
-                                  .setId("S1")
-                                  .setName("S1_NAME")
-                                  .setCountry(Country::FR)
-                                  .setTso("TSO")
-                                  .add();
-
-  VoltageLevel& vl1 = substation.newVoltageLevel()
-                                .setId("VL1")
-                                .setName("VL1_NAME")
-                                .setTopologyKind(TopologyKind::BUS_BREAKER)
-                                .setNominalV(382.0)
-                                .setLowVoltageLimit(340.0)
-                                .setHighVoltageLimit(420.0)
-                                .add();
-
-  vl1.getBusBreakerView().newBus().setId("VL1_BUS1").add();
-
-  return network;
-}
-}  // namespace iidm
-}  // namespace powsybl
+#include <limits>
 
 namespace DYN {
-using powsybl::iidm::createGeneratorNetwork;
+
+static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
+  for (auto& vl : net.getVoltageLevels())
+    if (vl.getId() == id) return vl;
+  throw std::runtime_error("VoltageLevel not found: " + id);
+}
+
+static iidm::Bus findBus(iidm::VoltageLevel& vl, const std::string& id) {
+  for (auto& b : vl.getBusBreakerView().getBuses())
+    if (b.getId() == id) return b;
+  throw std::runtime_error("Bus not found: " + id);
+}
 
 TEST(DataInterfaceTest, Generator_1) {
-  powsybl::iidm::Network network = createGeneratorNetwork();
-  powsybl::iidm::VoltageLevel& vl1 = network.getVoltageLevel("VL1");
-  powsybl::iidm::Bus& bus1 = vl1.getBusBreakerView().getBus("VL1_BUS1");
-  powsybl::iidm::Generator& gen =    vl1.newGenerator()
-     .setId("GEN1")
-     .setName("GEN1_NAME")
-     .setBus(bus1.getId())
-     .setConnectableBus(bus1.getId())
-     .setEnergySource(powsybl::iidm::EnergySource::WIND)
-     .setMaxP(50.0)
-     .setMinP(3.0)
-     .setRatedS(4.0)
-     .setTargetP(45.0)
-     .setTargetQ(5.0)
-     .setTargetV(24.0)
-     .setVoltageRegulatorOn(true)
-     .add();
+  auto net = iidm::NetworkFactory::load("resources/generator_basic.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto bus1 = findBus(vl, "VL1_BUS1");
+  auto gen = net.getGenerator("GEN1").value();
 
   GeneratorInterfaceIIDM genItf(gen);
-  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl1);
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
   genItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(genItf.getID(), "GEN1");
 
@@ -97,13 +63,13 @@ TEST(DataInterfaceTest, Generator_1) {
   genItf.importStaticParameters();
 
   ASSERT_EQ(genItf.getBusInterface().get(), nullptr);
-  std::unique_ptr<BusInterface> busItf = DYN::make_unique<BusInterfaceIIDM>(bus1);
+  std::unique_ptr<BusInterface> busItf = DYN::make_unique<BusInterfaceIIDM>(bus1, vl);
   genItf.setBusInterface(std::move(busItf));
   ASSERT_EQ(genItf.getBusInterface().get()->getID(), "VL1_BUS1");
 
   genItf.importStaticParameters();
 
-  const std::shared_ptr<VoltageLevelInterface> voltageLevelItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl1);
+  const std::shared_ptr<VoltageLevelInterface> voltageLevelItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
   genItf.setVoltageLevelInterface(voltageLevelItf);
 
   ASSERT_TRUE(genItf.getInitialConnected());
@@ -134,78 +100,16 @@ TEST(DataInterfaceTest, Generator_1) {
   genItf.setCountry("");
   ASSERT_TRUE(genItf.getCountry().empty());
 
+  // Generator without explicit reactive limits: iidm-bridge auto-creates
+  // default minMaxReactiveLimits = [-max_double, +max_double], so getQMin /
+  // getQMax / getQNom go through the minMax branch and return those defaults.
   ASSERT_EQ(genItf.getQMin(), -std::numeric_limits<double>::max());
   ASSERT_EQ(genItf.getQMax(), std::numeric_limits<double>::max());
   ASSERT_EQ(genItf.getQNom(), std::numeric_limits<double>::max());
-  gen.newMinMaxReactiveLimits().setMinQ(1.0).setMaxQ(2.0).add();
-  ASSERT_EQ(genItf.getQMin(), 1.0);
-  ASSERT_EQ(genItf.getQMax(), 2.0);
-  ASSERT_EQ(genItf.getQNom(), 2.0);
-  gen.newReactiveCapabilityCurve()
-     .beginPoint()
-       .setP(1)
-       .setMinQ(15)
-       .setMaxQ(25)
-     .endPoint()
-     .beginPoint()
-       .setP(2)
-       .setMinQ(10)
-       .setMaxQ(20)
-     .endPoint()
-     .add();
-  ASSERT_EQ(genItf.getQMin(), 15.0);
-  ASSERT_EQ(genItf.getQMax(), 25.0);
-  ASSERT_EQ(genItf.getQNom(), 25.0);
-  gen.newReactiveCapabilityCurve()
-     .beginPoint()
-       .setP(-30)
-       .setMinQ(15)
-       .setMaxQ(25)
-     .endPoint()
-     .beginPoint()
-       .setP(-20)
-       .setMinQ(10)
-       .setMaxQ(20)
-     .endPoint()
-     .add();
-  ASSERT_EQ(genItf.getQMin(), 10.0);
-  ASSERT_EQ(genItf.getQMax(), 20.0);
-  ASSERT_EQ(genItf.getQNom(), 25.0);
-  gen.newReactiveCapabilityCurve()
-     .beginPoint()
-       .setP(-20)
-       .setMinQ(15)
-       .setMaxQ(25)
-     .endPoint()
-     .beginPoint()
-       .setP(0)
-       .setMinQ(10)
-       .setMaxQ(20)
-     .endPoint()
-     .add();
-  ASSERT_EQ(genItf.getQMin(), 12.5);
-  ASSERT_EQ(genItf.getQMax(), 22.5);
-  ASSERT_EQ(genItf.getQNom(), 25.0);
-  ASSERT_EQ(genItf.getReactiveCurvesPoints().size(), 2);
-  gen.newReactiveCapabilityCurve()
-     .beginPoint()
-       .setP(-10)
-       .setMinQ(-30)
-       .setMaxQ(25)
-     .endPoint()
-     .beginPoint()
-       .setP(0)
-       .setMinQ(10)
-       .setMaxQ(20)
-     .endPoint()
-     .add();
-  ASSERT_EQ(genItf.getQNom(), 30.0);
 
   ASSERT_TRUE(genItf.isConnected());
   ASSERT_TRUE(genItf.isPartiallyConnected());
-  // TODO(TBA) genItf.exportStateVariablesUnitComponent();
   gen.getTerminal().disconnect();
-  // TODO(TBA) genItf.exportStateVariablesUnitComponent();
   ASSERT_FALSE(genItf.isPartiallyConnected());
   ASSERT_FALSE(genItf.isConnected());
   ASSERT_TRUE(genItf.getInitialConnected());
@@ -214,69 +118,122 @@ TEST(DataInterfaceTest, Generator_1) {
   ASSERT_DOUBLE_EQUALS_DYNAWO(genItf.getActivePowerControlDroop(), 0.);
   ASSERT_FALSE(genItf.hasCoordinatedReactiveControl());
   ASSERT_DOUBLE_EQUALS_DYNAWO(genItf.getCoordinatedReactiveControlPercentage(), 0.);
+}
 
-  gen.newExtension<powsybl::iidm::extensions::iidm::ActivePowerControlAdder>().withDroop(4.0).withParticipate(true).add();
-  gen.newExtension<powsybl::iidm::extensions::iidm::CoordinatedReactiveControlAdder>().withQPercent(50).add();
-  GeneratorInterfaceIIDM genItfWithExtensions(gen);
-  ASSERT_TRUE(genItfWithExtensions.hasActivePowerControl());
-  ASSERT_TRUE(genItfWithExtensions.isParticipating());
-  ASSERT_DOUBLE_EQUALS_DYNAWO(genItfWithExtensions.getActivePowerControlDroop(), 4.);
-  ASSERT_TRUE(genItfWithExtensions.hasCoordinatedReactiveControl());
-  ASSERT_DOUBLE_EQUALS_DYNAWO(genItfWithExtensions.getCoordinatedReactiveControlPercentage(), 50.);
-}  // TEST(DataInterfaceTest, Generator_1)
-
-TEST(DataInterfaceTest, Generator_2) {
-  powsybl::iidm::Network network = createGeneratorNetwork();
-  powsybl::iidm::VoltageLevel& vl1 = network.getVoltageLevel("VL1");
-  powsybl::iidm::Bus& bus1 = vl1.getBusBreakerView().getBus("VL1_BUS1");
-  powsybl::iidm::Generator& gen = vl1.newGenerator()
-                      .setId("GEN1")
-                      .setName("GEN1_NAME")
-                      .setConnectableBus(bus1.getId())
-                      .setMaxP(50.0)
-                      .setMinP(3.0)
-                      .setTargetP(45.0)
-                      .setReactivePowerSetpoint(10.0)
-                      .setVoltageRegulatorOn(false)
-                      .add();
+TEST(DataInterfaceTest, Generator_MinMax) {
+  auto net = iidm::NetworkFactory::load("resources/generator_minmax.xiidm");
+  auto gen = net.getGenerator("GEN1").value();
 
   GeneratorInterfaceIIDM genItf(gen);
-  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl1);
+  ASSERT_EQ(genItf.getQMin(), 1.0);
+  ASSERT_EQ(genItf.getQMax(), 2.0);
+  ASSERT_EQ(genItf.getQNom(), 2.0);
+}
+
+TEST(DataInterfaceTest, Generator_2) {
+  auto net = iidm::NetworkFactory::load("resources/generator_not_connected.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto gen = net.getGenerator("GEN1").value();
+
+  GeneratorInterfaceIIDM genItf(gen);
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
   genItf.setVoltageLevelInterface(vlItf);
   ASSERT_EQ(genItf.getID(), "GEN1");
   ASSERT_EQ(genItf.getEnergySource(), GeneratorInterface::SOURCE_OTHER);
 
   ASSERT_FALSE(genItf.getInitialConnected());
   ASSERT_FALSE(genItf.isVoltageRegulationOn());
-
   ASSERT_EQ(genItf.getTargetV(), 0.0);
-  gen.setTargetV(24.0).setVoltageRegulatorOn(true).setReactivePowerSetpoint(stdcxx::nan());
+
+  // set targetV and voltageRegulatorOn via setters; the new bridge keeps the
+  // previously-set targetQ (10.0 from the xiidm file) unless we explicitly
+  // clear it. The DataInterface only treats targetQ as "absent" when it is
+  // NaN, so reset it here to reproduce the "regulator is on, no targetQ"
+  // case the test exercises.
+  gen.setTargetV(24.0)
+     .setVoltageRegulatorOn(true)
+     .setTargetQ(std::numeric_limits<double>::quiet_NaN());
   ASSERT_EQ(genItf.getTargetQ(), 0.0);
   genItf.importStaticParameters();
-}  // TEST(DataInterfaceTest, Generator_2)
+}
 
 TEST(DataInterfaceTest, Generator_3) {
-  powsybl::iidm::Network network = createGeneratorNetwork();
-  powsybl::iidm::VoltageLevel& vl1 = network.getVoltageLevel("VL1");
-  powsybl::iidm::Bus& bus1 = vl1.getBusBreakerView().getBus("VL1_BUS1");
-  powsybl::iidm::Generator& gen =  vl1.newGenerator()
-     .setId("GEN1")
-     .setName("GEN1_NAME")
-     .setBus(bus1.getId())
-     .setConnectableBus(bus1.getId())
-     .setMaxP(50.0)
-     .setMinP(3.0)
-     .setTargetP(45.0)
-     .setTargetQ(5.0)
-     .setTargetV(24.0)
-     .setVoltageRegulatorOn(true)
-     .add();
-
-  gen.getTerminal().setP(0.0);
-  gen.getTerminal().setQ(0.0);
+  auto net = iidm::NetworkFactory::load("resources/generator_initial_pq.xiidm");
+  auto gen = net.getGenerator("GEN1").value();
 
   GeneratorInterfaceIIDM genItf(gen);
-
   ASSERT_TRUE(genItf.hasInitialConditions());
-}  // TEST(DataInterfaceTest, Generator_3)
+}
+
+// Curve P=1:15/25, P=2:10/20 with terminal P=10 → pGen=-10 < P[0]=1 → use first point
+TEST(DataInterfaceTest, Generator_Curve1) {
+  auto net = iidm::NetworkFactory::load("resources/generator_curve1.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto gen = net.getGenerator("GEN1").value();
+  gen.getTerminal().setP(10.0);
+
+  GeneratorInterfaceIIDM genItf(gen);
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  genItf.setVoltageLevelInterface(vlItf);
+  ASSERT_EQ(genItf.getQMin(), 15.0);
+  ASSERT_EQ(genItf.getQMax(), 25.0);
+  ASSERT_EQ(genItf.getQNom(), 25.0);
+}
+
+// Curve P=-30:15/25, P=-20:10/20 with terminal P=10 → pGen=-10 > last P=-20 → use last point
+TEST(DataInterfaceTest, Generator_Curve2) {
+  auto net = iidm::NetworkFactory::load("resources/generator_curve2.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto gen = net.getGenerator("GEN1").value();
+  gen.getTerminal().setP(10.0);
+
+  GeneratorInterfaceIIDM genItf(gen);
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  genItf.setVoltageLevelInterface(vlItf);
+  ASSERT_EQ(genItf.getQMin(), 10.0);
+  ASSERT_EQ(genItf.getQMax(), 20.0);
+  ASSERT_EQ(genItf.getQNom(), 25.0);
+}
+
+// Curve P=-20:15/25, P=0:10/20 with terminal P=10 → pGen=-10 → interpolate t=0.5
+TEST(DataInterfaceTest, Generator_Curve3) {
+  auto net = iidm::NetworkFactory::load("resources/generator_curve3.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto gen = net.getGenerator("GEN1").value();
+  gen.getTerminal().setP(10.0);
+
+  GeneratorInterfaceIIDM genItf(gen);
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  genItf.setVoltageLevelInterface(vlItf);
+  ASSERT_EQ(genItf.getQMin(), 12.5);
+  ASSERT_EQ(genItf.getQMax(), 22.5);
+  ASSERT_EQ(genItf.getQNom(), 25.0);
+  ASSERT_EQ(genItf.getReactiveCurvesPoints().size(), 2);
+}
+
+// Curve P=-10:-30/25, P=0:10/20 with terminal P=10 → pGen=-10 → first point → qNom=30
+TEST(DataInterfaceTest, Generator_Curve4) {
+  auto net = iidm::NetworkFactory::load("resources/generator_curve4.xiidm");
+  auto vl = findVL(net, "VL1");
+  auto gen = net.getGenerator("GEN1").value();
+  gen.getTerminal().setP(10.0);
+
+  GeneratorInterfaceIIDM genItf(gen);
+  const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
+  genItf.setVoltageLevelInterface(vlItf);
+  ASSERT_EQ(genItf.getQNom(), 30.0);
+}
+
+TEST(DataInterfaceTest, Generator_WithExt) {
+  auto net = iidm::NetworkFactory::load("resources/generator_with_ext.xiidm");
+  auto gen = net.getGenerator("GEN1").value();
+
+  GeneratorInterfaceIIDM genItfWithExtensions(gen);
+  ASSERT_TRUE(genItfWithExtensions.hasActivePowerControl());
+  ASSERT_TRUE(genItfWithExtensions.isParticipating());
+  ASSERT_DOUBLE_EQUALS_DYNAWO(genItfWithExtensions.getActivePowerControlDroop(), 4.);
+  ASSERT_TRUE(genItfWithExtensions.hasCoordinatedReactiveControl());
+  ASSERT_DOUBLE_EQUALS_DYNAWO(genItfWithExtensions.getCoordinatedReactiveControlPercentage(), 50.);
+}
+
 }  // namespace DYN

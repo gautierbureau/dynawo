@@ -16,94 +16,50 @@
 #include "DYNBusInterfaceIIDM.h"
 #include "DYNVoltageLevelInterfaceIIDM.h"
 
-#include <powsybl/iidm/HvdcLine.hpp>
-#include <powsybl/iidm/HvdcLineAdder.hpp>
-#include <powsybl/iidm/LccConverterStation.hpp>
-#include <powsybl/iidm/LccConverterStationAdder.hpp>
-#include <powsybl/iidm/Network.hpp>
-#include <powsybl/iidm/Substation.hpp>
-#include <powsybl/iidm/Terminal.hpp>
+#include <iidm/Network.h>
+#include <iidm/NetworkFactory.h>
+#include <iidm/VoltageLevel.h>
+#include <iidm/Bus.h>
+#include <iidm/LccConverterStation.h>
 
 #include "gtest_dynawo.h"
 
-namespace powsybl {
-namespace iidm {
-
-static Network
-createHvdcLccConverterStationNetwork() {
-  Network network("test", "test");
-  Substation& substation = network.newSubstation().setId("S1").setName("S1_NAME").setCountry(Country::FR).setTso("TSO").add();
-
-  VoltageLevel& vl1 = substation.newVoltageLevel()
-                          .setId("VL1")
-                          .setName("VL1_NAME")
-                          .setTopologyKind(TopologyKind::BUS_BREAKER)
-                          .setNominalV(380.0)
-                          .setLowVoltageLimit(340.0)
-                          .setHighVoltageLimit(420.0)
-                          .add();
-
-  Bus& vl1Bus1 = vl1.getBusBreakerView().newBus().setId("VL1_BUS1").add();
-
-  vl1.newLccConverterStation()
-      .setId("LCC1")
-      .setName("LCC1_NAME")
-      .setBus(vl1Bus1.getId())
-      .setConnectableBus(vl1Bus1.getId())
-      .setLossFactor(2.0)
-      .setPowerFactor(-.2)
-      .add();
-
-  vl1.newLccConverterStation()
-      .setId("LCC2")
-      .setName("LCC2_NAME")
-      .setBus(vl1Bus1.getId())
-      .setConnectableBus(vl1Bus1.getId())
-      .setLossFactor(3.0)
-      .setPowerFactor(-.3)
-      .add();
-
-  network.newHvdcLine()
-      .setId("HVDC1")
-      .setName("HVDC1_NAME")
-      .setActivePowerSetpoint(111.1)
-      .setConvertersMode(HvdcLine::ConvertersMode::SIDE_1_RECTIFIER_SIDE_2_INVERTER)
-      .setConverterStationId1("LCC1")
-      .setConverterStationId2("LCC2")
-      .setMaxP(12.0)
-      .setNominalV(13.0)
-      .setR(14.0)
-      .add();
-
-  return network;
-}  // createHvdcConverterStationNetwork()
-}  // namespace iidm
-}  // namespace powsybl
-
 namespace DYN {
 
-using powsybl::iidm::createHvdcLccConverterStationNetwork;
+static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
+  for (auto& vl : net.getVoltageLevels())
+    if (vl.getId() == id) return vl;
+  throw std::runtime_error("VoltageLevel not found: " + id);
+}
+
+static iidm::Bus findBus(iidm::VoltageLevel& vl, const std::string& id) {
+  for (auto& b : vl.getBusBreakerView().getBuses())
+    if (b.getId() == id) return b;
+  throw std::runtime_error("Bus not found: " + id);
+}
 
 TEST(DataInterfaceTest, LccConverter) {
-  powsybl::iidm::Network network = createHvdcLccConverterStationNetwork();
-  powsybl::iidm::VoltageLevel& vl1 = network.getVoltageLevel("VL1");
-  powsybl::iidm::LccConverterStation& lcc = network.getLccConverterStation("LCC1");
+  auto net = iidm::NetworkFactory::load("resources/lcc.xiidm");
+  auto vl1 = findVL(net, "VL1");
+  auto lcc = net.getLccConverterStation("LCC1").value();
 
-  DYN::LccConverterInterfaceIIDM Ifce(lcc);
-  const std::shared_ptr<DYN::VoltageLevelInterface> voltageLevelIfce = std::make_shared<DYN::VoltageLevelInterfaceIIDM>(vl1);
+  LccConverterInterfaceIIDM Ifce(lcc);
+  const std::shared_ptr<VoltageLevelInterface> voltageLevelIfce = std::make_shared<VoltageLevelInterfaceIIDM>(vl1);
   Ifce.setVoltageLevelInterfaceInjector(voltageLevelIfce);
   ASSERT_EQ(Ifce.getID(), "LCC1");
   ASSERT_EQ(Ifce.getComponentVarIndex("nothing"), -1);
   ASSERT_DOUBLE_EQ(Ifce.getLossFactor(), 2.0);
-  ASSERT_DOUBLE_EQ(Ifce.getPowerFactor(), -0.2L);
+  // The new bridge stores powerFactor as a float on the JVM side, so the
+  // round-trip back to double introduces a small ULP error. Compare with
+  // float precision instead of ASSERT_DOUBLE_EQ.
+  ASSERT_FLOAT_EQ(static_cast<float>(Ifce.getPowerFactor()), -0.2f);
 
   ASSERT_TRUE(Ifce.getInitialConnected());
   Ifce.exportStateVariablesUnitComponent();
   Ifce.importStaticParameters();
 
-  powsybl::iidm::Bus& b1 = vl1.getBusBreakerView().newBus().setId("BUS1").add();
-  b1.setV(410.0).setAngle(3.14);
-  const std::shared_ptr<BusInterface> x_b1 = std::make_shared<BusInterfaceIIDM>(b1);
+  auto bus1 = findBus(vl1, "BUS1");
+  const std::shared_ptr<BusInterface> x_b1 = std::make_shared<BusInterfaceIIDM>(bus1, vl1);
 
   ASSERT_EQ(Ifce.getBusInterface(), nullptr);
   Ifce.setBusInterface(x_b1);
@@ -128,7 +84,7 @@ TEST(DataInterfaceTest, LccConverter) {
 
   ASSERT_FALSE(Ifce.hasInitialConditions());
 
-  ASSERT_EQ(Ifce.getLccIIDM().getHvdcLine().get().getId(), "HVDC1");
+  ASSERT_EQ(Ifce.getLccIIDM().getHvdcLine().getId(), "HVDC1");
   Ifce.importStaticParameters();
 
   ASSERT_EQ(Ifce.getLccIIDM().getId(), lcc.getId());
@@ -142,17 +98,14 @@ TEST(DataInterfaceTest, LccConverter) {
   ASSERT_FALSE(Ifce.isPartiallyConnected());
   ASSERT_FALSE(Ifce.isConnected());
   ASSERT_TRUE(Ifce.getInitialConnected());
-}  // TEST(DataInterfaceTest, LccConverter)
+}
 
 TEST(DataInterfaceTest, LccConverter_2) {
-  powsybl::iidm::Network network = createHvdcLccConverterStationNetwork();
-  powsybl::iidm::LccConverterStation& lcc = network.getLccConverterStation("LCC1");
+  auto net = iidm::NetworkFactory::load("resources/lcc2.xiidm");
+  auto lcc = net.getLccConverterStation("LCC1").value();
 
-  lcc.getTerminal().setP(0.0);
-  lcc.getTerminal().setQ(0.0);
-
-  DYN::LccConverterInterfaceIIDM Ifce(lcc);
-
+  LccConverterInterfaceIIDM Ifce(lcc);
   ASSERT_TRUE(Ifce.hasInitialConditions());
-}  // TEST(DataInterfaceTest, LccConverter_2)
+}
+
 }  // namespace DYN

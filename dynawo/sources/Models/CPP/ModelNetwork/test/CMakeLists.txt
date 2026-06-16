@@ -32,7 +32,7 @@ add_executable(${MODULE_NAME} ${MODULE_SOURCES})
 
 target_include_directories(${MODULE_NAME}
   PRIVATE
-    $<TARGET_PROPERTY:IIDM::iidm,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:IidmBridge::iidmbridge,INTERFACE_INCLUDE_DIRECTORIES>
   )
 
 target_link_libraries(${MODULE_NAME}
@@ -42,7 +42,7 @@ target_link_libraries(${MODULE_NAME}
   DYNModelNetwork
   dynawo_API_CSTR
   dynawo_API_TL
-  IIDM::iidm
+  IidmBridge::iidmbridge
   dynawo_Test)
 
 add_custom_target(${MODULE_NAME}-tests

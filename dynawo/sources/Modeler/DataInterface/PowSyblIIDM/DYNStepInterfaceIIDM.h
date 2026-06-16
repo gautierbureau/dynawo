@@ -22,8 +22,8 @@
 
 #include "DYNStepInterface.h"
 
-#include <powsybl/iidm/PhaseTapChangerStep.hpp>
-#include <powsybl/iidm/RatioTapChangerStep.hpp>
+#include <iidm/PhaseTapChangerStep.h>
+#include <iidm/RatioTapChangerStep.h>
 
 #include <boost/optional.hpp>
 
@@ -38,13 +38,13 @@ class StepInterfaceIIDM : public StepInterface {
    * @brief Constructor
    * @param step phase tap changer step's iidm instance
    */
-  explicit StepInterfaceIIDM(const powsybl::iidm::PhaseTapChangerStep& step);
+  explicit StepInterfaceIIDM(const iidm::PhaseTapChangerStep& step);
 
   /**
    * @brief Constructor
    * @param step ratio tap changer step's iidm instance
    */
-  explicit StepInterfaceIIDM(const powsybl::iidm::RatioTapChangerStep& step);
+  explicit StepInterfaceIIDM(const iidm::RatioTapChangerStep& step);
 
   /**
    * @copydoc StepInterface::getR() const
@@ -77,15 +77,13 @@ class StepInterfaceIIDM : public StepInterface {
   double getAlpha() const override;
 
  private:
-  /**
-   * @brief empty constructor
-   */
-  StepInterfaceIIDM();
+  /// Kind of step stored.
+  enum class Kind { PHASE, RATIO };
 
-  boost::optional<powsybl::iidm::PhaseTapChangerStep> phaseStep_;  ///< reference to the iidm phase tap changer step instance
-  boost::optional<powsybl::iidm::RatioTapChangerStep> ratioStep_;  ///< reference to the iidm ratio tap changer step instance
-  bool isPhaseStep_;                                               ///< @b true if the step belongs to a phase tap changer
-};                                                                 ///< interface class for step of tap changer
+  boost::optional<iidm::PhaseTapChangerStep> phaseStep_;  ///< reference to the iidm phase tap changer step instance
+  boost::optional<iidm::RatioTapChangerStep> ratioStep_;  ///< reference to the iidm ratio tap changer step instance
+  Kind kind_;                                             ///< discriminant for the step kind
+};                                                        ///< interface class for step of tap changer
 
 }  // namespace DYN
 

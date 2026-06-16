@@ -20,13 +20,10 @@
 #ifndef MODELER_DATAINTERFACE_POWSYBLIIDM_DYNLINEINTERFACEIIDM_H_
 #define MODELER_DATAINTERFACE_POWSYBLIIDM_DYNLINEINTERFACEIIDM_H_
 
-#include <powsybl/iidm/Line.hpp>
+#include <iidm/Line.h>
 
 #include "DYNLineInterface.h"
 #include "DYNCurrentLimitInterface.h"
-#include "DYNActiveSeasonIIDMExtension.h"
-#include "DYNCurrentLimitsPerSeasonIIDMExtension.h"
-#include "DYNIIDMExtensions.hpp"
 
 #include <boost/noncopyable.hpp>
 
@@ -58,7 +55,7 @@ class LineInterfaceIIDM : public LineInterface, public boost::noncopyable {
    * @brief Constructor
    * @param line line's iidm instance
    */
-  explicit LineInterfaceIIDM(powsybl::iidm::Line& line);
+  explicit LineInterfaceIIDM(const iidm::Line& line);
 
   /**
    * @copydoc LineInterface::getVNom1() const
@@ -288,7 +285,8 @@ class LineInterfaceIIDM : public LineInterface, public boost::noncopyable {
   bool isPartiallyConnected() const override;
 
  private:
-  powsybl::iidm::Line& lineIIDM_;                                    ///< reference to the iidm line instance
+  iidm::Line lineIIDM_;                                     ///< iidm line instance (value-typed handle)
+  std::string lineId_;                                      ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<BusInterface> busInterface1_;                    ///< busInterface of the bus where the side 1 of the line is connected
   std::shared_ptr<BusInterface> busInterface2_;                    ///< busInterface of the bus where the side 2 of the line is connected
   std::shared_ptr<VoltageLevelInterface> voltageLevelInterface1_;  ///< voltageLevel interface where the side 1 of the line is connected
@@ -298,12 +296,6 @@ class LineInterfaceIIDM : public LineInterface, public boost::noncopyable {
   std::vector<std::unique_ptr<CurrentLimitInterface> > currentLimitInterfaces2_;  ///< current limit interfaces for side 2
   boost::optional<bool> initialConnected1_;                                         ///< side 1 initially connected
   boost::optional<bool> initialConnected2_;                                         ///< side 2 initially connected
-
-  ActiveSeasonIIDMExtension* activeSeasonExtension_;                                         ///< Active season extension
-  IIDMExtensions::DestroyFunction<ActiveSeasonIIDMExtension> destroyActiveSeasonExtension_;  ///< active season destroy function
-  CurrentLimitsPerSeasonIIDMExtension* currentLimitsPerSeasonExtension_;                        ///< current limit per season IIDM extension
-  IIDMExtensions::DestroyFunction<CurrentLimitsPerSeasonIIDMExtension>
-      destroyCurrentLimitsPerSeasonExtension_;  ///< current limit per season IIDM extension destroy function
 };                                                                                  ///< Interface class for Line model
 }  // namespace DYN
 

@@ -25,9 +25,10 @@
 #include "DYNCalculatedBusInterfaceIIDM.h"
 #include "DYNSwitchInterface.h"
 
-#include <powsybl/iidm/VoltageLevel.hpp>
-#include <powsybl/iidm/extensions/SlackTerminal.hpp>
+#include <iidm/VoltageLevel.h>
+#include <iidm/SlackTerminal.h>
 
+#include <string>
 #include <unordered_map>
 #include <boost/optional.hpp>
 
@@ -43,7 +44,7 @@ class VoltageLevelInterfaceIIDM : public VoltageLevelInterface {
    * @brief Constructor
    * @param voltageLevel : voltageLevel's iidm instance
    */
-  explicit VoltageLevelInterfaceIIDM(powsybl::iidm::VoltageLevel& voltageLevel);
+  explicit VoltageLevelInterfaceIIDM(const iidm::VoltageLevel& voltageLevel);
 
   /**
    * @brief Getter for the voltageLevel's id
@@ -230,7 +231,8 @@ class VoltageLevelInterfaceIIDM : public VoltageLevelInterface {
   unsigned countNumberOfSwitchesToClose(const std::vector<std::string>& path) const;
 
  private:
-  powsybl::iidm::VoltageLevel& voltageLevelIIDM_;  ///< reference to the iidm voltageLevel instance
+  iidm::VoltageLevel voltageLevelIIDM_;   ///< iidm voltageLevel instance (value-typed handle)
+  std::string voltageLevelId_;  ///< cached id (iidm::VoltageLevel::getId returns by value)
   bool isNodeBreakerTopology_;  ///< @b true if the topology of the voltageLevel is node breaker topology
   std::unordered_map<std::shared_ptr<SwitchInterface>, double, SwitchInterfaceHash> switchState_;  ///< state to apply to switch (due to topology change)
   std::map<std::string, std::shared_ptr<SwitchInterface> > switchesById_;  ///< switch interface by Id
@@ -248,7 +250,8 @@ class VoltageLevelInterfaceIIDM : public VoltageLevelInterface {
   std::vector<std::shared_ptr<LccConverterInterface> > lccConverters_;  ///< lccConverter interface created
   std::string country_;  ///< country of the voltage level
 
-  stdcxx::Reference<powsybl::iidm::extensions::SlackTerminal> slackTerminalExtension_;  ///< slack terminal extension
+  bool hasSlackTerminal_ = false;  ///< whether the voltage level carries a SlackTerminal extension
+  iidm::SlackTerminal slackTerminal_;  ///< slack terminal handle (valid only if hasSlackTerminal_)
 };  /// end of class declaration
 
 }  // namespace DYN

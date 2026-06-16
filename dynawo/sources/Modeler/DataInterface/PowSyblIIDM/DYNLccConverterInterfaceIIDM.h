@@ -26,7 +26,7 @@
 
 #include "DYNInjectorInterfaceIIDM.h"
 
-#include <powsybl/iidm/LccConverterStation.hpp>
+#include <iidm/LccConverterStation.h>
 
 #include <string>
 
@@ -36,13 +36,13 @@ namespace DYN {
 /**
  * class LccConverterInterfaceIIDM
  */
-class LccConverterInterfaceIIDM : public LccConverterInterface, public InjectorInterfaceIIDM {
+class LccConverterInterfaceIIDM : public LccConverterInterface, public InjectorInterfaceIIDM<iidm::LccConverterStation> {
  public:
   /**
    * @brief Constructor
    * @param lcc lcc converter iidm instance
    */
-  explicit LccConverterInterfaceIIDM(powsybl::iidm::LccConverterStation& lcc);
+  explicit LccConverterInterfaceIIDM(const iidm::LccConverterStation& lcc);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -128,10 +128,10 @@ class LccConverterInterfaceIIDM : public LccConverterInterface, public InjectorI
    * @brief Getter for the reference to the iidm lcc converter instance
    * @return the iidm lcc converter instance
    */
-  powsybl::iidm::LccConverterStation& getLccIIDM();
+  iidm::LccConverterStation& getLccIIDM();
 
  private:
-  powsybl::iidm::LccConverterStation& lccConverterIIDM_;  ///< reference to the iidm lcc converter instance
+  iidm::LccConverterStation lccConverterIIDM_;  ///< iidm lcc converter instance (value-typed handle)
 };
 }  // namespace DYN
 

@@ -7,6 +7,12 @@
 # SPDX-License-Identifier: MPL-2.0
 #
 # This file is part of Dynawo, an hybrid C++/Modelica open source time domain simulation tool for power systems.
+#
+# Replacement for powsybl/powsybl-iidm4cpp:
+# https://github.com/gautierbureau/iidm4cpp (project: iidm-bridge-cpp)
+# CMake package: IidmBridge, exported target: IidmBridge::iidmbridge
+# The library is a GraalVM/JNI bridge; the consumer still needs
+# libpowsybl-iidm-native.so (GraalVM) or a JVM + powsybl-core at runtime.
 
 cmake_minimum_required(VERSION 3.12)
 
@@ -15,29 +21,41 @@ if(NOT DEFINED CPU_COUNT)
   message(FATAL_ERROR "CPUCount.cmake: file not found.")
 endif()
 
-set(package_name       "libiidm")
-set(package_config_dir "LibIIDM")
-set(package_install_dir  "${CMAKE_INSTALL_PREFIX}/${package_name}")
-string(TOUPPER "${package_name}" package_uppername)
-set(package_RequiredVersion 1.5.1)
-set(package_RequiredVersionName "1.5.1-rc2")
+set(package_name        "libiidm")
+set(package_config_dir  "IidmBridge")
+set(package_install_dir "${CMAKE_INSTALL_PREFIX}/${package_name}")
 
-set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/${package_name}/${package_config_dir}")
+# Pinning the master branch by commit SHA keeps builds reproducible while the
+# upstream project is in rapid pre-1.0 iteration. Bump this together with any
+# API migration work.
+set(iidm_bridge_git_tag "8bc24df")
 
-find_package(${package_name} ${package_RequiredVersion} EXACT QUIET CONFIG)
-
-if(${package_name}_FOUND)
-  add_custom_target("${package_name}" DEPENDS libxml2 boost)
-  message(STATUS "Found ${package_name} ${PACKAGE_VERSION}")
-
+if(DEFINED ENV{DYNAWO_LIBIIDM_GIT_URL})
+  set(iidm_bridge_git_url $ENV{DYNAWO_LIBIIDM_GIT_URL})
 else()
-  set(package_md5    5fd8efc385325e8494e2606b842a5c24)
-  if(DEFINED ENV{DYNAWO_LIBIIDM_DOWNLOAD_URL})
-    set(package_prefix_url $ENV{DYNAWO_LIBIIDM_DOWNLOAD_URL})
-  else()
-    set(package_prefix_url https://github.com/powsybl/powsybl-iidm4cpp/archive/refs/tags)
+  set(iidm_bridge_git_url https://github.com/gautierbureau/iidm4cpp.git)
+endif()
+
+set(CMAKE_PREFIX_PATH "${package_install_dir}/lib/cmake/${package_config_dir};${package_install_dir}")
+
+find_package(IidmBridge QUIET CONFIG)
+
+if(IidmBridge_FOUND)
+  add_custom_target("${package_name}" DEPENDS libxml2 boost)
+  message(STATUS "Found IidmBridge ${IidmBridge_VERSION}")
+else()
+  # iidm-bridge-cpp's BUILD_NATIVE step does find_program(native-image),
+  # which on Windows misses native-image.cmd shipped by GraalVM CE.
+  # Detect it ourselves and pass it through as a hint so the inner cmake
+  # configure step doesn't FATAL_ERROR out of "native-image not found".
+  set(_native_image_hint "")
+  if(WIN32 AND DEFINED ENV{JAVA_HOME})
+    if(EXISTS "$ENV{JAVA_HOME}/bin/native-image.cmd")
+      set(_native_image_hint "-DNATIVE_IMAGE_EXECUTABLE:FILEPATH=$ENV{JAVA_HOME}/bin/native-image.cmd")
+    elseif(EXISTS "$ENV{JAVA_HOME}/bin/native-image.exe")
+      set(_native_image_hint "-DNATIVE_IMAGE_EXECUTABLE:FILEPATH=$ENV{JAVA_HOME}/bin/native-image.exe")
+    endif()
   endif()
-  set(package_url  "${package_prefix_url}/v${package_RequiredVersionName}.tar.gz")
 
   include(ExternalProject)
   ExternalProject_Add(
@@ -46,8 +64,10 @@ else()
     DEPENDS           libxml2 boost
     INSTALL_DIR       "${package_install_dir}"
 
-    URL               ${package_url}
-    URL_MD5           ${package_md5}
+    GIT_REPOSITORY    ${iidm_bridge_git_url}
+    GIT_TAG           ${iidm_bridge_git_tag}
+    GIT_SHALLOW       0
+    UPDATE_DISCONNECTED 1
 
     DOWNLOAD_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/${package_name}"
     TMP_DIR           "${TMP_DIR}"
@@ -60,22 +80,27 @@ else()
 
     CMAKE_ARGS        "-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>"
                       "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}"
+                      "-DCMAKE_CXX_STANDARD=11"
                       "-DBOOST_ROOT:PATH=${BOOST_ROOT}"
                       "$<$<BOOL:${MSVC}>:-DBOOST_LIBRARYDIR=${BOOST_ROOT}/bin>"
-                      "-DCMAKE_PREFIX_PATH=${LIBXML2_HOME}"
-                      "$<$<BOOL:${FORCE_CXX11_ABI}>:-DCMAKE_CXX_FLAGS='-D_GLIBCXX_USE_CXX11_ABI=1'>"
+                      "$<$<BOOL:${FORCE_CXX11_ABI}>:-DCMAKE_CXX_FLAGS=-D_GLIBCXX_USE_CXX11_ABI=1>"
                       "$<$<BOOL:${MSVC}>:-DINSTALL_LIB_DIR:STRING=bin>"
                       "-DBUILD_SHARED_LIBS=ON"
-                      "-DBUILD_TESTS=OFF"
-                      "-DBUILD_TOOLS=OFF"
+                      "-DIIDM_BRIDGE_ENABLE_GRAALVM=ON"
+                      "-DIIDM_BRIDGE_ENABLE_JNI=ON"
+                      "-DIIDM_BRIDGE_BUILD_TESTS=OFF"
+                      "-DIIDM_BRIDGE_BUILD_EXAMPLES=OFF"
+                      "-DIIDM_BRIDGE_BUILD_JAVA=ON"
+                      "-DIIDM_BRIDGE_BUILD_NATIVE=ON"
+                      ${_native_image_hint}
   )
 
-  unset(package_git_repo)
+  unset(_native_image_hint)
 
-endif(${package_name}_FOUND)
+  unset(iidm_bridge_git_url)
+  unset(iidm_bridge_git_tag)
+endif()
 
-unset(package_RequiredVersion)
-unset(package_upper_name)
 unset(package_install_dir)
 unset(package_config_dir)
 unset(package_name)

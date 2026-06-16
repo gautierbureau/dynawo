@@ -23,11 +23,9 @@
 
 #include "DYNThreeWTransformerInterface.h"
 #include "DYNVoltageLevelInterface.h"
-#include "DYNActiveSeasonIIDMExtension.h"
 #include "DYNCurrentLimitInterface.h"
-#include "DYNIIDMExtensions.hpp"
 
-#include <powsybl/iidm/ThreeWindingsTransformer.hpp>
+#include <iidm/ThreeWindingsTransformer.h>
 
 
 namespace DYN {
@@ -46,7 +44,7 @@ class ThreeWTransformerInterfaceIIDM : public ThreeWTransformerInterface {
    * @brief Constructor
    * @param tfo three windings transformer's iidm instance
    */
-  explicit ThreeWTransformerInterfaceIIDM(powsybl::iidm::ThreeWindingsTransformer& tfo);
+  explicit ThreeWTransformerInterfaceIIDM(const iidm::ThreeWindingsTransformer& tfo);
 
   /**
    * @copydoc ThreeWTransformerInterface::addCurrentLimitInterface1(std::unique_ptr<CurrentLimitInterface> currentLimitInterface)
@@ -199,7 +197,8 @@ class ThreeWTransformerInterfaceIIDM : public ThreeWTransformerInterface {
   explicit ThreeWTransformerInterfaceIIDM(const ThreeWTransformerInterfaceIIDM& other) = delete;
 
  private:
-  powsybl::iidm::ThreeWindingsTransformer& tfoIIDM_;  ///< reference to the tfo's iidm instance
+  iidm::ThreeWindingsTransformer tfoIIDM_;  ///< three windings transformer iidm instance (value-typed handle)
+  std::string tfoId_;                        ///< cached id (iidm-bridge returns by value)
   std::shared_ptr<BusInterface> busInterface1_;  ///< busInterface of the bus where the side 1 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface2_;  ///< busInterface of the bus where the side 2 of the tfo is connected
   std::shared_ptr<BusInterface> busInterface3_;  ///< busInterface of the bus where the side 3 of the tfo is connected
@@ -212,8 +211,6 @@ class ThreeWTransformerInterfaceIIDM : public ThreeWTransformerInterface {
   boost::optional<bool> initialConnected1_;  ///< whether the tfo is initially connected at side 1
   boost::optional<bool> initialConnected2_;  ///< whether the tfo is initially connected at side 2
   boost::optional<bool> initialConnected3_;  ///< whether the tfo is initially connected at side 3
-  ActiveSeasonIIDMExtension* activeSeasonExtension_;                                         ///< Active season extension
-  IIDMExtensions::DestroyFunction<ActiveSeasonIIDMExtension> destroyActiveSeasonExtension_;  ///< active season destroy function
 };
 }  // namespace DYN
 

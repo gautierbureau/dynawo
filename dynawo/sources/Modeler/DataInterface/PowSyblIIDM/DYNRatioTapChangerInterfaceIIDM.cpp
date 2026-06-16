@@ -24,21 +24,18 @@
 
 #include "make_unique.hpp"
 
+#include <cmath>
+
 using boost::shared_ptr;
 
 namespace DYN {
 
-RatioTapChangerInterfaceIIDM::RatioTapChangerInterfaceIIDM(powsybl::iidm::RatioTapChanger& tapChanger, const std::string& terminalRefSide) :
+RatioTapChangerInterfaceIIDM::RatioTapChangerInterfaceIIDM(iidm::RatioTapChanger tapChanger, const std::string& terminalRefSide) :
   tapChangerIIDM_(tapChanger),
   terminalRefSide_(terminalRefSide) {
-  auto oldTapPosition = tapChanger.getTapPosition();
-  for (long i = tapChanger.getLowTapPosition(); i <= tapChanger.getHighTapPosition(); i++) {
-    tapChanger.setTapPosition(i);
-    const auto& x = tapChanger.getStep(i);
-    powsybl::iidm::RatioTapChangerStep R(x.getRho(), x.getR(), x.getX(), x.getG(), x.getB());
-    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(R));
+  for (const auto& step : tapChanger.getAllSteps()) {
+    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(step));
   }
-  tapChanger.setTapPosition(oldTapPosition);
 }
 
 void
@@ -63,7 +60,7 @@ RatioTapChangerInterfaceIIDM::setCurrentPosition(const int& position) {
 
 int
 RatioTapChangerInterfaceIIDM::getLowPosition() const {
-  return static_cast<int>(tapChangerIIDM_.getLowTapPosition());
+  return static_cast<int>(tapChangerIIDM_.getLowTapPosition());  // NOLINT renamed from getLowTapPosition
 }
 
 unsigned int
@@ -91,7 +88,7 @@ RatioTapChangerInterfaceIIDM::getTargetV() const {
 
 std::string
 RatioTapChangerInterfaceIIDM::getTerminalRefId() const {
-  return getRegulating() ? tapChangerIIDM_.getRegulationTerminal().get().getConnectable().get().getId() : "";
+  return getRegulating() ? tapChangerIIDM_.getRegulationTerminal().getConnectableId() : std::string();
 }
 
 std::string
@@ -131,7 +128,11 @@ RatioTapChangerInterfaceIIDM::getCurrentRho() const {
 
 double
 RatioTapChangerInterfaceIIDM::getTargetDeadBand() const {
-  return getRegulating() ? tapChangerIIDM_.getTargetDeadband() : 0.;
+  if (!getRegulating()) {
+    return 0.;
+  }
+  const auto d = tapChangerIIDM_.getTargetDeadband();
+  return d.has_value() ? d.value() : 0.;
 }
 
 }  // namespace DYN

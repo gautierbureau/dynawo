@@ -24,7 +24,9 @@
 #include "DYNTrace.h"
 #include "DYNCommon.h"
 
-#include <powsybl/iidm/Bus.hpp>
+#include <iidm/Bus.h>
+#include <iidm/Terminal.h>
+#include <iidm/VoltageLevel.h>
 #include <algorithm>
 #include <sstream>
 #include <cmath>
@@ -36,7 +38,7 @@ using std::vector;
 
 namespace DYN {
 
-CalculatedBusInterfaceIIDM::CalculatedBusInterfaceIIDM(powsybl::iidm::VoltageLevel& voltageLevel, const string& name, const int busIndex) :
+CalculatedBusInterfaceIIDM::CalculatedBusInterfaceIIDM(const iidm::VoltageLevel& voltageLevel, const string& name, const int busIndex) :
 busIndex_(busIndex),
 name_(name),
 voltageLevel_(voltageLevel),
@@ -55,8 +57,10 @@ CalculatedBusInterfaceIIDM::addBusBarSection(const string& bbs) {
 
 void
 CalculatedBusInterfaceIIDM::setU0(const double& u0) {
-  if (!std::isnan(u0))
+  if (!std::isnan(u0)) {
     U0_ = u0;
+    hasInitialConditions(true);
+  }
 }
 
 void
@@ -77,18 +81,20 @@ CalculatedBusInterfaceIIDM::getID() const {
 
 double
 CalculatedBusInterfaceIIDM::getVMax() const {
-  if (std::isnan(voltageLevel_.getHighVoltageLimit())) {
+  const auto high = voltageLevel_.getHighVoltageLimit();
+  if (!high.has_value()) {
     return uMaxPu * getVNom();   // default data
   }
-  return voltageLevel_.getHighVoltageLimit();
+  return high.value();
 }
 
 double
 CalculatedBusInterfaceIIDM::getVMin() const {
-  if (std::isnan(voltageLevel_.getLowVoltageLimit())) {
+  const auto low = voltageLevel_.getLowVoltageLimit();
+  if (!low.has_value()) {
     return uMinPu * getVNom();   // default data
   }
-  return voltageLevel_.getLowVoltageLimit();
+  return low.value();
 }
 
 double
@@ -151,15 +157,13 @@ CalculatedBusInterfaceIIDM::exportStateVariablesUnitComponent() {
   double angle = getStateVarAngle();
   if (doubleIsZero(angle))
     angle = 0.;
-  for (auto& node : nodes_) {
-    const auto& terminal = voltageLevel_.getNodeBreakerView().getTerminal(node);
-    if (terminal) {
-      const auto& bus = terminal.get().getBusBreakerView().getBus();
-      if (bus) {
-        bus.get().setV(getStateVarV());
-        bus.get().setAngle(angle);
-      }
-    }
+  for (const auto& node : nodes_) {
+    iidm::Terminal terminal = voltageLevel_.getNodeBreakerView().getTerminal(node);
+    if (!terminal.isValid()) continue;
+    iidm::Bus bus = terminal.getBusView();
+    if (!bus.isValid()) continue;
+    bus.setV(getStateVarV());
+    bus.setAngle(angle);
   }
 }
 

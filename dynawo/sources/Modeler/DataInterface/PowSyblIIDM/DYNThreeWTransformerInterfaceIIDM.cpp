@@ -19,7 +19,7 @@
  */
 #include "DYNThreeWTransformerInterfaceIIDM.h"
 
-#include <powsybl/iidm/ThreeWindingsTransformer.hpp>
+#include <iidm/ThreeWindingsTransformer.h>
 
 #include "DYNBusInterface.h"
 #include "DYNStateVariable.h"
@@ -30,18 +30,13 @@ using std::vector;
 
 namespace DYN {
 
-ThreeWTransformerInterfaceIIDM::ThreeWTransformerInterfaceIIDM(powsybl::iidm::ThreeWindingsTransformer& tfo) :
-tfoIIDM_(tfo) {
+ThreeWTransformerInterfaceIIDM::ThreeWTransformerInterfaceIIDM(const iidm::ThreeWindingsTransformer& tfo) :
+tfoIIDM_(tfo),
+tfoId_(tfo.getId()) {
   setType(ComponentInterface::THREE_WTFO);
-
-  auto libPath = IIDMExtensions::findLibraryPath();
-  auto activeSeasonExtensionDef = IIDMExtensions::getExtension<ActiveSeasonIIDMExtension>(libPath.generic_string());
-  activeSeasonExtension_ = std::get<IIDMExtensions::CREATE_FUNCTION>(activeSeasonExtensionDef)(tfo);
-  destroyActiveSeasonExtension_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(activeSeasonExtensionDef);
 }
 
 ThreeWTransformerInterfaceIIDM::~ThreeWTransformerInterfaceIIDM() {
-  destroyActiveSeasonExtension_(activeSeasonExtension_);
 }
 
 void
@@ -91,7 +86,7 @@ ThreeWTransformerInterfaceIIDM::getBusInterface3() const {
 
 const std::string&
 ThreeWTransformerInterfaceIIDM::getID() const {
-  return tfoIIDM_.getId();
+  return tfoId_;
 }
 
 bool
@@ -196,7 +191,7 @@ ThreeWTransformerInterfaceIIDM::isPartiallyConnected() const {
 
 std::string
 ThreeWTransformerInterfaceIIDM::getActiveSeason() const {
-  return activeSeasonExtension_ ? activeSeasonExtension_->getValue() : std::string("UNDEFINED");
+  return std::string("UNDEFINED");
 }
 
 }  // namespace DYN

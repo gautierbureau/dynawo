@@ -20,7 +20,8 @@
 
 #include "DYNTwoWTransformerInterfaceIIDM.h"
 
-#include <powsybl/iidm/TwoWindingsTransformer.hpp>
+#include <iidm/TwoWindingsTransformer.h>
+#include <iidm/VoltageLevel.h>
 
 #include "DYNCommon.h"
 #include "DYNPhaseTapChangerInterfaceIIDM.h"
@@ -39,9 +40,10 @@ using std::vector;
 
 namespace DYN {
 
-TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(powsybl::iidm::TwoWindingsTransformer& tfo) :
+TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(const iidm::TwoWindingsTransformer& tfo) :
     TwoWTransformerInterface(false),
     tfoIIDM_(tfo),
+    tfoId_(tfo.getId()),
     initialConnected1_(boost::none),
     initialConnected2_(boost::none) {
   setType(ComponentInterface::TWO_WTFO);
@@ -57,10 +59,6 @@ TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(powsybl::iidm::TwoWin
   if (tfo.hasRatioTapChanger() || tfo.hasPhaseTapChanger())
     stateVariables_[VAR_TAPINDEX] = StateVariable("tapIndex", StateVariable::INT);
 
-  auto libPath = IIDMExtensions::findLibraryPath();
-  auto activeSeasonExtensionDef = IIDMExtensions::getExtension<ActiveSeasonIIDMExtension>(libPath.generic_string());
-  activeSeasonExtension_ = std::get<IIDMExtensions::CREATE_FUNCTION>(activeSeasonExtensionDef)(tfo);
-  destroyActiveSeasonExtension_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(activeSeasonExtensionDef);
   if (!std::isnan(tfoIIDM_.getTerminal1().getP()) || !std::isnan(tfoIIDM_.getTerminal1().getQ()) ||
       !std::isnan(tfoIIDM_.getTerminal2().getP()) || !std::isnan(tfoIIDM_.getTerminal2().getQ())) {
       hasInitialConditions(true);
@@ -68,7 +66,6 @@ TwoWTransformerInterfaceIIDM::TwoWTransformerInterfaceIIDM(powsybl::iidm::TwoWin
 }
 
 TwoWTransformerInterfaceIIDM::~TwoWTransformerInterfaceIIDM() {
-  destroyActiveSeasonExtension_(activeSeasonExtension_);
 }
 
 void
@@ -103,7 +100,7 @@ TwoWTransformerInterfaceIIDM::getBusInterface2() const {
 
 const std::string&
 TwoWTransformerInterfaceIIDM::getID() const {
-  return tfoIIDM_.getId();
+  return tfoId_;
 }
 
 bool
@@ -486,6 +483,6 @@ TwoWTransformerInterfaceIIDM::importStaticParameters() {
 
 std::string
 TwoWTransformerInterfaceIIDM::getActiveSeason() const {
-  return activeSeasonExtension_ ? activeSeasonExtension_->getValue() : std::string("UNDEFINED");
+  return std::string("UNDEFINED");
 }
 }  // namespace DYN

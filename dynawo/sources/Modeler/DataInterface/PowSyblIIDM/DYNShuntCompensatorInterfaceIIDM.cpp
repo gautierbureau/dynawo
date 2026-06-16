@@ -20,8 +20,9 @@
  */
 //======================================================================
 
-#include <powsybl/iidm/ShuntCompensator.hpp>
-#include <powsybl/iidm/ShuntCompensatorNonLinearModel.hpp>
+#include <iidm/ShuntCompensator.h>
+#include <iidm/ShuntCompensatorNonLinearModel.h>
+#include <iidm/VoltageLevel.h>
 
 #include "DYNShuntCompensatorInterfaceIIDM.h"
 
@@ -30,7 +31,7 @@ using std::string;
 
 namespace DYN {
 
-ShuntCompensatorInterfaceIIDM::ShuntCompensatorInterfaceIIDM(powsybl::iidm::ShuntCompensator& shunt) :
+ShuntCompensatorInterfaceIIDM::ShuntCompensatorInterfaceIIDM(const iidm::ShuntCompensator& shunt) :
 ShuntCompensatorInterface(false),
 InjectorInterfaceIIDM(shunt, shunt.getId()),
 shuntCompensatorIIDM_(shunt) {
@@ -82,8 +83,8 @@ ShuntCompensatorInterfaceIIDM::importStaticParameters() {
   staticParameters_.clear();
   staticParameters_.insert(std::make_pair("q_pu", StaticParameter("q_pu", StaticParameter::DOUBLE).setValue(getQ() / SNREF)));
   staticParameters_.insert(std::make_pair("q", StaticParameter("q", StaticParameter::DOUBLE).setValue(getQ())));
-  double B = shuntCompensatorIIDM_.getB();
-  staticParameters_.insert(std::make_pair("isCapacitor", StaticParameter("isCapacitor", StaticParameter::BOOL).setValue(B > 0)));
+  bool isCapacitor = shuntCompensatorIIDM_.getB() > 0;
+  staticParameters_.insert(std::make_pair("isCapacitor", StaticParameter("isCapacitor", StaticParameter::BOOL).setValue(isCapacitor)));
   if (getBusInterface()) {
     double U0 = getBusInterface()->getV0();
     double vNom = shuntCompensatorIIDM_.getTerminal().getVoltageLevel().getNominalV();
@@ -133,7 +134,7 @@ ShuntCompensatorInterfaceIIDM::getQ() {
 
 const std::string&
 ShuntCompensatorInterfaceIIDM::getID() const {
-  return shuntCompensatorIIDM_.getId();
+  return getIDInjector();
 }
 
 int
@@ -148,12 +149,25 @@ ShuntCompensatorInterfaceIIDM::getMaximumSection() const {
 
 double
 ShuntCompensatorInterfaceIIDM::getB(const int section) const {
-  return shuntCompensatorIIDM_.getB(section);
+  if (shuntCompensatorIIDM_.hasLinearModel()) {
+    // linear: cumulative susceptance up to 'section' sections
+    return shuntCompensatorIIDM_.getBPerSection() * static_cast<double>(section);
+  }
+  if (shuntCompensatorIIDM_.hasNonLinearModel()) {
+    if (section <= 0) {
+      return 0.;
+    }
+    const auto sections = shuntCompensatorIIDM_.getNonLinearModel().getAllSections();
+    if (static_cast<int>(sections.size()) >= section) {
+      return sections[section - 1].b;
+    }
+  }
+  return 0.;
 }
 
 bool
 ShuntCompensatorInterfaceIIDM::isLinear() const {
-  return (shuntCompensatorIIDM_.getModelType() == powsybl::iidm::ShuntCompensatorModelType::LINEAR);
+  return shuntCompensatorIIDM_.hasLinearModel();
 }
 
 bool

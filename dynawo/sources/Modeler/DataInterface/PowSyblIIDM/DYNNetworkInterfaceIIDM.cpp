@@ -26,13 +26,15 @@
 #include "DYNVoltageLevelInterfaceIIDM.h"
 #include "DYNHvdcLineInterface.h"
 
+#include <algorithm>
+
 using std::string;
 using std::vector;
 using std::shared_ptr;
 
 namespace DYN {
 
-NetworkInterfaceIIDM::NetworkInterfaceIIDM(powsybl::iidm::Network& network) :
+NetworkInterfaceIIDM::NetworkInterfaceIIDM(const iidm::Network& network) :
 networkIIDM_(network) {
 }
 

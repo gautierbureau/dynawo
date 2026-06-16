@@ -74,7 +74,7 @@ class ServiceManagerInterfaceIIDM : public ServiceManagerInterface {
    * @param terminal regulated terminal
    * @returns regulated bus on the side of the regulated object
    */
-  std::shared_ptr<BusInterface> getRegulatedBusOnSide(const powsybl::iidm::Terminal& terminal) const;
+  std::shared_ptr<BusInterface> getRegulatedBusOnSide(const iidm::Terminal& terminal) const;
 
  private:
   const DataInterfaceIIDM* const dataInterface_;  ///< data interface

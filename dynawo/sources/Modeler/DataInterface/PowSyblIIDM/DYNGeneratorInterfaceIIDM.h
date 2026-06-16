@@ -26,19 +26,15 @@
 
 #include "DYNGeneratorInterface.h"
 #include "DYNInjectorInterfaceIIDM.h"
-#include "DYNGeneratorActivePowerControlIIDMExtension.h"
-#include "DYNIIDMExtensions.hpp"
 
-#include <powsybl/iidm/Generator.hpp>
-#include <powsybl/iidm/extensions/iidm/ActivePowerControl.hpp>
-#include <powsybl/iidm/extensions/iidm/CoordinatedReactiveControl.hpp>
+#include <iidm/Generator.h>
 
 namespace DYN {
 
 /**
  * class GeneratorInterfaceIIDM
  */
-class GeneratorInterfaceIIDM : public GeneratorInterface, public InjectorInterfaceIIDM, public boost::noncopyable {
+class GeneratorInterfaceIIDM : public GeneratorInterface, public InjectorInterfaceIIDM<iidm::Generator>, public boost::noncopyable {
  public:
   /**
    * @brief defines the index of each state variable
@@ -59,7 +55,7 @@ class GeneratorInterfaceIIDM : public GeneratorInterface, public InjectorInterfa
    * @brief Constructor
    * @param generator generator's iidm instance
    */
-  explicit GeneratorInterfaceIIDM(powsybl::iidm::Generator& generator);
+  explicit GeneratorInterfaceIIDM(const iidm::Generator& generator);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -218,15 +214,10 @@ class GeneratorInterfaceIIDM : public GeneratorInterface, public InjectorInterfa
   EnergySource_t getEnergySource() const override;
 
  private:
-  powsybl::iidm::Generator& generatorIIDM_;  ///< reference to the iidm generator instance
+  iidm::Generator generatorIIDM_;  ///< iidm generator instance (value-typed handle)
   std::string country_;  ///< country of the generator
-  stdcxx::Reference<powsybl::iidm::extensions::iidm::ActivePowerControl> activePowerControl_;  ///< reference to ActivePowerControl extension
-  stdcxx::Reference<powsybl::iidm::extensions
-                    ::iidm::CoordinatedReactiveControl> coordinatedReactiveControl_;  ///< reference to CoordinatedReactiveControl extension
-
-  GeneratorActivePowerControlIIDMExtension* generatorActivePowerControl_;  ///< generator active power control extension
-  IIDMExtensions::DestroyFunction<GeneratorActivePowerControlIIDMExtension>
-    destroyGeneratorActivePowerControl_;  ///< function to destroy generator active power control extension
+  bool hasActivePowerControl_ = false;  ///< whether the ActivePowerControl extension is attached
+  bool hasCoordinatedReactiveControl_ = false;  ///< whether the CoordinatedReactiveControl extension is attached
 };
 }  // namespace DYN
 
