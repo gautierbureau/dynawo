@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <!-- Generator dynamics -->
+  <curve model="GEN_A1" variable="generator_omegaPu"/>
+  <curve model="GEN_A1" variable="generator_PGen"/>
+  <curve model="GEN_A1" variable="generator_QGen"/>
+  <curve model="GEN_A1" variable="generator_UStatorPu"/>
+  <curve model="GEN_A1" variable="voltageRegulator_EfdPu"/>
+  <curve model="GEN_A2" variable="generator_omegaPu"/>
+  <curve model="GEN_A2" variable="generator_PGen"/>
+  <curve model="GEN_A2" variable="generator_QGen"/>
+  <curve model="GEN_A2" variable="generator_UStatorPu"/>
+  <curve model="GEN_B1" variable="generator_omegaPu"/>
+  <curve model="GEN_B1" variable="generator_PGen"/>
+  <curve model="GEN_B1" variable="generator_QGen"/>
+  <curve model="GEN_B1" variable="generator_UStatorPu"/>
+  <curve model="GEN_B1" variable="voltageRegulator_EfdPu"/>
+  <curve model="GEN_B2" variable="generator_omegaPu"/>
+  <curve model="GEN_B2" variable="generator_PGen"/>
+  <curve model="GEN_B2" variable="generator_QGen"/>
+  <curve model="GEN_B2" variable="generator_UStatorPu"/>
+  <!-- One omegaRef barycenter per AC area -->
+  <curve model="OMEGA_REF" variable="omegaRef_0_value"/>
+  <curve model="OMEGA_REF" variable="omegaRef_1_value"/>
+  <curve model="OMEGA_REF" variable="omegaRef_grp_0_value"/>
+  <curve model="OMEGA_REF" variable="omegaRef_grp_2_value"/>
+  <!-- Transmission bus voltages -->
+  <curve model="NETWORK" variable="A_HV1_Upu_value"/>
+  <curve model="NETWORK" variable="A_HV2_Upu_value"/>
+  <curve model="NETWORK" variable="A_HV3_Upu_value"/>
+  <curve model="NETWORK" variable="B_HV1_Upu_value"/>
+  <curve model="NETWORK" variable="B_HV2_Upu_value"/>
+  <!-- A few distribution bus voltages -->
+  <curve model="NETWORK" variable="A_LD1_Upu_value"/>
+  <curve model="NETWORK" variable="B_LD2_Upu_value"/>
+  <!-- numcc on a bus in each area -->
+  <curve model="NETWORK" variable="A_HV1_numcc_value"/>
+  <curve model="NETWORK" variable="B_HV1_numcc_value"/>
+</curvesInput>

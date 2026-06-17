@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<timeline xmlns="http://www.rte-france.com/dynawo">
+  <event time="2.000000" modelName="L4011-4021" message="LINE : opening both sides"/>
+  <event time="2.000000" modelName="L4022-4031a" message="LINE : opening both sides"/>
+  <event time="2.000000" modelName="L4022-4031b" message="LINE : opening both sides"/>
+</timeline>

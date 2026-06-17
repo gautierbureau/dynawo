@@ -1,0 +1,6 @@
+1.000000 | _BUS____4-BUS____9-1_PT | TRANSFORMER : opening both sides
+1.000000 | _BUS____4-BUS____7-1_PT | TRANSFORMER : opening both sides
+1.000000 | _BUS____5-BUS____6-1_PT | TRANSFORMER : opening both sides
+10.999998 | _BUS____4-BUS____9-1_PT | TRANSFORMER : closing both sides
+10.999998 | _BUS____4-BUS____7-1_PT | TRANSFORMER : closing both sides
+10.999998 | _BUS____5-BUS____6-1_PT | TRANSFORMER : closing both sides

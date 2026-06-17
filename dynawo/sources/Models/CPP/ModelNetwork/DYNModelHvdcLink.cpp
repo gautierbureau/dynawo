@@ -64,7 +64,8 @@ ir01_(0.),
 ii01_(0.),
 ir02_(0.),
 ii02_(0.),
-startingPointMode_(WARM) {
+startingPointMode_(WARM),
+keepHvdcForeignNodes_(false) {
   // retrieve data from VscConverterInterface and HvdcLineInterface (IIDM)
   setAttributes(dcLine);
 }
@@ -855,6 +856,12 @@ ModelHvdcLink::setSubModelParameters(const std::unordered_map<std::string, Param
   const std::string startingPointMode = getParameterDynamicNoThrow<string>(params, "startingPointMode", startingPointModeFound);
   if (startingPointModeFound) {
     startingPointMode_ = getStartingPointMode(startingPointMode);
+  }
+
+  bool keepHvdcForeignNodesFound = false;
+  const bool keepHvdcForeignNodes = getParameterDynamicNoThrow<bool>(params, "keepHvdcForeignNodes", keepHvdcForeignNodesFound);
+  if (keepHvdcForeignNodesFound) {
+    keepHvdcForeignNodes_ = keepHvdcForeignNodes;
   }
 }
 

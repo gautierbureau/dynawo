@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2026, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+
+  <!-- ============== Generators (IEEE14-style synchronous machines with AVR + governor) ============== -->
+  <dyn:blackBoxModel id="GEN_A1" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="HVDC_TwoAreasRegulated.par" parId="GenFourW" staticId="GEN_A1"/>
+  <dyn:blackBoxModel id="GEN_A2" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="HVDC_TwoAreasRegulated.par" parId="GenThreeW" staticId="GEN_A2"/>
+  <dyn:blackBoxModel id="GEN_B1" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="HVDC_TwoAreasRegulated.par" parId="GenFourW" staticId="GEN_B1"/>
+  <dyn:blackBoxModel id="GEN_B2" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="HVDC_TwoAreasRegulated.par" parId="GenThreeW" staticId="GEN_B2"/>
+
+  <!-- ============== Loads ============== -->
+  <dyn:blackBoxModel id="LOAD_A1" lib="LoadAlphaBeta" parFile="HVDC_TwoAreasRegulated.par" parId="Load" staticId="LOAD_A1"/>
+  <dyn:blackBoxModel id="LOAD_A2" lib="LoadAlphaBeta" parFile="HVDC_TwoAreasRegulated.par" parId="Load" staticId="LOAD_A2"/>
+  <dyn:blackBoxModel id="LOAD_A3" lib="LoadAlphaBeta" parFile="HVDC_TwoAreasRegulated.par" parId="Load" staticId="LOAD_A3"/>
+  <dyn:blackBoxModel id="LOAD_B1" lib="LoadAlphaBeta" parFile="HVDC_TwoAreasRegulated.par" parId="Load" staticId="LOAD_B1"/>
+  <dyn:blackBoxModel id="LOAD_B2" lib="LoadAlphaBeta" parFile="HVDC_TwoAreasRegulated.par" parId="Load" staticId="LOAD_B2"/>
+  <dyn:blackBoxModel id="LOAD_B3" lib="LoadAlphaBeta" parFile="HVDC_TwoAreasRegulated.par" parId="Load" staticId="LOAD_B3"/>
+
+  <!-- ============== Frequency reference (one barycenter per AC island) ============== -->
+  <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="HVDC_TwoAreasRegulated.par" parId="OmegaRef"/>
+
+  <!-- ============== Event: trip HVDC link 1 at t = 1 s (both sides) ============== -->
+  <dyn:blackBoxModel id="DISCONNECT_HVDC1_S1" lib="EventQuadripoleDisconnection" parFile="HVDC_TwoAreasRegulated.par" parId="EventDisconnect"/>
+  <dyn:blackBoxModel id="DISCONNECT_HVDC1_S2" lib="EventQuadripoleDisconnection" parFile="HVDC_TwoAreasRegulated.par" parId="EventDisconnect"/>
+
+  <!-- ============== Generator connects ============== -->
+  <dyn:connect id1="GEN_A1" var1="generator_terminal" id2="NETWORK" var2="A_HV1_ACPIN"/>
+  <dyn:connect id1="GEN_A1" var1="generator_switchOffSignal1" id2="NETWORK" var2="A_HV1_switchOff"/>
+  <dyn:connect id1="GEN_A2" var1="generator_terminal" id2="NETWORK" var2="A_HV2_ACPIN"/>
+  <dyn:connect id1="GEN_A2" var1="generator_switchOffSignal1" id2="NETWORK" var2="A_HV2_switchOff"/>
+  <dyn:connect id1="GEN_B1" var1="generator_terminal" id2="NETWORK" var2="B_HV1_ACPIN"/>
+  <dyn:connect id1="GEN_B1" var1="generator_switchOffSignal1" id2="NETWORK" var2="B_HV1_switchOff"/>
+  <dyn:connect id1="GEN_B2" var1="generator_terminal" id2="NETWORK" var2="B_HV2_ACPIN"/>
+  <dyn:connect id1="GEN_B2" var1="generator_switchOffSignal1" id2="NETWORK" var2="B_HV2_switchOff"/>
+
+  <!-- ============== Load connects ============== -->
+  <dyn:connect id1="LOAD_A1" var1="load_terminal" id2="NETWORK" var2="A_LD1_ACPIN"/>
+  <dyn:connect id1="LOAD_A2" var1="load_terminal" id2="NETWORK" var2="A_LD2_ACPIN"/>
+  <dyn:connect id1="LOAD_A3" var1="load_terminal" id2="NETWORK" var2="A_LD3_ACPIN"/>
+  <dyn:connect id1="LOAD_B1" var1="load_terminal" id2="NETWORK" var2="B_LD1_ACPIN"/>
+  <dyn:connect id1="LOAD_B2" var1="load_terminal" id2="NETWORK" var2="B_LD2_ACPIN"/>
+  <dyn:connect id1="LOAD_B3" var1="load_terminal" id2="NETWORK" var2="B_LD3_ACPIN"/>
+
+  <!-- ============== OmegaRef wiring (one frequency barycenter per AC area) ============== -->
+  <dyn:connect id1="OMEGA_REF" var1="omega_grp_0_value"    id2="GEN_A1" var2="generator_omegaPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_0_value" id2="GEN_A1" var2="generator_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="numcc_node_0"          id2="NETWORK" var2="A_HV1_numcc"/>
+  <dyn:connect id1="OMEGA_REF" var1="running_grp_0"         id2="GEN_A1" var2="generator_running"/>
+  <dyn:connect id1="OMEGA_REF" var1="omega_grp_1_value"    id2="GEN_A2" var2="generator_omegaPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_1_value" id2="GEN_A2" var2="generator_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="numcc_node_1"          id2="NETWORK" var2="A_HV2_numcc"/>
+  <dyn:connect id1="OMEGA_REF" var1="running_grp_1"         id2="GEN_A2" var2="generator_running"/>
+  <dyn:connect id1="OMEGA_REF" var1="omega_grp_2_value"    id2="GEN_B1" var2="generator_omegaPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_2_value" id2="GEN_B1" var2="generator_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="numcc_node_2"          id2="NETWORK" var2="B_HV1_numcc"/>
+  <dyn:connect id1="OMEGA_REF" var1="running_grp_2"         id2="GEN_B1" var2="generator_running"/>
+  <dyn:connect id1="OMEGA_REF" var1="omega_grp_3_value"    id2="GEN_B2" var2="generator_omegaPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="omegaRef_grp_3_value" id2="GEN_B2" var2="generator_omegaRefPu"/>
+  <dyn:connect id1="OMEGA_REF" var1="numcc_node_3"          id2="NETWORK" var2="B_HV2_numcc"/>
+  <dyn:connect id1="OMEGA_REF" var1="running_grp_3"         id2="GEN_B2" var2="generator_running"/>
+
+  <!-- ============== Event ============== -->
+  <dyn:connect id1="DISCONNECT_HVDC1_S1" var1="event_state1_value" id2="NETWORK" var2="HVDC1_state1_value"/>
+  <dyn:connect id1="DISCONNECT_HVDC1_S2" var1="event_state1_value" id2="NETWORK" var2="HVDC1_state2_value"/>
+
+</dyn:dynamicModelsArchitecture>

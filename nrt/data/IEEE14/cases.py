@@ -164,6 +164,16 @@ job_file = os.path.join(os.path.dirname(__file__), "IEEE14_BasicTestCases", "IEE
 test_cases.append((case_name, case_description, job_file, 1, standardReturnCodeType, standardReturnCode))
 
 #########################################
+#      IEEE14 - Islanding                #
+#########################################
+
+case_name = "IEEE14 - Islanding"
+case_description = "IEEE14 split into two synchronous islands by tripping the three inter-area transformers (4-7, 4-9, 5-6) at t = 1 s, then merged back by reclosing them at t = 11 s; keepAllSynchronousComponents keeps both islands alive and DYNModelOmegaRef computes one barycenter per island while split"
+job_file = os.path.join(os.path.dirname(__file__), "IEEE14_BasicTestCases", "IEEE14_Islanding", "IEEE14.jobs")
+
+test_cases.append((case_name, case_description, job_file, 1, standardReturnCodeType, standardReturnCode))
+
+#########################################
 #      IEEE14 - Disconnect group        #
 #########################################
 

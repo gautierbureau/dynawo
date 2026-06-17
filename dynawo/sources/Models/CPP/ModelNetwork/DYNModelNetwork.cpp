@@ -24,6 +24,7 @@
 #include <iostream>
 #include <cmath>
 #include <iomanip>
+#include <set>
 
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
@@ -129,7 +130,8 @@ ModelCPP("NETWORK"),
 calculatedVarBuffer_(NULL),
 isInit_(false) ,
 isInitModel_(false),
-withNodeBreakerTopology_(false) {
+withNodeBreakerTopology_(false),
+keepAllSynchronousComponents_(false) {
   busContainer_.reset(new ModelBusContainer());
 }
 
@@ -597,6 +599,7 @@ ModelNetwork::initializeFromData(const shared_ptr<DataInterface>& data) {
     }
 
     initComponents_.push_back(modelHvdcLink);
+    hvdcComponents_.push_back(modelHvdcLink);
 
     // is there a dynamic model?
     if (hvdcLine->hasDynamicModel()) {
@@ -791,9 +794,45 @@ ModelNetwork::analyseComponents() const {
       maxIndex = i;
     }
   }
+
+  // sub-networks to keep alive: the biggest one, plus every sub-network linked
+  // to a kept one through an HVDC link when keepHvdcForeignNodes is enabled.
+  // An HVDC link does not merge the sub-networks (they keep distinct numcc, so
+  // each synchronous zone has its own OmegaRef computation); it only prevents
+  // the foreign zone from being switched off.
+  std::set<int> subNetworksToKeep;
+  if (!subNetworks.empty())
+    subNetworksToKeep.insert(subNetworks[maxIndex]->getNum());
+  bool changed = true;
+  while (changed) {
+    changed = false;
+    for (const auto& hvdcLink : hvdcComponents_) {
+      if (!hvdcLink->getKeepHvdcForeignNodes())
+        continue;
+      if (!hvdcLink->isConnected1() || !hvdcLink->isConnected2())
+        continue;
+      const std::shared_ptr<ModelBus>& modelBus1 = hvdcLink->getModelBus1();
+      const std::shared_ptr<ModelBus>& modelBus2 = hvdcLink->getModelBus2();
+      if (!modelBus1 || !modelBus2)
+        continue;
+      const int numSubNetwork1 = modelBus1->numSubNetwork();
+      const int numSubNetwork2 = modelBus2->numSubNetwork();
+      if (subNetworksToKeep.count(numSubNetwork1) && !subNetworksToKeep.count(numSubNetwork2)
+          && modelBus2->hasInitialConditions()) {
+        subNetworksToKeep.insert(numSubNetwork2);
+        changed = true;
+      }
+      if (subNetworksToKeep.count(numSubNetwork2) && !subNetworksToKeep.count(numSubNetwork1)
+          && modelBus1->hasInitialConditions()) {
+        subNetworksToKeep.insert(numSubNetwork1);
+        changed = true;
+      }
+    }
+  }
+
   Trace::debug() << DYNLog(KeepSubNetwork, maxIndex) << Trace::endline;
   for (unsigned int i = 0; i < subNetworks.size(); ++i) {
-    if (i == maxIndex)
+    if (keepAllSynchronousComponents_ || subNetworksToKeep.find(subNetworks[i]->getNum()) != subNetworksToKeep.end())
       subNetworks[i]->turnOnNodes();
     else
       subNetworks[i]->shutDownNodes();
@@ -1229,6 +1268,8 @@ ModelNetwork::defineParameters(vector<ParameterModeler>& parameters) {
   ModelTwoWindingsTransformer::defineParameters(parameters);
   ModelHvdcLink::defineParameters(parameters);
   parameters.push_back(ParameterModeler("startingPointMode", VAR_TYPE_STRING, EXTERNAL_PARAMETER));
+  parameters.push_back(ParameterModeler("keepHvdcForeignNodes", VAR_TYPE_BOOL, EXTERNAL_PARAMETER));
+  parameters.push_back(ParameterModeler("keepAllSynchronousComponents", VAR_TYPE_BOOL, EXTERNAL_PARAMETER));
 
   for (const auto& component : getComponents()) {
     component->defineNonGenericParameters(parameters);
@@ -1295,6 +1336,9 @@ ModelNetwork::defineElements(vector<Element>& elements, map<string, int>& mapEle
 
 void
 ModelNetwork::setSubModelParameters() {
+  const ParameterModeler& keepAll = findParameterDynamic("keepAllSynchronousComponents");
+  keepAllSynchronousComponents_ = keepAll.hasValue() ? keepAll.getValue<bool>() : false;
+
   for (const auto& component : getComponents())
     component->setSubModelParameters(parametersDynamic_);
 }

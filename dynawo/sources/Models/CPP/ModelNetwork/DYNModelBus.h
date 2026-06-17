@@ -319,6 +319,12 @@ class ModelBus : public NetworkComponent {  ///< Generic AC network bus
     return doubleIsZero(y_[urNum_]) && doubleIsZero(y_[uiNum_]);
   }
 
+  /**
+   * @brief test if the bus is energized at the start of the simulation
+   * @return @b true if the bus has initial conditions set
+   */
+  bool hasInitialConditions() const;
+
   std::vector<std::weak_ptr<ModelBus> > neighbors_;  ///< list of buses within the same AC-connected component
 
   /**

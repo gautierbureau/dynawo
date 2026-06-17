@@ -1,0 +1,81 @@
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+# See AUTHORS.txt
+# All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, you can obtain one at http://mozilla.org/MPL/2.0/.
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of Dynawo, an hybrid C++/Modelica open source time domain
+# simulation tool for power systems.
+
+import os
+
+test_cases = []
+standardReturnCode = [0]
+standardReturnCodeType = "ALLOWED"
+
+##########################################################
+#   TwoZones AC - two classical machines with OmegaRef   #
+##########################################################
+
+case_name = "TwoZones - AC"
+case_description = "Two zones linked by an AC line, each with a classical second-order generator, sharing a single DYNModelOmegaRef frequency reference; a fault is applied on the GEN2 bus"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
+############################################################
+#   TwoZones HVDC - two synchronous zones across an HVDC   #
+############################################################
+
+case_name = "TwoZones - HVDC"
+case_description = "Two synchronous zones linked by a VSC-HVDC line, each with a classical second-order generator and its own DYNModelOmegaRef barycenter; the keepHvdcForeignNodes network parameter keeps both zones energized without merging them, a fault on the GEN1 bus stays confined to zone 1"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_HVDC", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 20, standardReturnCodeType, standardReturnCode))
+
+#####################################################################
+#   TwoZones AC Islanding - one AC zone split in two by a line trip #
+#####################################################################
+
+case_name = "TwoZones - AC Islanding"
+case_description = "One AC network split into two synchronous zones by tripping the central LINE_MID; keepAllSynchronousComponents keeps both islands alive and DYNModelOmegaRef splits into one barycenter per island"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_Islanding", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
+###########################################################################
+#   TwoZones AC FourGenerators - two classical machines per zone, with a  #
+#   genuine DYNModelOmegaRef barycenter per island                        #
+###########################################################################
+
+case_name = "TwoZones - AC FourGenerators"
+case_description = "Two zones with two classical generators each, all with distinct inertia and damping; the central LINE_MID is tripped at t = 1 s and reclosed at t = 11 s. While islanded, the net-exporter zone 1 and net-importer zone 2 settle at two distinct frequencies, each a genuine DYNModelOmegaRef barycenter of its two machines"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_FourGenerators", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
+###########################################################################
+#   TwoZones AC OppositeDrift - islanding with a large transfer so the    #
+#   two island frequencies diverge in opposite directions                #
+###########################################################################
+
+case_name = "TwoZones - AC OppositeDrift"
+case_description = "Four-generator TwoZones islanding with a large pre-split transfer (~215 MW) across LINE_MID; when the line trips at t = 1 s the net-exporter zone 1 frequency rises while the net-importer zone 2 frequency falls. The classical generators have no governor so the two islands diverge in opposite directions without reconnection"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_OppositeDrift", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))
+
+###########################################################################
+#   TwoZones AC OppositeDriftReconnection - same opposite-drift split,    #
+#   with the latest reclose the solver still survives (test coverage)     #
+###########################################################################
+
+case_name = "TwoZones - AC OppositeDriftReconnection"
+case_description = "TwoZones_AC_OppositeDrift with LINE_MID reclosed at t = 3 s, the latest reconnection the solver survives before the islands slip too far out of step; exercises the disconnection, reconnection and DYNModelOmegaRef component-merge path. The reunited generators resynchronise but, having no governor, the merged system keeps drifting (no recovery to nominal expected)"
+job_file = os.path.join(os.path.dirname(__file__), "TwoZones_AC_OppositeDriftReconnection", "TwoZones.jobs")
+
+test_cases.append((case_name, case_description, job_file, 10, standardReturnCodeType, standardReturnCode))

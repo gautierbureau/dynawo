@@ -33,6 +33,7 @@ namespace DYN {
 class ModelBusContainer;
 class ModelSwitch;
 class ModelVoltageLevel;
+class ModelHvdcLink;
 class NetworkComponent;
 class NetworkBridgeQuadripole;
 class DataInterface;
@@ -415,12 +416,14 @@ class ModelNetwork : public ModelCPP, private boost::noncopyable {
   bool isInit_;  ///< whether the current process is the initialization process
   bool isInitModel_;  ///< whether the current model used is the init one
   bool withNodeBreakerTopology_;  ///< whether at least one voltageLevel has node breaker topology view
+  bool keepAllSynchronousComponents_;  ///< whether all synchronous components are kept alive (islanding) instead of only the main one
 
   std::unique_ptr<ModelBusContainer> busContainer_;  ///< all network buses
   std::vector<std::shared_ptr<ModelVoltageLevel> > vLevelComponents_;  ///< all voltage level components
   std::vector<std::shared_ptr<ModelVoltageLevel> > vLevelInitComponents_;  ///< all voltage level components  (used for init model)
   std::vector<std::shared_ptr<NetworkComponent> > components_;  ///< all network components without dynamic Model
   std::vector<std::shared_ptr<NetworkComponent> > initComponents_;  ///< all network components even components with dynamic model
+  std::vector<std::shared_ptr<ModelHvdcLink> > hvdcComponents_;  ///< all HVDC links, used to keep their synchronous zones connected
   std::unordered_map<std::string, std::shared_ptr<NetworkBridgeQuadripole> > unmappedBridges_;  ///< network bridges yet unassociated with their dynamic model
   std::vector<int> componentIndexByCalculatedVar_;  ///< index of component for each calculated variable
 };
