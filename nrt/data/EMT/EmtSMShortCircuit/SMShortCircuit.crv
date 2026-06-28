@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="SM" variable="circuit_vTermA"/>
+  <curve model="SM" variable="circuit_vTermB"/>
+  <curve model="SM" variable="circuit_vTermC"/>
+  <curve model="SM" variable="circuit_iStatorA"/>
+  <curve model="SM" variable="circuit_iStatorB"/>
+  <curve model="SM" variable="circuit_iStatorC"/>
+  <curve model="SM" variable="circuit_Wr"/>
+  <curve model="SM" variable="circuit_Te"/>
+</curvesInput>

@@ -51,4 +51,14 @@ NetworkEntry::getNetworkParId() const {
   return networkParId_;
 }
 
+void
+NetworkEntry::setNetworkModelLib(const std::string& lib) {
+  networkModelLib_ = lib;
+}
+
+const std::string&
+NetworkEntry::getNetworkModelLib() const {
+  return networkModelLib_;
+}
+
 }  // namespace job

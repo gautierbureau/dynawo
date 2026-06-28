@@ -787,6 +787,8 @@ Simulation::initFromData(const shared_ptr<DataInterface>& data, const shared_ptr
   std::unique_ptr<Modeler> modeler = createModeler();
   modeler->setDataInterface(data);
   modeler->setDynamicData(dyd);
+  if (jobEntry_->getModelerEntry()->getNetworkEntry())
+    modeler->setNetworkModelLib(jobEntry_->getModelerEntry()->getNetworkEntry()->getNetworkModelLib());
   modeler->initSystem();
 
   model_ = modeler->getModel();

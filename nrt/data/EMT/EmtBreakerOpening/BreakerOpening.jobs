@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+    <job name="BreakerOpening">
+        <solver lib="dynawo_SolverTRAP" parFile="BreakerOpening.par" parId="Solver"/>
+        <modeler compileDir="outputs/compilation">
+            <dynModels dydFile="BreakerOpening.dyd"/>
+            <precompiledModels useStandardModels="true"/>
+            <modelicaModels useStandardModels="true"/>
+        </modeler>
+        <simulation startTime="0" stopTime="0.2"/>
+        <outputs directory="outputs">
+            <timeline exportMode="TXT"/>
+            <curves inputFile="BreakerOpening.crv" exportMode="CSV"/>
+            <logs><appender tag="" file="dynawo.log" lvlFilter="INFO"/></logs>
+        </outputs>
+    </job>
+</jobs>

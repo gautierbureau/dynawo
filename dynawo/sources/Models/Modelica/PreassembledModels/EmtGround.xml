@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:modelicaModel id="EmtGround">
+    <dyn:unitDynamicModel id="ground" name="Dynawo.Electrical.EMT.Ground"/>
+  </dyn:modelicaModel>
+</dyn:dynamicModelsArchitecture>

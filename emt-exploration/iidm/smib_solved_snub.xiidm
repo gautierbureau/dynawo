@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_5" xmlns:slt="http://www.powsybl.org/schema/iidm/ext/slack_terminal/1_2" xmlns:reft="http://www.powsybl.org/schema/iidm/ext/reference_terminals/1_0" id="emtsmib" caseDate="2024-01-01T00:00:00.000Z" forecastDistance="0" sourceFormat="manual">
+    <iidm:substation id="S1" country="FR">
+        <iidm:voltageLevel id="VL_GEN" nominalV="1.0" lowVoltageLimit="0.5" highVoltageLimit="1.5" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="GEN_BUS" v="0.92" angle="12.317366100610595"/>
+            </iidm:busBreakerTopology>
+            <iidm:generator id="SM" energySource="OTHER" minP="-100.0" maxP="100.0" voltageRegulatorOn="true" targetP="60.0" targetV="0.92" bus="GEN_BUS" connectableBus="GEN_BUS" p="-60.0" q="4.750684499474707">
+                <iidm:minMaxReactiveLimits minQ="-100.0" maxQ="100.0"/>
+            </iidm:generator>
+            <iidm:shunt id="SNUB_GEN" sectionCount="1" voltageRegulatorOn="false" targetV="1.0" targetDeadband="0.0" bus="GEN_BUS" connectableBus="GEN_BUS" q="-7.977132065995203">
+                <iidm:shuntLinearModel bPerSection="9.42477796076938" gPerSection="0.0" maximumSectionCount="1"/>
+            </iidm:shunt>
+        </iidm:voltageLevel>
+        <iidm:voltageLevel id="VL_HV" nominalV="1.0" lowVoltageLimit="0.5" highVoltageLimit="1.5" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="HV_BUS" v="0.9188104869607574" angle="8.24707560976068"/>
+            </iidm:busBreakerTopology>
+            <iidm:shunt id="SNUB_HV" sectionCount="1" voltageRegulatorOn="false" targetV="1.0" targetDeadband="0.0" bus="HV_BUS" connectableBus="HV_BUS" q="-7.95651735235411">
+                <iidm:shuntLinearModel bPerSection="9.42477796076938" gPerSection="0.0" maximumSectionCount="1"/>
+            </iidm:shunt>
+        </iidm:voltageLevel>
+        <iidm:twoWindingsTransformer id="TR" r="0.0" x="0.001" g="0.0" b="0.0" ratedU1="1.0" ratedU2="1.0" voltageLevelId1="VL_GEN" bus1="GEN_BUS" connectableBus1="GEN_BUS" voltageLevelId2="VL_HV" bus2="HV_BUS" connectableBus2="HV_BUS" p1="59.99999186661904" q1="3.2264475665204984" p2="-59.99999186661904" q2="1.0391585155846086"/>
+    </iidm:substation>
+    <iidm:substation id="S_INF">
+        <iidm:voltageLevel id="VL_INF" nominalV="1.0" lowVoltageLimit="0.5" highVoltageLimit="1.5" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="INF_BUS" v="0.9" angle="0.0"/>
+            </iidm:busBreakerTopology>
+            <iidm:generator id="INF" energySource="OTHER" minP="-200.0" maxP="200.0" voltageRegulatorOn="true" targetP="0.0" targetV="0.9" bus="INF_BUS" connectableBus="INF_BUS" p="-0.0" q="-1.7246186453720735">
+                <iidm:minMaxReactiveLimits minQ="-200.0" maxQ="200.0"/>
+            </iidm:generator>
+        </iidm:voltageLevel>
+    </iidm:substation>
+    <iidm:line id="LINE" r="2.0E-4" x="0.002" g1="0.0" b1="0.0" g2="0.0" b2="0.0" voltageLevelId1="VL_HV" bus1="HV_BUS" connectableBus1="HV_BUS" voltageLevelId2="VL_INF" bus2="INF_BUS" connectableBus2="INF_BUS" p1="59.9999912264938" q1="6.917396021271655" p2="-59.13578975982949" q2="1.7246186453720735"/>
+    <iidm:extension id="VL_INF">
+        <slt:slackTerminal id="INF"/>
+    </iidm:extension>
+    <iidm:extension id="emtsmib">
+        <reft:referenceTerminals>
+            <reft:referenceTerminal id="INF"/>
+        </reft:referenceTerminals>
+    </iidm:extension>
+</iidm:network>

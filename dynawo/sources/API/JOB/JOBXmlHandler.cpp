@@ -656,6 +656,8 @@ NetworkHandler::create(attributes_type const& attributes) {
     network_->setNetworkParFile(attributes["parFile"]);
   if (attributes.has("parId"))
     network_->setNetworkParId(attributes["parId"]);
+  if (attributes.has("lib"))
+    network_->setNetworkModelLib(attributes["lib"]);
 }
 
 shared_ptr<NetworkEntry>

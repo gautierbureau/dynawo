@@ -87,14 +87,15 @@ Modeler::initNetwork() {
   // --------------------------------------------
   const string DDBDir = getMandatoryEnvVar("DYNAWO_DDB_DIR");
 
-  modelNetwork_ = SubModelFactory::createSubModelFromLib(DDBDir + "/DYNModelNetwork" + sharedLibraryExtension());
+  // network model library selected from the jobs <network lib="..."/> (phasor "DYNModelNetwork" by default)
+  modelNetwork_ = SubModelFactory::createSubModelFromLib(DDBDir + "/" + networkModelLib_ + sharedLibraryExtension());
   modelNetwork_->initFromData(data_);
   data_->setModelNetwork(modelNetwork_);
   modelNetwork_->name("NETWORK");
   const std::shared_ptr<ParametersSet>& networkParams = dyd_->getNetworkParameters();
   modelNetwork_->setPARParameters(networkParams);
 
-  model_->addSubModel(modelNetwork_, "DYNModelNetwork" + string(sharedLibraryExtension()));
+  model_->addSubModel(modelNetwork_, networkModelLib_ + string(sharedLibraryExtension()));
   subModels_["NETWORK"] = modelNetwork_;
 }
 

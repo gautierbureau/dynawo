@@ -24,7 +24,8 @@
 
 
 #include "DYNModelConstants.h"
-#include "DYNModelNetwork.h"
+#include "DYNSubModel.h"
+#include "DYNModelCPP.h"
 
 using std::stringstream;
 
@@ -113,7 +114,7 @@ ModelRatioTapChanger::evalG(const double t, const double uValue, const bool node
 
 void
 ModelRatioTapChanger::evalZ(const double t, const state_g* g, const double disable, const bool nodeOff, const double locked, const bool tfoClosed,
-  ModelNetwork* network) {
+  SubModel* network) {
   int currentStepIndex = getCurrentStepIndex();
   if (getNextStepIndex() != -1)
     currentStepIndex = getNextStepIndex();

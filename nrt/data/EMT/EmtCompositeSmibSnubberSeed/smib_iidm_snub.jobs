@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="smib_iidm_snub">
+    <solver lib="dynawo_SolverTRAP" parFile="smib_iidm_snub.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="smib_dynawo_snub.xiidm" parFile="smib_iidm_snub.par" parId="Network"/>
+      <dynModels dydFile="smib_iidm.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.3"/>
+    <outputs directory="outputs">
+      <curves inputFile="smib_iidm.crv" exportMode="CSV"/>
+      <logs><appender tag="" file="dynawo.log" lvlFilter="INFO"/></logs>
+    </outputs>
+  </job>
+</jobs>

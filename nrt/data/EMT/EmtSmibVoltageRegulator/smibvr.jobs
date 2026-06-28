@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="smibvr">
+    <solver lib="dynawo_SolverTRAP" parFile="smibvr.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <dynModels dydFile="smibvr.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="2.5"/>
+    <outputs directory="outputs">
+      <dumpInitValues local="true" global="true"/>
+      <curves inputFile="smibvr.crv" exportMode="CSV"/>
+      <logs><appender tag="" file="dynawo.log" lvlFilter="INFO"/></logs>
+    </outputs>
+  </job>
+</jobs>

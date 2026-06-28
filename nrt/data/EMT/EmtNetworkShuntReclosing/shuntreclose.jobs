@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="shuntreclose">
+    <solver lib="dynawo_SolverTRAP" parFile="shuntreclose.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="IEEE14.iidm" parFile="shuntreclose.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="shuntreclose.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.8"/>
+    <outputs directory="outputs">
+      <curves inputFile="ieee14.crv" exportMode="CSV"/>
+      <logs><appender tag="" file="dynawo.log" lvlFilter="INFO"/></logs>
+    </outputs>
+  </job>
+</jobs>

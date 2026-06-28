@@ -26,6 +26,7 @@
 
 namespace DYN {
 class ModelNetwork;
+class SubModel;
 
 /**
  * @brief  Generic Current Limits model
@@ -78,7 +79,7 @@ class ModelCurrentLimits {  ///< Generic Current Limits model
    * @return the state of the current limits
    */
   state_t evalZ(const std::string& componentName, double t, const state_g* g, double desactivate,
-    const std::string& modelType, ModelNetwork* network);  // compute the local Z function
+    const std::string& modelType, SubModel* network);  // compute the local Z function
 
   /**
    * @brief add a new current limit (pu base UNom, base SNRef)

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="linefault_trip">
+    <solver lib="dynawo_SolverTRAP" parFile="linefault_trip.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="rlc.iidm" parFile="linefault_trip.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="linefault_trip.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.5"/>
+    <outputs directory="outputs">
+      <curves inputFile="rlc.crv" exportMode="CSV"/>
+
+    </outputs>
+  </job>
+</jobs>

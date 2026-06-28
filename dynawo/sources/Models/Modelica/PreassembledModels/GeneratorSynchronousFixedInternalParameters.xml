@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <!-- Phasor twin of the EMT GeneratorEmtSynchronousFull: the phasor
+       Dynawo.Electrical.Machines.OmegaRef.GeneratorSynchronous (internal parameters, reusing
+       GeneratorSynchronousInt_INIT) with the SAME constant field-voltage / mechanical-power feed
+       (Dynawo.Electrical.EMT.FixedExcitationMechanicalPower), so the two can be compared one-for-one. -->
+  <dyn:modelicaModel id="GeneratorSynchronousFixedInternalParameters">
+    <dyn:unitDynamicModel id="machine" name="Dynawo.Electrical.Machines.OmegaRef.GeneratorSynchronous" initName="Dynawo.Electrical.Machines.OmegaRef.GeneratorSynchronousInt_INIT"/>
+    <dyn:unitDynamicModel id="fixedControl" name="Dynawo.Electrical.EMT.FixedExcitationMechanicalPower" initName="Dynawo.Electrical.EMT.FixedExcitationMechanicalPower_INIT"/>
+    <dyn:initConnect id1="fixedControl" var1="Efd0Pu" id2="machine" var2="Efd0Pu"/>
+    <dyn:initConnect id1="fixedControl" var1="Pm0Pu" id2="machine" var2="Pm0Pu"/>
+    <dyn:connect id1="fixedControl" var1="efdPu" id2="machine" var2="efdPu"/>
+    <dyn:connect id1="fixedControl" var1="PmPu" id2="machine" var2="PmPu"/>
+  </dyn:modelicaModel>
+</dyn:dynamicModelsArchitecture>

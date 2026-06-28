@@ -13,6 +13,7 @@ examples/**/outputs*/
 nrt/data/*/*/execution/
 nrt/data/SIMOrder1Prediction/compilation/
 dynawo/sources/Models/CPP/ModelNetwork/DYNModelNetwork.hpp
+dynawo/sources/Models/CPP/ModelNetworkEMT/DYNModelNetworkEMT.hpp
 dynawo/sources/Models/CPP/ModelFrequency/ModelOmegaRef/DYNModelOmegaRef.hpp
 dynawo/sources/Models/CPP/ModelFrequency/ModelSignalN/DYNModelSignalN.hpp
 dynawo/sources/Models/CPP/Components/ModelLoadRestorativeWithLimits/DYNModelLoadRestorativeWithLimits.hpp
@@ -121,3 +122,7 @@ nrt/data/TrapezoidalTest/reference/**
 myEnvDynawo.sh
 b/
 b-3-p/
+
+# EMT exploration: simulation run artifacts
+emt-exploration/**/outputs/
+emt-exploration/**/outputs_*/

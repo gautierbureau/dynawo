@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="EmtFlt" variable="circuit_iSrcA"/>
+  <curve model="EmtFlt" variable="circuit_iSrcB"/>
+  <curve model="EmtFlt" variable="circuit_iSrcC"/>
+  <curve model="EmtFlt" variable="circuit_iFaultA"/>
+  <curve model="EmtFlt" variable="circuit_vBusA"/>
+  <curve model="EmtFlt" variable="circuit_vBusB"/>
+  <curve model="EmtFlt" variable="circuit_vBusC"/>
+</curvesInput>

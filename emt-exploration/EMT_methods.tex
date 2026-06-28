@@ -1,0 +1,626 @@
+\documentclass[11pt]{article}
+
+% --------------------------------------------------------------------------
+% Two ways to solve electromagnetic transients:
+%   global implicit DAE (Dynawo)  vs.  nodal companion models (classical EMTP)
+% Compile with: pdflatex EMT_methods.tex
+% --------------------------------------------------------------------------
+
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\hstep}{h}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\ii}{\mathbf{i}}
+
+\title{\bfseries Two ways to solve electromagnetic transients\\[2pt]
+\large Global implicit DAE (Dynawo) versus nodal companion models (classical EMTP)}
+\author{EMT exploration notes --- Dynawo}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Electromagnetic-transient (EMT) simulation computes the \emph{instantaneous}
+three-phase voltages and currents of a network of resistors, inductors,
+capacitors, sources and switches. Two families of methods do this and they sit
+at opposite ends of a design axis. The \textbf{classical EMTP} method
+discretises \emph{each element locally} into a resistor plus a history current
+source (a \emph{companion model}) and solves one real, linear nodal system per
+step. The \textbf{global-DAE} method (as used by Dynawo) keeps each element as
+its continuous physical equation and lets a general implicit integrator
+discretise the \emph{whole symbolic system} at once, solving a nonlinear
+residual by Newton iterations each step. This note derives both from the same
+trapezoidal rule, makes the precise correspondence explicit, and tabulates the
+trade-offs.
+\end{abstract}
+
+\tableofcontents
+
+% ==========================================================================
+\section{The problem}
+% ==========================================================================
+
+We want the instantaneous waveforms $v(t)$, $i(t)$ in every phase. The building
+blocks obey, per phase,
+\begin{equation}
+\text{resistor: } v = R\,i,
+\qquad
+\text{inductor: } v = L\,\frac{\dd i}{\dd t},
+\qquad
+\text{capacitor: } i = C\,\frac{\dd v}{\dd t}.
+\label{eq:constitutive}
+\end{equation}
+Together with Kirchhoff's laws (KCL/KVL) over the topology, these form a system
+of differential and algebraic equations. The question is \emph{how to advance it
+in time}. Both methods below use the same one-step integration rule, the
+\textbf{trapezoidal rule},
+\begin{equation}
+y_{n+1} = y_n + \frac{\hstep}{2}\big(\dot y_n + \dot y_{n+1}\big),
+\qquad \hstep = t_{n+1}-t_n,
+\label{eq:trap}
+\end{equation}
+which is second-order accurate and A-stable. What differs is the
+\emph{scope} at which \eqref{eq:trap} is applied.
+
+% ==========================================================================
+\section{Method A --- Global implicit DAE (Dynawo)}
+% ==========================================================================
+
+Collect all unknowns (node voltages, inductor currents, source currents, \dots)
+into one vector $y$. The network is written as a single, generally implicit,
+differential-algebraic system
+\begin{equation}
+F\big(y,\dot y,t\big) = 0,
+\label{eq:dae}
+\end{equation}
+mixing differential equations (for the $L$ and $C$ states) and algebraic ones
+(KCL at nodes, resistor laws, ideal-source laws). \textbf{No element is
+pre-discretised}: an inductor contributes literally $v - L\,\dot i = 0$.
+
+\paragraph{Discretisation lives in the solver.}
+Solving \eqref{eq:trap} for the derivative gives
+\begin{equation}
+\dot y_{n+1} = \frac{2}{\hstep}\big(y_{n+1}-y_n\big) - \dot y_n
+\;\equiv\; c_j\,y_{n+1} + \alpha_n,
+\qquad
+\boxed{\,c_j = \dfrac{2}{\hstep}\,},\quad
+\alpha_n = -\frac{2}{\hstep}y_n-\dot y_n .
+\label{eq:yp}
+\end{equation}
+Substituting \eqref{eq:yp} into \eqref{eq:dae} turns each step into a
+\emph{nonlinear algebraic} system for the single unknown $y_{n+1}$,
+\begin{equation}
+\Phi(y_{n+1}) \;\equiv\;
+F\!\left(y_{n+1},\; c_j\,y_{n+1}+\alpha_n,\; t_{n+1}\right) = 0,
+\label{eq:residual}
+\end{equation}
+solved by Newton's method, $J\,\Delta y = -\Phi(y_{n+1})$, with the iteration
+matrix
+\begin{equation}
+J = \frac{\partial F}{\partial y} + c_j\,\frac{\partial F}{\partial \dot y}.
+\label{eq:jac}
+\end{equation}
+The whole network --- including every nonlinearity and switch --- is inside
+\eqref{eq:residual}; the matrix $J$ is rebuilt/refactorised as needed but the
+system is \emph{never} reduced to a constant admittance.
+
+\paragraph{This is exactly Dynawo's \texttt{SolverTRAP}.}
+In \texttt{DYNSolverTRAP.cpp}, \texttt{computeYP} implements \eqref{eq:yp}
+verbatim,
+\[
+\texttt{vectorYp[i] = (2./h)*(yy[i] - vectorYSave[i]) - vectorYpSave[i];}
+\]
+and the nonlinear solve \eqref{eq:residual}--\eqref{eq:jac} is handed to KINSOL.
+A worked single branch (source--$R$--$L$ loop, state $i$):
+\begin{equation}
+L\,\dot i = v_s(t) - R\,i
+\;\;\xrightarrow{\eqref{eq:yp}}\;\;
+L\Big(\tfrac{2}{\hstep}(i_{n+1}-i_n)-\dot i_n\Big) = v_s(t_{n+1}) - R\,i_{n+1},
+\label{eq:Aexample}
+\end{equation}
+one (here linear) equation solved for $i_{n+1}$ each step.
+
+% ==========================================================================
+\section{Method B --- Nodal companion models (classical EMTP)}
+% ==========================================================================
+
+Here \eqref{eq:trap} is applied \emph{inside each storage element} before any
+system assembly, replacing it by a \textbf{companion model}: a conductance in
+parallel with a history current source that depends only on past values.
+
+\paragraph{Inductor.} With $v=L\,\dd i/\dd t$ and the trapezoidal rule,
+\begin{equation}
+i_{n+1} = i_n + \frac{\hstep}{2L}\big(v_{n+1}+v_n\big)
+= \underbrace{\frac{\hstep}{2L}}_{G_L}\,v_{n+1}
++ \underbrace{\Big(i_n + \frac{\hstep}{2L}v_n\Big)}_{I_{\mathrm{h},n}^{L}} ,
+\qquad
+\boxed{\,G_L=\dfrac{\hstep}{2L}\,}.
+\label{eq:compL}
+\end{equation}
+
+\paragraph{Capacitor.} With $i=C\,\dd v/\dd t$,
+\begin{equation}
+i_{n+1} = \underbrace{\frac{2C}{\hstep}}_{G_C}\,v_{n+1}
+\;-\;\underbrace{\Big(\frac{2C}{\hstep}v_n + i_n\Big)}_{-\,I_{\mathrm{h},n}^{C}},
+\qquad
+\boxed{\,G_C=\dfrac{2C}{\hstep}\,}.
+\label{eq:compC}
+\end{equation}
+
+\paragraph{Resistor.} Simply $G_R = 1/R$, no history term.
+
+\medskip
+Every element is now \emph{resistor $\parallel$ known current source}. Each phase
+node obeys KCL, and assembling them gives one real, symmetric, \textbf{constant}
+(for fixed $\hstep$ and topology) conductance system
+\begin{equation}
+\boxed{\;\mathbf{G}\,\vv_{n+1} = \ii^{\,\text{src}}_{n+1} + I_{\mathrm{h},n}\;}
+\label{eq:nodal}
+\end{equation}
+where $I_{\mathrm{h},n}$ is computed cheaply from the previous step's $\vv_n,\ii_n$.
+$\mathbf{G}$ is factorised \emph{once}; each step is a single forward/back
+substitution. Each element is a Norton equivalent (Norton's theorem),
+\[
+v = R_N\,(i + i_N), \qquad R_N = G^{-1},\;\; i_N \equiv \text{history current},
+\]
+and a distributed (Bergeron) line is two such Norton ends whose history currents
+are the travelling waves from the \emph{other} end one propagation delay $\tau$
+earlier,
+\begin{equation}
+I_{\mathrm{h},k}^{\text{line}}(t) = f\big(v_m,i_m;\,t-\tau\big),
+\end{equation}
+i.e. a delay rather than a derivative.
+
+% ==========================================================================
+\section{They are the same rule at different scopes}
+% ==========================================================================
+
+The two methods are not rival approximations: for a \textbf{linear network at a
+fixed step} they produce the \emph{identical} sequence $y_n$, because both are
+the trapezoidal discretisation of the same equations. The correspondence is
+exact and visible in the coefficients. With $c_j = 2/\hstep$ from
+\eqref{eq:yp},
+\begin{equation}
+G_L = \frac{\hstep}{2L} = \frac{1}{c_j\,L},
+\qquad
+G_C = \frac{2C}{\hstep} = c_j\,C .
+\label{eq:equiv}
+\end{equation}
+\emph{The companion conductances of Method B are exactly the entries the
+trapezoidal coefficient $c_j$ contributes to the Jacobian \eqref{eq:jac} of
+Method A.} The history sources $I_{\mathrm{h},n}$ play the role of the constant term
+$\alpha_n$ in \eqref{eq:yp}. The difference is therefore purely architectural:
+
+\begin{itemize}
+\item \textbf{Method A} substitutes \eqref{eq:trap} into the \emph{global
+symbolic residual} and solves it \emph{implicitly} (Newton). Discretisation is a
+property of the \textbf{solver}; models stay continuous.
+\item \textbf{Method B} substitutes \eqref{eq:trap} into \emph{each element},
+producing a constant real matrix and an explicit history, solved by one
+\emph{linear} nodal pass. Discretisation is baked into the \textbf{models}.
+\end{itemize}
+
+% ==========================================================================
+\section{Side-by-side}
+% ==========================================================================
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.30\textwidth} >{\raggedright\arraybackslash}p{0.32\textwidth} >{\raggedright\arraybackslash}p{0.30\textwidth}}
+\toprule
+ & \textbf{A: Global DAE (Dynawo)} & \textbf{B: Companion (EMTP)} \\
+\midrule
+Element model & continuous, $v=L\dot i$ & pre-discretised, $i=G_L v+I_{\mathrm{h}}$ \\
+Where \eqref{eq:trap} is applied & in the solver, globally & in each element, locally \\
+Unknown each step & full state $y_{n+1}$ & node voltages $\vv_{n+1}$ \\
+System solved each step & nonlinear $\Phi(y_{n+1})=0$ (Newton) & linear $\mathbf{G}\vv_{n+1}=\text{rhs}$ \\
+Matrix & Jacobian $J$, rebuilt as needed & constant $\mathbf{G}$, factorised once \\
+History kept by & solver ($y_n,\dot y_n$) & models ($I_{\mathrm{h}}$ via delay/sample) \\
+Time step & variable or fixed & fixed (baked into $G_L,G_C$) \\
+Nonlinearity / switching & inside Newton; refactor $J$ & rebuild/refactor $\mathbf{G}$; compensation \\
+Cost per step & higher (nonlinear solve) & very low (one back-substitution) \\
+Generality & any DAE, controls, phasor+EMT & EMT network, special-cased \\
+\bottomrule
+\end{tabular}
+\caption{The opposing design choices. Both rest on the trapezoidal rule
+\eqref{eq:trap}; \eqref{eq:equiv} shows their coefficients coincide.}
+\end{table}
+
+% ==========================================================================
+\section{Consequences and trade-offs}
+% ==========================================================================
+
+\begin{description}
+\item[Speed.] Method B is extremely fast: with a fixed step and fixed topology
+the conductance $\mathbf{G}$ is factorised once and every step is a cheap
+substitution. Method A pays for a nonlinear Newton solve over a larger system
+each step.
+
+\item[Robustness / generality.] Method A handles arbitrary nonlinearities,
+stiff dynamics, controls, and even mixed phasor/EMT models uniformly, because
+everything lives in one implicit residual and the integrator may adapt the step.
+Method B special-cases nonlinear and switching elements (piecewise companions,
+compensation/Newton sub-iterations) and a topology or step change forces a
+re-factorisation.
+
+\item[Numerical oscillations.] The trapezoidal rule is A-stable but not
+L-stable: at a switching discontinuity it can ring (the well-known EMTP
+``chatter''). Classical EMTP mitigates this with the \emph{Critical Damping
+Adjustment} (half-step backward-Euler interpolation); a global-DAE solver
+addresses the same effect through its event handling and step/order control.
+
+\item[Step size.] Method B's accuracy and stability are tied to the single
+fixed $\hstep$ chosen up front (typically $1$--$50\,\mu\mathrm{s}$).
+Method A can in principle vary $\hstep$, though for waveform fidelity an EMT run
+still uses a small step.
+\end{description}
+
+% ==========================================================================
+\section{The implemented network primitives}
+% ==========================================================================
+
+Method A is abstract until one writes the residual each element actually
+contributes to $F(y,\dot y,t)=0$. This section lists, for every
+abc primitive of \texttt{DYNModelNetworkEMT}, (i) the residual as coded in its
+\texttt{evalF}, and (ii) the classical companion counterpart, so the two columns
+of the side-by-side table become concrete per device.
+
+\paragraph{Conventions.} Receptor convention; instantaneous \emph{peak}-pu abc
+quantities, $v_k=\sqrt2\,V_{\mathrm{rms}}\cos(\theta-2\pi k/3)$, $k\in\{a,b,c\}$.
+From the IIDM data: $R=r/Z_{\mathrm b}$, $L=x/(Z_{\mathrm b}\,\omega_N)$,
+$C=b\,Z_{\mathrm b}/\omega_N$, with $\omega_N=2\pi f_N$. Below, $v_k,i_k$ are the
+node-voltage / branch-current entries of $y$ owned by the component, and
+$\dot{(\cdot)}\equiv\dd(\cdot)/\dd t$ is the derivative the solver discretises
+through \eqref{eq:yp}.
+
+\subsection{Node (bus): \texttt{ModelBusEMT}}
+A bus is a small shunt capacitance $C$ to ground (physical/stray $C$, plus any
+shunt-compensator $C$) into which every incident branch injects its current
+(KCL), with shunt conductance $G$ (loads) and an optional fault conductance
+$G_f$. Per phase $k$ the residual is
+\begin{equation}
+f_k \;=\; \sum_{\text{branches}}(\pm i_k)\;-\;(G_k+G_{f,k})\,v_k\;-\;C\,\dot v_k
+\;=\;0,
+\qquad\text{i.e.}\quad C\,\dot v_k=\textstyle\sum i_k-(G_k+G_{f,k})v_k .
+\label{eq:bus}
+\end{equation}
+It is differential whenever $C>0$; the network enforces $C\ge 10^{-4}$ (a snubber)
+so every node is a stiff \textbf{index-1} differential state --- the DAE
+regularisation that takes the place of EMTP's ever-present $G_C=2C/\hstep$. A
+dead (switched-off) island pins $f_k=v_k$ ($v=0$).
+\emph{Companion (EMTP):} the capacitor becomes $G_C=2C/\hstep \parallel
+I_{\mathrm h}^C$ and the node row reads $(G_C+\sum G)\,v_k=I_{\mathrm h}^C+\sum
+i^{\text{hist}}_{\text{branch}}$; a $C$-less node is simply a conductance row.
+
+\subsection{Series R--L branch (line, cable, reactor): \texttt{ModelLineEMT}}
+The branch current $i_k$ is a state and the constitutive law is the residual,
+\begin{equation}
+f_k \;=\; v_{\mathrm{from},k}-v_{\mathrm{to},k}-R\,i_k-L\,\dot i_k \;=\;0,
+\label{eq:line}
+\end{equation}
+with $-i_k$ injected into the \emph{from} node and $+i_k$ into the \emph{to} node
+(the $\sum i_k$ of \eqref{eq:bus}); open $\Rightarrow f_k=i_k$. This is
+\eqref{eq:Aexample} embedded in the network. \emph{Companion (EMTP):} the same
+branch is the conductance $G_{RL}=1/(R+2L/\hstep)$ in parallel with a history
+source, the current being back-substituted after the nodal solve rather than
+carried as a state --- the single sharpest contrast between the two methods.
+
+\subsection{Switch / breaker: \texttt{ModelSwitchEMT}}
+An ideal switch is a pure constraint on $y$:
+\begin{equation}
+\text{closed: } f_k=v_{1,k}-v_{2,k}=0,
+\qquad
+\text{open: } f_k=i_k=0,
+\label{eq:switch}
+\end{equation}
+the current unknown $i_k$ (injected $\mp1$ into the two nodes) absorbing the
+zero-impedance equality. \emph{Companion (EMTP):} an ideal zero-impedance switch
+makes the nodal matrix singular, so EMTP uses a small $R_{\mathrm{on}}$ / large
+$R_{\mathrm{off}}$ or node merging; the augmented DAE set represents the ideal
+constraint directly.
+
+\subsection{Two-winding transformer: \texttt{ModelTwoWindingsTransformerEMT}}
+With turns ratio $r_T=N_1/N_2$ and phase shift $\alpha$ (an abc rotation
+$\mathcal R(\alpha)$), the primary current $i_k$ is the state:
+\begin{equation}
+f_k=v_{\mathrm{pri},k}-r_T\,[\mathcal R(\alpha)\,v_{\mathrm{sec}}]_k-R\,i_k-L\,\dot i_k=0,
+\quad
+[\mathcal R(\alpha)v]_k=\cos\alpha\,v_k+\tfrac{\sin\alpha}{\sqrt3}\big(v_{k+2}-v_{k+1}\big),
+\label{eq:tfo}
+\end{equation}
+with $-i_k$ injected into the primary node and the power-conserving
+$r_T\,[\mathcal R(-\alpha)\,i]_k$ into the secondary. For $r_T=1,\alpha=0$ it
+reduces to the R--L branch \eqref{eq:line}. \emph{Companion (EMTP):} an
+ideal-transformer (turns-ratio) companion in series with the R--L companion of
+\eqref{eq:line}; the rotation $\mathcal R(\alpha)$ is identical.
+
+\subsection{Default load and PQ generator: \texttt{ModelLoadEMT}, \texttt{ModelGeneratorEMT}}
+A constant-impedance load owns no state and registers a per-phase conductance
+$G=1/R$ into its node (the $G$ of \eqref{eq:bus}) --- algebraic and identical in
+both methods. The default generator is a prescribed balanced current source
+\begin{equation}
+i_k(t)=\sqrt2\,I\,\cos\!\big(\omega_N t+\varphi-\tfrac{2\pi k}{3}\big),
+\label{eq:gen}
+\end{equation}
+injected into the node --- again the same object (a current source) in both
+methods. Voltage-dependent / restorative variants are deliberately \emph{not}
+network primitives: their defining quantity is the RMS $U$, a state in the
+quasi-static phasor world but a \emph{measurement} in EMT, so they belong to a
+Modelica model on the bus terminal, not here.
+
+\subsection{Synchronous machine: \texttt{Electrical/EMT/GeneratorSynchronous}}
+The detailed machine is a Modelica model bound to its bus through the abc ACPIN.
+It is a Park ($dq0$) model that, unlike the phasor, \textbf{keeps the stator
+electromagnetic transients} $\dot\lambda/\omega_N$. The abc terminal is mapped to
+$dq0$ by Park's transform,
+\begin{equation}
+u_d=C\!\sum_k\sin\!\big(\theta-\tfrac{2\pi k}{3}\big)v_k,\quad
+u_q=C\!\sum_k\cos\!\big(\theta-\tfrac{2\pi k}{3}\big)v_k,\quad
+u_0=\tfrac{1}{\sqrt3}\textstyle\sum_k v_k,
+\label{eq:park}
+\end{equation}
+and the stator current is injected back through the inverse map
+$i_k=K_i C_{dq}\big[\sin(\theta-\tfrac{2\pi k}{3})i_d+\cos(\theta-\tfrac{2\pi
+k}{3})i_q+i_0/\sqrt2\big]$. The stator voltage equations \emph{retain} the
+transient term (the EMT difference --- the phasor sets $\dot\lambda=0$):
+\begin{align}
+u_d&=(R_a+R_{Tfo})\,i_d+\dot\lambda_d/\omega_N-\omega\,\lambda_q,\nonumber\\
+u_q&=(R_a+R_{Tfo})\,i_q+\dot\lambda_q/\omega_N+\omega\,\lambda_d,\qquad
+u_0=R_a\,i_0+\dot\lambda_0/\omega_N,
+\label{eq:stator}
+\end{align}
+the rotor windings ($f,D,Q_1,Q_2$) obey $u_f=R_f i_f+\dot\lambda_f/\omega_N$,
+$0=R_D i_D+\dot\lambda_D/\omega_N,\dots$, the fluxes link the currents through the
+saturable mutuals $M_{d,\mathrm{sat}},M_{q,\mathrm{sat}}$ (Canay $M_{rc}$), e.g.
+$\lambda_d=(M_{d,\mathrm{sat}}+L_d+X_{Tfo})i_d+M_{d,\mathrm{sat}}i_f+M_{d,\mathrm{sat}}i_D$,
+$\lambda_0=L_0 i_0$, and the swing closes the loop,
+\begin{equation}
+\dot\theta=\omega\,\omega_N,\qquad
+2H\,\dot\omega=c_m\tfrac{P_{\text{NomTurb}}}{S_{\text{Nom}}}-c_e-D_{Pu}(\omega-\omega_{\text{ref}}),\qquad
+c_e=\lambda_q i_d-\lambda_d i_q .
+\label{eq:swing}
+\end{equation}
+\emph{Companion (EMTP):} a universal-machine companion couples to the network by
+a Norton/Th\'evenin source at the stator terminal (an internal EMF behind a
+subtransient impedance, predicted and updated each fixed step). Dynawo instead
+solves the machine fluxes \eqref{eq:stator}--\eqref{eq:swing} and the network abc
+voltages \eqref{eq:bus} \emph{simultaneously} as one DAE --- the ACPIN equates
+$\texttt{terminal.v}\leftrightarrow$ node $v$ and
+$\texttt{terminal.i}\leftrightarrow$ the KCL injection --- so there is no
+predictor/companion lag at the machine--network interface.
+
+\subsection{Summary}
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.20\textwidth}
+  >{\raggedright\arraybackslash}p{0.18\textwidth}
+  >{\raggedright\arraybackslash}p{0.52\textwidth}}
+\toprule
+Primitive & State(s) & Implemented residual / contribution \\
+\midrule
+Bus & $v_k$ (if $C{>}0$) & $C\dot v_k=\sum i_k-(G{+}G_f)v_k$ \eqref{eq:bus} \\
+R--L branch & $i_k$ & $v_{\mathrm{from}}-v_{\mathrm{to}}-Ri_k-L\dot i_k=0$ \eqref{eq:line} \\
+Switch & $i_k$ & closed $v_1{-}v_2=0$, open $i_k=0$ \eqref{eq:switch} \\
+2W transformer & $i_k$ & $v_{\mathrm{pri}}-r_T\mathcal R(\alpha)v_{\mathrm{sec}}-Ri_k-L\dot i_k=0$ \eqref{eq:tfo} \\
+Load & --- & shunt $G=1/R$ into the node \\
+PQ generator & --- & prescribed current source \eqref{eq:gen} \\
+Machine & $\lambda_{d,q,0,f,D,Q_1,Q_2},\theta,\omega$ & Park $dq0$ with $\dot\lambda/\omega_N$ \eqref{eq:park}--\eqref{eq:swing} \\
+\bottomrule
+\end{tabular}
+\caption{The abc EMT primitives and the residuals they contribute to the global
+DAE $F(y,\dot y,t)=0$. Every $\dot{(\cdot)}$ is discretised by the solver through
+\eqref{eq:yp}; the classical method would replace each storage element by its
+companion model instead.}
+\end{table}
+
+% ==========================================================================
+\section{The Modelica EMT component library}
+% ==========================================================================
+
+Dynawo carries EMT primitives at \emph{two} layers, both in the continuous
+(Method A) form. Section~7 covered the C++ \texttt{DYNModelNetworkEMT}, which
+builds an abc network directly from the IIDM. Alongside it lives a standalone
+\textbf{Modelica} library, \texttt{Dynawo.Electrical.EMT}, of preassembled abc
+components that are \emph{composed through \texttt{.dyd} connections} (or attached
+to the C++ network's ACPIN). The two share conventions and waveforms; this
+section records the Modelica components whose formulation is not already a C++
+primitive.
+
+\paragraph{Two-terminal base.} Every passive element extends
+\texttt{BaseEmtTwoTerminal}, which declares the branch voltage and the
+flow-connector KCL
+\begin{equation}
+v_k = p.v_k - n.v_k,\qquad p.i_k + n.i_k = 0,\qquad k\in\{a,b,c\},
+\label{eq:base2t}
+\end{equation}
+($p.i$ the through-current; the \texttt{flow} connector sums currents at shared
+nodes). The constitutive laws are then literal continuous equations:
+\begin{equation}
+\text{R: } v_k=R\,i_k,\quad
+\text{L: } v_k=L\,\dot i_k,\quad
+\text{C: } i_k=C\,\dot v_k,\quad
+\text{SeriesRL: } v_k=R\,i_k+L\,\dot i_k .
+\label{eq:rlc}
+\end{equation}
+
+\paragraph{Coupled R--L (mutual phases): \texttt{CoupledRL}.} The one passive
+element \emph{not} diagonal --- the abc series impedance with inter-phase mutuals
+written as $3\times3$ matrices,
+\begin{equation}
+\mathbf v = \mathbf R\,\mathbf i + \mathbf L\,\dot{\mathbf i},
+\qquad \mathbf R,\mathbf L\in\mathbb R^{3\times3},
+\label{eq:coupledrl}
+\end{equation}
+the full mutual-coupling generalisation of the diagonal $\texttt{SeriesRL}$ /
+C++ line \eqref{eq:line}.
+
+\paragraph{Winding-connection transformers.}
+\texttt{TransformerYgYg} (grounded-wye / grounded-wye, $1{:}1$ phase) is the
+per-phase
+\begin{equation}
+v_{1,k}=r_T\,v_{2,k}+R\,i_{1,k}+L\,\dot i_{1,k},
+\qquad i_{2,k}=-r_T\,i_{1,k},
+\label{eq:ygyg}
+\end{equation}
+i.e.\ the C++ branch \eqref{eq:tfo} at $\alpha=0$. \texttt{TransformerYgD}
+(grounded-wye / delta) realises the $30^\circ$ shift \emph{through the winding
+connection} rather than a rotation matrix: secondary winding $k$ sees the delta
+difference $v_{2,k}-v_{2,k+1}$, and the line current is the difference of two
+winding currents,
+\begin{equation}
+v_{1,k}=r_T\big(v_{2,k}-v_{2,k+1}\big)+R\,i_{1,k}+L\,\dot i_{1,k},
+\qquad
+i_{2,k}=-r_T\big(i_{1,k}-i_{1,k-1}\big),
+\label{eq:ygd}
+\end{equation}
+(indices mod 3). The $\sqrt3$ magnitude and $30^\circ$ phase fall out of the
+delta topology --- the physical EMT way to get the shift the C++ branch
+approximates with $\mathcal R(\alpha)$.
+
+\paragraph{Ideal sources.} \texttt{VoltageSource} imposes an ideal abc EMF
+$v_k=\hat U\cos(\Omega t+\varphi+\psi_k)$, $\psi_k\in\{0,-\tfrac{2\pi}{3},
++\tfrac{2\pi}{3}\}$. \texttt{InfiniteBus} is an EMF behind a small series $R_s$,
+which makes it connectable to any (inductive or capacitive) node:
+\begin{equation}
+i_k=\frac{v_k-\sqrt2\,U\cos(\Omega t+\varphi+\psi_k)}{R_s},
+\qquad \Omega=2\pi f_N .
+\label{eq:infbus}
+\end{equation}
+
+\paragraph{Faults.} \texttt{Fault} is the (multi-)phase-to-ground short: while
+active, each faulted phase obeys $v_k=R_f\,i_k$ (small $R_f$); every healthy phase
+draws the negligible $i_k=v_k/R_\infty$. \texttt{LineToLineFault} shorts two
+phases through $R_f$,
+\begin{equation}
+v_{p_1}-v_{p_2}=R_f\,i_F,\qquad i_{p_1}=i_F,\quad i_{p_2}=-i_F,\quad
+i_{p_3}=v_{p_3}/R_\infty,
+\label{eq:llfault}
+\end{equation}
+the abc analogue of the C++ network's $G_f$ shunt-to-ground term in
+\eqref{eq:bus} (here written as a Modelica terminal model). \texttt{LineFault}
+splices such a fault into a line.
+
+\paragraph{Machines.} The three Modelica machines all use the Park $dq0$ +
+$\dot\lambda/\omega_N$ stator form of \eqref{eq:park}--\eqref{eq:swing};
+they differ in detail, not in method:
+\texttt{GeneratorSynchronous} (Section~7.6) carries an integrated step-up
+transformer ($L_d{+}X_{Tfo}$, $R_a{+}R_{Tfo}$) and an \texttt{omegaRefPu} input;
+\texttt{SynchronousMachineFull} is its standalone twin in the \emph{absolute}
+rotor frame ($\dot\theta=\omega\,\omega_N$, no \texttt{omegaRef}, swing damping
+$D_{Pu}(\omega-1)$), with saturation evaluated on the \emph{instantaneous} air-gap
+flux (singularity-guarded) --- the physically correct behaviour under unbalance /
+faults; \texttt{SynchronousMachine} is the reduced two-axis (subtransient) model.
+All keep the EMT zero-sequence winding $\lambda_0=L_0 i_0$.
+
+% ==========================================================================
+\section{A concrete Method-B reference: classical EMTP travelling-wave lines}\label{sec:emtp-lines}
+% ==========================================================================
+
+The companion/nodal Method~B of Section~3 has a concrete counterpart in the
+classical EMTP family of tools, sketched here purely as the \emph{opposite} of the
+Dynawo DAE primitives of Sections~7--8. A first observation: most \emph{lumped}
+EMTP elements are themselves written in the continuous $\dot{}$ form of
+Method~A --- an R-L branch is literally $v=R\,i+L\,\dot i$, and transformers and
+synchronous machines are continuous too. The genuinely Method-B part --- the part
+that has \emph{no} Dynawo equivalent --- is the \textbf{travelling-wave
+transmission lines}.
+
+\paragraph{Norton end.} Every line terminal is a Norton companion:
+\begin{equation}
+v = R_N\,(i + i_N),\qquad \textstyle\sum \texttt{pin.i}=0,
+\label{eq:emtp-norton}
+\end{equation}
+a fixed conductance $G_N=1/R_N$ in parallel with a \emph{history current source}
+$i_N$ --- exactly the Method-B element \eqref{eq:compL}--\eqref{eq:nodal}, now a
+concrete model.
+
+\paragraph{Constant-parameter (Bergeron) line.} For a line of characteristic
+impedance $Z_c$ and one-way travel time $\tau$, $R_N=Z_c$ and the two ends couple
+\emph{only} through the wave that left the far end one delay ago. In
+the history term this is literally a \texttt{delay}:
+\begin{equation}
+i_{h,k}(t) = \texttt{delay}\big(i_{r,m},\,\tau\big),\qquad
+i_{h,m}(t) = \texttt{delay}\big(i_{r,k},\,\tau\big),
+\label{eq:emtp-bergeron}
+\end{equation}
+($k,m$ the two ends). The history is a \textbf{look-up of past values}, not a
+derivative of present unknowns; and because $\tau\ge\hstep$ the two end nodes are
+\emph{decoupled within a step} --- the structural reason EMTP's $\mathbf G$ is
+sparse/block-diagonal and the per-step solve is cheap and parallel.
+
+\paragraph{Wideband (frequency-dependent) line.} The same Norton ends, but the
+history now carries the line's frequency dependence as a recursive convolution
+(a pole--residue fit of the modal propagation/admittance), realised by auxiliary
+history states:
+\begin{equation}
+\dot x_{k,p,i}=P_{p}\,x_{k,p,i}+R_{p,i}\,i_{h,m},
+\qquad
+i_{N,k}=\sum_{p,i} x_{k,p,i},
+\label{eq:emtp-wb}
+\end{equation}
+i.e.\ $i_N(t)=\int a(t-s)\,i(s)\,\dd s$ approximated by first-order states.
+
+\paragraph{Why this is the opposite of the DAE.} A Dynawo line is the single
+implicit equation $v_{\mathrm{from},k}-v_{\mathrm{to},k}-R\,i_k-L\,\dot i_k=0$
+\eqref{eq:line} spanning \emph{both} ends and the current state, solved
+\emph{simultaneously} with the whole network by Newton each step. An EMTP
+travelling-wave line is \emph{two} Norton sources \eqref{eq:emtp-norton} whose
+only link is a \texttt{delay} \eqref{eq:emtp-bergeron} (or a convolution
+\eqref{eq:emtp-wb}) of \emph{past} values. The contrast is total and is the whole
+point of the note:
+
+\begin{center}\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.46\textwidth}>{\raggedright\arraybackslash}p{0.46\textwidth}}
+\toprule
+\textbf{Dynawo line (DAE, \S7)} & \textbf{EMTP travelling-wave line (companion)} \\
+\midrule
+$v_{\mathrm{from}}-v_{\mathrm{to}}-R i-L\,\dot i=0$ & two Norton ends $v=R_N(i+i_N)$ \\
+ends coupled \emph{implicitly}, in one equation & ends coupled only by $\texttt{delay}(\cdot,\tau)$ / convolution \\
+$\dot i$ --- derivative of present unknown & $i_N$ --- history of past values \\
+solved with the whole network (Newton) & cheap decoupled nodal solve per step \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Feeding such a line to a DAE solver is the category error noted in the next
+section: its \texttt{delay()} history is an explicit past-value look-up, foreign
+to a continuous Newton step --- so a port to Dynawo replaces the travelling-wave
+companion with a lumped, continuous $\dot{}$ segment and lets the solver own the
+time stepping.
+
+% ==========================================================================
+\section{Mapping to this repository}
+% ==========================================================================
+
+\begin{itemize}
+\item \textbf{Method A} is what this repository implements: Dynawo's
+\texttt{SolverTRAP} (\eqref{eq:yp}) together with the instantaneous-abc
+primitives of the C++ \texttt{DYNModelNetworkEMT} (Section~7) and the Modelica
+\texttt{Dynawo.Electrical.EMT} library (Section~8), each written in continuous
+$\dot{}$ form (e.g.\ \texttt{SeriesRL}: $v=R\,i+L\,\dot i$). The validated demo
+\texttt{ThreePhaseRLC} matches the analytic steady state to $\le 0.1\%$. Every
+EMT model named in this note is a Dynawo model.
+
+\item \textbf{Method B} (the classical companion/nodal form) is \emph{not} a
+Dynawo model; it is dissected in Section~\ref{sec:emtp-lines}: the EMTP
+travelling-wave lines (Norton ends coupled by a \texttt{delay} or a convolution
+history term) are the genuine companion form, while the lumped $RLC$ /
+transformer / machine models are already continuous (Method~A).
+
+\item \textbf{Practical note.} Feeding a companion model (Method B) to a DAE
+solver (Method A) is a category error: the element is already discretised, and
+its delayed/sampled history fights the continuous Newton step. A model written
+for Method A keeps the continuous $\dot{}$ form and lets the solver, not the
+model, own the time stepping.
+\end{itemize}
+
+\end{document}

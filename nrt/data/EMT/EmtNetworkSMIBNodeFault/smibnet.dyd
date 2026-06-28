@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="MACHINE" lib="GeneratorEmtSynchronousMachineFull" staticId="G0" parFile="smibnet.par" parId="MACHINE"/>
+  <dyn:connect id1="MACHINE" var1="machine_terminal" id2="NETWORK" var2="@G0@@NODE@_ACPIN"/>
+  <dyn:blackBoxModel id="INFBUS" lib="EmtInfiniteBus" staticId="INFBUS" parFile="smibnet.par" parId="INFBUS"/>
+  <dyn:connect id1="INFBUS" var1="infiniteBus_terminal" id2="NETWORK" var2="@INFBUS@@NODE@_ACPIN"/>
+</dyn:dynamicModelsArchitecture>

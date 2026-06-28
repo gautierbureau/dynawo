@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+    <job name="LL">
+        <solver lib="dynawo_SolverTRAP" parFile="LineToLineFaultDemo.par" parId="Solver"/>
+        <modeler compileDir="outputs/compilation">
+            <dynModels dydFile="LineToLineFaultDemo.dyd"/>
+            <precompiledModels useStandardModels="true"/>
+            <modelicaModels useStandardModels="true"/>
+        </modeler>
+        <simulation startTime="0" stopTime="0.25"/>
+        <outputs directory="outputs">
+            <curves inputFile="LineToLineFaultDemo.crv" exportMode="CSV"/>
+            <logs><appender tag="" file="dynawo.log" lvlFilter="INFO"/></logs>
+        </outputs>
+    </job>
+</jobs>

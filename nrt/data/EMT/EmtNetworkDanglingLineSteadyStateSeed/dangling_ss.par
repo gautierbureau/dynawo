@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="Network">
+    <par type="BOOL" name="steady_state_init_seed" value="true"/>
+  </set>
+  <set id="Solver">
+    <par type="DOUBLE" name="hMin" value="1e-5"/>
+    <par type="DOUBLE" name="hMax" value="1e-5"/>
+    <par type="DOUBLE" name="kReduceStep" value="0.5"/>
+    <par type="INT" name="maxNewtonTry" value="10"/>
+    <par type="STRING" name="linearSolverName" value="KLU"/>
+    <par type="DOUBLE" name="minimalAcceptableStep" value="1e-7"/>
+    <par type="INT" name="maximumNumberSlowStepIncrease" value="100"/>
+  </set>
+  <set id="INFBUS">
+    <par type="DOUBLE" name="infiniteBus_UPu" value="1.0"/>
+    <par type="DOUBLE" name="infiniteBus_UPhase" value="0.0"/>
+    <par type="DOUBLE" name="infiniteBus_FNom" value="50"/>
+  </set>
+</parametersSet>

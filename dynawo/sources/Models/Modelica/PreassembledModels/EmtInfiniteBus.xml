@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:modelicaModel id="EmtInfiniteBus">
+    <dyn:unitDynamicModel id="infiniteBus" name="Dynawo.Electrical.EMT.InfiniteBus"/>
+  </dyn:modelicaModel>
+</dyn:dynamicModelsArchitecture>

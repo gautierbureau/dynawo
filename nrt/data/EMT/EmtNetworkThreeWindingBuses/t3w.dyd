@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="INFBUS" lib="EmtInfiniteBus" staticId="G1" parFile="t3w.par" parId="INFBUS"/>
+  <dyn:connect id1="INFBUS" var1="infiniteBus_terminal" id2="NETWORK" var2="@G1@@NODE@_ACPIN"/>
+</dyn:dynamicModelsArchitecture>
+

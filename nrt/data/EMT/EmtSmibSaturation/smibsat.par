@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="MACHINE">
+    <par type="DOUBLE" name="machine_P0Pu" value="-0.602"/>
+    <par type="DOUBLE" name="machine_Q0Pu" value="-0.024"/>
+    <par type="DOUBLE" name="machine_U0Pu" value="0.9142993715318843"/>
+    <par type="DOUBLE" name="machine_UPhase0" value="-0.071687"/>
+    <par type="DOUBLE" name="machine_md" value="0.15"/>
+    <par type="DOUBLE" name="machine_mq" value="0.15"/>
+    <par type="DOUBLE" name="machine_nd" value="7"/>
+    <par type="DOUBLE" name="machine_nq" value="7"/>
+  </set>
+  <set id="CAPGEN">
+    <par type="DOUBLE" name="cap_CPu" value="1e-4"/>
+    <par type="DOUBLE" name="cap_U0Pu_0_" value="1.28967904228"/>
+    <par type="DOUBLE" name="cap_U0Pu_1_" value="-0.725043797339"/>
+    <par type="DOUBLE" name="cap_U0Pu_2_" value="-0.564635244945"/>
+  </set>
+  <set id="CAPBUS">
+    <par type="DOUBLE" name="cap_CPu" value="1e-4"/>
+    <par type="DOUBLE" name="cap_U0Pu_0_" value="1.28226280196"/>
+    <par type="DOUBLE" name="cap_U0Pu_1_" value="-0.746700727495"/>
+    <par type="DOUBLE" name="cap_U0Pu_2_" value="-0.535562074465"/>
+  </set>
+  <set id="DAMP"><par type="DOUBLE" name="resistor_RPu" value="100"/></set>
+  <set id="TFO">
+    <par type="DOUBLE" name="tfo_rTfoPu" value="1.0"/>
+    <par type="DOUBLE" name="tfo_RPu" value="0.0"/>
+    <par type="DOUBLE" name="tfo_LPu" value="3.183e-4"/>
+    <par type="DOUBLE" name="tfo_I0Pu_0_" value="0.292899469558"/>
+    <par type="DOUBLE" name="tfo_I0Pu_1_" value="-0.210678254821"/>
+    <par type="DOUBLE" name="tfo_I0Pu_2_" value="-0.0822212147376"/>
+  </set>
+  <set id="LINE">
+    <par type="DOUBLE" name="line_RPu" value="0.02"/>
+    <par type="DOUBLE" name="line_LPu" value="6.366e-4"/>
+    <par type="DOUBLE" name="line_I0Pu_0_" value="0.276247209992"/>
+    <par type="DOUBLE" name="line_I0Pu_1_" value="-0.236182943597"/>
+    <par type="DOUBLE" name="line_I0Pu_2_" value="-0.0400642663951"/>
+  </set>
+  <set id="FAULT">
+    <par type="DOUBLE" name="fault_RfPu" value="0.005"/>
+    <par type="DOUBLE" name="fault_tBegin" value="0.4"/>
+    <par type="DOUBLE" name="fault_tEnd" value="0.5"/>
+    <par type="BOOL" name="fault_faultedPhase_0_" value="true"/>
+    <par type="BOOL" name="fault_faultedPhase_1_" value="false"/>
+    <par type="BOOL" name="fault_faultedPhase_2_" value="false"/>
+  </set>
+  <set id="INFBUS">
+    <par type="DOUBLE" name="source_UPeakPu" value="1.26622786904"/>
+    <par type="DOUBLE" name="source_FNom" value="50"/>
+    <par type="DOUBLE" name="source_Phase0" value="-0.138557154077"/>
+  </set>
+  <set id="Solver">
+    <par type="DOUBLE" name="hMin" value="2e-5"/>
+    <par type="DOUBLE" name="hMax" value="2e-5"/>
+    <par type="DOUBLE" name="kReduceStep" value="0.5"/>
+    <par type="INT" name="maxNewtonTry" value="10"/>
+    <par type="STRING" name="linearSolverName" value="KLU"/>
+    <par type="DOUBLE" name="minimalAcceptableStep" value="1e-7"/>
+    <par type="INT" name="maximumNumberSlowStepIncrease" value="100"/>
+  </set>
+</parametersSet>

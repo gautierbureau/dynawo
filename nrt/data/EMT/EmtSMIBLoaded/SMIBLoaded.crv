@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="L" variable="circuit_vBusA"/>
+  <curve model="L" variable="circuit_vBusB"/>
+  <curve model="L" variable="circuit_vBusC"/>
+  <curve model="L" variable="circuit_iGenA"/>
+  <curve model="L" variable="circuit_iGenB"/>
+  <curve model="L" variable="circuit_iGenC"/>
+  <curve model="L" variable="circuit_Wr"/>
+  <curve model="L" variable="circuit_dtheta"/>
+  <curve model="L" variable="circuit_Te"/>
+</curvesInput>

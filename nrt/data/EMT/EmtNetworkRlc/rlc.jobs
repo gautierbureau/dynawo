@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="rlc">
+    <solver lib="dynawo_SolverTRAP" parFile="rlc.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="rlc.iidm" parFile="rlc.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="rlc.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.06"/>
+    <outputs directory="outputs">
+      <curves inputFile="rlc.crv" exportMode="CSV"/>
+
+    </outputs>
+  </job>
+</jobs>

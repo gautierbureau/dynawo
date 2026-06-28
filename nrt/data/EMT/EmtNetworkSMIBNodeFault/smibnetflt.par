@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="MACHINE">
+    <par type="DOUBLE" name="machine_P0Pu" value="-0.495"/>
+    <par type="DOUBLE" name="machine_Q0Pu" value="0.0"/>
+    <par type="DOUBLE" name="machine_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="machine_UPhase0" value="0.0"/>
+  </set>
+  <set id="Network">
+    <par type="STRING" name="fault_bus" value="B0"/>
+    <par type="DOUBLE" name="fault_RfPu" value="0.02"/>
+    <par type="DOUBLE" name="fault_tBegin" value="0.2"/>
+    <par type="DOUBLE" name="fault_tEnd" value="100.0"/>
+    <par type="BOOL" name="fault_faultedPhase_0_" value="true"/>
+    <par type="BOOL" name="fault_faultedPhase_1_" value="false"/>
+    <par type="BOOL" name="fault_faultedPhase_2_" value="false"/>
+    <par type="DOUBLE" name="unused" value="0.0"/>
+  </set>
+  <set id="Solver">
+    <par type="DOUBLE" name="hMin" value="1e-5"/>
+    <par type="DOUBLE" name="hMax" value="1e-5"/>
+    <par type="DOUBLE" name="kReduceStep" value="0.5"/>
+    <par type="INT" name="maxNewtonTry" value="10"/>
+    <par type="STRING" name="linearSolverName" value="KLU"/>
+    <par type="DOUBLE" name="minimalAcceptableStep" value="1e-7"/>
+    <par type="INT" name="maximumNumberSlowStepIncrease" value="100"/>
+  </set>
+</parametersSet>
