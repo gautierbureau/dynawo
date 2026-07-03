@@ -1,4 +1,6 @@
 var a00596 =
 [
-    [ "printStructureToFile", "dc/d25/a00596.html#a76725b4052110680bd936de6dd64c527", null ]
+    [ "addElement", "dc/d25/a00596.html#a1cf23a0b4d2b7cdcd0e6d5b75b304de3", null ],
+    [ "addSubElement", "dc/d25/a00596.html#a70c9b41b0a4aa5045172afdc108d220c", null ],
+    [ "replaceMacroInVariableId", "dc/d25/a00596.html#aa91d8c788d4426901ab173149051a531", null ]
 ];

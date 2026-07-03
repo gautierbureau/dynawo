@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: Member List</title>
+<title>Dynawo: DYN::ShuntCompensatorInterfaceIIDM Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.7.0</div>
+    1.8.0</div>
   </td>
  </tr>
  </tbody>
@@ -75,7 +75,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('d6/d04/a03193.html','../../');});
+$(document).ready(function(){initNavTree('de/de3/a03190.html','../../');});
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -94,258 +94,832 @@ $(document).ready(function(){initNavTree('d6/d04/a03193.html','../../');});
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="../../d7/d49/a03187.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">DYN::ModelOmegaRef Member List</div>  </div>
+<div class="title">DYN::ShuntCompensatorInterfaceIIDM Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a>, including all inherited members.</p>
-<table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a4754b897c4fca929c4ff5fc3860bc33b">addConstraint</a>(const std::string &amp;modelName, bool begin, const Message &amp;description, const std::string &amp;modelType=&quot;&quot;, const boost::optional&lt; constraints::ConstraintData &gt; &amp;constraintData=boost::none)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a94595db4b9e7456f45acb375dcd8a015">addCurve</a>(boost::shared_ptr&lt; curves::Curve &gt; &amp;curve)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa53743a51dd235ef0386b75d3bd0cfdc">addEvent</a>(const std::string &amp;modelName, const MessageTimeline &amp;messageTimeline)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#abd7afebdd5afd987560d1c19384943c5">addMessage</a>(const std::string &amp;message)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a5d288e52e050ad9870db34b59e02b8eb">addParameter</a>(const ParameterModeler &amp;parameter, const bool isInitParam)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a4ba1fd04e00fe21378111c5378487aa8">addParameterCurve</a>(boost::shared_ptr&lt; curves::Curve &gt; &amp;curve)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a995b41ea7082326f866004400a9fe68b">addParameters</a>(const std::vector&lt; ParameterModeler &gt; &amp;parameters, const bool isInitParam)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a85fe6b1a98020baf8098c209b8695a87">calculatedVars_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a840be689f5427d953812868808c1b6eb">CalculatedVars_t</a> enum name</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a4721fe1e66a9dff0117d5b38e6863af0">calculatedVarsInit_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ae6fc7a6571521fed3a5914c6c74a4960">calculateInitialState</a>()</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#aa458461e1d5cfe0116ac9cb595147f69">checkDataCoherence</a>(const double t) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a505a0010a5ff628c7e867ef42a992052">checkDataCoherenceSub</a>(const double t)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#aa308ddb8ddc022727b8b15e8fa29099a">checkParametersCoherence</a>() const override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a0db1ce186e86f83890e7cd7cc876812d">col1stOmega_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a89e9b8b7d26a188c6b012d59e210af24">col1stOmegaRef_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span><span class="mlabel">static</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ac1e2306592d63717c62e47e2ca4e88d4">col1stOmegaRefGrp_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#af31e6479907fef279e23d73d03471332">collectSilentZ</a>(BitMask *silentZTable) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a1b20aabc3d28cf1e05efc5ecf228f840">defineElements</a>(std::vector&lt; Element &gt; &amp;elements, std::map&lt; std::string, int &gt; &amp;mapElement) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a958f711e45ee059b0dc16838aea0fb00">DYN::SubModel::defineElements</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a4e3f8753a91f54e3dc54222e6cf124bc">defineNames</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#ac28254e8f419caf9ff4ef4032c43531d">defineNamesImpl</a>(std::vector&lt; boost::shared_ptr&lt; Variable &gt; &gt; &amp;variables, std::vector&lt; std::string &gt; &amp;zNames, std::vector&lt; std::string &gt; &amp;xNames, std::vector&lt; std::string &gt; &amp;calculatedVarNames) override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa8cdd77774175355f5d7c87024783b49">defineNamesInit</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ae5556f79c4edb5a42fa80d558eab55f1">defineParameters</a>(std::vector&lt; ParameterModeler &gt; &amp;parameters) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a645cbcde26f5db994c7ed125ab9e5c20">DYN::ModelCPP::defineParameters</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a02a92f3039d507f7953e53ceda558178">DYN::ModelCPP::defineParameters</a>(const bool isInitParam)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a49e1ee1e3b1052228db89ab38a89a54c">defineParametersInit</a>(std::vector&lt; ParameterModeler &gt; &amp;parameters) override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a475d4928f8db4f7ec65bf80ad40eae6c">DYN::SubModel::defineParametersInit</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a0769a7b747bd63309ba3991330354105">defineVariables</a>(std::vector&lt; boost::shared_ptr&lt; Variable &gt; &gt; &amp;variables) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a26356e905878b5bdecc9b4166f4034c0">DYN::ModelCPP::defineVariables</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a403c066215afc62e1d8fe113472adbe9">defineVariablesInit</a>(std::vector&lt; boost::shared_ptr&lt; Variable &gt; &gt; &amp;variables) override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aedb80e8617cc143501bdbc08fc0c7261">DYN::SubModel::defineVariablesInit</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#adae8d63dac96f590a164a3aab6168ba6">dumpParameters</a>(std::map&lt; std::string, std::string &gt; &amp;mapParameters) override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a9c1c262ef85b199af8107e630d77717d">dumpUserReadableElementList</a>(const std::string &amp;nameElement) const override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#af33ccbe3835f6aae5431e3af9b110327">dumpVariables</a>(std::map&lt; std::string, std::string &gt; &amp;mapVariables) override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a49d7108b792213e867b3959760f0f14e">evalCalculatedVarI</a>(unsigned iCalculatedVar) const override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ac1ab105d1f210d82aa92d3051b87eccb">evalCalculatedVariablesSub</a>(const double t)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a0f0a17230f7245daa8e7f44a391ed135">evalCalculatedVars</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#aef04a6a29aeee9744432f4ef392b267f">evalDynamicFType</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a244a66aedfd698c2feba61a8df1b73a9">evalDynamicYType</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a122eaf8608e7835193bf2a7544c84d75">evalF</a>(double t, propertyF_t type) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a68620ba993cc35e3498b7464a994ece6">evalFDiffSub</a>(const double t)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0306206a60e4f5111a821ba6f9ac9a00">evalFSub</a>(const double t)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a304de7644442a8740589c7d43450465a">evalG</a>(const double t) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a2b77dab3ac2be6d09951df3dde8a77cc">evalGSub</a>(const double t)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a52012d2c6998cc01a13983aafd3c7d42">evalJCalculatedVarI</a>(unsigned iCalculatedVar, std::vector&lt; double &gt; &amp;res) const override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ae10e147c15a4108e11f3aee9c1721576">evalJt</a>(const double t, const double cj, SparseMatrix &amp;jt, const int rowOffset) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ac2ff1dd010a0c113d34d8bff33a6572c">evalJtPrim</a>(const double t, const double cj, SparseMatrix &amp;jt, const int rowOffset) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ae712b05f9b4e74fb9e6ee1aceb8ca2fe">evalJtPrimSub</a>(const double t, const double cj, SparseMatrix &amp;jt, int &amp;rowOffset)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa46958b709c957f00bc04500c44ef6d1">evalJtSub</a>(const double t, const double cj, SparseMatrix &amp;Jt, int &amp;rowOffset)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#aadfa5acfddf33d608bf21e7a765150c6">evalMode</a>(const double t) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0fcb7bd1dca599c91ce34046775d65eb">evalModeSub</a>(const double t)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ae1c989c630421eeba04638faf6a1c9ed">evalStaticFType</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a953d3bc922e7019cf7d796606648158a">evalStaticYType</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#aa410bf3ea2465bb90f762c9954eaf804">evalZ</a>(const double t) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a6dccd17143bfe6875793e77c44753174">evalZSub</a>(const double t)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a49b2f75e82e82e317315b08d5c697c46">fDeb</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a4e072b208fe98722710e0bf1ced25e9d">fDeb_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a4144950a2e215502c1471465f934dc3c">fEquationIndex_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ad0073396aa22dc1df9c4cda71d3bcfb5">fEquationInitIndex_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aea96dc28f8497d49a3b7eb61795fcee8">findParameter</a>(const std::string &amp;name, const bool isInitParam) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aaa5f372d5af8b2bb6e887cb8418173d5">findParameterDynamic</a>(const std::string &amp;name) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a02f422b9728ccc4a2a4dd78cfa983f07">findParameterInit</a>(const std::string &amp;name) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a608d428b812f7e3cfeda788869cf1131">firstState_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a2e7fbd704c3b41e9d58c963cf48d5e38">fLocal_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0bf81dae6d784cc120de744752439ea6">fLocalInit_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a41a82f1f3b85b50ebc04e45d1e1a93f9">fType_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aadac202837bb3dff7d572f482e239871">gDeb</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a69550a141fdacdffd220fb46e9b4e59a">gDeb_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#afa488f6228866374582302245c090018">genByCC_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ae511ea4542a4da913b86a6e5377d1e14">gEquationIndex_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a8b5503b9c0b5e8b20c32eb5d79a531b2">gEquationInitIndex_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a41edae37a8e7af253a01121923a038dd">getCalculatedVar</a>(int indexCalculatedVar)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a660d82248e5fe473daebdae96e038e32">getCalculatedVarName</a>(const unsigned int index)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a04738b2b43e8078ec69e071d8177381f">getCalculatedVarNames</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0643e88e5a8c82e516ce788fa3a354fd">getCalculatedVarNamesInit</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a5637375030002463a4dd08227b0a575b">getCheckSum</a>() const override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a8e58f132d16f647c0ce71d725ee17193">getCurrentTime</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a6b29a20466472e45e348133b1b548bfe">getElements</a>(const std::string &amp;name) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aad43f10b30d8b4592101960526ff5804">getFequationByLocalIndex</a>(const int index)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a973874b56f8a19d1a4c9f38a8d6c31ca">getGequationByLocalIndex</a>(const int index)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ab9180a25e4d664e6dfe90e8e96f01c9f">getIndexesOfVariablesUsedForCalculatedVarI</a>(unsigned iCalculatedVar, std::vector&lt; int &gt; &amp;indexes) const override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ab7f9028769433b01a4c7e60bc91655cb">getInitSubModelParameterValue</a>(const std::string &amp;nameParameter, std::string &amp;value, bool &amp;found) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a59c96c7de310636579afa1f2f04ac14d">getIsInitProcess</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aed59444912b966cd6fa30e953fc7fc1d">getOffsetY</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aaee1bcb2f2f14773d0dd23d1dd23878a">getParameters</a>(const bool isInitParam) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a76a35058ea0b23d7e2410395f693b54c">getParametersDynamic</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a2ff7fe075c6114d5df93ef8bddab5dfa">getParametersInit</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a19f2dcacd59ed1117d6d747a52955b94">getSize</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a302c6467e3d026811083b2bade8df020">getSubModelParameterValue</a>(const std::string &amp;nameParameter, std::string &amp;value, bool &amp;found)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a35a6c1f1fa9c2c814e2329e309f44400">getVariable</a>(const std::string &amp;variableName) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a8d94b92258659cf940738bcdd9149e46">getVariableByName</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aac70903e5e87ffc2bf3909eb2083962e">getVariableIndexGlobal</a>(const boost::shared_ptr&lt; Variable &gt; &amp;variable) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0795a3e71ed406b4fe55d3d390d82d0a">getVariableValue</a>(const std::string &amp;nameVariable) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa1bcbf7fd7c398d7a8d5a84b6a4c6c81">getVariableValue</a>(const boost::shared_ptr&lt; Variable &gt; &amp;variable) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa03d7cbe19f43e2ae7ba8e8b355c2acd">getWorkingDirectory</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a7b181cbe9209ee2e903986ee9229cde9">getY0</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a74e38a4a49c6486151e22f2ec7918f08">getY0Sub</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a8504c3ee781b6c5a7916d161fa479d47">getY0Values</a>(std::vector&lt; double &gt; &amp;y0, std::vector&lt; double &gt; &amp;yp0, std::vector&lt; double &gt; &amp;z0)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af2ee2911c12160300cb209798afd03ac">getYType</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a408f073a791e9c9b49581f92aa751720">getZ</a>(std::vector&lt; double &gt; &amp;z)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ad6e7574f5e7c9637ee7c28524774723f">gLocal_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#abbd70cf927d8cf40087a02fb0f1b6017">hasCheckDataCoherence</a>() const</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af45f6172588a5c161cb1a06826f4898b">hasConstraints</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a72ae69f1d1f8da7ce4245c0c0ae408de">hasDataCheckCoherence</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a702ab616f504c116e8c3329d95e82f80">hasParameter</a>(const std::string &amp;nameParameter, const bool isInitParam) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#acc2bbac6cdc64aa1a658ad0c4414bc3b">hasParameterDynamic</a>(const std::string &amp;nameParameter) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a90c634ebcc17ec30de4e6b2777ca2bf0">hasParameterInit</a>(const std::string &amp;nameParameter) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ac43c9a5f128f0999f3b4fc061ad8db0d">hasTimeline</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aef1fe9fc960a7ab4fbb4f528ef8a12cb">hasVariable</a>(const std::string &amp;nameVariable) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af6d1625624aaca3b25a3b749abd150ef">hasVariableInit</a>(const std::string &amp;nameVariable) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a1ca88661aaea3aebec220f4b1bd4a099">indexOmega_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a9795b39bf41dda6c76c5b41f02908a94">init</a>(const double t0) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a35a57de8e2623d3ad31c294a34aa1453">initFromData</a>(const boost::shared_ptr&lt; DataInterface &gt; &amp;data)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a77aee4f3ba76036be028570e3adac526">initializeFromData</a>(const boost::shared_ptr&lt; DataInterface &gt; &amp;data) override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a59a61542a8257255d3c8b8ae88f7c71d">initializeStaticData</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a0595d4529c3adfd563ff84bef07c7721">initParams</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a99727f07b192bc54d86a330f59fa3964">initSize</a>(int &amp;sizeYGlob, int &amp;sizeZGlob, int &amp;sizeModeGlob, int &amp;sizeFGlob, int &amp;sizeGGlob)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0b3b495d1855319c0a4515dcbc43f734">initStaticData</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa766cedd5e8ae36097412d7568632275">initSub</a>(const double t0, boost::shared_ptr&lt; parameters::ParametersSet &gt; localInitParameters)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a7e21e9de9182d50201404242b1cb42da">initSubBuffers</a>() override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a7ee4252fc2a342a31b3a20aa1a1df00a">instantiateNonUnitaryParameters</a>(const bool isInitParam, const std::map&lt; std::string, ParameterModeler &gt; &amp;nonUnitaryParameters, std::unordered_set&lt; std::string &gt; &amp;addedParameter)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#ab535104320ef1f24aebae595ae4e8f1b">isStartingFromDump</a>() const</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a3b9790dad578c79f3a4a966aebe99288">loadParameters</a>(const std::string &amp;parameters) override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a07be52500cbfbe5bfb700963f1d81232">DYN::SubModel::loadParameters</a>(const std::map&lt; std::string, std::string &gt; &amp;mapParameters)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#ab32bee854ddf053cf041efeca1ef5914">loadVariables</a>(const std::string &amp;variables) override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a632d46be10667adab02c8bbace0666a9">DYN::SubModel::loadVariables</a>(const std::map&lt; std::string, std::string &gt; &amp;mapVariables)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ae3bbe13ab64f817fdfd6408d825cb8e6">localInitParameters_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa04bc54826f9fb6e3a4bdb4019a3f0a0">modeChange</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a7f9e8d40c4a5c5b008b6d568e34b325b">modeChange</a>(const bool modeChange)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ab801a074af3b41dd8403588a16b81311">modeDeb_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#ab4096df55395b14b32ea402da654e5ca">ModelCPP</a>()</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a8b812826f57433a9360da93af24a110f">ModelCPP</a>(std::string modelType)</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#aa4acc23ff5d2786e493651e771afdf57">ModelOmegaRef</a>()</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#afc8c3f03f682e7f62f7d3c7e55a6472b">modelType</a>() const override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a04c27cba14804926f308a52c2f763623">name</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a925f48076202358c5262b933a8386d1d">name</a>(const std::string &amp;name)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>nbCalculatedVars_</b> enum value (defined in <a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a>)</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a371a30a5be9eb7da229023c6b37f94fa">nbCC_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ae0f943cc9eb886eb5ab0baa40dc384c7">nbGen_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a4aac6a6667d6ebc1d4ffcafa0ead3678">nbOmega_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a9d3e847806ea23de017ca840fb7c9879">notifyTimeStep</a>() override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#af943e31b0ae6f34c97bc6a291cddc49e">numCCNode_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#aec92a30f8d915431bb60b34fea1a2f47">numCCNodeOld_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ad3549db6a9087e88daa18219e26f9ff7">offsetY_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ad2053b56f580d80c0ba7f1046b2cfd21">omegaRef0_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a66189f67e4302b09bbc565293b035654">omegaRefMax_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ae6c9b7263d02e545912fa887944dbc3d">omegaRefMin_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#afb336cce2572005686530ddbf2d81461">operator=</a>(SubModel &amp;&amp;)=default</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aea1cece12a1062832e2a1a81b777e1d9">parametersDynamic_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#adf72905dfc581f53e294309a39515da3">parametersFileName</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af3ac5691ae329b35a122a9da9006ac2a">parametersInit_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a66063ac01714e8e31afdc01b4b922764">printInitModelValues</a>(const std::string &amp;directory, const std::string &amp;dumpFileName)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af8a5661ba4c31d46000749b6a6674ccf">printInitValuesParameters</a>(std::ofstream &amp;fstream) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a93c72f8f43cf81b7a3a20105a62a3f6b">printInitValuesVariables</a>(std::ofstream &amp;fstream)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a48324206454f6e414cc98e7decc599e9">printInternalParameters</a>(std::ofstream &amp;fstream) const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a744c9372750ae424bb2bb9d557574a51">printLocalInitParametersValues</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a30ac8bc3007425c7c224b1e335cd5fcc">printMessages</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a59604e226486dfac7e660aa6534e8bfe">printModel</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a1899acfc2d9ec4a8aab429384492a9ad">printModelValues</a>(const std::string &amp;directory, const std::string &amp;dumpFileName)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#addc2bcdffe4ade923ae59a25899fc354">printParameterValues</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a4f88da1df85decd8a7c6fe9e5c7c2365">printValuesParameters</a>(std::ofstream &amp;fstream)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a15a33fad9a18370f7d50a724d9736993">printValuesVariables</a>(std::ofstream &amp;fstream)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a79d86a5f23a7fe16764550ecf3140da3">readPARParameters_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a6f4bb70edb67a1642d19ebfece081ade">releaseElements</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a8c78b061555925bd2c2bc2b7887ea8cc">resetParameters</a>(const bool isInitParam)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a0f2ece638e8fe78f76e86ef81b6aa1c8">rotateBuffers</a>() override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#aad0de43f90aa2fff5929f4846f05b084">runningGrp_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a06934667178397094029e4e2a144bdc2">runningGrpOld_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ade3126db2ba309a4af810abb8d45d6b5">setBufferF</a>(double *f, const int offsetF)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a6d459fd1401d03dc6855fd5d0811d5c1">setBufferFType</a>(propertyF_t *fType, const int offsetFType)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a74f17233e56c314c6a1e12b381a9dc47">setBufferG</a>(state_g *g, const int offsetG)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a605ac79b9072c26cb003a0c1b4574e6f">setBufferY</a>(double *y, double *yp, const int offsetY)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa2a45b06f129ea218b45f79a8cf4cb32">setBufferYType</a>(propertyContinuousVar_t *yType, const int offsetYType)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ad74a9ca804bc2641376502f36f27d6bf">setBufferZ</a>(double *z, bool *zConnected, int offsetZ)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a2e575f4056a3b5458b8a70766e741f8d">setConstraints</a>(const boost::shared_ptr&lt; constraints::ConstraintsCollection &gt; &amp;constraints)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a16ce07c46b7fdcbdb766f4523bc3a7e4">setCurrentTime</a>(const double time)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a42e458ae6549105b263350fd17055879">setFequations</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#add3f95a3f40f956ab258b85b9a37efd1">setFequationsInit</a>() override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ada88673887533d61a67192d5e9d25dae">setFequationsSub</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#aba0177cbbc134412c579aac24b312c68">setGequations</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#af70b69603ca3bd0113d3650ea4d408f0">setGequationsInit</a>() override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a159abc69341dfa4c740efc00d7281cdb">setGequationsSub</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a894b056cdc6b1323ce11ecebb8fa3127">setIsInitProcess</a>(bool isInitProcess)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#acf103f7fd6d11afdc386716badb42354">setModeChangeType</a>(const modeChangeType_t &amp;modeChangeType)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a3c76487ea6e086a5701f69e25c8cfba5">setParameterFromPARFile</a>(const std::string &amp;parameterName, const bool isInitParam)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ad19ab5bb5b0e8d770c7867daa4589c5b">setParameterFromSet</a>(ParameterModeler &amp;parameter, const boost::shared_ptr&lt; parameters::ParametersSet &gt; &amp;parametersSet, const parameterOrigin_t &amp;origin)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a6ccbbe9ea000c846d0f3fcf1f573e4ad">setParametersFromPARFile</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a28865f864ffaa87e4a75a3402efd1625">setParametersFromPARFile</a>(const bool isInitParam)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a2dc5b5dbe842bb6799006e17e410315a">setParameterValue</a>(const std::string &amp;name, const parameterOrigin_t &amp;origin, const T &amp;value, const bool isInitParam)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a67234526c485cc0c34cc057d99939b36">setPARParameters</a>(const boost::shared_ptr&lt; parameters::ParametersSet &gt; &amp;params)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a3aae336632d189189317267ada0e907d">setSharedParametersDefaultValues</a>() override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a0bd537b5b7896f0e0aeed60f0e5d31dc">setSharedParametersDefaultValuesInit</a>() override</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a664727734e4147eeee61aa614ef55ea1">setSubModelParameters</a>() override</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a92cfd1aff54e57583c9e27299c7ebfac">setTimeline</a>(const boost::shared_ptr&lt; timeline::Timeline &gt; &amp;timeline)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a334ed0c43b8ce5378d6df19e35b1c227">setWorkingDirectory</a>(const std::string &amp;workingDirectory)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a35ff11ee1608946db55852af1491858f">sizeCalculatedVar</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a7d89f32133c61d8e2295c5efa893ac47">sizeCalculatedVar_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a55a0f15c850f09186580519c10882e60">sizeF</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af57d2b722aa3e20ba42224c1d05ac154">sizeF_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a9fc3b49410eb56662e04c9a9c2070bed">sizeFInit</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a2cc4c706b85b83c0728ff7adf1cfb1d6">sizeG</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a07fc8bf5734ec0a5af35fc4e56dbbf29">sizeG_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a78ccd508d67f55435199d521545deac3">sizeGInit</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af8fe7bda256449bd3ddbf35cba0efff2">sizeMode</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0ae4d10bc32e04bffb317ffda4f60b75">sizeMode_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a54cff26bb4995da5fddd20b82d50654f">sizeY</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af631d1ab41e2e0de82e485976731f94b">sizeY_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#adcd711bd82d66e5812dcfe2479462eb6">sizeZ</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ae7d999f960a86b76ef512ce22a4cf715">sizeZ_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d6/d04/a03193.html#ab6c6c8e8ff55918b7d6df1f363751113">sortGenByCC</a>()</td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a57c153cae0c0cc21d41b5542fa5394c1">staticId</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0ab5828c68576c9d383883c8ec6179ab">staticId</a>(const std::string &amp;id)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ad74b53a071129766d2bb9cf432d221f1">SubModel</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a8b4a440e4a001e0da6890058e853a960">SubModel</a>(SubModel &amp;&amp;)=default</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a0f6e0a68f55570b96c9bc94783013581">sumWeightByCC_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a1692c0c3b6f1151590e85786e7398258">updateCalculatedVarForCurve</a>(boost::shared_ptr&lt; curves::Curve &gt; &amp;curve)</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a5067aa0b9472bd2fc98bcd49d5dcd9b5">variablesByName_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a3814b6d6230398ca03710a7f245d9ec2">variablesByNameInit</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a45589ceb7c9d03d9a00a647fd4d75950">variablesByNameInit_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a0492a323276da4957bedce0d998d9b7d">variablesFileName</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d6/d04/a03193.html#a66b40eeba7d06794930ab14b291bdfbb">weights_</a></td><td class="entry"><a class="el" href="../../d6/d04/a03193.html">DYN::ModelOmegaRef</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a29bdea291963749b5afbf06a83494bc8">withLoadedParameters_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af2b6c7d416d3f56d0f9533ff8a8fd0d7">withLoadedVariables_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ac75c6c0614bb31c1768c8961560cf604">xAliasesNames</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a2a9551afe323ccccfb6a12897257e12a">xNames</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a79d011084d19186bf843a6431c57f7d4">xNamesInit</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ac40acc09fba92e27bb03f726333328c1">yDeb</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a06e7da52a8143b6370f24e9b7334b481">yDeb_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a3aeabff5f8a67b1878b6b4054ed42beb">yLocal_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#ac51f74b0780496853cae8cc0434c41ea">yLocalInit_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a528e9b3ca588c396ddb95d3aed861454">ypLocal_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a436353bf09939a34e3bc6d31f7877c59">ypLocalInit_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a4f4bc2692ded0f658542ed94cabf6e35">yType_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a01ae127c90132d1de2cb722abb85c481">zAliasesNames</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a02ce72a645bae60a41595816d7423346">zDeb</a>() const</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af15987a7f0fb4064d4d48d39cf7ef93c">zDeb_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#af06a5b214fad1d404889501e3f9c585d">zLocal_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#acec224c631f5e0d483eedccbd9de59a7">zLocalConnected_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a6601f3b7f92f0f4561b7679da3829e5f">zLocalInit_</a></td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a837516a82adc0c016f45490f578fb051">zNames</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#aa1709a1ce20c764697e6abc23f5c692f">zNamesInit</a>()</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d2/d0f/a03137.html#a2ad0f822c27f250cad7f8cf376ef3524">~ModelCPP</a>() override=default</td><td class="entry"><a class="el" href="../../d2/d0f/a03137.html">DYN::ModelCPP</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d9/da5/a02757.html#a1623660130dd5bcd4d4ae84b6b1741d0">~SubModel</a>()=default</td><td class="entry"><a class="el" href="../../d9/da5/a02757.html">DYN::SubModel</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-</table></div><!-- contents -->
+<p><code>#include &lt;<a class="el" href="../../dc/d17/a00872_source.html">DYNShuntCompensatorInterfaceIIDM.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for DYN::ShuntCompensatorInterfaceIIDM:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="../../de/de3/a03190.png" usemap="#DYN::ShuntCompensatorInterfaceIIDM_map" alt=""/>
+  <map id="DYN::ShuntCompensatorInterfaceIIDM_map" name="DYN::ShuntCompensatorInterfaceIIDM_map">
+<area href="../../dd/d84/a03034.html" title="Shunt compensator interface Interface class for Shunt Compensator. " alt="DYN::ShuntCompensatorInterface" shape="rect" coords="0,56,227,80"/>
+<area href="../../da/d8d/a03158.html" alt="DYN::InjectorInterfaceIIDM" shape="rect" coords="237,56,464,80"/>
+<area href="../../d3/d3b/a02910.html" title="Class describing a component of the network. " alt="DYN::ComponentInterface" shape="rect" coords="0,0,227,24"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a99b572a95186468109bec051462b9951"><td class="memItemLeft" align="right" valign="top"><a id="a99b572a95186468109bec051462b9951"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a99b572a95186468109bec051462b9951">indexVar_t</a> { <b>VAR_Q</b> = 0, 
+<b>VAR_STATE</b>, 
+<b>VAR_CURRENTSECTION</b>
+ }</td></tr>
+<tr class="memdesc:a99b572a95186468109bec051462b9951"><td class="mdescLeft">&#160;</td><td class="mdescRight">defines the index of each state variable <br /></td></tr>
+<tr class="separator:a99b572a95186468109bec051462b9951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_a02910"><td colspan="2" onclick="javascript:toggleInherit('pub_types_a02910')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d3/d3b/a02910.html">DYN::ComponentInterface</a></td></tr>
+<tr class="memitem:a8089dfd2e85bdc3fc21030715c846872 inherit pub_types_a02910"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">ComponentType_t</a> { <br />
+&#160;&#160;<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a07df56823341ff6a8659eedcaa5ab994">UNKNOWN</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a58910706220db3aa26ef83cc7e8a26c4">BUS</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a251f9d96ef4272321e49c7b71a5ea5d7">CALCULATED_BUS</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a69d91e244e6054c7779d6ec9cf08238e">SWITCH</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a1a0f12a58102bd2afd073be90e01af8f">LOAD</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872acd809ebf05c1a6cc4037fd7e429e560c">LINE</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a1de090a3916e39dc06f8a211e9b89f6c">GENERATOR</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872aff22939164641c88ddca4f3b8f75b7de">SHUNT</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a3d56662d9c11ef2905785aacc0c01d6a">DANGLING_LINE</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872aeb32fa0ff31d9b817d2a8299a3f9b153">TWO_WTFO</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a5d97e6161158480daa64e4094ae21083">THREE_WTFO</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a4fb7066ad44a2613c8bb0c5219d2466f">SVC</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a1d29386c8ebadaaf3b9f3342e131fa68">VSC_CONVERTER</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a53adb0161b3d082e47d4e0766d2e872f">LCC_CONVERTER</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a896de4a61821dd8aecb455b1a7bec2ef">HVDC_LINE</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872acb80dacf920e9406c93c024896b877f9">COMPONENT_TYPE_COUNT</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:a8089dfd2e85bdc3fc21030715c846872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the type of the component.  <a href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">More...</a><br /></td></tr>
+<tr class="separator:a8089dfd2e85bdc3fc21030715c846872 inherit pub_types_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ad85b1c021d866ab2a40fb72545133dd8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#ad85b1c021d866ab2a40fb72545133dd8">ShuntCompensatorInterfaceIIDM</a> (powsybl::iidm::ShuntCompensator &amp;shunt)</td></tr>
+<tr class="memdesc:ad85b1c021d866ab2a40fb72545133dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#ad85b1c021d866ab2a40fb72545133dd8">More...</a><br /></td></tr>
+<tr class="separator:ad85b1c021d866ab2a40fb72545133dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfdb6fc1e5ce753609170b22a653e40a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#acfdb6fc1e5ce753609170b22a653e40a">exportStateVariablesUnitComponent</a> () override</td></tr>
+<tr class="memdesc:acfdb6fc1e5ce753609170b22a653e40a"><td class="mdescLeft">&#160;</td><td class="mdescRight">update iidm structure from state variables for each unit component  <a href="#acfdb6fc1e5ce753609170b22a653e40a">More...</a><br /></td></tr>
+<tr class="separator:acfdb6fc1e5ce753609170b22a653e40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36337bb3b41ca5244eae762da0a43d39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a36337bb3b41ca5244eae762da0a43d39">importStaticParameters</a> () override</td></tr>
+<tr class="memdesc:a36337bb3b41ca5244eae762da0a43d39"><td class="mdescLeft">&#160;</td><td class="mdescRight">import static parameters  <a href="#a36337bb3b41ca5244eae762da0a43d39">More...</a><br /></td></tr>
+<tr class="separator:a36337bb3b41ca5244eae762da0a43d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a547d79a897c4cd8d6040ca93e7fb7c83"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a547d79a897c4cd8d6040ca93e7fb7c83">isConnected</a> () const override</td></tr>
+<tr class="memdesc:a547d79a897c4cd8d6040ca93e7fb7c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">check the connection state of the component  <a href="#a547d79a897c4cd8d6040ca93e7fb7c83">More...</a><br /></td></tr>
+<tr class="separator:a547d79a897c4cd8d6040ca93e7fb7c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fcd8bce67c1ff3b8c721d28f0bf5286"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a9fcd8bce67c1ff3b8c721d28f0bf5286">setBusInterface</a> (const std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt; &amp;busInterface) override</td></tr>
+<tr class="memdesc:a9fcd8bce67c1ff3b8c721d28f0bf5286"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the shuntCompensator's bus interface.  <a href="#a9fcd8bce67c1ff3b8c721d28f0bf5286">More...</a><br /></td></tr>
+<tr class="separator:a9fcd8bce67c1ff3b8c721d28f0bf5286"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf1078fadb9c809f799db50928587c7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#abf1078fadb9c809f799db50928587c7d">setVoltageLevelInterface</a> (const std::shared_ptr&lt; <a class="el" href="../../d9/df4/a03070.html">VoltageLevelInterface</a> &gt; &amp;voltageLevelInterface) override</td></tr>
+<tr class="memdesc:abf1078fadb9c809f799db50928587c7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the shuntCompensator's voltage interface.  <a href="#abf1078fadb9c809f799db50928587c7d">More...</a><br /></td></tr>
+<tr class="separator:abf1078fadb9c809f799db50928587c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bd7d09552315ef76eae49fde17c4d53"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a3bd7d09552315ef76eae49fde17c4d53">getBusInterface</a> () const override</td></tr>
+<tr class="memdesc:a3bd7d09552315ef76eae49fde17c4d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the shuntCompensator's bus interface.  <a href="#a3bd7d09552315ef76eae49fde17c4d53">More...</a><br /></td></tr>
+<tr class="separator:a3bd7d09552315ef76eae49fde17c4d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ace64e9775e2c9f5b574742f9db1181"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a6ace64e9775e2c9f5b574742f9db1181">getInitialConnected</a> () override</td></tr>
+<tr class="memdesc:a6ace64e9775e2c9f5b574742f9db1181"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the initial connection state of the shunt compensator.  <a href="#a6ace64e9775e2c9f5b574742f9db1181">More...</a><br /></td></tr>
+<tr class="separator:a6ace64e9775e2c9f5b574742f9db1181"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d149154c6cbbc8b404bcf7995b90e4f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a9d149154c6cbbc8b404bcf7995b90e4f">getVNom</a> () const override</td></tr>
+<tr class="memdesc:a9d149154c6cbbc8b404bcf7995b90e4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the nominal voltage of the bus where the shunt compensator is connected.  <a href="#a9d149154c6cbbc8b404bcf7995b90e4f">More...</a><br /></td></tr>
+<tr class="separator:a9d149154c6cbbc8b404bcf7995b90e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac771f88e83837ab331eaac2b5201b93"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#aac771f88e83837ab331eaac2b5201b93">getQ</a> () override</td></tr>
+<tr class="memdesc:aac771f88e83837ab331eaac2b5201b93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the reactive power of the shunt compensator.  <a href="#aac771f88e83837ab331eaac2b5201b93">More...</a><br /></td></tr>
+<tr class="separator:aac771f88e83837ab331eaac2b5201b93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c8c85ea4605d285d377b43fd17c49c6"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a2c8c85ea4605d285d377b43fd17c49c6">getID</a> () const override</td></tr>
+<tr class="memdesc:a2c8c85ea4605d285d377b43fd17c49c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the shunt compensator's id.  <a href="#a2c8c85ea4605d285d377b43fd17c49c6">More...</a><br /></td></tr>
+<tr class="separator:a2c8c85ea4605d285d377b43fd17c49c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac364e6a8f89faa47768b6fab6fc5fd44"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#ac364e6a8f89faa47768b6fab6fc5fd44">getCurrentSection</a> () const override</td></tr>
+<tr class="memdesc:ac364e6a8f89faa47768b6fab6fc5fd44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the shuntCompensator's current number of connected sections.  <a href="#ac364e6a8f89faa47768b6fab6fc5fd44">More...</a><br /></td></tr>
+<tr class="separator:ac364e6a8f89faa47768b6fab6fc5fd44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add894d15cc4ec9738ecbe2a6d63a06a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#add894d15cc4ec9738ecbe2a6d63a06a4">getMaximumSection</a> () const override</td></tr>
+<tr class="memdesc:add894d15cc4ec9738ecbe2a6d63a06a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the shuntCompensator's maximum number of sections.  <a href="#add894d15cc4ec9738ecbe2a6d63a06a4">More...</a><br /></td></tr>
+<tr class="separator:add894d15cc4ec9738ecbe2a6d63a06a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67fd04dd34e0c00a20abb4074c7954dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a67fd04dd34e0c00a20abb4074c7954dd">isVoltageRegulationOn</a> () const final</td></tr>
+<tr class="memdesc:a67fd04dd34e0c00a20abb4074c7954dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if voltage regulation is enabled on current shunt.  <a href="#a67fd04dd34e0c00a20abb4074c7954dd">More...</a><br /></td></tr>
+<tr class="separator:a67fd04dd34e0c00a20abb4074c7954dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b134ec64f07f1d023753def3bd6eabd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a6b134ec64f07f1d023753def3bd6eabd">getTargetV</a> () const final</td></tr>
+<tr class="memdesc:a6b134ec64f07f1d023753def3bd6eabd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Target V of the shunt.  <a href="#a6b134ec64f07f1d023753def3bd6eabd">More...</a><br /></td></tr>
+<tr class="separator:a6b134ec64f07f1d023753def3bd6eabd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97709a8e6a77fe2e6256d1602919f5c1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a97709a8e6a77fe2e6256d1602919f5c1">getB</a> (const int section) const override</td></tr>
+<tr class="memdesc:a97709a8e6a77fe2e6256d1602919f5c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the shuntCompensator's cumulative susceptance at given section i.e. the sum of the sections' susceptances from 1 to section.  <a href="#a97709a8e6a77fe2e6256d1602919f5c1">More...</a><br /></td></tr>
+<tr class="separator:a97709a8e6a77fe2e6256d1602919f5c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a423cda6c5e5cdfdcc7a3fa75e5fa622f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a423cda6c5e5cdfdcc7a3fa75e5fa622f">isLinear</a> () const override</td></tr>
+<tr class="memdesc:a423cda6c5e5cdfdcc7a3fa75e5fa622f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for model type of the shunt compensator.  <a href="#a423cda6c5e5cdfdcc7a3fa75e5fa622f">More...</a><br /></td></tr>
+<tr class="separator:a423cda6c5e5cdfdcc7a3fa75e5fa622f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f6d392cee3d93a9e58b7f31d32de00a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a9f6d392cee3d93a9e58b7f31d32de00a">getComponentVarIndex</a> (const std::string &amp;varName) const override</td></tr>
+<tr class="memdesc:a9f6d392cee3d93a9e58b7f31d32de00a"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the index of a state variable thanks to its name  <a href="#a9f6d392cee3d93a9e58b7f31d32de00a">More...</a><br /></td></tr>
+<tr class="separator:a9f6d392cee3d93a9e58b7f31d32de00a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_a03034"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a03034')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../dd/d84/a03034.html">DYN::ShuntCompensatorInterface</a></td></tr>
+<tr class="memitem:a2543ead92b3ebcb3775c6feb77d62ae0 inherit pub_methods_a03034"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d84/a03034.html#a2543ead92b3ebcb3775c6feb77d62ae0">ShuntCompensatorInterface</a> (bool <a class="el" href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">hasInitialConditions</a>=true)</td></tr>
+<tr class="memdesc:a2543ead92b3ebcb3775c6feb77d62ae0 inherit pub_methods_a03034"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="../../dd/d84/a03034.html#a2543ead92b3ebcb3775c6feb77d62ae0">More...</a><br /></td></tr>
+<tr class="separator:a2543ead92b3ebcb3775c6feb77d62ae0 inherit pub_methods_a03034"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add50d472fc6d3f96ef82fd90374deadc inherit pub_methods_a03034"><td class="memItemLeft" align="right" valign="top"><a id="add50d472fc6d3f96ef82fd90374deadc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d84/a03034.html#add50d472fc6d3f96ef82fd90374deadc">~ShuntCompensatorInterface</a> () override=default</td></tr>
+<tr class="memdesc:add50d472fc6d3f96ef82fd90374deadc inherit pub_methods_a03034"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:add50d472fc6d3f96ef82fd90374deadc inherit pub_methods_a03034"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_a02910"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a02910')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d3/d3b/a02910.html">DYN::ComponentInterface</a></td></tr>
+<tr class="memitem:a54a4adcbcd28a26428cafa45a848e172 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a54a4adcbcd28a26428cafa45a848e172">ComponentInterface</a> (bool <a class="el" href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">hasInitialConditions</a>=true)</td></tr>
+<tr class="memdesc:a54a4adcbcd28a26428cafa45a848e172 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="../../d3/d3b/a02910.html#a54a4adcbcd28a26428cafa45a848e172">More...</a><br /></td></tr>
+<tr class="separator:a54a4adcbcd28a26428cafa45a848e172 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaeea1b605a906a6b2772ff8b092dc17b inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top"><a id="aaeea1b605a906a6b2772ff8b092dc17b"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#aaeea1b605a906a6b2772ff8b092dc17b">~ComponentInterface</a> ()=default</td></tr>
+<tr class="memdesc:aaeea1b605a906a6b2772ff8b092dc17b inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:aaeea1b605a906a6b2772ff8b092dc17b inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a3edef5ec14f6635bcaa11a5def0c2 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ae2a3edef5ec14f6635bcaa11a5def0c2">hasDynamicModel</a> (bool hasDynamicModel)</td></tr>
+<tr class="memdesc:ae2a3edef5ec14f6635bcaa11a5def0c2 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the component's hasDynamicModel_ attribute.  <a href="../../d3/d3b/a02910.html#ae2a3edef5ec14f6635bcaa11a5def0c2">More...</a><br /></td></tr>
+<tr class="separator:ae2a3edef5ec14f6635bcaa11a5def0c2 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4a2e77952f4983e5705c0feb2ffefd3 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ad4a2e77952f4983e5705c0feb2ffefd3">setModelDyn</a> (const boost::shared_ptr&lt; <a class="el" href="../../dc/d90/a02854.html">SubModel</a> &gt; &amp;model)</td></tr>
+<tr class="memdesc:ad4a2e77952f4983e5705c0feb2ffefd3 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the component's model attribute.  <a href="../../d3/d3b/a02910.html#ad4a2e77952f4983e5705c0feb2ffefd3">More...</a><br /></td></tr>
+<tr class="separator:ad4a2e77952f4983e5705c0feb2ffefd3 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4d21f5feedc23bfd0c89f2b32e71746 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#aa4d21f5feedc23bfd0c89f2b32e71746">setReference</a> (const std::string &amp;componentVar, const std::string &amp;modelId, const std::string &amp;modelVar)</td></tr>
+<tr class="memdesc:aa4d21f5feedc23bfd0c89f2b32e71746 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">associate a component variable with a model variable  <a href="../../d3/d3b/a02910.html#aa4d21f5feedc23bfd0c89f2b32e71746">More...</a><br /></td></tr>
+<tr class="separator:aa4d21f5feedc23bfd0c89f2b32e71746 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22ebe68dfef59fe4b694885643908c31 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a22ebe68dfef59fe4b694885643908c31">hasDynamicModel</a> () const</td></tr>
+<tr class="memdesc:a22ebe68dfef59fe4b694885643908c31 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the component's hasDynamicModel_ attribute.  <a href="../../d3/d3b/a02910.html#a22ebe68dfef59fe4b694885643908c31">More...</a><br /></td></tr>
+<tr class="separator:a22ebe68dfef59fe4b694885643908c31 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab673e4fea551130c3776e4a0fda6fea6 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ab673e4fea551130c3776e4a0fda6fea6">updateFromModel</a> (bool filterForCriteriaCheck)</td></tr>
+<tr class="memdesc:ab673e4fea551130c3776e4a0fda6fea6 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">update state variables with data from model (c++ or dynamic model)  <a href="../../d3/d3b/a02910.html#ab673e4fea551130c3776e4a0fda6fea6">More...</a><br /></td></tr>
+<tr class="separator:ab673e4fea551130c3776e4a0fda6fea6 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa68ff5ea43ce54304c3062f1614213dc inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top"><a id="aa68ff5ea43ce54304c3062f1614213dc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#aa68ff5ea43ce54304c3062f1614213dc">getStateVariableReference</a> ()</td></tr>
+<tr class="memdesc:aa68ff5ea43ce54304c3062f1614213dc inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">get state variable reference in dynamic model <br /></td></tr>
+<tr class="separator:aa68ff5ea43ce54304c3062f1614213dc inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2b7a24d4bb3aed941d24831988b3da5 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ad2b7a24d4bb3aed941d24831988b3da5">setType</a> (const <a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">ComponentType_t</a> &amp;type)</td></tr>
+<tr class="memdesc:ad2b7a24d4bb3aed941d24831988b3da5 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the type of the interface.  <a href="../../d3/d3b/a02910.html#ad2b7a24d4bb3aed941d24831988b3da5">More...</a><br /></td></tr>
+<tr class="separator:ad2b7a24d4bb3aed941d24831988b3da5 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a157a82e17608a36a7965614cde1c6234 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">ComponentType_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a157a82e17608a36a7965614cde1c6234">getType</a> () const</td></tr>
+<tr class="memdesc:a157a82e17608a36a7965614cde1c6234 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter fot the interface's type.  <a href="../../d3/d3b/a02910.html#a157a82e17608a36a7965614cde1c6234">More...</a><br /></td></tr>
+<tr class="separator:a157a82e17608a36a7965614cde1c6234 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13bc31f9a55abf04ac162196ad6a3ace inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a13bc31f9a55abf04ac162196ad6a3ace">getTypeAsString</a> () const</td></tr>
+<tr class="memdesc:a13bc31f9a55abf04ac162196ad6a3ace inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter fot the interface's type as string.  <a href="../../d3/d3b/a02910.html#a13bc31f9a55abf04ac162196ad6a3ace">More...</a><br /></td></tr>
+<tr class="separator:a13bc31f9a55abf04ac162196ad6a3ace inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac298501e2706de0701bcf0405d69780c inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ac298501e2706de0701bcf0405d69780c">isPartiallyConnected</a> () const</td></tr>
+<tr class="memdesc:ac298501e2706de0701bcf0405d69780c inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">check the connection state of the component  <a href="../../d3/d3b/a02910.html#ac298501e2706de0701bcf0405d69780c">More...</a><br /></td></tr>
+<tr class="separator:ac298501e2706de0701bcf0405d69780c inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b2709afa47d455b8bc9512348d93f30 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top"><a id="a0b2709afa47d455b8bc9512348d93f30"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a0b2709afa47d455b8bc9512348d93f30">exportStateVariables</a> ()</td></tr>
+<tr class="memdesc:a0b2709afa47d455b8bc9512348d93f30 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">update iidm structure from state variables <br /></td></tr>
+<tr class="separator:a0b2709afa47d455b8bc9512348d93f30 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ae1528a39c004efa24e63c1d4b0d8de inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a2ae1528a39c004efa24e63c1d4b0d8de">createComponentVarIndex</a> (const std::string &amp;varName)</td></tr>
+<tr class="memdesc:a2ae1528a39c004efa24e63c1d4b0d8de inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a yet-unexisting state variable, in the rare cases it makes sense  <a href="../../d3/d3b/a02910.html#a2ae1528a39c004efa24e63c1d4b0d8de">More...</a><br /></td></tr>
+<tr class="separator:a2ae1528a39c004efa24e63c1d4b0d8de inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9be4aae7894693081ca3436f3d8aa328 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">hasInitialConditions</a> () const</td></tr>
+<tr class="memdesc:a9be4aae7894693081ca3436f3d8aa328 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the component's hasInitialConditions_ attribute.  <a href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">More...</a><br /></td></tr>
+<tr class="separator:a9be4aae7894693081ca3436f3d8aa328 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22a01ec1b67b1e98e2277d2f1ddcdc4a inherit pub_methods_a02910"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a22a01ec1b67b1e98e2277d2f1ddcdc4a inherit pub_methods_a02910"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a22a01ec1b67b1e98e2277d2f1ddcdc4a">getStaticParameterValue</a> (const std::string &amp;name) const</td></tr>
+<tr class="memdesc:a22a01ec1b67b1e98e2277d2f1ddcdc4a inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">retrieve a state variable value thanks to its name  <a href="../../d3/d3b/a02910.html#a22a01ec1b67b1e98e2277d2f1ddcdc4a">More...</a><br /></td></tr>
+<tr class="separator:a22a01ec1b67b1e98e2277d2f1ddcdc4a inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_a03158"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a03158')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../da/d8d/a03158.html">DYN::InjectorInterfaceIIDM</a></td></tr>
+<tr class="memitem:afe68da93ed0db9d58da70f34f26c88b8 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top"><a id="afe68da93ed0db9d58da70f34f26c88b8"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#afe68da93ed0db9d58da70f34f26c88b8">~InjectorInterfaceIIDM</a> ()=default</td></tr>
+<tr class="memdesc:afe68da93ed0db9d58da70f34f26c88b8 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:afe68da93ed0db9d58da70f34f26c88b8 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a972d180a356869c15e6c12b0d55f55de inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a972d180a356869c15e6c12b0d55f55de">InjectorInterfaceIIDM</a> (const powsybl::iidm::Injection &amp;injector, const std::string &amp;id)</td></tr>
+<tr class="memdesc:a972d180a356869c15e6c12b0d55f55de inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="../../da/d8d/a03158.html#a972d180a356869c15e6c12b0d55f55de">More...</a><br /></td></tr>
+<tr class="separator:a972d180a356869c15e6c12b0d55f55de inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40577543c964828f7e7546aa114cbff1 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a40577543c964828f7e7546aa114cbff1">setBusInterfaceInjector</a> (const std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt; &amp;busInterface)</td></tr>
+<tr class="memdesc:a40577543c964828f7e7546aa114cbff1 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the injector's bus interface.  <a href="../../da/d8d/a03158.html#a40577543c964828f7e7546aa114cbff1">More...</a><br /></td></tr>
+<tr class="separator:a40577543c964828f7e7546aa114cbff1 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab07977e039ac2b1e1b6670d29f105567 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">const std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#ab07977e039ac2b1e1b6670d29f105567">getBusInterfaceInjector</a> () const</td></tr>
+<tr class="memdesc:ab07977e039ac2b1e1b6670d29f105567 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the injector's bus interface.  <a href="../../da/d8d/a03158.html#ab07977e039ac2b1e1b6670d29f105567">More...</a><br /></td></tr>
+<tr class="separator:ab07977e039ac2b1e1b6670d29f105567 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2044d6434b6a0c5193e3ca1f134da08 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#ac2044d6434b6a0c5193e3ca1f134da08">setVoltageLevelInterfaceInjector</a> (const std::shared_ptr&lt; <a class="el" href="../../d9/df4/a03070.html">VoltageLevelInterface</a> &gt; &amp;voltageLevelInterface)</td></tr>
+<tr class="memdesc:ac2044d6434b6a0c5193e3ca1f134da08 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the injector's voltage level interface.  <a href="../../da/d8d/a03158.html#ac2044d6434b6a0c5193e3ca1f134da08">More...</a><br /></td></tr>
+<tr class="separator:ac2044d6434b6a0c5193e3ca1f134da08 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e6f4df64eaf21053b98fe16936e2607 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../d9/df4/a03070.html">VoltageLevelInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a0e6f4df64eaf21053b98fe16936e2607">getVoltageLevelInterfaceInjector</a> () const</td></tr>
+<tr class="memdesc:a0e6f4df64eaf21053b98fe16936e2607 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the injector's voltage level interface.  <a href="../../da/d8d/a03158.html#a0e6f4df64eaf21053b98fe16936e2607">More...</a><br /></td></tr>
+<tr class="separator:a0e6f4df64eaf21053b98fe16936e2607 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d99ddd4cad7e14b1216806a9fefe349 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a3d99ddd4cad7e14b1216806a9fefe349">getVNomInjector</a> () const</td></tr>
+<tr class="memdesc:a3d99ddd4cad7e14b1216806a9fefe349 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the nominal voltage of the bus where the injector is connected.  <a href="../../da/d8d/a03158.html#a3d99ddd4cad7e14b1216806a9fefe349">More...</a><br /></td></tr>
+<tr class="separator:a3d99ddd4cad7e14b1216806a9fefe349 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68db1ce7da94d981dc4cf10d7d47d8ec inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a68db1ce7da94d981dc4cf10d7d47d8ec">getInitialConnectedInjector</a> ()</td></tr>
+<tr class="memdesc:a68db1ce7da94d981dc4cf10d7d47d8ec inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the initial connection state of the injector.  <a href="../../da/d8d/a03158.html#a68db1ce7da94d981dc4cf10d7d47d8ec">More...</a><br /></td></tr>
+<tr class="separator:a68db1ce7da94d981dc4cf10d7d47d8ec inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab580c4da4d7057feb9065a4776c4f251 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#ab580c4da4d7057feb9065a4776c4f251">isConnectedInjector</a> () const</td></tr>
+<tr class="memdesc:ab580c4da4d7057feb9065a4776c4f251 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the connection state of the injector.  <a href="../../da/d8d/a03158.html#ab580c4da4d7057feb9065a4776c4f251">More...</a><br /></td></tr>
+<tr class="separator:ab580c4da4d7057feb9065a4776c4f251 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49ec8b9b20252da413887fd7deb9e273 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a49ec8b9b20252da413887fd7deb9e273">hasPInjector</a> () const</td></tr>
+<tr class="memdesc:a49ec8b9b20252da413887fd7deb9e273 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the injector knows its injected/consumed active power.  <a href="../../da/d8d/a03158.html#a49ec8b9b20252da413887fd7deb9e273">More...</a><br /></td></tr>
+<tr class="separator:a49ec8b9b20252da413887fd7deb9e273 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c8d2f07bce0f84aa88fb05371303ab2 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a3c8d2f07bce0f84aa88fb05371303ab2">hasQInjector</a> () const</td></tr>
+<tr class="memdesc:a3c8d2f07bce0f84aa88fb05371303ab2 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the injector knows its injected/consumed reactive power.  <a href="../../da/d8d/a03158.html#a3c8d2f07bce0f84aa88fb05371303ab2">More...</a><br /></td></tr>
+<tr class="separator:a3c8d2f07bce0f84aa88fb05371303ab2 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1101d348ca3daffc1a95e66f5ab2a92f inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a1101d348ca3daffc1a95e66f5ab2a92f">getPInjector</a> ()</td></tr>
+<tr class="memdesc:a1101d348ca3daffc1a95e66f5ab2a92f inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the active power injected/consumed by the injector.  <a href="../../da/d8d/a03158.html#a1101d348ca3daffc1a95e66f5ab2a92f">More...</a><br /></td></tr>
+<tr class="separator:a1101d348ca3daffc1a95e66f5ab2a92f inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f966593530c9cbe1ac49bed796f26b2 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a0f966593530c9cbe1ac49bed796f26b2">getQInjector</a> ()</td></tr>
+<tr class="memdesc:a0f966593530c9cbe1ac49bed796f26b2 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the reactive power injected/consumed by the injector.  <a href="../../da/d8d/a03158.html#a0f966593530c9cbe1ac49bed796f26b2">More...</a><br /></td></tr>
+<tr class="separator:a0f966593530c9cbe1ac49bed796f26b2 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae075d2dfb9154199daac391abd0bf1b5 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#ae075d2dfb9154199daac391abd0bf1b5">getIDInjector</a> () const</td></tr>
+<tr class="memdesc:ae075d2dfb9154199daac391abd0bf1b5 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the injector's id.  <a href="../../da/d8d/a03158.html#ae075d2dfb9154199daac391abd0bf1b5">More...</a><br /></td></tr>
+<tr class="separator:ae075d2dfb9154199daac391abd0bf1b5 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a9d52c6f739e282c65756e6e813c39a37"><td class="memItemLeft" align="right" valign="top"><a id="a9d52c6f739e282c65756e6e813c39a37"></a>
+powsybl::iidm::ShuntCompensator &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de3/a03190.html#a9d52c6f739e282c65756e6e813c39a37">shuntCompensatorIIDM_</a></td></tr>
+<tr class="memdesc:a9d52c6f739e282c65756e6e813c39a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">reference to the iidm shunt compensator instance <br /></td></tr>
+<tr class="separator:a9d52c6f739e282c65756e6e813c39a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_a02910"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_a02910')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d3/d3b/a02910.html">DYN::ComponentInterface</a></td></tr>
+<tr class="memitem:ac256bc3546483d0c4ccffb61dfa58a3a inherit pro_methods_a02910"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ac256bc3546483d0c4ccffb61dfa58a3a inherit pro_methods_a02910"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ac256bc3546483d0c4ccffb61dfa58a3a">getValue</a> (const int index) const</td></tr>
+<tr class="memdesc:ac256bc3546483d0c4ccffb61dfa58a3a inherit pro_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">retrieve a state variable value thanks to its name  <a href="../../d3/d3b/a02910.html#ac256bc3546483d0c4ccffb61dfa58a3a">More...</a><br /></td></tr>
+<tr class="separator:ac256bc3546483d0c4ccffb61dfa58a3a inherit pro_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a360fb8d74db3b5e8d1acb4f636c9647d inherit pro_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a360fb8d74db3b5e8d1acb4f636c9647d">hasInitialConditions</a> (bool hasInitialConditions)</td></tr>
+<tr class="memdesc:a360fb8d74db3b5e8d1acb4f636c9647d inherit pro_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the component's hasInitialConditions_ attribute.  <a href="../../d3/d3b/a02910.html#a360fb8d74db3b5e8d1acb4f636c9647d">More...</a><br /></td></tr>
+<tr class="separator:a360fb8d74db3b5e8d1acb4f636c9647d inherit pro_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_a02910"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_a02910')"><img src="../../closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="../../d3/d3b/a02910.html">DYN::ComponentInterface</a></td></tr>
+<tr class="memitem:a4e9a1ad375b2c22292b200713cb94bac inherit pro_attribs_a02910"><td class="memItemLeft" align="right" valign="top"><a id="a4e9a1ad375b2c22292b200713cb94bac"></a>
+std::vector&lt; <a class="el" href="../../d8/d23/a03038.html">StateVariable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a4e9a1ad375b2c22292b200713cb94bac">stateVariables_</a></td></tr>
+<tr class="memdesc:a4e9a1ad375b2c22292b200713cb94bac inherit pro_attribs_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">state variable <br /></td></tr>
+<tr class="separator:a4e9a1ad375b2c22292b200713cb94bac inherit pro_attribs_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afba20d4e78f70ec9e147378934d10b33 inherit pro_attribs_a02910"><td class="memItemLeft" align="right" valign="top"><a id="afba20d4e78f70ec9e147378934d10b33"></a>
+std::unordered_map&lt; std::string, <a class="el" href="../../d9/dbf/a03042.html">StaticParameter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#afba20d4e78f70ec9e147378934d10b33">staticParameters_</a></td></tr>
+<tr class="memdesc:afba20d4e78f70ec9e147378934d10b33 inherit pro_attribs_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">static parameter by name, from iidm data <br /></td></tr>
+<tr class="separator:afba20d4e78f70ec9e147378934d10b33 inherit pro_attribs_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b7f69e17315c6cb35ffb9231dcb5e6a inherit pro_attribs_a02910"><td class="memItemLeft" align="right" valign="top"><a id="a3b7f69e17315c6cb35ffb9231dcb5e6a"></a>
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">ComponentType_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a3b7f69e17315c6cb35ffb9231dcb5e6a">type_</a></td></tr>
+<tr class="memdesc:a3b7f69e17315c6cb35ffb9231dcb5e6a inherit pro_attribs_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of the interface <br /></td></tr>
+<tr class="separator:a3b7f69e17315c6cb35ffb9231dcb5e6a inherit pro_attribs_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>class <a class="el" href="../../de/de3/a03190.html">ShuntCompensatorInterfaceIIDM</a> </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ad85b1c021d866ab2a40fb72545133dd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad85b1c021d866ab2a40fb72545133dd8">&#9670;&nbsp;</a></span>ShuntCompensatorInterfaceIIDM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DYN::ShuntCompensatorInterfaceIIDM::ShuntCompensatorInterfaceIIDM </td>
+          <td>(</td>
+          <td class="paramtype">powsybl::iidm::ShuntCompensator &amp;&#160;</td>
+          <td class="paramname"><em>shunt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">shunt</td><td>shunt compensator's iidm instance </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="acfdb6fc1e5ce753609170b22a653e40a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfdb6fc1e5ce753609170b22a653e40a">&#9670;&nbsp;</a></span>exportStateVariablesUnitComponent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::ShuntCompensatorInterfaceIIDM::exportStateVariablesUnitComponent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>update iidm structure from state variables for each unit component </p>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#a7c79aeabb190f79c336bd28f3f496c7a">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a97709a8e6a77fe2e6256d1602919f5c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97709a8e6a77fe2e6256d1602919f5c1">&#9670;&nbsp;</a></span>getB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::ShuntCompensatorInterfaceIIDM::getB </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>section</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the shuntCompensator's cumulative susceptance at given section i.e. the sum of the sections' susceptances from 1 to section. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">section</td><td>at which calculate the shuntsCompensator's susceptance </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The cumulative susceptance in Siemens, at given section of the shunt compensator </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#a965f98fcf1a03eed3d1648eb6cc05738">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a3bd7d09552315ef76eae49fde17c4d53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bd7d09552315ef76eae49fde17c4d53">&#9670;&nbsp;</a></span>getBusInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="../../d6/d1d/a02906.html">BusInterface</a>&gt; DYN::ShuntCompensatorInterfaceIIDM::getBusInterface </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the shuntCompensator's bus interface. </p>
+<dl class="section return"><dt>Returns</dt><dd>The busInterface of the bus where the shunt compensator is connected </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#adf91d598814c21afb4e08bbc67e42bf0">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a9f6d392cee3d93a9e58b7f31d32de00a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f6d392cee3d93a9e58b7f31d32de00a">&#9670;&nbsp;</a></span>getComponentVarIndex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int DYN::ShuntCompensatorInterfaceIIDM::getComponentVarIndex </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>varName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get the index of a state variable thanks to its name </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">varName</td><td>name of the state variable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>index of the state variable, <b>-1</b> if the variable does not exist </dd></dl>
+
+<p>Implements <a class="el" href="../../d3/d3b/a02910.html#a6d167dccb153a1ffcee78ad0f2e3a72e">DYN::ComponentInterface</a>.</p>
+
+</div>
+</div>
+<a id="ac364e6a8f89faa47768b6fab6fc5fd44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac364e6a8f89faa47768b6fab6fc5fd44">&#9670;&nbsp;</a></span>getCurrentSection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int DYN::ShuntCompensatorInterfaceIIDM::getCurrentSection </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the shuntCompensator's current number of connected sections. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current number of connected sections of the shunt compensator </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#aa6ba6a30fec441fb737d8f09c991e3e7">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a2c8c85ea4605d285d377b43fd17c49c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c8c85ea4605d285d377b43fd17c49c6">&#9670;&nbsp;</a></span>getID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string&amp; DYN::ShuntCompensatorInterfaceIIDM::getID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the shunt compensator's id. </p>
+<dl class="section return"><dt>Returns</dt><dd>The id of the shunt compensator </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#ace1697f4de5b3afd1709001bf7f526ca">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a6ace64e9775e2c9f5b574742f9db1181"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ace64e9775e2c9f5b574742f9db1181">&#9670;&nbsp;</a></span>getInitialConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::ShuntCompensatorInterfaceIIDM::getInitialConnected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the initial connection state of the shunt compensator. </p>
+<dl class="section return"><dt>Returns</dt><dd><b>true</b> if the shunt compensator is connected, <b>false</b> otherwise </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#a4a71cf1d1f8dd11adb685d5e41744cfb">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="add894d15cc4ec9738ecbe2a6d63a06a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add894d15cc4ec9738ecbe2a6d63a06a4">&#9670;&nbsp;</a></span>getMaximumSection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int DYN::ShuntCompensatorInterfaceIIDM::getMaximumSection </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the shuntCompensator's maximum number of sections. </p>
+<dl class="section return"><dt>Returns</dt><dd>The maximum number of sections of the shunt compensator </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#a027a4485b86ebc1da0d711c294e39183">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="aac771f88e83837ab331eaac2b5201b93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac771f88e83837ab331eaac2b5201b93">&#9670;&nbsp;</a></span>getQ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::ShuntCompensatorInterfaceIIDM::getQ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the reactive power of the shunt compensator. </p>
+<dl class="section return"><dt>Returns</dt><dd>The reactive power of the shunt compensator in Mvar </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#a96c4afbdf48bb50a3cca3785cffcca16">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a6b134ec64f07f1d023753def3bd6eabd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b134ec64f07f1d023753def3bd6eabd">&#9670;&nbsp;</a></span>getTargetV()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::ShuntCompensatorInterfaceIIDM::getTargetV </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">final</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the Target V of the shunt. </p>
+<dl class="section return"><dt>Returns</dt><dd>the target voltage of the shunt </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#a9a1c0127b22052e2fd4e23d17219637c">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a9d149154c6cbbc8b404bcf7995b90e4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d149154c6cbbc8b404bcf7995b90e4f">&#9670;&nbsp;</a></span>getVNom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::ShuntCompensatorInterfaceIIDM::getVNom </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the nominal voltage of the bus where the shunt compensator is connected. </p>
+<dl class="section return"><dt>Returns</dt><dd>The nominal voltage of the bus where the shunt compensator is connected in kV </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#aa0ced5b79061ff7746b57ee18664dd6c">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a36337bb3b41ca5244eae762da0a43d39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36337bb3b41ca5244eae762da0a43d39">&#9670;&nbsp;</a></span>importStaticParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::ShuntCompensatorInterfaceIIDM::importStaticParameters </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>import static parameters </p>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#ae2fb2ab3e940e4db0fa6ea1c5f2f0c4b">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a547d79a897c4cd8d6040ca93e7fb7c83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a547d79a897c4cd8d6040ca93e7fb7c83">&#9670;&nbsp;</a></span>isConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::ShuntCompensatorInterfaceIIDM::isConnected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>check the connection state of the component </p>
+<dl class="section return"><dt>Returns</dt><dd><b>true</b> if the component is connected, <b>false</b> else </dd></dl>
+
+<p>Reimplemented from <a class="el" href="../../d3/d3b/a02910.html#a22639f8b88b1d70984852928d87676ec">DYN::ComponentInterface</a>.</p>
+
+</div>
+</div>
+<a id="a423cda6c5e5cdfdcc7a3fa75e5fa622f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a423cda6c5e5cdfdcc7a3fa75e5fa622f">&#9670;&nbsp;</a></span>isLinear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::ShuntCompensatorInterfaceIIDM::isLinear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for model type of the shunt compensator. </p>
+<dl class="section return"><dt>Returns</dt><dd><b>true</b> if the shunt compensator is linear, <b>false</b> otherwise </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#ab196b770246ac7e8450bdb68846d3cb5">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a67fd04dd34e0c00a20abb4074c7954dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67fd04dd34e0c00a20abb4074c7954dd">&#9670;&nbsp;</a></span>isVoltageRegulationOn()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::ShuntCompensatorInterfaceIIDM::isVoltageRegulationOn </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">final</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines if voltage regulation is enabled on current shunt. </p>
+<dl class="section return"><dt>Returns</dt><dd><b>true</b> if voltage regulation enabled, <b>false</b> if not </dd></dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#a0591ef504ce311bb55651d2dc152d461">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="a9fcd8bce67c1ff3b8c721d28f0bf5286"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fcd8bce67c1ff3b8c721d28f0bf5286">&#9670;&nbsp;</a></span>setBusInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::ShuntCompensatorInterfaceIIDM::setBusInterface </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>busInterface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Setter for the shuntCompensator's bus interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">busInterface</td><td>of the bus where the shunt compensator is connected </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#a84bc422173f832ed9e187c421444c795">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<a id="abf1078fadb9c809f799db50928587c7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf1078fadb9c809f799db50928587c7d">&#9670;&nbsp;</a></span>setVoltageLevelInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::ShuntCompensatorInterfaceIIDM::setVoltageLevelInterface </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="../../d9/df4/a03070.html">VoltageLevelInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>voltageLevelInterface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Setter for the shuntCompensator's voltage interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">voltageLevelInterface</td><td>of the voltageLevel where the shuntCompensator is connected </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="../../dd/d84/a03034.html#af96d1cff1165c8ec2e553da418b0c1b9">DYN::ShuntCompensatorInterface</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li><a class="el" href="../../dc/d17/a00872_source.html">DYNShuntCompensatorInterfaceIIDM.h</a></li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!--
     Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
@@ -361,7 +935,8 @@ $(document).ready(function(){initNavTree('d6/d04/a03193.html','../../');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jul 25 2024 10:35:18 for Dynawo by
+    <li class="navelem"><b>DYN</b></li><li class="navelem"><a class="el" href="../../de/de3/a03190.html">ShuntCompensatorInterfaceIIDM</a></li>
+    <li class="footer">Generated on Fri Jul 3 2026 08:17:30 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

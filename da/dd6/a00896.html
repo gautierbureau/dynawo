@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: DYNModelVoltageSetPointChange.h File Reference</title>
+<title>Dynawo: DYNVscConverterInterfaceIIDM.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.7.0</div>
+    1.8.0</div>
   </td>
  </tr>
  </tbody>
@@ -97,27 +97,25 @@ $(document).ready(function(){initNavTree('da/dd6/a00896.html','../../');});
   <div class="summary">
 <a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">DYNModelVoltageSetPointChange.h File Reference</div>  </div>
+<div class="title">DYNVscConverterInterfaceIIDM.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Model to handle a voltage set point change on loads.  
+<p>Vsc converter interface : header file for IIDM implementation.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d7/d49/a00863_source.html">DYNModelCPP.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d4/dc4/a00617_source.html">DYNSubModelFactory.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d5/d12/a00794_source.html">DYNVscConverterInterface.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d30/a00848_source.html">DYNInjectorInterfaceIIDM.h</a>&quot;</code><br />
+<code>#include &lt;powsybl/iidm/VscConverterStation.hpp&gt;</code><br />
 </div>
 <p><a href="../../da/dd6/a00896_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/daf/a03181.html">DYN::ModelVoltageSetPointChangeFactory</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d7/daf/a03181.html" title="ModelVoltageSetPointChangeFactory Model factory. ">ModelVoltageSetPointChangeFactory</a> <a class="el" href="../../df/d50/a02725.html" title="Generic model Generic class for Model. ">Model</a> factory.  <a href="../../d7/daf/a03181.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d30/a03185.html">DYN::ModelVoltageSetPointChange</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html">DYN::VscConverterInterfaceIIDM</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Model to handle a voltage set point change on loads. </p>
+<div class="textblock"><p>Vsc converter interface : header file for IIDM implementation. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!--
@@ -134,8 +132,8 @@ Classes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_a4d4f000bd99afbf77ec024c15aebee1.html">Models</a></li><li class="navelem"><a class="el" href="../../dir_1d85a110c1104c8803c230870bb3238d.html">CPP</a></li><li class="navelem"><a class="el" href="../../dir_1dcdd90ae7ace035f25f6dac1bffce54.html">Events</a></li><li class="navelem"><a class="el" href="../../dir_1ba246ab64b0734a5617de5273002f79.html">ModelVoltageSetPointChange</a></li><li class="navelem"><a class="el" href="../../da/dd6/a00896.html">DYNModelVoltageSetPointChange.h</a></li>
-    <li class="footer">Generated on Thu Jul 25 2024 10:35:18 for Dynawo by
+    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_7d7d21115b5241938a60e6b8a57ea766.html">Modeler</a></li><li class="navelem"><a class="el" href="../../dir_f405ae7c53e4c759cd7436faf72efd90.html">DataInterface</a></li><li class="navelem"><a class="el" href="../../dir_b83efd09d1a32c7e6689e8ffddfcb0cb.html">PowSyblIIDM</a></li><li class="navelem"><a class="el" href="../../da/dd6/a00896.html">DYNVscConverterInterfaceIIDM.h</a></li>
+    <li class="footer">Generated on Fri Jul 3 2026 08:17:29 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

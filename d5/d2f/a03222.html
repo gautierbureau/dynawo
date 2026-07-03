@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: Member List</title>
+<title>Dynawo: DYN::VscConverterInterfaceIIDM Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.7.0</div>
+    1.8.0</div>
   </td>
  </tr>
  </tbody>
@@ -75,7 +75,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('d5/da4/a03225.html','../../');});
+$(document).ready(function(){initNavTree('d5/d2f/a03222.html','../../');});
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -94,127 +94,994 @@ $(document).ready(function(){initNavTree('d5/da4/a03225.html','../../');});
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="../../d6/dcf/a03219.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">DYN::ModelGenerator Member List</div>  </div>
+<div class="title">DYN::VscConverterInterfaceIIDM Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a>, including all inherited members.</p>
-<table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a6808328274d5b60af3550945a2e871d0">addBusNeighbors</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a7f8fcf4b0468e8cbd6fe7026d0c19c1e">addElementWithValue</a>(const std::string &amp;elementName, const std::string &amp;parentType, std::vector&lt; Element &gt; &amp;elements, std::map&lt; std::string, int &gt; &amp;mapElement)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a7c33fd469e28a5741447e119d63cb138">CalculatedVariables_t</a> enum name</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a7d7fe4d6e87943ac51015cf9426a1f0e">calculatedVars_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a7ebbe6f3f1c3dabf85b18d3cddf1558b">collectSilentZ</a>(BitMask *silentZTable)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a3c4d5ea30a09fc68f4399af1a3d3a28a">connectionState_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#abdab0dd75aa689be78ee8bc6cfe61aa1">defineElements</a>(std::vector&lt; Element &gt; &amp;elements, std::map&lt; std::string, int &gt; &amp;mapElement)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ac644aff431ebea04306ac2fc6b9398f9">defineNonGenericParameters</a>(std::vector&lt; ParameterModeler &gt; &amp;parameters)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ad07f1ae70f5b66c75bb8843c7dd2f06b">defineParameters</a>(std::vector&lt; ParameterModeler &gt; &amp;parameters)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a8733ab6820f17af45140dab97026a34d">defineVariables</a>(std::vector&lt; boost::shared_ptr&lt; Variable &gt; &gt; &amp;variables)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a74ca9c688635f8ab0d9244ca7521aea0">evalCalculatedVarI</a>(unsigned numCalculatedVar) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a4d7087287402963ac5d742499959ea27">evalCalculatedVars</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a0e321594be32f606069f06d6a08c4873">evalDerivatives</a>(const double cj)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a2e4d69ccc01d41aa9f5bcb63d04d6d11">evalDerivativesPrim</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a2ba10c033d458bcb52f2054ec9ec6dfc">evalDynamicFType</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a550b76325602b412bc41b5c115e85cf3">evalDynamicYType</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#aa808555d71c869874c77440051056eca">evalF</a>(propertyF_t type)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ac9fd60e22d8f47f0fb9d7911f7a4836d">evalG</a>(const double &amp;t)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ad57e7a7e80608da27c82734f8cd0ae88">evalJCalculatedVarI</a>(unsigned numCalculatedVar, std::vector&lt; double &gt; &amp;res) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#aa37f684bdcb06c6e5293ded63fd73a0f">evalJt</a>(SparseMatrix &amp;jt, const double &amp;cj, const int &amp;rowOffset)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a85b3a41d2259e4c4040cb8aa1b1b29b3">evalJtPrim</a>(SparseMatrix &amp;jt, const int &amp;rowOffset)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a60f1d710ed635024175976de129f1379">evalNodeInjection</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a9273aff91fd0eae38227c45fa9fed342">evalState</a>(const double &amp;time)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a206d112f67d1841a4d10538c455c6833">evalStaticFType</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#adb9aee859c6d225cda93e31a54e382b3">evalStaticYType</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a43ce60d2ea5dafd7823046e9a8166047">evalYMat</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#af9b955ca92694d278470f55b6203b9af">evalZ</a>(const double &amp;t)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a16539540647a270802a0a6a101232b18">f_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ab6cdc26973c78bd254659cdac8ddadce">findParameter</a>(const std::string &amp;name, const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;params) const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>FLAT</b> enum value (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a6e1dbff200a6fd54d57b5499511983f6">fType_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a34e1a5f3f24626e6622acd2fc1c11612">g_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#af454c3ad67195d729eb918bebebe15be">generator_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>genStateNum_</b> enum value (defined in <a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a>)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ac1d2345c8aaf07650ab489552c5a2ab1">getConnected</a>() const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a2b8b6b584fad5aef08db70a592283ae4">getIndexesOfVariablesUsedForCalculatedVarI</a>(unsigned numCalculatedVar, std::vector&lt; int &gt; &amp;numVars) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a3b06bd62e4ae15b0a26ffa5c6ad78e1e">getOffsetCalculatedVar</a>() const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a851cefc0ccac3b21aad14535354e16ef">getParameterDynamic</a>(const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;params, const std::string &amp;id, const std::vector&lt; std::string &gt; &amp;ids) const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a6d459b786a0e729d23bf0e49c5bbb21a">getParameterDynamicNoThrow</a>(const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;params, const std::string &amp;id, bool &amp;foundParam, const std::vector&lt; std::string &gt; &amp;ids=std::vector&lt; std::string &gt;()) const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>getParameterDynamicNoThrow</b>(const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;, const std::string &amp;, bool &amp;, const std::vector&lt; std::string &gt; &amp;) const (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getParameterDynamicNoThrow</b>(const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;, const std::string &amp;, bool &amp;, const std::vector&lt; std::string &gt; &amp;) const (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>getParameterDynamicNoThrow</b>(const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;, const std::string &amp;, bool &amp;, const std::vector&lt; std::string &gt; &amp;) const (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getParameterDynamicNoThrow</b>(const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;, const std::string &amp;, bool &amp;, const std::vector&lt; std::string &gt; &amp;) const (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a503825dd56806e2ecfe30d2eae5ae0c7">getStartingPointMode</a>(const std::string &amp;startingPointMode)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ab789655eabf6cd9472ad296943ecf070">getY0</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a74641aac035c62411b4de85da829b298">hasParameter</a>(const std::string &amp;name, const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;params) const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#aad1476b4ce3943586fd162b8f4221ea0">id</a>() const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a9de44061487a1d84b3b0a3dbb9c0c7f8">id_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ad060f33d846c41ca415da17a27ee4234">ii</a>(const double &amp;ur, const double &amp;ui, const double &amp;U2, const double &amp;Pc, const double &amp;Qc) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a3594d64b815109a6d0bca8663b4ef078">ii0_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a10a3248968a2874802d8661093ec4a77">ii_dUi</a>(const double &amp;ur, const double &amp;ui, const double &amp;U2, const double &amp;Pc, const double &amp;Qc) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a1a29755a84c76849036207dfbe5fdf6c">ii_dUr</a>(const double &amp;ur, const double &amp;ui, const double &amp;U2, const double &amp;Pc, const double &amp;Qc) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ae9936848e350297e189d03a1aac801ae">init</a>(int &amp;yNum)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a911826fb6f25ea04fcc1793d9442b19c">initSize</a>()</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a8c485267b45c8116f97aaf5a232351ce">instantiateVariables</a>(std::vector&lt; boost::shared_ptr&lt; Variable &gt; &gt; &amp;variables)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ac67661b7d37ff43f2cd16035acbb2a19">ir</a>(const double &amp;ur, const double &amp;ui, const double &amp;U2, const double &amp;Pc, const double &amp;Qc) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a1104f5563a7e4f9acf0d081faadaa6b6">ir0_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ac119f2baf548d1accedd9cf14efe4385">ir_dUi</a>(const double &amp;ur, const double &amp;ui, const double &amp;U2, const double &amp;Pc, const double &amp;Qc) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ad7494a88c484d93138839ed4dcd541f1">ir_dUr</a>(const double &amp;ur, const double &amp;ui, const double &amp;U2, const double &amp;Pc, const double &amp;Qc) const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#af85bae3a0ed8fef8e7778ad2b45833aa">isConnected</a>() const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a7a7617c31c6c89d922cabb1cd62829cf">modelBus_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a309909044ff64cb05ce8923e0d9f1389">ModelGenerator</a>(const boost::shared_ptr&lt; GeneratorInterface &gt; &amp;generator)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>nbCalculatedVariables_</b> enum value (defined in <a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a>)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a76ba16f570825a6088b8ae4eaf4937dc">network_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ac9c20d7615edd11760d9b86f186c650a">NetworkComponent</a>()</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#afe0c414216cb1700b654b05de99caac0">NetworkComponent</a>(const std::string &amp;id)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>NO_CHANGE</b> enum value (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ae7b43dcf96074ec741effc88f8c0c672">offsetCalculatedVar_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#aeb2e2ac2ba4c21413f5c61e8238f6743">Pc_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a23a77a7e4c88c8ac4125a4bf72db126d">PcPu</a>() const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>pNum_</b> enum value (defined in <a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a>)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a08d23177a6d7155236bd1b04ee179055">printInternalParameters</a>(std::ofstream &amp;fstream) const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#ad5dcc4ab33d916959224fdd935006fa9">Qc_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a5b2c83bd3456d95dcdb6c784ecd56bc2">QcPu</a>() const</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>qNum_</b> enum value (defined in <a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a>)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ad8a6d5cb73ff78609d5460545af5fcd8">setBufferFType</a>(propertyF_t *fType, const unsigned int &amp;offset)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ad2bf156c60db6074b56a860d3a34b5cc">setBufferYType</a>(propertyContinuousVar_t *yType, const unsigned int &amp;offset)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a969039cecd49daf3d724a22a3e9d5e8b">setConnected</a>(State state)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a6328467f12b2be132115e1dfe6d1b02f">setFequations</a>(std::map&lt; int, std::string &gt; &amp;fEquationIndex)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a583825458b43de95b8c451fc56d0138d">setGequations</a>(std::map&lt; int, std::string &gt; &amp;gEquationIndex)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#acfee2255676bd9f324a5817daec991a9">setModelBus</a>(const boost::shared_ptr&lt; ModelBus &gt; &amp;model)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a80a11140d732f4c7b2afe8bb5001fcdc">setNetwork</a>(ModelNetwork *model)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a789dbb97b29892cd704f7f871851acbe">setOffsetCalculatedVar</a>(unsigned int offset)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a48a6d2e631d5538d546d6fc952eb5e3e">setReferenceCalculatedVar</a>(double *calculatedVars, const int &amp;offsetCalculatedVars)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#afe7e0e1c9f7fa61f64b84ef455ffedb3">setReferenceG</a>(state_g *g, const int &amp;offsetG)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a0770b01a8a32b15bdc7ff8a1741ff3d2">setReferenceY</a>(double *y, double *yp, double *f, const int &amp;offsetY, const int &amp;offsetF)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a1f2d3b6cfb18843ad783486599ab3c11">setReferenceZ</a>(double *z, bool *zConnected, const int &amp;offsetZ)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d5/da4/a03225.html#a07df0ad64ba95c88f831cd3ac4ab5578">setSubModelParameters</a>(const std::unordered_map&lt; std::string, ParameterModeler &gt; &amp;params)</td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#acd89fa3f501db8efef6442e0c4c6c09e">sizeCalculatedVar</a>() const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a32b606cca1fa33f8c42728ee9f029cd6">sizeCalculatedVar_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a592164a7c9e8ebf64003c10e95b00d70">sizeF</a>() const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ad199c28f3d76c1a156e07726db7a3557">sizeF_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a28d888406f7aab3f8ab8bb89d858ac14">sizeG</a>() const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a8f32baab60f5342de2a91e64030cc655">sizeG_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#aa1c1e4cc61e24dc8d030ca6e8d86bc31">sizeMode</a>() const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a5434fc43646573e12bea533d6458652a">sizeMode_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a3e9b8b5e395df245f651dd245e106077">sizeY</a>() const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ae43eb93a00a35aabdebe4c46cd7f0a9c">sizeY_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a2a9432594241987d14a52014f1845f37">sizeZ</a>() const</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ac2b730d8857015ee3e6d9368292ba3b9">sizeZ_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#aa45dcc2f71f5417e146f3aab8246c8b9">startingPointMode_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a946e05126d29e11cc9e4c92bd796dde4">startingPointMode_t</a> enum name</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>STATE_CHANGE</b> enum value (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ab067ace2562da72e4017d1c2cca12867">StateChange_t</a> enum name</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d5/da4/a03225.html#aad0f68ac74bfb5a30987e7aab640c524">stateModified_</a></td><td class="entry"><a class="el" href="../../d5/da4/a03225.html">DYN::ModelGenerator</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>TOPO_CHANGE</b> enum value (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>WARM</b> enum value (defined in <a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a>)</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ad4b6b00ac1f634fc1e22ad6e01043afe">y_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a9c5400d0c2b8418d71da37aced2713a5">yp_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ac3030ad2d2765e89a4c32bc2e525c1f9">yType_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#ac8d220e01993be9009fe5aa93ab52a1c">z_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a47736cab5f696757a48f54c496569b8d">zConnected_</a></td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d0/d9d/a03289.html#a58a8a76064424f68a62b9b0ef4d0a3d5">~NetworkComponent</a>()</td><td class="entry"><a class="el" href="../../d0/d9d/a03289.html">DYN::NetworkComponent</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-</table></div><!-- contents -->
+<p><code>#include &lt;<a class="el" href="../../da/dd6/a00896_source.html">DYNVscConverterInterfaceIIDM.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for DYN::VscConverterInterfaceIIDM:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="../../d5/d2f/a03222.png" usemap="#DYN::VscConverterInterfaceIIDM_map" alt=""/>
+  <map id="DYN::VscConverterInterfaceIIDM_map" name="DYN::VscConverterInterfaceIIDM_map">
+<area href="../../d1/d44/a03074.html" title="VSC converter interface Interface class for Vsc Converter. " alt="DYN::VscConverterInterface" shape="rect" coords="111,112,324,136"/>
+<area href="../../da/d8d/a03158.html" alt="DYN::InjectorInterfaceIIDM" shape="rect" coords="334,112,547,136"/>
+<area href="../../d7/da7/a02914.html" title="Converter interface common interface class for converters. " alt="DYN::ConverterInterface" shape="rect" coords="0,56,213,80"/>
+<area href="../../d2/df4/a03022.html" title="Curve points data interface. " alt="DYN::ReactiveCurvePointsInterface" shape="rect" coords="223,56,436,80"/>
+<area href="../../d3/d3b/a02910.html" title="Class describing a component of the network. " alt="DYN::ComponentInterface" shape="rect" coords="0,0,213,24"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a668cba0be50ad6784fd6b6ab5ca5c056"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a668cba0be50ad6784fd6b6ab5ca5c056">VscConverterInterfaceIIDM</a> (powsybl::iidm::VscConverterStation &amp;vsc)</td></tr>
+<tr class="memdesc:a668cba0be50ad6784fd6b6ab5ca5c056"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a668cba0be50ad6784fd6b6ab5ca5c056">More...</a><br /></td></tr>
+<tr class="separator:a668cba0be50ad6784fd6b6ab5ca5c056"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9c0c651425ea40aff7fb4cd5384a114"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#ab9c0c651425ea40aff7fb4cd5384a114">importStaticParameters</a> () override</td></tr>
+<tr class="memdesc:ab9c0c651425ea40aff7fb4cd5384a114"><td class="mdescLeft">&#160;</td><td class="mdescRight">import static parameters  <a href="#ab9c0c651425ea40aff7fb4cd5384a114">More...</a><br /></td></tr>
+<tr class="separator:ab9c0c651425ea40aff7fb4cd5384a114"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54fe3f081a340fe6e3cc89f2897324ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a54fe3f081a340fe6e3cc89f2897324ac">exportStateVariablesUnitComponent</a> () override</td></tr>
+<tr class="memdesc:a54fe3f081a340fe6e3cc89f2897324ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">update iidm structure from state variables for each unit component  <a href="#a54fe3f081a340fe6e3cc89f2897324ac">More...</a><br /></td></tr>
+<tr class="separator:a54fe3f081a340fe6e3cc89f2897324ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a526a9a6654925b71cded2d94b3136b78"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a526a9a6654925b71cded2d94b3136b78">isConnected</a> () const override</td></tr>
+<tr class="memdesc:a526a9a6654925b71cded2d94b3136b78"><td class="mdescLeft">&#160;</td><td class="mdescRight">check the connection state of the component  <a href="#a526a9a6654925b71cded2d94b3136b78">More...</a><br /></td></tr>
+<tr class="separator:a526a9a6654925b71cded2d94b3136b78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a585a074b24441090ae72bd46332c7d36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a585a074b24441090ae72bd46332c7d36">setBusInterface</a> (const std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt; &amp;busInterface) override</td></tr>
+<tr class="memdesc:a585a074b24441090ae72bd46332c7d36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the converter bus interface.  <a href="#a585a074b24441090ae72bd46332c7d36">More...</a><br /></td></tr>
+<tr class="separator:a585a074b24441090ae72bd46332c7d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dbc9784ad8123c01721563e9572bcbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a1dbc9784ad8123c01721563e9572bcbf">setVoltageLevelInterface</a> (const std::shared_ptr&lt; <a class="el" href="../../d9/df4/a03070.html">VoltageLevelInterface</a> &gt; &amp;voltageLevelInterface) override</td></tr>
+<tr class="memdesc:a1dbc9784ad8123c01721563e9572bcbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the converter voltage interface.  <a href="#a1dbc9784ad8123c01721563e9572bcbf">More...</a><br /></td></tr>
+<tr class="separator:a1dbc9784ad8123c01721563e9572bcbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7351feffb417a80fb0c5a6a134aa4d7"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#aa7351feffb417a80fb0c5a6a134aa4d7">getBusInterface</a> () const override</td></tr>
+<tr class="memdesc:aa7351feffb417a80fb0c5a6a134aa4d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the converter bus interface.  <a href="#aa7351feffb417a80fb0c5a6a134aa4d7">More...</a><br /></td></tr>
+<tr class="separator:aa7351feffb417a80fb0c5a6a134aa4d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d8612894bd242d8b67ed1787f5d7682"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a4d8612894bd242d8b67ed1787f5d7682">getInitialConnected</a> () override</td></tr>
+<tr class="memdesc:a4d8612894bd242d8b67ed1787f5d7682"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the initial connection state of the converter.  <a href="#a4d8612894bd242d8b67ed1787f5d7682">More...</a><br /></td></tr>
+<tr class="separator:a4d8612894bd242d8b67ed1787f5d7682"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0621774fc34f3cff3927187342d4069c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a0621774fc34f3cff3927187342d4069c">getVNom</a> () const override</td></tr>
+<tr class="memdesc:a0621774fc34f3cff3927187342d4069c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the nominal voltage of the bus where the converter is connected.  <a href="#a0621774fc34f3cff3927187342d4069c">More...</a><br /></td></tr>
+<tr class="separator:a0621774fc34f3cff3927187342d4069c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac42864192b0b6184971831a74d53d046"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#ac42864192b0b6184971831a74d53d046">hasP</a> () override</td></tr>
+<tr class="memdesc:ac42864192b0b6184971831a74d53d046"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the injector knows its injected/consumed active power.  <a href="#ac42864192b0b6184971831a74d53d046">More...</a><br /></td></tr>
+<tr class="separator:ac42864192b0b6184971831a74d53d046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1833dd35d126cefa7b135e2c52f11ef1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a1833dd35d126cefa7b135e2c52f11ef1">hasQ</a> () override</td></tr>
+<tr class="memdesc:a1833dd35d126cefa7b135e2c52f11ef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the injector knows its injected/consumed reactive power.  <a href="#a1833dd35d126cefa7b135e2c52f11ef1">More...</a><br /></td></tr>
+<tr class="separator:a1833dd35d126cefa7b135e2c52f11ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7e5e2b775eac770cad31737a9505fa0"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#ac7e5e2b775eac770cad31737a9505fa0">getP</a> () override</td></tr>
+<tr class="memdesc:ac7e5e2b775eac770cad31737a9505fa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the active power of the converter.  <a href="#ac7e5e2b775eac770cad31737a9505fa0">More...</a><br /></td></tr>
+<tr class="separator:ac7e5e2b775eac770cad31737a9505fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c5f812f5ed10303d77c0c0d3e50b9d6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a3c5f812f5ed10303d77c0c0d3e50b9d6">getQ</a> () override</td></tr>
+<tr class="memdesc:a3c5f812f5ed10303d77c0c0d3e50b9d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the reactive power of the converter.  <a href="#a3c5f812f5ed10303d77c0c0d3e50b9d6">More...</a><br /></td></tr>
+<tr class="separator:a3c5f812f5ed10303d77c0c0d3e50b9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11b8e49662ecbfde58f4c4a23d5fcf29"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a11b8e49662ecbfde58f4c4a23d5fcf29">getQMax</a> () override</td></tr>
+<tr class="memdesc:a11b8e49662ecbfde58f4c4a23d5fcf29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the maximum reactive power of the converter.  <a href="#a11b8e49662ecbfde58f4c4a23d5fcf29">More...</a><br /></td></tr>
+<tr class="separator:a11b8e49662ecbfde58f4c4a23d5fcf29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b42c12cf4f66cb416fefb281d6a3f67"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a7b42c12cf4f66cb416fefb281d6a3f67">getQMin</a> () override</td></tr>
+<tr class="memdesc:a7b42c12cf4f66cb416fefb281d6a3f67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the maximum reactive power of the converter.  <a href="#a7b42c12cf4f66cb416fefb281d6a3f67">More...</a><br /></td></tr>
+<tr class="separator:a7b42c12cf4f66cb416fefb281d6a3f67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac171b3224b7e37efac9a7d3dd0925242"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../dd/da3/a03026.html">ReactiveCurvePoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#ac171b3224b7e37efac9a7d3dd0925242">getReactiveCurvesPoints</a> () const override</td></tr>
+<tr class="memdesc:ac171b3224b7e37efac9a7d3dd0925242"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the list of reactive curve points, if any.  <a href="#ac171b3224b7e37efac9a7d3dd0925242">More...</a><br /></td></tr>
+<tr class="separator:ac171b3224b7e37efac9a7d3dd0925242"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a31ef07e454b2d2eeac4235faab0515"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a2a31ef07e454b2d2eeac4235faab0515">getID</a> () const override</td></tr>
+<tr class="memdesc:a2a31ef07e454b2d2eeac4235faab0515"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the converter id.  <a href="#a2a31ef07e454b2d2eeac4235faab0515">More...</a><br /></td></tr>
+<tr class="separator:a2a31ef07e454b2d2eeac4235faab0515"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84a98e40d6de0b50b2bc3dafa9d7f71c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a84a98e40d6de0b50b2bc3dafa9d7f71c">getLossFactor</a> () const override</td></tr>
+<tr class="memdesc:a84a98e40d6de0b50b2bc3dafa9d7f71c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the loss factor of the converter.  <a href="#a84a98e40d6de0b50b2bc3dafa9d7f71c">More...</a><br /></td></tr>
+<tr class="separator:a84a98e40d6de0b50b2bc3dafa9d7f71c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcedc8ce5ccc47eaee1cd0e6c9509e47"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#adcedc8ce5ccc47eaee1cd0e6c9509e47">getVoltageRegulatorOn</a> () const override</td></tr>
+<tr class="memdesc:adcedc8ce5ccc47eaee1cd0e6c9509e47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the boolean indicating if the converter regulates the voltage (otherwise it regulates the reactive power)  <a href="#adcedc8ce5ccc47eaee1cd0e6c9509e47">More...</a><br /></td></tr>
+<tr class="separator:adcedc8ce5ccc47eaee1cd0e6c9509e47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41cc2607f3f4a4bf2f09625a2d642c1b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a41cc2607f3f4a4bf2f09625a2d642c1b">getReactivePowerSetpoint</a> () const override</td></tr>
+<tr class="memdesc:a41cc2607f3f4a4bf2f09625a2d642c1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the reactive power set-point.  <a href="#a41cc2607f3f4a4bf2f09625a2d642c1b">More...</a><br /></td></tr>
+<tr class="separator:a41cc2607f3f4a4bf2f09625a2d642c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae343276aef7e103a9cfbfae8058ee10"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#aae343276aef7e103a9cfbfae8058ee10">getVoltageSetpoint</a> () const override</td></tr>
+<tr class="memdesc:aae343276aef7e103a9cfbfae8058ee10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the voltage set-point.  <a href="#aae343276aef7e103a9cfbfae8058ee10">More...</a><br /></td></tr>
+<tr class="separator:aae343276aef7e103a9cfbfae8058ee10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43d47fca27c7f1af3e7f08f5b5f7e23b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a43d47fca27c7f1af3e7f08f5b5f7e23b">getComponentVarIndex</a> (const std::string &amp;varName) const override</td></tr>
+<tr class="memdesc:a43d47fca27c7f1af3e7f08f5b5f7e23b"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the index of a state variable thanks to its name  <a href="#a43d47fca27c7f1af3e7f08f5b5f7e23b">More...</a><br /></td></tr>
+<tr class="separator:a43d47fca27c7f1af3e7f08f5b5f7e23b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af138bb8ce2de681d8a9103e12ff4d689"><td class="memItemLeft" align="right" valign="top">powsybl::iidm::VscConverterStation &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#af138bb8ce2de681d8a9103e12ff4d689">getVscIIDM</a> ()</td></tr>
+<tr class="memdesc:af138bb8ce2de681d8a9103e12ff4d689"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the reference to the iidm vsc converter istance.  <a href="#af138bb8ce2de681d8a9103e12ff4d689">More...</a><br /></td></tr>
+<tr class="separator:af138bb8ce2de681d8a9103e12ff4d689"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_a03074"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a03074')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d1/d44/a03074.html">DYN::VscConverterInterface</a></td></tr>
+<tr class="memitem:a4f6b18353a43507e178636aadb09c107 inherit pub_methods_a03074"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d44/a03074.html#a4f6b18353a43507e178636aadb09c107">VscConverterInterface</a> (bool <a class="el" href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">hasInitialConditions</a>=true)</td></tr>
+<tr class="memdesc:a4f6b18353a43507e178636aadb09c107 inherit pub_methods_a03074"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="../../d1/d44/a03074.html#a4f6b18353a43507e178636aadb09c107">More...</a><br /></td></tr>
+<tr class="separator:a4f6b18353a43507e178636aadb09c107 inherit pub_methods_a03074"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49ff502766805cf8c61213c4e9af8968 inherit pub_methods_a03074"><td class="memItemLeft" align="right" valign="top"><a id="a49ff502766805cf8c61213c4e9af8968"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d44/a03074.html#a49ff502766805cf8c61213c4e9af8968">~VscConverterInterface</a> () override=default</td></tr>
+<tr class="memdesc:a49ff502766805cf8c61213c4e9af8968 inherit pub_methods_a03074"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a49ff502766805cf8c61213c4e9af8968 inherit pub_methods_a03074"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_a02914"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a02914')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d7/da7/a02914.html">DYN::ConverterInterface</a></td></tr>
+<tr class="memitem:a5fe1765a604e8c596d2904636a0d1578 inherit pub_methods_a02914"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/da7/a02914.html#a5fe1765a604e8c596d2904636a0d1578">ConverterInterface</a> (bool <a class="el" href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">hasInitialConditions</a>=true)</td></tr>
+<tr class="memdesc:a5fe1765a604e8c596d2904636a0d1578 inherit pub_methods_a02914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="../../d7/da7/a02914.html#a5fe1765a604e8c596d2904636a0d1578">More...</a><br /></td></tr>
+<tr class="separator:a5fe1765a604e8c596d2904636a0d1578 inherit pub_methods_a02914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a20ecde1390fc224404f7622ed6a50c inherit pub_methods_a02914"><td class="memItemLeft" align="right" valign="top"><a id="a8a20ecde1390fc224404f7622ed6a50c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/da7/a02914.html#a8a20ecde1390fc224404f7622ed6a50c">~ConverterInterface</a> () override=default</td></tr>
+<tr class="memdesc:a8a20ecde1390fc224404f7622ed6a50c inherit pub_methods_a02914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a8a20ecde1390fc224404f7622ed6a50c inherit pub_methods_a02914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae59b0310f6bfd4365bce2d716c240b5a inherit pub_methods_a02914"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/da7/a02914.html#a2b86b878e89974293374c1c37ed381c9">ConverterType_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/da7/a02914.html#ae59b0310f6bfd4365bce2d716c240b5a">getConverterType</a> () const</td></tr>
+<tr class="memdesc:ae59b0310f6bfd4365bce2d716c240b5a inherit pub_methods_a02914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter fot the converter's type.  <a href="../../d7/da7/a02914.html#ae59b0310f6bfd4365bce2d716c240b5a">More...</a><br /></td></tr>
+<tr class="separator:ae59b0310f6bfd4365bce2d716c240b5a inherit pub_methods_a02914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_a02910"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a02910')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d3/d3b/a02910.html">DYN::ComponentInterface</a></td></tr>
+<tr class="memitem:a54a4adcbcd28a26428cafa45a848e172 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a54a4adcbcd28a26428cafa45a848e172">ComponentInterface</a> (bool <a class="el" href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">hasInitialConditions</a>=true)</td></tr>
+<tr class="memdesc:a54a4adcbcd28a26428cafa45a848e172 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="../../d3/d3b/a02910.html#a54a4adcbcd28a26428cafa45a848e172">More...</a><br /></td></tr>
+<tr class="separator:a54a4adcbcd28a26428cafa45a848e172 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaeea1b605a906a6b2772ff8b092dc17b inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top"><a id="aaeea1b605a906a6b2772ff8b092dc17b"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#aaeea1b605a906a6b2772ff8b092dc17b">~ComponentInterface</a> ()=default</td></tr>
+<tr class="memdesc:aaeea1b605a906a6b2772ff8b092dc17b inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:aaeea1b605a906a6b2772ff8b092dc17b inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a3edef5ec14f6635bcaa11a5def0c2 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ae2a3edef5ec14f6635bcaa11a5def0c2">hasDynamicModel</a> (bool hasDynamicModel)</td></tr>
+<tr class="memdesc:ae2a3edef5ec14f6635bcaa11a5def0c2 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the component's hasDynamicModel_ attribute.  <a href="../../d3/d3b/a02910.html#ae2a3edef5ec14f6635bcaa11a5def0c2">More...</a><br /></td></tr>
+<tr class="separator:ae2a3edef5ec14f6635bcaa11a5def0c2 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4a2e77952f4983e5705c0feb2ffefd3 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ad4a2e77952f4983e5705c0feb2ffefd3">setModelDyn</a> (const boost::shared_ptr&lt; <a class="el" href="../../dc/d90/a02854.html">SubModel</a> &gt; &amp;model)</td></tr>
+<tr class="memdesc:ad4a2e77952f4983e5705c0feb2ffefd3 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the component's model attribute.  <a href="../../d3/d3b/a02910.html#ad4a2e77952f4983e5705c0feb2ffefd3">More...</a><br /></td></tr>
+<tr class="separator:ad4a2e77952f4983e5705c0feb2ffefd3 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4d21f5feedc23bfd0c89f2b32e71746 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#aa4d21f5feedc23bfd0c89f2b32e71746">setReference</a> (const std::string &amp;componentVar, const std::string &amp;modelId, const std::string &amp;modelVar)</td></tr>
+<tr class="memdesc:aa4d21f5feedc23bfd0c89f2b32e71746 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">associate a component variable with a model variable  <a href="../../d3/d3b/a02910.html#aa4d21f5feedc23bfd0c89f2b32e71746">More...</a><br /></td></tr>
+<tr class="separator:aa4d21f5feedc23bfd0c89f2b32e71746 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22ebe68dfef59fe4b694885643908c31 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a22ebe68dfef59fe4b694885643908c31">hasDynamicModel</a> () const</td></tr>
+<tr class="memdesc:a22ebe68dfef59fe4b694885643908c31 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the component's hasDynamicModel_ attribute.  <a href="../../d3/d3b/a02910.html#a22ebe68dfef59fe4b694885643908c31">More...</a><br /></td></tr>
+<tr class="separator:a22ebe68dfef59fe4b694885643908c31 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab673e4fea551130c3776e4a0fda6fea6 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ab673e4fea551130c3776e4a0fda6fea6">updateFromModel</a> (bool filterForCriteriaCheck)</td></tr>
+<tr class="memdesc:ab673e4fea551130c3776e4a0fda6fea6 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">update state variables with data from model (c++ or dynamic model)  <a href="../../d3/d3b/a02910.html#ab673e4fea551130c3776e4a0fda6fea6">More...</a><br /></td></tr>
+<tr class="separator:ab673e4fea551130c3776e4a0fda6fea6 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa68ff5ea43ce54304c3062f1614213dc inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top"><a id="aa68ff5ea43ce54304c3062f1614213dc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#aa68ff5ea43ce54304c3062f1614213dc">getStateVariableReference</a> ()</td></tr>
+<tr class="memdesc:aa68ff5ea43ce54304c3062f1614213dc inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">get state variable reference in dynamic model <br /></td></tr>
+<tr class="separator:aa68ff5ea43ce54304c3062f1614213dc inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2b7a24d4bb3aed941d24831988b3da5 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ad2b7a24d4bb3aed941d24831988b3da5">setType</a> (const <a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">ComponentType_t</a> &amp;type)</td></tr>
+<tr class="memdesc:ad2b7a24d4bb3aed941d24831988b3da5 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the type of the interface.  <a href="../../d3/d3b/a02910.html#ad2b7a24d4bb3aed941d24831988b3da5">More...</a><br /></td></tr>
+<tr class="separator:ad2b7a24d4bb3aed941d24831988b3da5 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a157a82e17608a36a7965614cde1c6234 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">ComponentType_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a157a82e17608a36a7965614cde1c6234">getType</a> () const</td></tr>
+<tr class="memdesc:a157a82e17608a36a7965614cde1c6234 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter fot the interface's type.  <a href="../../d3/d3b/a02910.html#a157a82e17608a36a7965614cde1c6234">More...</a><br /></td></tr>
+<tr class="separator:a157a82e17608a36a7965614cde1c6234 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13bc31f9a55abf04ac162196ad6a3ace inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a13bc31f9a55abf04ac162196ad6a3ace">getTypeAsString</a> () const</td></tr>
+<tr class="memdesc:a13bc31f9a55abf04ac162196ad6a3ace inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter fot the interface's type as string.  <a href="../../d3/d3b/a02910.html#a13bc31f9a55abf04ac162196ad6a3ace">More...</a><br /></td></tr>
+<tr class="separator:a13bc31f9a55abf04ac162196ad6a3ace inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac298501e2706de0701bcf0405d69780c inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ac298501e2706de0701bcf0405d69780c">isPartiallyConnected</a> () const</td></tr>
+<tr class="memdesc:ac298501e2706de0701bcf0405d69780c inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">check the connection state of the component  <a href="../../d3/d3b/a02910.html#ac298501e2706de0701bcf0405d69780c">More...</a><br /></td></tr>
+<tr class="separator:ac298501e2706de0701bcf0405d69780c inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b2709afa47d455b8bc9512348d93f30 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top"><a id="a0b2709afa47d455b8bc9512348d93f30"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a0b2709afa47d455b8bc9512348d93f30">exportStateVariables</a> ()</td></tr>
+<tr class="memdesc:a0b2709afa47d455b8bc9512348d93f30 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">update iidm structure from state variables <br /></td></tr>
+<tr class="separator:a0b2709afa47d455b8bc9512348d93f30 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ae1528a39c004efa24e63c1d4b0d8de inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a2ae1528a39c004efa24e63c1d4b0d8de">createComponentVarIndex</a> (const std::string &amp;varName)</td></tr>
+<tr class="memdesc:a2ae1528a39c004efa24e63c1d4b0d8de inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">create a yet-unexisting state variable, in the rare cases it makes sense  <a href="../../d3/d3b/a02910.html#a2ae1528a39c004efa24e63c1d4b0d8de">More...</a><br /></td></tr>
+<tr class="separator:a2ae1528a39c004efa24e63c1d4b0d8de inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9be4aae7894693081ca3436f3d8aa328 inherit pub_methods_a02910"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">hasInitialConditions</a> () const</td></tr>
+<tr class="memdesc:a9be4aae7894693081ca3436f3d8aa328 inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the component's hasInitialConditions_ attribute.  <a href="../../d3/d3b/a02910.html#a9be4aae7894693081ca3436f3d8aa328">More...</a><br /></td></tr>
+<tr class="separator:a9be4aae7894693081ca3436f3d8aa328 inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22a01ec1b67b1e98e2277d2f1ddcdc4a inherit pub_methods_a02910"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a22a01ec1b67b1e98e2277d2f1ddcdc4a inherit pub_methods_a02910"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a22a01ec1b67b1e98e2277d2f1ddcdc4a">getStaticParameterValue</a> (const std::string &amp;name) const</td></tr>
+<tr class="memdesc:a22a01ec1b67b1e98e2277d2f1ddcdc4a inherit pub_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">retrieve a state variable value thanks to its name  <a href="../../d3/d3b/a02910.html#a22a01ec1b67b1e98e2277d2f1ddcdc4a">More...</a><br /></td></tr>
+<tr class="separator:a22a01ec1b67b1e98e2277d2f1ddcdc4a inherit pub_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_a03022"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a03022')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d2/df4/a03022.html">DYN::ReactiveCurvePointsInterface</a></td></tr>
+<tr class="memitem:affc2934260bde2d15fe6d19ecdfd445f inherit pub_methods_a03022"><td class="memItemLeft" align="right" valign="top"><a id="affc2934260bde2d15fe6d19ecdfd445f"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/df4/a03022.html#affc2934260bde2d15fe6d19ecdfd445f">~ReactiveCurvePointsInterface</a> ()=default</td></tr>
+<tr class="memdesc:affc2934260bde2d15fe6d19ecdfd445f inherit pub_methods_a03022"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:affc2934260bde2d15fe6d19ecdfd445f inherit pub_methods_a03022"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_a03158"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_a03158')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../da/d8d/a03158.html">DYN::InjectorInterfaceIIDM</a></td></tr>
+<tr class="memitem:afe68da93ed0db9d58da70f34f26c88b8 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top"><a id="afe68da93ed0db9d58da70f34f26c88b8"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#afe68da93ed0db9d58da70f34f26c88b8">~InjectorInterfaceIIDM</a> ()=default</td></tr>
+<tr class="memdesc:afe68da93ed0db9d58da70f34f26c88b8 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:afe68da93ed0db9d58da70f34f26c88b8 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a972d180a356869c15e6c12b0d55f55de inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a972d180a356869c15e6c12b0d55f55de">InjectorInterfaceIIDM</a> (const powsybl::iidm::Injection &amp;injector, const std::string &amp;id)</td></tr>
+<tr class="memdesc:a972d180a356869c15e6c12b0d55f55de inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="../../da/d8d/a03158.html#a972d180a356869c15e6c12b0d55f55de">More...</a><br /></td></tr>
+<tr class="separator:a972d180a356869c15e6c12b0d55f55de inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40577543c964828f7e7546aa114cbff1 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a40577543c964828f7e7546aa114cbff1">setBusInterfaceInjector</a> (const std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt; &amp;busInterface)</td></tr>
+<tr class="memdesc:a40577543c964828f7e7546aa114cbff1 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the injector's bus interface.  <a href="../../da/d8d/a03158.html#a40577543c964828f7e7546aa114cbff1">More...</a><br /></td></tr>
+<tr class="separator:a40577543c964828f7e7546aa114cbff1 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab07977e039ac2b1e1b6670d29f105567 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">const std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#ab07977e039ac2b1e1b6670d29f105567">getBusInterfaceInjector</a> () const</td></tr>
+<tr class="memdesc:ab07977e039ac2b1e1b6670d29f105567 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the injector's bus interface.  <a href="../../da/d8d/a03158.html#ab07977e039ac2b1e1b6670d29f105567">More...</a><br /></td></tr>
+<tr class="separator:ab07977e039ac2b1e1b6670d29f105567 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2044d6434b6a0c5193e3ca1f134da08 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#ac2044d6434b6a0c5193e3ca1f134da08">setVoltageLevelInterfaceInjector</a> (const std::shared_ptr&lt; <a class="el" href="../../d9/df4/a03070.html">VoltageLevelInterface</a> &gt; &amp;voltageLevelInterface)</td></tr>
+<tr class="memdesc:ac2044d6434b6a0c5193e3ca1f134da08 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the injector's voltage level interface.  <a href="../../da/d8d/a03158.html#ac2044d6434b6a0c5193e3ca1f134da08">More...</a><br /></td></tr>
+<tr class="separator:ac2044d6434b6a0c5193e3ca1f134da08 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e6f4df64eaf21053b98fe16936e2607 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../d9/df4/a03070.html">VoltageLevelInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a0e6f4df64eaf21053b98fe16936e2607">getVoltageLevelInterfaceInjector</a> () const</td></tr>
+<tr class="memdesc:a0e6f4df64eaf21053b98fe16936e2607 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the injector's voltage level interface.  <a href="../../da/d8d/a03158.html#a0e6f4df64eaf21053b98fe16936e2607">More...</a><br /></td></tr>
+<tr class="separator:a0e6f4df64eaf21053b98fe16936e2607 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d99ddd4cad7e14b1216806a9fefe349 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a3d99ddd4cad7e14b1216806a9fefe349">getVNomInjector</a> () const</td></tr>
+<tr class="memdesc:a3d99ddd4cad7e14b1216806a9fefe349 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the nominal voltage of the bus where the injector is connected.  <a href="../../da/d8d/a03158.html#a3d99ddd4cad7e14b1216806a9fefe349">More...</a><br /></td></tr>
+<tr class="separator:a3d99ddd4cad7e14b1216806a9fefe349 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68db1ce7da94d981dc4cf10d7d47d8ec inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a68db1ce7da94d981dc4cf10d7d47d8ec">getInitialConnectedInjector</a> ()</td></tr>
+<tr class="memdesc:a68db1ce7da94d981dc4cf10d7d47d8ec inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the initial connection state of the injector.  <a href="../../da/d8d/a03158.html#a68db1ce7da94d981dc4cf10d7d47d8ec">More...</a><br /></td></tr>
+<tr class="separator:a68db1ce7da94d981dc4cf10d7d47d8ec inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab580c4da4d7057feb9065a4776c4f251 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#ab580c4da4d7057feb9065a4776c4f251">isConnectedInjector</a> () const</td></tr>
+<tr class="memdesc:ab580c4da4d7057feb9065a4776c4f251 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the connection state of the injector.  <a href="../../da/d8d/a03158.html#ab580c4da4d7057feb9065a4776c4f251">More...</a><br /></td></tr>
+<tr class="separator:ab580c4da4d7057feb9065a4776c4f251 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49ec8b9b20252da413887fd7deb9e273 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a49ec8b9b20252da413887fd7deb9e273">hasPInjector</a> () const</td></tr>
+<tr class="memdesc:a49ec8b9b20252da413887fd7deb9e273 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the injector knows its injected/consumed active power.  <a href="../../da/d8d/a03158.html#a49ec8b9b20252da413887fd7deb9e273">More...</a><br /></td></tr>
+<tr class="separator:a49ec8b9b20252da413887fd7deb9e273 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c8d2f07bce0f84aa88fb05371303ab2 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a3c8d2f07bce0f84aa88fb05371303ab2">hasQInjector</a> () const</td></tr>
+<tr class="memdesc:a3c8d2f07bce0f84aa88fb05371303ab2 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the injector knows its injected/consumed reactive power.  <a href="../../da/d8d/a03158.html#a3c8d2f07bce0f84aa88fb05371303ab2">More...</a><br /></td></tr>
+<tr class="separator:a3c8d2f07bce0f84aa88fb05371303ab2 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1101d348ca3daffc1a95e66f5ab2a92f inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a1101d348ca3daffc1a95e66f5ab2a92f">getPInjector</a> ()</td></tr>
+<tr class="memdesc:a1101d348ca3daffc1a95e66f5ab2a92f inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the active power injected/consumed by the injector.  <a href="../../da/d8d/a03158.html#a1101d348ca3daffc1a95e66f5ab2a92f">More...</a><br /></td></tr>
+<tr class="separator:a1101d348ca3daffc1a95e66f5ab2a92f inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f966593530c9cbe1ac49bed796f26b2 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#a0f966593530c9cbe1ac49bed796f26b2">getQInjector</a> ()</td></tr>
+<tr class="memdesc:a0f966593530c9cbe1ac49bed796f26b2 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the reactive power injected/consumed by the injector.  <a href="../../da/d8d/a03158.html#a0f966593530c9cbe1ac49bed796f26b2">More...</a><br /></td></tr>
+<tr class="separator:a0f966593530c9cbe1ac49bed796f26b2 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae075d2dfb9154199daac391abd0bf1b5 inherit pub_methods_a03158"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8d/a03158.html#ae075d2dfb9154199daac391abd0bf1b5">getIDInjector</a> () const</td></tr>
+<tr class="memdesc:ae075d2dfb9154199daac391abd0bf1b5 inherit pub_methods_a03158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the injector's id.  <a href="../../da/d8d/a03158.html#ae075d2dfb9154199daac391abd0bf1b5">More...</a><br /></td></tr>
+<tr class="separator:ae075d2dfb9154199daac391abd0bf1b5 inherit pub_methods_a03158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a6e075e8f327e16032f4a1a0f5b389977"><td class="memItemLeft" align="right" valign="top"><a id="a6e075e8f327e16032f4a1a0f5b389977"></a>
+powsybl::iidm::VscConverterStation &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2f/a03222.html#a6e075e8f327e16032f4a1a0f5b389977">vscConverterIIDM_</a></td></tr>
+<tr class="memdesc:a6e075e8f327e16032f4a1a0f5b389977"><td class="mdescLeft">&#160;</td><td class="mdescRight">reference to the iidm vsc converter instance <br /></td></tr>
+<tr class="separator:a6e075e8f327e16032f4a1a0f5b389977"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_a02914"><td colspan="2" onclick="javascript:toggleInherit('pub_types_a02914')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d7/da7/a02914.html">DYN::ConverterInterface</a></td></tr>
+<tr class="memitem:a2b86b878e89974293374c1c37ed381c9 inherit pub_types_a02914"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/da7/a02914.html#a2b86b878e89974293374c1c37ed381c9">ConverterType_t</a> { <a class="el" href="../../d7/da7/a02914.html#a2b86b878e89974293374c1c37ed381c9a550a6bcb27400d1116fee17ac3c6696c">VSC_CONVERTER</a>, 
+<a class="el" href="../../d7/da7/a02914.html#a2b86b878e89974293374c1c37ed381c9a80b97e7522513dd812973a549bb36f36">LCC_CONVERTER</a>
+ }</td></tr>
+<tr class="memdesc:a2b86b878e89974293374c1c37ed381c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the type of the converter.  <a href="../../d7/da7/a02914.html#a2b86b878e89974293374c1c37ed381c9">More...</a><br /></td></tr>
+<tr class="separator:a2b86b878e89974293374c1c37ed381c9 inherit pub_types_a02914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_a02910"><td colspan="2" onclick="javascript:toggleInherit('pub_types_a02910')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d3/d3b/a02910.html">DYN::ComponentInterface</a></td></tr>
+<tr class="memitem:a8089dfd2e85bdc3fc21030715c846872 inherit pub_types_a02910"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">ComponentType_t</a> { <br />
+&#160;&#160;<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a07df56823341ff6a8659eedcaa5ab994">UNKNOWN</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a58910706220db3aa26ef83cc7e8a26c4">BUS</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a251f9d96ef4272321e49c7b71a5ea5d7">CALCULATED_BUS</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a69d91e244e6054c7779d6ec9cf08238e">SWITCH</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a1a0f12a58102bd2afd073be90e01af8f">LOAD</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872acd809ebf05c1a6cc4037fd7e429e560c">LINE</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a1de090a3916e39dc06f8a211e9b89f6c">GENERATOR</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872aff22939164641c88ddca4f3b8f75b7de">SHUNT</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a3d56662d9c11ef2905785aacc0c01d6a">DANGLING_LINE</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872aeb32fa0ff31d9b817d2a8299a3f9b153">TWO_WTFO</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a5d97e6161158480daa64e4094ae21083">THREE_WTFO</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a4fb7066ad44a2613c8bb0c5219d2466f">SVC</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a1d29386c8ebadaaf3b9f3342e131fa68">VSC_CONVERTER</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a53adb0161b3d082e47d4e0766d2e872f">LCC_CONVERTER</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872a896de4a61821dd8aecb455b1a7bec2ef">HVDC_LINE</a>, 
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872acb80dacf920e9406c93c024896b877f9">COMPONENT_TYPE_COUNT</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:a8089dfd2e85bdc3fc21030715c846872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the type of the component.  <a href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">More...</a><br /></td></tr>
+<tr class="separator:a8089dfd2e85bdc3fc21030715c846872 inherit pub_types_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_a02910"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_a02910')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d3/d3b/a02910.html">DYN::ComponentInterface</a></td></tr>
+<tr class="memitem:ac256bc3546483d0c4ccffb61dfa58a3a inherit pro_methods_a02910"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ac256bc3546483d0c4ccffb61dfa58a3a inherit pro_methods_a02910"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#ac256bc3546483d0c4ccffb61dfa58a3a">getValue</a> (const int index) const</td></tr>
+<tr class="memdesc:ac256bc3546483d0c4ccffb61dfa58a3a inherit pro_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">retrieve a state variable value thanks to its name  <a href="../../d3/d3b/a02910.html#ac256bc3546483d0c4ccffb61dfa58a3a">More...</a><br /></td></tr>
+<tr class="separator:ac256bc3546483d0c4ccffb61dfa58a3a inherit pro_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a360fb8d74db3b5e8d1acb4f636c9647d inherit pro_methods_a02910"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a360fb8d74db3b5e8d1acb4f636c9647d">hasInitialConditions</a> (bool hasInitialConditions)</td></tr>
+<tr class="memdesc:a360fb8d74db3b5e8d1acb4f636c9647d inherit pro_methods_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the component's hasInitialConditions_ attribute.  <a href="../../d3/d3b/a02910.html#a360fb8d74db3b5e8d1acb4f636c9647d">More...</a><br /></td></tr>
+<tr class="separator:a360fb8d74db3b5e8d1acb4f636c9647d inherit pro_methods_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_a02910"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_a02910')"><img src="../../closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="../../d3/d3b/a02910.html">DYN::ComponentInterface</a></td></tr>
+<tr class="memitem:a4e9a1ad375b2c22292b200713cb94bac inherit pro_attribs_a02910"><td class="memItemLeft" align="right" valign="top"><a id="a4e9a1ad375b2c22292b200713cb94bac"></a>
+std::vector&lt; <a class="el" href="../../d8/d23/a03038.html">StateVariable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a4e9a1ad375b2c22292b200713cb94bac">stateVariables_</a></td></tr>
+<tr class="memdesc:a4e9a1ad375b2c22292b200713cb94bac inherit pro_attribs_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">state variable <br /></td></tr>
+<tr class="separator:a4e9a1ad375b2c22292b200713cb94bac inherit pro_attribs_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afba20d4e78f70ec9e147378934d10b33 inherit pro_attribs_a02910"><td class="memItemLeft" align="right" valign="top"><a id="afba20d4e78f70ec9e147378934d10b33"></a>
+std::unordered_map&lt; std::string, <a class="el" href="../../d9/dbf/a03042.html">StaticParameter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#afba20d4e78f70ec9e147378934d10b33">staticParameters_</a></td></tr>
+<tr class="memdesc:afba20d4e78f70ec9e147378934d10b33 inherit pro_attribs_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">static parameter by name, from iidm data <br /></td></tr>
+<tr class="separator:afba20d4e78f70ec9e147378934d10b33 inherit pro_attribs_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b7f69e17315c6cb35ffb9231dcb5e6a inherit pro_attribs_a02910"><td class="memItemLeft" align="right" valign="top"><a id="a3b7f69e17315c6cb35ffb9231dcb5e6a"></a>
+<a class="el" href="../../d3/d3b/a02910.html#a8089dfd2e85bdc3fc21030715c846872">ComponentType_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d3b/a02910.html#a3b7f69e17315c6cb35ffb9231dcb5e6a">type_</a></td></tr>
+<tr class="memdesc:a3b7f69e17315c6cb35ffb9231dcb5e6a inherit pro_attribs_a02910"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of the interface <br /></td></tr>
+<tr class="separator:a3b7f69e17315c6cb35ffb9231dcb5e6a inherit pro_attribs_a02910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>class <a class="el" href="../../d5/d2f/a03222.html">VscConverterInterfaceIIDM</a> </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a668cba0be50ad6784fd6b6ab5ca5c056"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a668cba0be50ad6784fd6b6ab5ca5c056">&#9670;&nbsp;</a></span>VscConverterInterfaceIIDM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DYN::VscConverterInterfaceIIDM::VscConverterInterfaceIIDM </td>
+          <td>(</td>
+          <td class="paramtype">powsybl::iidm::VscConverterStation &amp;&#160;</td>
+          <td class="paramname"><em>vsc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vsc</td><td>vsc converter iidm instance </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a54fe3f081a340fe6e3cc89f2897324ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54fe3f081a340fe6e3cc89f2897324ac">&#9670;&nbsp;</a></span>exportStateVariablesUnitComponent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::VscConverterInterfaceIIDM::exportStateVariablesUnitComponent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>update iidm structure from state variables for each unit component </p>
+
+<p>Implements <a class="el" href="../../d3/d3b/a02910.html#a24a19ea150b9d118f6b365cdbabcacff">DYN::ComponentInterface</a>.</p>
+
+</div>
+</div>
+<a id="aa7351feffb417a80fb0c5a6a134aa4d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7351feffb417a80fb0c5a6a134aa4d7">&#9670;&nbsp;</a></span>getBusInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="../../d6/d1d/a02906.html">BusInterface</a>&gt; DYN::VscConverterInterfaceIIDM::getBusInterface </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the converter bus interface. </p>
+<dl class="section return"><dt>Returns</dt><dd>busInterface interface of the bus where the converter is connected </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#a97f4a8485ae1851ffdec2fb2192b6780">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a43d47fca27c7f1af3e7f08f5b5f7e23b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43d47fca27c7f1af3e7f08f5b5f7e23b">&#9670;&nbsp;</a></span>getComponentVarIndex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int DYN::VscConverterInterfaceIIDM::getComponentVarIndex </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>varName</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get the index of a state variable thanks to its name </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">varName</td><td>name of the state variable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>index of the state variable, <b>-1</b> if the variable does not exist </dd></dl>
+
+<p>Implements <a class="el" href="../../d3/d3b/a02910.html#a6d167dccb153a1ffcee78ad0f2e3a72e">DYN::ComponentInterface</a>.</p>
+
+</div>
+</div>
+<a id="a2a31ef07e454b2d2eeac4235faab0515"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a31ef07e454b2d2eeac4235faab0515">&#9670;&nbsp;</a></span>getID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string&amp; DYN::VscConverterInterfaceIIDM::getID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the converter id. </p>
+<dl class="section return"><dt>Returns</dt><dd>The id of the converter </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#ad508621557328d1967d8cfa60c69cf09">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a4d8612894bd242d8b67ed1787f5d7682"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d8612894bd242d8b67ed1787f5d7682">&#9670;&nbsp;</a></span>getInitialConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::VscConverterInterfaceIIDM::getInitialConnected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the initial connection state of the converter. </p>
+<dl class="section return"><dt>Returns</dt><dd><b>true</b> if the converter is connected, <b>false</b> otherwise </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#ac7d0bd1eba8523973400eab30bf342a6">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a84a98e40d6de0b50b2bc3dafa9d7f71c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84a98e40d6de0b50b2bc3dafa9d7f71c">&#9670;&nbsp;</a></span>getLossFactor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::VscConverterInterfaceIIDM::getLossFactor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the loss factor of the converter. </p>
+<dl class="section return"><dt>Returns</dt><dd>The loss factor of the converter </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#afb5b0b1c92a599026e4c2b8dcc19e1d1">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="ac7e5e2b775eac770cad31737a9505fa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7e5e2b775eac770cad31737a9505fa0">&#9670;&nbsp;</a></span>getP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::VscConverterInterfaceIIDM::getP </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the active power of the converter. </p>
+<dl class="section return"><dt>Returns</dt><dd>The active power of the converter in MW (following iidm convention) </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#ab6cadfdee75922542d017c987e772e1a">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a3c5f812f5ed10303d77c0c0d3e50b9d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c5f812f5ed10303d77c0c0d3e50b9d6">&#9670;&nbsp;</a></span>getQ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::VscConverterInterfaceIIDM::getQ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the reactive power of the converter. </p>
+<dl class="section return"><dt>Returns</dt><dd>The reactive power of the converter in Mvar (following iidm convention) </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#a62d72b00920f498a175efe2a435e63eb">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a11b8e49662ecbfde58f4c4a23d5fcf29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11b8e49662ecbfde58f4c4a23d5fcf29">&#9670;&nbsp;</a></span>getQMax()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::VscConverterInterfaceIIDM::getQMax </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the maximum reactive power of the converter. </p>
+<dl class="section return"><dt>Returns</dt><dd>The maximum reactive power of the converter in Mvar (following iidm convention) </dd></dl>
+
+<p>Implements <a class="el" href="../../d1/d44/a03074.html#a761b7483015ac0f76bf1a2a4533a95c1">DYN::VscConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a7b42c12cf4f66cb416fefb281d6a3f67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b42c12cf4f66cb416fefb281d6a3f67">&#9670;&nbsp;</a></span>getQMin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::VscConverterInterfaceIIDM::getQMin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the maximum reactive power of the converter. </p>
+<dl class="section return"><dt>Returns</dt><dd>The maximum reactive power of the converter in Mvar (following iidm convention) </dd></dl>
+
+<p>Implements <a class="el" href="../../d1/d44/a03074.html#a293a013ce5385267607ee8db63cbbbfa">DYN::VscConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="ac171b3224b7e37efac9a7d3dd0925242"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac171b3224b7e37efac9a7d3dd0925242">&#9670;&nbsp;</a></span>getReactiveCurvesPoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="../../dd/da3/a03026.html">ReactiveCurvePoint</a>&gt; DYN::VscConverterInterfaceIIDM::getReactiveCurvesPoints </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieve the list of reactive curve points, if any. </p>
+<dl class="section return"><dt>Returns</dt><dd>list of reactive curve points </dd></dl>
+
+<p>Implements <a class="el" href="../../d1/d44/a03074.html#aea02070da5288689c566dd907e33bd57">DYN::VscConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a41cc2607f3f4a4bf2f09625a2d642c1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41cc2607f3f4a4bf2f09625a2d642c1b">&#9670;&nbsp;</a></span>getReactivePowerSetpoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::VscConverterInterfaceIIDM::getReactivePowerSetpoint </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the reactive power set-point. </p>
+<dl class="section return"><dt>Returns</dt><dd>The reactive power set-point in Mvar </dd></dl>
+
+<p>Implements <a class="el" href="../../d1/d44/a03074.html#a6a28de4baa702a6c5ac9c8d34df93dc8">DYN::VscConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a0621774fc34f3cff3927187342d4069c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0621774fc34f3cff3927187342d4069c">&#9670;&nbsp;</a></span>getVNom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::VscConverterInterfaceIIDM::getVNom </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the nominal voltage of the bus where the converter is connected. </p>
+<dl class="section return"><dt>Returns</dt><dd>The nominal voltage of the bus where the converter is connected in kV </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#aa29b1be4591f61be93fbdd77bf6b072f">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="adcedc8ce5ccc47eaee1cd0e6c9509e47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcedc8ce5ccc47eaee1cd0e6c9509e47">&#9670;&nbsp;</a></span>getVoltageRegulatorOn()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::VscConverterInterfaceIIDM::getVoltageRegulatorOn </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the boolean indicating if the converter regulates the voltage (otherwise it regulates the reactive power) </p>
+<dl class="section return"><dt>Returns</dt><dd><b>true</b> if the vsc converter controls the voltage, <b>false</b> if it controls the reactive power </dd></dl>
+
+<p>Implements <a class="el" href="../../d1/d44/a03074.html#ab212f6812f9f6df324f5a452adeb714c">DYN::VscConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="aae343276aef7e103a9cfbfae8058ee10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae343276aef7e103a9cfbfae8058ee10">&#9670;&nbsp;</a></span>getVoltageSetpoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double DYN::VscConverterInterfaceIIDM::getVoltageSetpoint </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Getter for the voltage set-point. </p>
+<dl class="section return"><dt>Returns</dt><dd>The voltage set-point in kV </dd></dl>
+
+<p>Implements <a class="el" href="../../d1/d44/a03074.html#a0c7eb71d5fd8f6d45551226a813303f9">DYN::VscConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="af138bb8ce2de681d8a9103e12ff4d689"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af138bb8ce2de681d8a9103e12ff4d689">&#9670;&nbsp;</a></span>getVscIIDM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">powsybl::iidm::VscConverterStation&amp; DYN::VscConverterInterfaceIIDM::getVscIIDM </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Getter for the reference to the iidm vsc converter istance. </p>
+<dl class="section return"><dt>Returns</dt><dd>the iidm vsc converter istance </dd></dl>
+
+</div>
+</div>
+<a id="ac42864192b0b6184971831a74d53d046"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac42864192b0b6184971831a74d53d046">&#9670;&nbsp;</a></span>hasP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::VscConverterInterfaceIIDM::hasP </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Indicates whether the injector knows its injected/consumed active power. </p>
+<dl class="section return"><dt>Returns</dt><dd>Whether the injector knows its injected/consumed active power </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#a85b3e842a9c280f33c1ee9c138e1f82d">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a1833dd35d126cefa7b135e2c52f11ef1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1833dd35d126cefa7b135e2c52f11ef1">&#9670;&nbsp;</a></span>hasQ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::VscConverterInterfaceIIDM::hasQ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Indicates whether the injector knows its injected/consumed reactive power. </p>
+<dl class="section return"><dt>Returns</dt><dd>Whether the injector knows its injected/consumed reactive power </dd></dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#a9a8c6ac0fc244bcd3e2c2c1023e9504e">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="ab9c0c651425ea40aff7fb4cd5384a114"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9c0c651425ea40aff7fb4cd5384a114">&#9670;&nbsp;</a></span>importStaticParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::VscConverterInterfaceIIDM::importStaticParameters </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>import static parameters </p>
+
+<p>Implements <a class="el" href="../../d3/d3b/a02910.html#ac24fd6f4706d72ca980eb5c338f1b642">DYN::ComponentInterface</a>.</p>
+
+</div>
+</div>
+<a id="a526a9a6654925b71cded2d94b3136b78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a526a9a6654925b71cded2d94b3136b78">&#9670;&nbsp;</a></span>isConnected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DYN::VscConverterInterfaceIIDM::isConnected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>check the connection state of the component </p>
+<dl class="section return"><dt>Returns</dt><dd><b>true</b> if the component is connected, <b>false</b> else </dd></dl>
+
+<p>Reimplemented from <a class="el" href="../../d3/d3b/a02910.html#a22639f8b88b1d70984852928d87676ec">DYN::ComponentInterface</a>.</p>
+
+</div>
+</div>
+<a id="a585a074b24441090ae72bd46332c7d36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a585a074b24441090ae72bd46332c7d36">&#9670;&nbsp;</a></span>setBusInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::VscConverterInterfaceIIDM::setBusInterface </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="../../d6/d1d/a02906.html">BusInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>busInterface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Setter for the converter bus interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">busInterface</td><td>interface of the bus where the converter is connected </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#ab17a5ef15311f6a8c9d2bcf630e6a404">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<a id="a1dbc9784ad8123c01721563e9572bcbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dbc9784ad8123c01721563e9572bcbf">&#9670;&nbsp;</a></span>setVoltageLevelInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::VscConverterInterfaceIIDM::setVoltageLevelInterface </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="../../d9/df4/a03070.html">VoltageLevelInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>voltageLevelInterface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Setter for the converter voltage interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">voltageLevelInterface</td><td>interface of the voltageLevel where the converter is connected </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="../../d7/da7/a02914.html#a181690129a52e501c59e22d857e618d9">DYN::ConverterInterface</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li><a class="el" href="../../da/dd6/a00896_source.html">DYNVscConverterInterfaceIIDM.h</a></li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!--
     Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
@@ -230,7 +1097,8 @@ $(document).ready(function(){initNavTree('d5/da4/a03225.html','../../');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jul 25 2024 10:35:18 for Dynawo by
+    <li class="navelem"><b>DYN</b></li><li class="navelem"><a class="el" href="../../d5/d2f/a03222.html">VscConverterInterfaceIIDM</a></li>
+    <li class="footer">Generated on Fri Jul 3 2026 08:17:30 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: DYNParameterModeler.h File Reference</title>
+<title>Dynawo: DYNCompiler.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.7.0</div>
+    1.8.0</div>
   </td>
  </tr>
  </tbody>
@@ -97,30 +97,31 @@ $(document).ready(function(){initNavTree('d5/d8a/a00599.html','../../');});
   <div class="summary">
 <a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">DYNParameterModeler.h File Reference</div>  </div>
+<div class="title">DYNCompiler.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Dynawo Modeler Parameter: header file.  
+<p>Dynawo models compile header file.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;string&gt;</code><br />
+<div class="textblock"><code>#include &lt;map&gt;</code><br />
+<code>#include &lt;set&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;map&gt;</code><br />
-<code>#include &lt;boost/optional.hpp&gt;</code><br />
-<code>#include &lt;boost/any.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="../../dc/d8e/a00473_source.html">DYNEnumUtils.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d7/def/a00521_source.html">DYNParameter.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d5/d0a/a00602_source.html">DYNParameterModeler.hpp</a>&quot;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;sstream&gt;</code><br />
+<code>#include &lt;boost/shared_ptr.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d24/a00524_source.html">DYNFileSystemUtils.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d1/d88/a00128_source.html">DYDMacroConnect.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/dd5/a00215_source.html">EXTVARVariablesCollection.h</a>&quot;</code><br />
 </div>
 <p><a href="../../d5/d8a/a00599_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d00/a02745.html">DYN::ParameterModeler</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/db0/a02778.html">DYN::Compiler</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Dynawo Modeler Parameter: header file. </p>
+<div class="textblock"><p>Dynawo models compile header file. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!--
@@ -137,8 +138,8 @@ Classes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_7d7d21115b5241938a60e6b8a57ea766.html">Modeler</a></li><li class="navelem"><a class="el" href="../../dir_a96cc45270be55e9fc3691253afb6f87.html">Common</a></li><li class="navelem"><a class="el" href="../../d5/d8a/a00599.html">DYNParameterModeler.h</a></li>
-    <li class="footer">Generated on Thu Jul 25 2024 10:35:18 for Dynawo by
+    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_7d7d21115b5241938a60e6b8a57ea766.html">Modeler</a></li><li class="navelem"><a class="el" href="../../dir_a96cc45270be55e9fc3691253afb6f87.html">Common</a></li><li class="navelem"><a class="el" href="../../d5/d8a/a00599.html">DYNCompiler.h</a></li>
+    <li class="footer">Generated on Fri Jul 3 2026 08:17:29 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

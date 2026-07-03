@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: Member List</title>
+<title>Dynawo: DYN::SubModelDelete Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.7.0</div>
+    1.8.0</div>
   </td>
  </tr>
  </tbody>
@@ -75,7 +75,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('d7/d13/a02873.html','../../');});
+$(document).ready(function(){initNavTree('d0/dee/a02870.html','../../');});
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -94,41 +94,105 @@ $(document).ready(function(){initNavTree('d7/d13/a02873.html','../../');});
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="../../d6/d92/a02867.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">DYN::DataInterface Member List</div>  </div>
+<div class="title">DYN::SubModelDelete Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a>, including all inherited members.</p>
-<table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a309971065dd1d2a60dd8e4f86b1cbd2d">canUseVariant</a>() const =0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#ae080140fa11498e1ccc1c60634d1cd9f">checkCriteria</a>(double t, bool finalStep)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a486f40ff74deb16fc05a1010049994f2">clone</a>() const =0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#ab70045c218610a14d7ea244b77f5c4fd">configureCriteria</a>(const boost::shared_ptr&lt; criteria::CriteriaCollection &gt; &amp;criteria)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#aa303994128dd1a2aa273eef4fd4023f9">dumpToFile</a>(const std::string &amp;filepath) const =0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#ad32280961eccbf724e85f4212f5a7f7e">exportStateVariables</a>()=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a203d3376b7c0bec0f5ae1a9233bac5a9">findConnectedComponents</a>()=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#ac0b110419b38ea8a8ace47670c73f740">findLostEquipments</a>(const boost::shared_ptr&lt; std::vector&lt; boost::shared_ptr&lt; ComponentInterface &gt; &gt; &gt; &amp;connectedComponents)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a21474236ac4bddbe79e961f4f122c9b8">getBusName</a>(const std::string &amp;staticID, const std::string &amp;labelNode)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#acfd29130a1dbaf8aaee502cb69b09cc4">getFailingCriteria</a>(std::vector&lt; std::pair&lt; double, std::string &gt; &gt; &amp;failingCriteria) const =0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#adb99731cce9499275f295f3fd39b35eb">getNetwork</a>() const =0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a9fe64f91c9735ca519b6860e880e3e58">getServiceManager</a>() const =0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a3617b374079355f94f5a20021a1611d9">getStateVariableReference</a>()=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a0d63da2d2ae541a31cf0f5f2b6628523">getStaticParameterBoolValue</a>(const std::string &amp;staticID, const std::string &amp;refOrigName)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#ab7a9e5977fd429c705a2d88307d52e75">getStaticParameterDoubleValue</a>(const std::string &amp;staticID, const std::string &amp;refOrigName)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#aeec47a5e21d12bd0fed9f7415e7022de">getStaticParameterIntValue</a>(const std::string &amp;staticID, const std::string &amp;refOrigName)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a61ab2ac0087f4a108732c9021593594b">hasDynamicModel</a>(const std::string &amp;id)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#ab83835e5ce431fbd30e2fc0288855b89">importStaticParameters</a>()=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a8166fe6ebeb950f2fc2c00797cda8ff5">instantiateNetwork</a>() const =0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#ab9d813fbc8e629cd936ffe135cb4c651">mapConnections</a>()=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a5b1de608cf26541a8625f95bb850cd8b">selectVariant</a>(const std::string &amp;variantName)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a9f0b4d080ed74d6a018c89000d3dac60">setDynamicModel</a>(const std::string &amp;componentId, const boost::shared_ptr&lt; SubModel &gt; &amp;model)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a2f16859a4c2e1ae667a7a86c34f57d91">setModelNetwork</a>(const boost::shared_ptr&lt; SubModel &gt; &amp;model)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a7b843fda45e9bbd64849f35c94ed8434">setReference</a>(const std::string &amp;componentVar, const std::string &amp;staticId, const std::string &amp;modelId, const std::string &amp;modelVar)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a2260e675488e3dba17cd0af3085b44b3">setTimeline</a>(const boost::shared_ptr&lt; timeline::Timeline &gt; &amp;timeline)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="../../d7/d13/a02873.html#a1297af56124573be3c453bd69e69fc0d">updateFromModel</a>(bool filterForCriteriaCheck)=0</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="../../d7/d13/a02873.html#addd7f4cd8404ab931b33ccd598e42c4b">~DataInterface</a>()=default</td><td class="entry"><a class="el" href="../../d7/d13/a02873.html">DYN::DataInterface</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-</table></div><!-- contents -->
+<p><a class="el" href="../../d0/dee/a02870.html" title="SubModelDelete class. ">SubModelDelete</a> class.  
+ <a href="../../d0/dee/a02870.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../dc/df1/a00662_source.html">DYNSubModelFactory.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a610c93c25c5ddf888e6a66a9754af621"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dee/a02870.html#a610c93c25c5ddf888e6a66a9754af621">SubModelDelete</a> (<a class="el" href="../../d3/dee/a02862.html">SubModelFactory</a> *factory)</td></tr>
+<tr class="memdesc:a610c93c25c5ddf888e6a66a9754af621"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a610c93c25c5ddf888e6a66a9754af621">More...</a><br /></td></tr>
+<tr class="separator:a610c93c25c5ddf888e6a66a9754af621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44d183aeae409cc74dc0b56a56bbd392"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dee/a02870.html#a44d183aeae409cc74dc0b56a56bbd392">operator()</a> (<a class="el" href="../../dc/d90/a02854.html">SubModel</a> *subModel)</td></tr>
+<tr class="memdesc:a44d183aeae409cc74dc0b56a56bbd392"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to use this class as a Functor.  <a href="#a44d183aeae409cc74dc0b56a56bbd392">More...</a><br /></td></tr>
+<tr class="separator:a44d183aeae409cc74dc0b56a56bbd392"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a3113bd690ac89eb242a3bce86c8f8b8b"><td class="memItemLeft" align="right" valign="top"><a id="a3113bd690ac89eb242a3bce86c8f8b8b"></a>
+<a class="el" href="../../d3/dee/a02862.html">SubModelFactory</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dee/a02870.html#a3113bd690ac89eb242a3bce86c8f8b8b">factory_</a></td></tr>
+<tr class="memdesc:a3113bd690ac89eb242a3bce86c8f8b8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">factory associated to the model to destroy <br /></td></tr>
+<tr class="separator:a3113bd690ac89eb242a3bce86c8f8b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="../../d0/dee/a02870.html" title="SubModelDelete class. ">SubModelDelete</a> class. </p>
+<p>Manage the destruction of a submodel. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a610c93c25c5ddf888e6a66a9754af621"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a610c93c25c5ddf888e6a66a9754af621">&#9670;&nbsp;</a></span>SubModelDelete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DYN::SubModelDelete::SubModelDelete </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d3/dee/a02862.html">SubModelFactory</a> *&#160;</td>
+          <td class="paramname"><em>factory</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">factory</td><td>model factory to delete </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a44d183aeae409cc74dc0b56a56bbd392"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44d183aeae409cc74dc0b56a56bbd392">&#9670;&nbsp;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DYN::SubModelDelete::operator() </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../dc/d90/a02854.html">SubModel</a> *&#160;</td>
+          <td class="paramname"><em>subModel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to use this class as a Functor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">subModel</td><td>pointer to the subModel to delete map </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li><a class="el" href="../../dc/df1/a00662_source.html">DYNSubModelFactory.h</a></li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!--
     Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
@@ -144,7 +208,8 @@ $(document).ready(function(){initNavTree('d7/d13/a02873.html','../../');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jul 25 2024 10:35:18 for Dynawo by
+    <li class="navelem"><b>DYN</b></li><li class="navelem"><a class="el" href="../../d0/dee/a02870.html">SubModelDelete</a></li>
+    <li class="footer">Generated on Fri Jul 3 2026 08:17:30 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>
