@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:modelicaModel id="EmtSMIB">
+    <dyn:unitDynamicModel id="circuit" name="Dynawo.Electrical.EMT.Examples.SMIB"/>
+  </dyn:modelicaModel>
+</dyn:dynamicModelsArchitecture>

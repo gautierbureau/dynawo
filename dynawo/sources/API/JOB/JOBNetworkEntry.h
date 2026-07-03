@@ -66,10 +66,23 @@ class NetworkEntry {
    */
   const std::string& getNetworkParId() const;
 
+  /**
+   * @brief network model library name setter (selects the C++ network model)
+   * @param lib : network model library name (e.g. "DYNModelNetworkEMT"); empty -> default phasor network
+   */
+  void setNetworkModelLib(const std::string& lib);
+
+  /**
+   * @brief network model library name getter
+   * @return network model library name, or "DYNModelNetwork" (phasor) if unset
+   */
+  const std::string& getNetworkModelLib() const;
+
  private:
   std::string iidmFile_;        ///< IIDM file for the simulation
   std::string networkParFile_;  ///< Parameters file for the network model
   std::string networkParId_;    ///< Number of the parameters set in parameters file
+  std::string networkModelLib_ = "DYNModelNetwork";  ///< C++ network model library (phasor by default)
 };
 
 }  // namespace job

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <!-- One detailed EMT machine per generator. SNom matches the phasor IEEE14 case; the
+       operating point (P0Pu/Q0Pu/U0Pu/UPhase0) is pulled from the IIDM load flow by reference
+       (it feeds the SynchronousMachineFull_INIT model, which computes the start values). The
+       remaining physical machine parameters keep the SynchronousMachineFull defaults. -->
+  <set id="GEN1">
+    <par type="DOUBLE" name="machine_SNom" value="1211"/>
+    <reference name="machine_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+    <reference name="machine_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+    <reference name="machine_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
+    <reference name="machine_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+  </set>
+  <set id="GEN2">
+    <par type="DOUBLE" name="machine_SNom" value="1120"/>
+    <reference name="machine_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+    <reference name="machine_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+    <reference name="machine_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
+    <reference name="machine_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+  </set>
+  <set id="GEN3">
+    <par type="DOUBLE" name="machine_SNom" value="1650"/>
+    <reference name="machine_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+    <reference name="machine_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+    <reference name="machine_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
+    <reference name="machine_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+  </set>
+  <set id="GEN6">
+    <par type="DOUBLE" name="machine_SNom" value="80"/>
+    <reference name="machine_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+    <reference name="machine_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+    <reference name="machine_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
+    <reference name="machine_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+  </set>
+  <set id="GEN8">
+    <par type="DOUBLE" name="machine_SNom" value="250"/>
+    <reference name="machine_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+    <reference name="machine_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+    <reference name="machine_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
+    <reference name="machine_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+  </set>
+  <set id="DISC">
+    <par type="DOUBLE" name="event_tEvent" value="0.2"/>
+    <par type="BOOL" name="event_disconnectOrigin" value="true"/>
+    <par type="BOOL" name="event_disconnectExtremity" value="true"/>
+  </set>
+  <set id="Network">
+    <par type="DOUBLE" name="_BANK___9_SC_no_reclosing_delay" value="0.4"/><par type="DOUBLE" name="unused" value="0.0"/></set>
+  <set id="Solver">
+    <par type="DOUBLE" name="hMin" value="1e-5"/>
+    <par type="DOUBLE" name="hMax" value="1e-5"/>
+    <par type="DOUBLE" name="kReduceStep" value="0.5"/>
+    <par type="INT" name="maxNewtonTry" value="10"/>
+    <par type="STRING" name="linearSolverName" value="KLU"/>
+    <par type="DOUBLE" name="minimalAcceptableStep" value="1e-7"/>
+    <par type="INT" name="maximumNumberSlowStepIncrease" value="100"/>
+  </set>
+  <set id="SHOPEN">
+    <par type="DOUBLE" name="event_tEvent" value="0.1"/>
+    <par type="BOOL" name="event_disconnectOrigin" value="true"/>
+    <par type="BOOL" name="event_disconnectExtremity" value="true"/>
+  </set>
+  <set id="SHRECL">
+    <par type="DOUBLE" name="event_tEvent" value="0.2"/>
+    <par type="BOOL" name="event_connectOrigin" value="true"/>
+    <par type="BOOL" name="event_connectExtremity" value="true"/>
+  </set>
+</parametersSet>

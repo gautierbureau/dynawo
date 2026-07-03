@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <!-- Balanced 3-phase EMT source feeding a series R-L line into a parallel R-C
+       load to ground, built entirely from per-component black-box preassembled
+       models wired with dyn:connect on the abc EmtTerminal connectors. Node N1 =
+       source.p/line.p ; node N2 = line.n/load.p/cap.p ; node GND = the neutrals
+       and the ground reference. Reproduces Examples.ThreePhaseRLCircuit. -->
+  <dyn:blackBoxModel id="SRC"  lib="EmtVoltageSource" parFile="EmtThreePhaseRLBlackBox.par" parId="SRC"/>
+  <dyn:blackBoxModel id="LINE" lib="EmtSeriesRL"      parFile="EmtThreePhaseRLBlackBox.par" parId="LINE"/>
+  <dyn:blackBoxModel id="LOAD" lib="EmtResistor"      parFile="EmtThreePhaseRLBlackBox.par" parId="LOAD"/>
+  <dyn:blackBoxModel id="CAP"  lib="EmtCapacitor"     parFile="EmtThreePhaseRLBlackBox.par" parId="CAP"/>
+  <dyn:blackBoxModel id="GND"  lib="EmtGround"/>
+  <dyn:connect id1="SRC"  var1="source_p"   id2="LINE" var2="line_p"/>
+  <dyn:connect id1="LINE" var1="line_n"     id2="LOAD" var2="resistor_p"/>
+  <dyn:connect id1="LINE" var1="line_n"     id2="CAP"  var2="cap_p"/>
+  <dyn:connect id1="SRC"  var1="source_n"   id2="GND"  var2="ground_terminal"/>
+  <dyn:connect id1="LOAD" var1="resistor_n" id2="GND"  var2="ground_terminal"/>
+  <dyn:connect id1="CAP"  var1="cap_n"      id2="GND"  var2="ground_terminal"/>
+</dyn:dynamicModelsArchitecture>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+  <set id="SRC">
+    <par type="DOUBLE" name="source_UPeakPu" value="1.4142135623730951"/>
+    <par type="DOUBLE" name="source_FNom" value="50"/>
+    <par type="DOUBLE" name="source_Phase0" value="0"/>
+  </set>
+  <set id="LINE">
+    <par type="DOUBLE" name="line_RPu" value="0.05"/>
+    <par type="DOUBLE" name="line_LPu" value="5e-4"/>
+  </set>
+  <set id="LOAD"><par type="DOUBLE" name="resistor_RPu" value="2.0"/></set>
+  <set id="CAP"><par type="DOUBLE" name="cap_CPu" value="2e-4"/></set>
+  <set id="Solver">
+    <par type="DOUBLE" name="hMin" value="2e-5"/>
+    <par type="DOUBLE" name="hMax" value="2e-5"/>
+    <par type="DOUBLE" name="kReduceStep" value="0.5"/>
+    <par type="INT" name="maxNewtonTry" value="10"/>
+    <par type="STRING" name="linearSolverName" value="KLU"/>
+    <par type="DOUBLE" name="minimalAcceptableStep" value="1e-7"/>
+    <par type="INT" name="maximumNumberSlowStepIncrease" value="100"/>
+  </set>
+</parametersSet>

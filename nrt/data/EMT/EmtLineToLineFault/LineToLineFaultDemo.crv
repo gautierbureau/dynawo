@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="LL" variable="circuit_vLoadA"/>
+  <curve model="LL" variable="circuit_vLoadB"/>
+  <curve model="LL" variable="circuit_vLoadC"/>
+  <curve model="LL" variable="circuit_iLineA"/>
+  <curve model="LL" variable="circuit_iLineB"/>
+  <curve model="LL" variable="circuit_iLineC"/>
+</curvesInput>

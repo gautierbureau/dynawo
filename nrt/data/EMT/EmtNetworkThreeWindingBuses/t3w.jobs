@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="t3w">
+    <solver lib="dynawo_SolverTRAP" parFile="t3w.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="t3w.iidm" parFile="t3w.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="t3w.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.06"/>
+    <outputs directory="outputs">
+      <curves inputFile="t3w.crv" exportMode="CSV"/>
+
+    </outputs>
+  </job>
+</jobs>

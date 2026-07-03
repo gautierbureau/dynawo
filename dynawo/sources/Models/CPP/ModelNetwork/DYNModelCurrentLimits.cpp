@@ -20,9 +20,8 @@
 #include <limits>
 #include <iostream>
 #include "DYNModelCurrentLimits.h"
-
 #include <DYNTimer.h>
-
+#include "DYNSubModel.h"
 #include "DYNModelNetwork.h"
 #include "DYNMacrosMessage.h"
 #include "DYNModelConstants.h"
@@ -109,7 +108,8 @@ ModelCurrentLimits::constraintData(const constraints::ConstraintData::kind_t& ki
 
 ModelCurrentLimits::state_t
 ModelCurrentLimits::evalZ(const string& componentName, const double t, const state_g* g, const double desactivate,
-    const string& modelType, ModelNetwork* network) {
+    const string& modelType, SubModel* network) {
+  state_t state = COMPONENT_CLOSE;
   using constraints::ConstraintData;
   state_t state = COMPONENT_CLOSE;
 

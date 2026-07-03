@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="CAPBUS"  variable="cap_p_v_0_"/>
+  <curve model="CAPBUS"  variable="cap_p_v_1_"/>
+  <curve model="CAPBUS"  variable="cap_p_v_2_"/>
+  <curve model="MACHINE" variable="machine_terminal_i_0_"/>
+  <curve model="MACHINE" variable="machine_terminal_i_1_"/>
+  <curve model="MACHINE" variable="machine_terminal_i_2_"/>
+  <curve model="MACHINE" variable="machine_Wr"/>
+  <curve model="MACHINE" variable="machine_dtheta"/>
+  <curve model="MACHINE" variable="machine_Te"/>
+</curvesInput>

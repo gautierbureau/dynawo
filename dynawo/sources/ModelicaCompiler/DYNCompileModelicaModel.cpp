@@ -186,7 +186,11 @@ int main(int argc, char ** argv) {
           throw DYNError(DYN::Error::MODELER, FileGenerationFailed, lib);
         copyFile(libName, compilationDir, modelDir);
 #ifndef _DEBUG_
-        removeAllInDirectory(compilationDir1);
+        // DEBUG AID: keep the generated C/C++ model sources (per-model compilation directory)
+        // after the .so is built, so the generated equations/Jacobian can be inspected. The
+        // pre-build cleanup above (removeAllInDirectory(compilationDir)) still runs, so stale
+        // files are not reused.
+        // removeAllInDirectory(compilationDir1);
 #endif
       }
     }

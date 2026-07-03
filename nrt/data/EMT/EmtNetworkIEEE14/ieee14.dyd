@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <!-- Drop a detailed EMT synchronous machine onto each IEEE14 generator bus. The network
+       (DYNModelNetworkEMT) skips its own internal model for a generator that carries a dynamic
+       model (hasDynamicModel) and exposes the bus as @<staticId>@@NODE@_ACPIN; the machine's
+       abc terminal connects to it. No OMEGA_REF: the EMT machine runs in the absolute frame. -->
+  <dyn:blackBoxModel id="GEN____1_SM" lib="GeneratorEmtSynchronousMachineFull" parFile="ieee14.par" parId="GEN1" staticId="_GEN____1_SM"/>
+  <dyn:blackBoxModel id="GEN____2_SM" lib="GeneratorEmtSynchronousMachineFull" parFile="ieee14.par" parId="GEN2" staticId="_GEN____2_SM"/>
+  <dyn:blackBoxModel id="GEN____3_SM" lib="GeneratorEmtSynchronousMachineFull" parFile="ieee14.par" parId="GEN3" staticId="_GEN____3_SM"/>
+  <dyn:blackBoxModel id="GEN____6_SM" lib="GeneratorEmtSynchronousMachineFull" parFile="ieee14.par" parId="GEN6" staticId="_GEN____6_SM"/>
+  <dyn:blackBoxModel id="GEN____8_SM" lib="GeneratorEmtSynchronousMachineFull" parFile="ieee14.par" parId="GEN8" staticId="_GEN____8_SM"/>
+  <dyn:connect id1="GEN____1_SM" var1="machine_terminal" id2="NETWORK" var2="@_GEN____1_SM@@NODE@_ACPIN"/>
+  <dyn:connect id1="GEN____2_SM" var1="machine_terminal" id2="NETWORK" var2="@_GEN____2_SM@@NODE@_ACPIN"/>
+  <dyn:connect id1="GEN____3_SM" var1="machine_terminal" id2="NETWORK" var2="@_GEN____3_SM@@NODE@_ACPIN"/>
+  <dyn:connect id1="GEN____6_SM" var1="machine_terminal" id2="NETWORK" var2="@_GEN____6_SM@@NODE@_ACPIN"/>
+  <dyn:connect id1="GEN____8_SM" var1="machine_terminal" id2="NETWORK" var2="@_GEN____8_SM@@NODE@_ACPIN"/>
+</dyn:dynamicModelsArchitecture>

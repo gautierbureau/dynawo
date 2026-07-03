@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="MACHINE" lib="GeneratorEmtSynchronous" parFile="smib_iidm.par" parId="MACHINE" staticId="SM"/>
+  <dyn:blackBoxModel id="BUSGEN"  lib="EmtBus"           parFile="smib_iidm.par" parId="BUSGEN" staticId="GEN_BUS"/>
+  <dyn:blackBoxModel id="BUSHV"   lib="EmtBus"           parFile="smib_iidm.par" parId="BUSHV"  staticId="HV_BUS"/>
+  <dyn:blackBoxModel id="TFO"     lib="EmtTransformerYgYg" parFile="smib_iidm.par" parId="TFO"  staticId="TR"/>
+  <dyn:blackBoxModel id="LINE"    lib="EmtSeriesRL"      parFile="smib_iidm.par" parId="LINE"   staticId="LINE"/>
+  <dyn:blackBoxModel id="INFBUS"  lib="EmtVoltageSource" parFile="smib_iidm.par" parId="INFBUS" staticId="INF_BUS"/>
+  <dyn:blackBoxModel id="GGEN" lib="EmtGround"/>
+  <dyn:blackBoxModel id="GHV"  lib="EmtGround"/>
+  <dyn:blackBoxModel id="GSRC" lib="EmtGround"/>
+  <dyn:connect id1="MACHINE" var1="machine_terminal" id2="BUSGEN" var2="bus_p"/>
+  <dyn:connect id1="MACHINE" var1="machine_terminal" id2="TFO"    var2="tfo_primary"/>
+  <dyn:connect id1="BUSGEN"  var1="bus_n"            id2="GGEN"   var2="ground_terminal"/>
+  <dyn:connect id1="TFO"     var1="tfo_secondary"   id2="BUSHV"  var2="bus_p"/>
+  <dyn:connect id1="TFO"     var1="tfo_secondary"   id2="LINE"   var2="line_p"/>
+  <dyn:connect id1="BUSHV"   var1="bus_n"           id2="GHV"    var2="ground_terminal"/>
+  <dyn:connect id1="LINE"    var1="line_n"          id2="INFBUS" var2="source_p"/>
+  <dyn:connect id1="INFBUS"  var1="source_n"        id2="GSRC"   var2="ground_terminal"/>
+</dyn:dynamicModelsArchitecture>

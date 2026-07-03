@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="GEN"     lib="GeneratorEmtSynchronousGoverPropVRPropInt"      parFile="EmtControlledSMIB.par" parId="GEN"/>
+  <dyn:blackBoxModel id="CAPGEN"  lib="EmtCapacitor"          parFile="EmtControlledSMIB.par" parId="CAPGEN"/>
+  <dyn:blackBoxModel id="DAMPGEN" lib="EmtResistor"           parFile="EmtControlledSMIB.par" parId="DAMP"/>
+  <dyn:blackBoxModel id="TFO"     lib="EmtTransformerYgYg"     parFile="EmtControlledSMIB.par" parId="TFO"/>
+  <dyn:blackBoxModel id="CAPBUS"  lib="EmtCapacitor"          parFile="EmtControlledSMIB.par" parId="CAPBUS"/>
+  <dyn:blackBoxModel id="DAMPBUS" lib="EmtResistor"           parFile="EmtControlledSMIB.par" parId="DAMP"/>
+  <dyn:blackBoxModel id="FAULT"   lib="EmtFault"              parFile="EmtControlledSMIB.par" parId="FAULT"/>
+  <dyn:blackBoxModel id="LINE"    lib="EmtSeriesRL"           parFile="EmtControlledSMIB.par" parId="LINE"/>
+  <dyn:blackBoxModel id="INFBUS"  lib="EmtVoltageSource"       parFile="EmtControlledSMIB.par" parId="INFBUS"/>
+  <dyn:blackBoxModel id="GGEN" lib="EmtGround"/>
+  <dyn:blackBoxModel id="GBUS" lib="EmtGround"/>
+  <dyn:blackBoxModel id="GINF" lib="EmtGround"/>
+  <dyn:connect id1="GEN" var1="generator_terminal" id2="CAPGEN"  var2="cap_p"/>
+  <dyn:connect id1="GEN" var1="generator_terminal" id2="DAMPGEN" var2="resistor_p"/>
+  <dyn:connect id1="GEN" var1="generator_terminal" id2="TFO"     var2="tfo_primary"/>
+  <dyn:connect id1="CAPGEN"  var1="cap_n"            id2="GGEN"    var2="ground_terminal"/>
+  <dyn:connect id1="DAMPGEN" var1="resistor_n"      id2="GGEN"    var2="ground_terminal"/>
+  <dyn:connect id1="TFO"     var1="tfo_secondary"   id2="CAPBUS"  var2="cap_p"/>
+  <dyn:connect id1="TFO"     var1="tfo_secondary"   id2="DAMPBUS" var2="resistor_p"/>
+  <dyn:connect id1="TFO"     var1="tfo_secondary"   id2="FAULT"   var2="fault_terminal"/>
+  <dyn:connect id1="TFO"     var1="tfo_secondary"   id2="LINE"    var2="line_p"/>
+  <dyn:connect id1="CAPBUS"  var1="cap_n"           id2="GBUS"    var2="ground_terminal"/>
+  <dyn:connect id1="DAMPBUS" var1="resistor_n"      id2="GBUS"    var2="ground_terminal"/>
+  <dyn:connect id1="LINE"    var1="line_n"          id2="INFBUS"  var2="source_p"/>
+  <dyn:connect id1="INFBUS"  var1="source_n"        id2="GINF"    var2="ground_terminal"/>
+</dyn:dynamicModelsArchitecture>

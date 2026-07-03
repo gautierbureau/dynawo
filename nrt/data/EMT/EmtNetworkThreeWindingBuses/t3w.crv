@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="NETWORK" variable="T3_1_i_a"/>
+  <curve model="NETWORK" variable="T3_2_i_a"/>
+  <curve model="NETWORK" variable="T3_3_i_a"/>
+  <curve model="NETWORK" variable="T3_FictBUS_v_a"/>
+  <curve model="NETWORK" variable="B2_v_a"/>
+  <curve model="NETWORK" variable="B3_v_a"/>
+</curvesInput>

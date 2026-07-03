@@ -31,6 +31,7 @@
 
 namespace DYN {
 class ModelNetwork;
+class SubModel;
 
 /**
  * @brief Generic tap-changer model

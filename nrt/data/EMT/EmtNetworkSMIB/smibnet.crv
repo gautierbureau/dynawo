@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="NETWORK" variable="B0_Urms"/>
+  <curve model="MACHINE" variable="machine_omegaPu"/>
+  <curve model="MACHINE" variable="machine_PGenPu"/>
+  <curve model="MACHINE" variable="machine_UStatorPu"/>
+  <curve model="MACHINE" variable="machine_terminal_i_0_"/>
+  <curve model="MACHINE" variable="machine_terminal_i_1_"/>
+  <curve model="MACHINE" variable="machine_terminal_i_2_"/>
+</curvesInput>

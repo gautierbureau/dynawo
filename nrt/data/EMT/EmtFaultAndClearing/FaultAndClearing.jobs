@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+    <job name="FaultAndClearing">
+        <solver lib="dynawo_SolverTRAP" parFile="FaultAndClearing.par" parId="Solver"/>
+        <modeler compileDir="outputs/compilation">
+            <dynModels dydFile="FaultAndClearing.dyd"/>
+            <precompiledModels useStandardModels="true"/>
+            <modelicaModels useStandardModels="true"/>
+        </modeler>
+        <simulation startTime="0" stopTime="0.2"/>
+        <outputs directory="outputs">
+            <timeline exportMode="TXT"/>
+            <curves inputFile="FaultAndClearing.crv" exportMode="CSV"/>
+            <logs><appender tag="" file="dynawo.log" lvlFilter="INFO"/></logs>
+        </outputs>
+    </job>
+</jobs>

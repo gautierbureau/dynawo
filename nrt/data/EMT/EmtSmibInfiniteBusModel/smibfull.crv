@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="CAPBUS"  variable="cap_p_v_0_"/>
+  <curve model="MACHINE" variable="machine_terminal_i_0_"/>
+  <curve model="MACHINE" variable="machine_terminal_i_1_"/>
+  <curve model="MACHINE" variable="machine_terminal_i_2_"/>
+  <curve model="MACHINE" variable="machine_omegaPu"/>
+  <curve model="MACHINE" variable="machine_theta"/>
+  <curve model="MACHINE" variable="machine_cePu"/>
+  <curve model="MACHINE" variable="machine_UStatorPu"/>
+  <curve model="MACHINE" variable="machine_ifPu"/>
+</curvesInput>

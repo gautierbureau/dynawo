@@ -74,6 +74,15 @@ class Modeler {
   }
 
   /**
+   * @brief set the C++ network model library to instantiate (phasor by default)
+   * @param lib : network model library name (e.g. "DYNModelNetworkEMT")
+   */
+  void setNetworkModelLib(const std::string& lib) {
+    if (!lib.empty())
+      networkModelLib_ = lib;
+  }
+
+  /**
    * @brief build the model thanks to the data interface and the dynamic data
    */
   void initSystem();
@@ -167,6 +176,7 @@ class Modeler {
   boost::shared_ptr<DynamicData> dyd_;  ///< dynamic data used to build the model multi
   std::shared_ptr<ActionBuffer> actionBuffer_;  ///< action buffer to add to model multi
   std::shared_ptr<ModelMulti> model_;  ///< model created thanks to previous data
+  std::string networkModelLib_ = "DYNModelNetwork";  ///< C++ network model library to load (phasor by default)
 
   std::map<std::string, boost::shared_ptr<SubModel> > subModels_;  ///< association between name and subModel : usefull when the connectors should be created
   boost::shared_ptr<SubModel> modelNetwork_ = nullptr;  ///< pointer to the special NETWORK submodel, if present

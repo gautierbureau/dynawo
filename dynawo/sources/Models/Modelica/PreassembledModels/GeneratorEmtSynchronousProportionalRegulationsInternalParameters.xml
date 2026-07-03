@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <!-- EMT twin of GeneratorSynchronousProportionalRegulationsInternalParameters: the EMT
+       GeneratorSynchronous (full 6-winding machine, reusing the phasor GeneratorSynchronousInt_INIT)
+       with the SAME proportional governor and proportional voltage regulator and the same internal
+       machine parameters, so it can be compared one-for-one against the phasor case. -->
+  <dyn:modelicaModel id="GeneratorEmtSynchronousProportionalRegulationsInternalParameters">
+    <dyn:unitDynamicModel id="generator" name="Dynawo.Electrical.EMT.GeneratorSynchronous" initName="Dynawo.Electrical.EMT.GeneratorSynchronous_INIT"/>
+    <dyn:unitDynamicModel id="voltageRegulator" name="Dynawo.Electrical.Controls.Machines.VoltageRegulators.Simplified.VRProportional" initName="Dynawo.Electrical.Controls.Machines.VoltageRegulators.Simplified.VRProportional_INIT"/>
+    <dyn:unitDynamicModel id="governor" name="Dynawo.Electrical.Controls.Machines.Governors.Simplified.GoverProportional" initName="Dynawo.Electrical.Controls.Machines.Governors.Governor_INIT"/>
+    <dyn:initConnect id1="voltageRegulator" var1="Efd0PuLF" id2="generator" var2="Efd0Pu"/>
+    <dyn:initConnect id1="voltageRegulator" var1="Us0Pu" id2="generator" var2="UStator0Pu"/>
+    <dyn:initConnect id1="governor" var1="Pm0Pu" id2="generator" var2="Pm0Pu"/>
+    <dyn:connect id1="voltageRegulator" var1="EfdPu" id2="generator" var2="efdPu"/>
+    <dyn:connect id1="voltageRegulator" var1="UsPu" id2="generator" var2="UStatorPu"/>
+    <dyn:connect id1="governor" var1="omegaPu" id2="generator" var2="omegaPu"/>
+    <dyn:connect id1="governor" var1="PmPu" id2="generator" var2="PmPu"/>
+  </dyn:modelicaModel>
+</dyn:dynamicModelsArchitecture>

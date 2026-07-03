@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="hvdc_ss">
+    <solver lib="dynawo_SolverTRAP" parFile="hvdc_ss.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="hvdc.iidm" parFile="hvdc_ss.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="hvdc.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.06"/>
+    <outputs directory="outputs">
+      <curves inputFile="hvdc.crv" exportMode="CSV"/>
+
+    </outputs>
+  </job>
+</jobs>

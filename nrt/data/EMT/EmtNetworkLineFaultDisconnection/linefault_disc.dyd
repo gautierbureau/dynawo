@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:blackBoxModel id="INFBUS" lib="EmtInfiniteBus" staticId="G0" parFile="linefault_disc.par" parId="INFBUS"/>
+  <dyn:connect id1="INFBUS" var1="infiniteBus_terminal" id2="NETWORK" var2="@G0@@NODE@_ACPIN"/>
+  <dyn:blackBoxModel id="LINE" lib="EmtLineFault" staticId="LINE" parFile="linefault_disc.par" parId="LINEFLT"/>
+  <dyn:connect id1="LINE" var1="line_terminal1" id2="NETWORK" var2="B0_ACPIN"/>
+  <dyn:connect id1="LINE" var1="line_terminal2" id2="NETWORK" var2="B1_ACPIN"/>
+  <dyn:blackBoxModel id="DISC" lib="EventQuadripoleDisconnection" parFile="linefault_disc.par" parId="DISC"/>
+  <dyn:connect id1="DISC" var1="event_state1_value" id2="NETWORK" var2="LINE_state_value"/>
+</dyn:dynamicModelsArchitecture>

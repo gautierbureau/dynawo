@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="limit">
+    <solver lib="dynawo_SolverTRAP" parFile="limit.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="limit.iidm" parFile="limit.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="limit.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.06"/>
+    <outputs directory="outputs">
+      <constraints exportMode="XML"/>
+      <timeline exportMode="TXT"/>
+      <curves inputFile="limit.crv" exportMode="CSV"/>
+    </outputs>
+  </job>
+</jobs>

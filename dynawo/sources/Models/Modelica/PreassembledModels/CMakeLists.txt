@@ -31,6 +31,39 @@ set(MODELICA_PREASSEMBLED_MODELS
   DistanceProtectionLineTwoZonesWithBlinder.xml
   DoubleStep.xml
   ElectronicLoad.xml
+  EmtBreakerOpening.xml
+  EmtFaultAndClearing.xml
+  EmtTransformerStepDown.xml
+  EmtTransformerDeltaShift.xml
+  EmtSMShortCircuit.xml
+  EmtSMIB.xml
+  EmtSMIBLoaded.xml
+  EmtSMIBLoadedInit.xml
+  GeneratorEmtSynchronousGoverPropVRPropInt.xml
+  GeneratorEmtSynchronousGoverPropVRPropIntPss1aOmega.xml
+  GeneratorEmtSynchronousProportionalRegulationsInternalParameters.xml
+  GeneratorEmtSynchronousFullGoverPropVRPropInt.xml
+  GeneratorSynchronousFixedInternalParameters.xml
+  EmtLineToLineFaultDemo.xml
+  EmtThreePhaseRLCircuit.xml
+  EmtVoltageSource.xml
+  EmtInfiniteBus.xml
+  EmtResistor.xml
+  EmtGround.xml
+  EmtSeriesRL.xml
+  EmtCapacitor.xml
+  EmtBus.xml
+  GeneratorEmtSynchronous.xml
+  GeneratorEmtSynchronousFull.xml
+  GeneratorEmtSynchronousMachineFull.xml
+  EmtTransformerYgYg.xml
+  EmtTransformerYgD.xml
+  EmtCoupledRL.xml
+  EmtInductor.xml
+  EmtBreaker.xml
+  EmtLineToLineFault.xml
+  EmtLineFault.xml
+  EmtFault.xml
   EventConnectedStatus.xml
   EventQuadripoleConnection.xml
   EventQuadripoleDisconnection.xml

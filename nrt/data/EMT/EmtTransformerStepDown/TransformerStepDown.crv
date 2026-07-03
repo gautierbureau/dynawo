@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="EmtTfoYY" variable="circuit_vPrimA"/>
+  <curve model="EmtTfoYY" variable="circuit_vSecA"/>
+  <curve model="EmtTfoYY" variable="circuit_iPrimA"/>
+  <curve model="EmtTfoYY" variable="circuit_iSecA"/>
+</curvesInput>

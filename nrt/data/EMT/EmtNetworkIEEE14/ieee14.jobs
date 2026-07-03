@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="ieee14emt">
+    <solver lib="dynawo_SolverTRAP" parFile="ieee14.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="IEEE14.iidm" parFile="ieee14.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="ieee14.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.5"/>
+    <outputs directory="outputs">
+      <curves inputFile="ieee14.crv" exportMode="CSV"/>
+      <logs><appender tag="" file="dynawo.log" lvlFilter="INFO"/></logs>
+    </outputs>
+  </job>
+</jobs>

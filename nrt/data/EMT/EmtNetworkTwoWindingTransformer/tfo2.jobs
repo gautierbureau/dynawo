@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="tfo2">
+    <solver lib="dynawo_SolverTRAP" parFile="tfo2.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="tfo2.iidm" parFile="tfo2.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="tfo2.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.04"/>
+    <outputs directory="outputs">
+      <curves inputFile="tfo2.crv" exportMode="CSV"/>
+
+    </outputs>
+  </job>
+</jobs>

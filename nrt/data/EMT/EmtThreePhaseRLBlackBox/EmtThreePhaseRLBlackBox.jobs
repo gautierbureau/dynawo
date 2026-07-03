@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
+    See AUTHORS.txt
+    All rights reserved.
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, you can obtain one at http://mozilla.org/MPL/2.0/.
+    SPDX-License-Identifier: MPL-2.0
+
+    This file is part of Dynawo, a hybrid C++/Modelica open source time domain
+    simulation tool for power systems.
+-->
+<jobs xmlns="http://www.rte-france.com/dynawo">
+    <job name="EmtThreePhaseRLBlackBox">
+        <solver lib="dynawo_SolverTRAP" parFile="EmtThreePhaseRLBlackBox.par" parId="Solver"/>
+        <modeler compileDir="outputs/compilation">
+            <dynModels dydFile="EmtThreePhaseRLBlackBox.dyd"/>
+            <precompiledModels useStandardModels="true"/>
+            <modelicaModels useStandardModels="true"/>
+        </modeler>
+        <simulation startTime="0" stopTime="0.1"/>
+        <outputs directory="outputs">
+            <curves inputFile="EmtThreePhaseRLBlackBox.crv" exportMode="CSV"/>
+            <logs><appender tag="" file="dynawo.log" lvlFilter="INFO"/></logs>
+        </outputs>
+    </job>
+</jobs>

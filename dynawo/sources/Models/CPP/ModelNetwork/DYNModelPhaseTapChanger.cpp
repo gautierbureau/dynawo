@@ -24,7 +24,8 @@
 
 
 #include "DYNModelConstants.h"
-#include "DYNModelNetwork.h"
+#include "DYNSubModel.h"
+#include "DYNModelCPP.h"
 
 using std::stringstream;
 
@@ -117,7 +118,7 @@ void ModelPhaseTapChanger::evalG(const double t, const double iValue, const bool
 
 void ModelPhaseTapChanger::evalZ(const double t, const state_g* g,
                                  const double disable, const bool P1SupP2, const double locked,
-                                 const bool tfoClosed, ModelNetwork* network) {
+                                 const bool tfoClosed, SubModel* network) {
   int currentStepIndex = getCurrentStepIndex();
   if (getNextStepIndex() != -1)
     currentStepIndex = getNextStepIndex();

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jobs xmlns="http://www.rte-france.com/dynawo">
+  <job name="pshift">
+    <solver lib="dynawo_SolverTRAP" parFile="pshift.par" parId="Solver"/>
+    <modeler compileDir="outputs/compilation">
+      <network iidmFile="pshift.iidm" parFile="pshift.par" parId="Network" lib="DYNModelNetworkEMT"/>
+      <dynModels dydFile="pshift.dyd"/>
+      <precompiledModels useStandardModels="true"/>
+      <modelicaModels useStandardModels="true"/>
+    </modeler>
+    <simulation startTime="0" stopTime="0.1"/>
+    <outputs directory="outputs">
+      <curves inputFile="pshift.crv" exportMode="CSV"/>
+
+    </outputs>
+  </job>
+</jobs>
