@@ -1031,6 +1031,11 @@ class ReaderOMC:
         ptrn_assign_var = re.compile(r'^[ ]*data->localData(?P<var>\S*)[ ]*\/\* (?P<varName>[\w\$\.()\[\],]*) [\w(),\.]+ \*\/[ ]*=[ ]*(?P<rhs>[^;]+);')
         ptrn_assign_var_complex = re.compile(r'^[ ]*data->modelData->\S*\.attribute[ ]*\/\* (?P<varName>[ \w\$\.()\[\],]*) [\w(),\.\[\]]+ \*\/.start[ ]*=[^;]*;$')
         ptrn_param = re.compile(r'^[ ]*data->simulationInfo->(?P<var>\S*)[ ]*\/\* (?P<varName>[ \w\$\.()\[\],]*) PARAM \*\/[ ]*=[ ]*(?P<rhs>[^;]+);')
+        # array parameter initialised through a function output: a real_array_create()
+        # view built over data->simulationInfo->...Parameter[K] (e.g. PadeDelay coefficients)
+        ptrn_array_param_init = re.compile(r'real_array_create\(&\w+,.*?&data->simulationInfo->\w+\[[0-9]+\][ ]*\/\* (?P<name>[\w\$\.]+)\[[0-9]+\] PARAM \*\/.*?,[ ]*[0-9]+,[ ]*(?P<size>[0-9]+)\)')
+        # scalar parameter passed by address as a function output
+        ptrn_scalar_param_init = re.compile(r'&data->simulationInfo->\w+\[[0-9]+\][ ]*\/\* (?P<varName>[\w\$\.\[\]]+) PARAM \*\/')
         for init_file in self._06inz_c_file:
             with open(init_file, 'r') as f:
                 while True:
@@ -1074,6 +1079,29 @@ class ReaderOMC:
                             if 'attribute' not in rhs  and 'aux_x' not in rhs and "linearSystemData" not in rhs:
                                 self.var_init_val_06inz[ var ] = list_body
                                 self.var_num_init_val_06inz[var] = num_function
+
+                    # Parameters initialised through an algorithm equation that
+                    # calls a function writing its results into parameter arrays
+                    # (e.g. the PadeDelay coefficients). Such a function body does
+                    # not contain a plain "realParameter[..] = .." assignment, so
+                    # it is not caught by the patterns above: the outputs are
+                    # written through real_array_create() views and pointers.
+                    if 'real_array_create' in ''.join(list_body):
+                        params_set_by_function = []
+                        for line in list_body:
+                            # array parameter: real_array_create(&tmpN, ..&simulationInfo->..[K] /* base[i] PARAM */.., 1, size)
+                            for m in ptrn_array_param_init.finditer(line):
+                                base = m.group('name')
+                                for i in range(1, int(m.group('size')) + 1):
+                                    params_set_by_function.append(base + '[' + str(i) + ']')
+                            # scalar parameter passed by address as a function output
+                            for m in ptrn_scalar_param_init.finditer(line):
+                                params_set_by_function.append(str(m.group('varName')))
+                        for var in params_set_by_function:
+                            # give each parameter its own copy: the start text is
+                            # cleaned in place, once per parameter
+                            self.var_init_val_06inz[var] = list(list_body)
+                            self.var_num_init_val_06inz[var] = num_function
 
                     for line in list_body:
                         if 'omc_assert_warning' in line:
