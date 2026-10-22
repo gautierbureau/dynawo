@@ -104,7 +104,7 @@ DataInterfaceIIDM::loadExtensions(const std::vector<std::string>& paths) {
 
 boost::shared_ptr<DataInterface>
 DataInterfaceIIDM::build(const std::string& iidmFilePath, unsigned int nbVariants) {
-  boost::shared_ptr<DataInterfaceIIDM> data;
+  boost::shared_ptr<DataInterface> data;
   try {
     // TODO(iidm-bridge): readXml(path, options) is not exposed; use the
     // default reader that the new API exposes (readXml(path)) and drop
@@ -122,18 +122,22 @@ DataInterfaceIIDM::build(const std::string& iidmFilePath, unsigned int nbVariant
     loadExtensions(paths);
 
     // TODO(iidm-bridge): use NetworkFactory::load(); ImportOptions are not exposed.
-    auto networkIIDM = boost::make_shared<iidm::Network>(iidm::NetworkFactory::load(iidmFilePath));
-
-    // TODO(iidm-bridge): VariantManager is not exposed; multi-variant support is disabled.
-    if (nbVariants > 1) {
-      Trace::warn() << "Multi-variant network requested but iidm-bridge does not expose VariantManager yet; ignoring." << Trace::endline;
-    }
-
-    data.reset(new DataInterfaceIIDM(networkIIDM));
-    data->initFromIIDM();
+    data = build(boost::make_shared<iidm::Network>(iidm::NetworkFactory::load(iidmFilePath)), nbVariants);
   } catch (const std::exception& exp) {
     throw DYNError(Error::GENERAL, XmlFileParsingError, iidmFilePath, exp.what());
   }
+  return data;
+}
+
+boost::shared_ptr<DataInterface>
+DataInterfaceIIDM::build(const boost::shared_ptr<iidm::Network>& networkIIDM, unsigned int nbVariants) {
+  // TODO(iidm-bridge): VariantManager is not exposed; multi-variant support is disabled.
+  if (nbVariants > 1) {
+    Trace::warn() << "Multi-variant network requested but iidm-bridge does not expose VariantManager yet; ignoring." << Trace::endline;
+  }
+
+  boost::shared_ptr<DataInterfaceIIDM> data(new DataInterfaceIIDM(networkIIDM));
+  data->initFromIIDM();
   return data;
 }
 

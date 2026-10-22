@@ -26,6 +26,7 @@
 namespace DYN {
 
 bool SignalHandler::gotExitSignal_ = false;
+bool SignalHandler::signalHandlersDisabled_ = false;
 
 bool
 SignalHandler::gotExitSignal() {
@@ -59,7 +60,14 @@ SignalHandler::exitSignalHandler(const int signal) {
 }
 
 void
+SignalHandler::disableSignalHandlers() {
+  signalHandlersDisabled_ = true;
+}
+
+void
 SignalHandler::setSignalHandlers() {
+  if (signalHandlersDisabled_)
+    return;
 #ifdef SIGTERM
   signal(SIGTERM, SignalHandler::exitSignalHandler);
 #endif

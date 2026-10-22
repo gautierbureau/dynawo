@@ -445,6 +445,16 @@ class Simulation {
   }
 
   /**
+   * @brief setter for the export of the final state into the network of the data interface
+   * @param exportFinalStateToNetwork @b true if the final values of the state variables should be written into the
+   * network of the data interface, as for the IIDM file of the final state but without writing it: for a network held
+   * by the caller, such as the network of a JVM that Dynawo is run from
+   */
+  inline void setExportFinalStateToNetwork(const bool exportFinalStateToNetwork) {
+    exportFinalStateToNetwork_ = exportFinalStateToNetwork;
+  }
+
+  /**
    * @brief setter of the time of the linearization
    * @param time time at which the linearization is done
    */
@@ -774,6 +784,7 @@ class Simulation {
   bool dumpGlobalInitValues_;  ///< whether to export the results from the global initialisation
   bool dumpInitModelValues_;  ///< whether to export the results from the initialisation model
   bool dumpFinalValues_;  ///< whether to export the values of the models's variables and parameters at the end of the simulation
+  bool exportFinalStateToNetwork_;  ///< whether to write the final values of the state variables into the network of the data interface
   std::vector<double> zCurrent_;  ///< current values of the model's discrete variables
   boost::optional<double> tLinearization_;  ///< time of the linearization, none if no linearization is requested
   std::shared_ptr<matrix::Exporter> linearizationExporter_;  ///< exporter of the linearization

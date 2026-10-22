@@ -23,6 +23,12 @@
 
 #include <string>
 
+#include <boost/shared_ptr.hpp>
+
+namespace DYN {
+class DataInterface;
+}
+
 /**
  * @brief launch a simulation thanks to a description contains in jobsFileName
  *
@@ -31,5 +37,17 @@
  * @param isInteractive true if simulation in interactive or real-time mode
  */
 void launchSimu(const std::string& jobsFileName, bool isInteractive = false);
+
+/**
+ * @brief launch a simulation thanks to a description contains in jobsFileName, on a network given in memory instead of
+ * the iidm file of the job(s)
+ *
+ * The final values of the state variables are written into that network, as for the IIDM file of the final state
+ * but without writing it. A failed simulation leaves the network as it was.
+ *
+ * @param jobsFileName file describing the job(s) to launch
+ * @param data data interface of the network to simulate
+ */
+void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data);
 
 #endif  // SIMULATION_DYNSIMULATIONLAUNCHER_H_

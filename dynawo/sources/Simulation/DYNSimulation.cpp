@@ -210,6 +210,7 @@ dumpLocalInitValues_(false),
 dumpGlobalInitValues_(false),
 dumpInitModelValues_(false),
 dumpFinalValues_(false),
+exportFinalStateToNetwork_(false),
 tLinearization_(boost::none),
 linearizationExporter_(std::make_shared<matrix::TxtExporter>()),
 wasLoggingEnabled_(false) {
@@ -1026,12 +1027,13 @@ Simulation::simulate() {
 
   bool criteriaChecked = true;
   try {
-    // update state variable only if the IIDM final state is exported, or criteria is checked, or lost equipments are exported
+    // update state variable only if the IIDM final state is exported or written into the network, or criteria is checked,
+    // or lost equipments are exported
     bool anyStateIidmFileSet = finalState_.iidmFile_.has_value();
     for (auto &intermediateState : intermediateStates_)
       anyStateIidmFileSet &= intermediateState.iidmFile_.has_value();
 
-    if (data_ && (anyStateIidmFileSet || activateCriteria_ || isLostEquipmentsExported())) {
+    if (data_ && (anyStateIidmFileSet || exportFinalStateToNetwork_ || activateCriteria_ || isLostEquipmentsExported())) {
       data_->getStateVariableReference();   // Each state variable in DataInterface has a mapped reference variable in dynamic model,
                                          // either in a modelica model or in a C++ model.
       // save initial connection state at t0 for each equipment
@@ -1141,7 +1143,7 @@ Simulation::simulate() {
     }
 
     // If we haven't evaluated the calculated variables for the last iteration before, we must do it here if it might be used in the post process
-    if (finalState_.iidmFile_ || exportCurvesMode_ != EXPORT_CURVES_NONE || activateCriteria_)
+    if (finalState_.iidmFile_ || exportFinalStateToNetwork_ || exportCurvesMode_ != EXPORT_CURVES_NONE || activateCriteria_)
       model_->evalCalculatedVariables(tCurrent_, solver_->getCurrentY(), solver_->getCurrentYP(), zCurrent_);
 
     if (SignalHandler::gotExitSignal() && !end()) {
@@ -1341,7 +1343,7 @@ Simulation::terminate() {
     model_->printModelValues(finalValuesDir, "dumpFinalValues");
   }
 
-  if (data_ && (finalState_.iidmFile_ || isLostEquipmentsExported())) {
+  if (data_ && (finalState_.iidmFile_ || exportFinalStateToNetwork_ || isLostEquipmentsExported())) {
 #if defined(_DEBUG_) || defined(PRINT_TIMERS)
     Timer timer2("DataInterfaceIIDM::exportStateVariables");
 #endif
