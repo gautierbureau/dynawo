@@ -53,7 +53,7 @@ namespace DYN {
     setType(ComponentInterface::TWO_WTFO);
     auto selfLocallyRegulating = [&]() -> bool {
       if (!leg.value().hasRatioTapChanger()) return false;
-      iidm::Terminal regTerm = leg.value().getRatioTapChanger().getRegulationTerminal();
+      const iidm::Terminal regTerm = leg.value().getRatioTapChanger().value().getRegulatingTerminal();
       return regTerm.isValid() && regTerm == leg.value().getTerminal();
     };
     if (leg.value().hasPhaseTapChanger() ||

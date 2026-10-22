@@ -351,7 +351,7 @@ class DataInterfaceIIDM : public DataInterfaceImpl {
    * @param danglingLineIIDM IIDM instance to use to create danglingLineInterface
    * @return the instance of danglingLineInterface created
    */
-  std::unique_ptr<DanglingLineInterfaceIIDM> importDanglingLine(iidm::DanglingLine& danglingLineIIDM) const;
+  std::unique_ptr<DanglingLineInterfaceIIDM> importDanglingLine(iidm::BoundaryLine& danglingLineIIDM) const;
 
   /**
    * @brief import and create a svc interface thanks to the IIDM instance

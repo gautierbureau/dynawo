@@ -86,9 +86,9 @@ voltageLevelId_(voltageLevel.getId()) {
     }
   }
 
-  hasSlackTerminal_ = voltageLevelIIDM_.hasSlackTerminal();
+  hasSlackTerminal_ = voltageLevelIIDM_.hasExtension<iidm::SlackTerminal>();
   if (hasSlackTerminal_) {
-    slackTerminal_ = voltageLevelIIDM_.getSlackTerminal();
+    slackTerminal_ = voltageLevelIIDM_.getExtension<iidm::SlackTerminal>();
   }
 }
 
@@ -310,12 +310,12 @@ VoltageLevelInterfaceIIDM::calculateBusTopology() {
   }
   for (unsigned int i = 0; i != component.size(); ++i) {
     calculatedBus_[component[i]]->addNode(componentIndexToNodeId[i]);
-    iidm::Terminal terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(static_cast<int>(componentIndexToNodeId[i]));
-    if (terminal.isValid()) {
-      iidm::Bus bus = terminal.getBusBreakerView().getConnectableBus();
-      if (bus.isValid()) {
-        calculatedBus_[component[i]]->setU0(bus.getV());
-        calculatedBus_[component[i]]->setAngle0(bus.getAngle());
+    iidm::optional<iidm::Terminal> terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(static_cast<int>(componentIndexToNodeId[i]));
+    if (terminal) {
+      iidm::optional<iidm::Bus> bus = terminal->getBusBreakerView().getConnectableBus();
+      if (bus) {
+        calculatedBus_[component[i]]->setU0(bus->getV());
+        calculatedBus_[component[i]]->setAngle0(bus->getAngle());
       }
     }
   }
@@ -329,7 +329,7 @@ VoltageLevelInterfaceIIDM::calculateBusTopology() {
   for (iidm::BusbarSection& bbsIIDM : voltageLevelIIDM_.getNodeBreakerView().getBusbarSections()) {
     int node = static_cast<int>(bbsIIDM.getTerminal().getNodeBreakerView().getNode());
     calculatedBus_[component[nodeIdToComponentIndex[node]]]->addBusBarSection(bbsIIDM.getId());
-    iidm::Bus bus = bbsIIDM.getTerminal().getBusBreakerView().getConnectableBus();
+    iidm::optional<iidm::Bus> bus = bbsIIDM.getTerminal().getBusBreakerView().getConnectableBus();
 
     // retrieve the electricalNode
     unsigned int electricalComponent = component1[nodeIdToComponentIndex[node]];
@@ -337,9 +337,9 @@ VoltageLevelInterfaceIIDM::calculateBusTopology() {
     // set voltage and angle of bus on the same electrical nodes
     set<int> nodes = electricalNodes[electricalComponent];  // to throw
     for (const auto nodeIndex : nodes) {
-      if (bus.isValid()) {
-        calculatedBus_[component[nodeIdToComponentIndex[nodeIndex]]]->setU0(bus.getV());
-        calculatedBus_[component[nodeIdToComponentIndex[nodeIndex]]]->setAngle0(bus.getAngle());
+      if (bus) {
+        calculatedBus_[component[nodeIdToComponentIndex[nodeIndex]]]->setU0(bus->getV());
+        calculatedBus_[component[nodeIdToComponentIndex[nodeIndex]]]->setAngle0(bus->getAngle());
       }
     }
   }
@@ -389,10 +389,9 @@ VoltageLevelInterfaceIIDM::connectNode(unsigned int nodeToConnect) {
   vector<string> shortestPath;
   unsigned nbSwitchToClose = 0;
   for (int nodeId : voltageLevelIIDM_.getNodeBreakerView().getNodes()) {
-    iidm::Terminal terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
-    if (!terminal.isValid()) continue;
-    iidm::Bus bus = terminal.getBusBreakerView().getBus();
-    if (!bus.isValid()) continue;
+    iidm::optional<iidm::Terminal> terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
+    if (!terminal) continue;
+    if (!terminal->getBusBreakerView().getBus()) continue;
     vector<string> ret;
     graph_.shortestPath(nodeToConnect, static_cast<unsigned int>(nodeId), weights1_, ret);
     if (shortestPath.empty()) {
@@ -443,10 +442,9 @@ VoltageLevelInterfaceIIDM::disconnectNode(unsigned int nodeToDisconnect) {
     weights[ssInternalConnectionId.str()] = 1;
   }
   for (int nodeId : voltageLevelIIDM_.getNodeBreakerView().getNodes()) {
-    iidm::Terminal terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
-    if (!terminal.isValid()) continue;
-    iidm::Bus bus = terminal.getBusView();
-    if (!bus.isValid()) continue;
+    iidm::optional<iidm::Terminal> terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
+    if (!terminal) continue;
+    if (!terminal->getBusView().getBus()) continue;
     vector<string> path;
     graph_.shortestPath(nodeToDisconnect, static_cast<unsigned int>(nodeId), weights, path);
     bool somethingWasDisconnected = true;
@@ -495,10 +493,9 @@ VoltageLevelInterfaceIIDM::isNodeConnected(unsigned int nodeToCheck) {
   }
 
   for (int nodeId : voltageLevelIIDM_.getNodeBreakerView().getNodes()) {
-    iidm::Terminal terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
-    if (!terminal.isValid()) continue;
-    iidm::Bus bus = terminal.getBusView();
-    if (bus.isValid() && graph_.pathExist(nodeToCheck, static_cast<unsigned int>(nodeId), weights)) {
+    iidm::optional<iidm::Terminal> terminal = voltageLevelIIDM_.getNodeBreakerView().getTerminal(nodeId);
+    if (!terminal) continue;
+    if (terminal->getBusView().getBus() && graph_.pathExist(nodeToCheck, static_cast<unsigned int>(nodeId), weights)) {
       return true;
     }
   }
@@ -510,7 +507,13 @@ VoltageLevelInterfaceIIDM::getSlackBusId() const {
   if (!hasSlackTerminal_) {
     return boost::none;
   }
-  return slackTerminal_.getTerminal().getBusId();
+  const iidm::Terminal terminal = slackTerminal_.getTerminal().value();
+  const iidm::optional<iidm::Bus> bus = voltageLevelIIDM_.getTopologyKind() == iidm::TopologyKind::NODE_BREAKER
+      ? terminal.getBusView().getBus() : terminal.getBusBreakerView().getBus();
+  if (!bus) {
+    return boost::none;
+  }
+  return bus->getId();
 }
 
 }  // namespace DYN

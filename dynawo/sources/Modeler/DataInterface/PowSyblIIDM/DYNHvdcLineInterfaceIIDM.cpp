@@ -53,8 +53,8 @@ HvdcLineInterfaceIIDM::HvdcLineInterfaceIIDM(const iidm::HvdcLine& hvdcLine,
   stateVariables_[VAR_STATE1] = StateVariable("state1", StateVariable::INT);  // connectionState1
   stateVariables_[VAR_STATE2] = StateVariable("state2", StateVariable::INT);  // connectionState2
 
-  hasHvdcActivePowerControl_ = hvdcLine.hasHvdcAngleDroopActivePowerControl();
-  hasHvdcActivePowerRange_ = hvdcLine.hasHvdcOperatorActivePowerRange();
+  hasHvdcActivePowerControl_ = hvdcLine.hasExtension<iidm::HvdcAngleDroopActivePowerControl>();
+  hasHvdcActivePowerRange_ = hvdcLine.hasExtension<iidm::HvdcOperatorActivePowerRange>();
 }
 
 HvdcLineInterfaceIIDM::~HvdcLineInterfaceIIDM() {
@@ -185,11 +185,11 @@ void HvdcLineInterfaceIIDM::exportStateVariablesUnitComponent() {
 void HvdcLineInterfaceIIDM::importStaticParameters() {
   staticParameters_.clear();
 
-  bool isACEmulationEnabled = hasHvdcActivePowerControl_ && hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl().isEnabled();
+  bool isACEmulationEnabled = hasHvdcActivePowerControl_ && hvdcLineIIDM_.getExtension<iidm::HvdcAngleDroopActivePowerControl>().isEnabled();
   double p0ACEmulationPu = 0.;
   double droop = 0.;
   if (isACEmulationEnabled) {
-    const auto apc = hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl();
+    const auto apc = hvdcLineIIDM_.getExtension<iidm::HvdcAngleDroopActivePowerControl>();
     p0ACEmulationPu = apc.getP0() / SNREF;
     droop = apc.getDroop();
   }
@@ -287,12 +287,12 @@ HvdcLineInterfaceIIDM::getConverterMode() const {
 
 string
 HvdcLineInterfaceIIDM::getIdConverter1() const {
-  return hvdcLineIIDM_.getConverterStation1Id();
+  return hvdcLineIIDM_.getConverterStation1().getId();
 }
 
 string
 HvdcLineInterfaceIIDM::getIdConverter2() const {
-  return hvdcLineIIDM_.getConverterStation2Id();
+  return hvdcLineIIDM_.getConverterStation2().getId();
 }
 
 int HvdcLineInterfaceIIDM::getComponentVarIndex(const std::string& varName) const {
@@ -324,31 +324,31 @@ HvdcLineInterfaceIIDM::getConverter2() const {
 
 boost::optional<double>
 HvdcLineInterfaceIIDM::getDroop() const {
-  return hasHvdcActivePowerControl_ ? boost::optional<double>(hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl().getDroop())
+  return hasHvdcActivePowerControl_ ? boost::optional<double>(hvdcLineIIDM_.getExtension<iidm::HvdcAngleDroopActivePowerControl>().getDroop())
                                     : boost::optional<double>();
 }
 
 boost::optional<double>
 HvdcLineInterfaceIIDM::getP0() const {
-  return hasHvdcActivePowerControl_ ? boost::optional<double>(hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl().getP0())
+  return hasHvdcActivePowerControl_ ? boost::optional<double>(hvdcLineIIDM_.getExtension<iidm::HvdcAngleDroopActivePowerControl>().getP0())
                                     : boost::optional<double>();
 }
 
 boost::optional<bool>
 HvdcLineInterfaceIIDM::isActivePowerControlEnabled() const {
-  return hasHvdcActivePowerControl_ ? boost::optional<bool>(hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl().isEnabled())
+  return hasHvdcActivePowerControl_ ? boost::optional<bool>(hvdcLineIIDM_.getExtension<iidm::HvdcAngleDroopActivePowerControl>().isEnabled())
                                     : boost::optional<bool>();
 }
 
 boost::optional<double>
 HvdcLineInterfaceIIDM::getOprFromCS1toCS2() const {
-  return hasHvdcActivePowerRange_ ? boost::optional<double>(hvdcLineIIDM_.getHvdcOperatorActivePowerRange().getOprFromCS1toCS2())
+  return hasHvdcActivePowerRange_ ? boost::optional<double>(hvdcLineIIDM_.getExtension<iidm::HvdcOperatorActivePowerRange>().getOprFromCS1toCS2())
                                   : boost::optional<double>();
 }
 
 boost::optional<double>
 HvdcLineInterfaceIIDM::getOprFromCS2toCS1() const {
-  return hasHvdcActivePowerRange_ ? boost::optional<double>(hvdcLineIIDM_.getHvdcOperatorActivePowerRange().getOprFromCS2toCS1())
+  return hasHvdcActivePowerRange_ ? boost::optional<double>(hvdcLineIIDM_.getExtension<iidm::HvdcOperatorActivePowerRange>().getOprFromCS2toCS1())
                                   : boost::optional<double>();
 }
 

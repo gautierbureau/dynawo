@@ -432,7 +432,7 @@ DataInterfaceIIDM::importVoltageLevel(iidm::VoltageLevel& voltageLevelIIDM, cons
   //===========================
   //  ADD DANGLING LINE INTERFACE
   //===========================
-  for (auto& dlIIDM : voltageLevelIIDM.getDanglingLines()) {
+  for (auto& dlIIDM : voltageLevelIIDM.getBoundaryLines()) {
     std::shared_ptr<DanglingLineInterfaceIIDM> line = importDanglingLine(dlIIDM);
     voltageLevel->addDanglingLine(line);
     components_[line->getID()] = line;
@@ -526,9 +526,9 @@ buildCurrentLimitInterfaces(const iidm::CurrentLimits& currentLimits) {
   const std::vector<iidm::TemporaryLimit> temporaryLimits = currentLimits.getTemporaryLimits();
   for (const bool fictitiousPass : {false, true}) {
     for (const auto& temporaryLimit : temporaryLimits) {
-      if (temporaryLimit.fictitious == fictitiousPass) {
-        limits.push_back(DYN::make_unique<CurrentLimitInterfaceIIDM>(temporaryLimit.value, temporaryLimit.acceptableDuration,
-                                                                     temporaryLimit.fictitious, temporaryLimit.name));
+      if (temporaryLimit.isFictitious() == fictitiousPass) {
+        limits.push_back(DYN::make_unique<CurrentLimitInterfaceIIDM>(temporaryLimit.getValue(), temporaryLimit.getAcceptableDuration(),
+                                                                     temporaryLimit.isFictitious(), temporaryLimit.getName()));
       }
     }
   }
@@ -536,7 +536,7 @@ buildCurrentLimitInterfaces(const iidm::CurrentLimits& currentLimits) {
 }
 
 std::unique_ptr<DanglingLineInterfaceIIDM>
-DataInterfaceIIDM::importDanglingLine(iidm::DanglingLine& danglingLineIIDM) const {
+DataInterfaceIIDM::importDanglingLine(iidm::BoundaryLine& danglingLineIIDM) const {
   std::unique_ptr<DanglingLineInterfaceIIDM> danglingLine = DYN::make_unique<DanglingLineInterfaceIIDM>(danglingLineIIDM);
   danglingLine->setBusInterface(findBusInterface(danglingLineIIDM.getTerminal()));
 
@@ -570,17 +570,12 @@ DataInterfaceIIDM::importTwoWindingsTransformer(iidm::TwoWindingsTransformer& tw
   if (twoWTfoIIDM.hasRatioTapChanger()) {
     string side;
     auto rtcOpt = twoWTfoIIDM.getRatioTapChanger();
-    iidm::Terminal regTerm = rtcOpt.value().getRegulationTerminal();
+    const iidm::Terminal regTerm = rtcOpt.value().getRegulatingTerminal();
     if (regTerm.isValid()) {
-      // The libiidm backend may assign distinct handles to the same physical terminal depending on the
-      // access path, so Terminal equality is unreliable here: compare the connected bus to find the regulated side.
-      const string regBusId = regTerm.getBusId();
-      if (!regBusId.empty()) {
-        if (regBusId == twoWTfoIIDM.getTerminal1().getBusId()) {
-          side = "ONE";
-        } else if (regBusId == twoWTfoIIDM.getTerminal2().getBusId()) {
-          side = "TWO";
-        }
+      if (regTerm == twoWTfoIIDM.getTerminal1()) {
+        side = "ONE";
+      } else if (regTerm == twoWTfoIIDM.getTerminal2()) {
+        side = "TWO";
       }
     }
     std::unique_ptr<RatioTapChangerInterfaceIIDM> tapChanger =
@@ -615,8 +610,9 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
   const string fictVLId = threeWindingTransformer.getId() + "_FictVL";
   const string fictBusId = threeWindingTransformer.getId() + "_FictBUS";
   string countryStr;
-  if (threeWindingTransformer.getSubstation().getCountry()) {
-    countryStr = iidm::getCountryName(threeWindingTransformer.getSubstation().getCountry().value());
+  const iidm::optional<iidm::Substation> substation = threeWindingTransformer.getSubstation();
+  if (substation && substation->getCountry()) {
+    countryStr = iidm::getCountryName(substation->getCountry().value());
   }
 
   // legs are value types on the new side; wrap them in iidm::optional so downstream
@@ -659,14 +655,14 @@ DataInterfaceIIDM::convertThreeWindingsTransformers(iidm::ThreeWindingsTransform
     // add phase tapChanger and steps if exists
     if (leg.value().hasPhaseTapChanger()) {
       std::unique_ptr<PhaseTapChangerInterfaceIIDM> tapChanger =
-          DYN::make_unique<PhaseTapChangerInterfaceIIDM>(leg.value().getPhaseTapChanger());
+          DYN::make_unique<PhaseTapChangerInterfaceIIDM>(leg.value().getPhaseTapChanger().value());
       fictTwoWTransf->setPhaseTapChanger(std::move(tapChanger));
     }
     // add ratio tapChanger and steps if exists. It is always referring to side TWO as it is the side coming from
     // the orginal ThreeWindingTransformer
     if (leg.value().hasRatioTapChanger()) {
-      auto rtc = leg.value().getRatioTapChanger();
-      iidm::Terminal regTerm = rtc.getRegulationTerminal();
+      const iidm::RatioTapChanger rtc = leg.value().getRatioTapChanger().value();
+      const iidm::Terminal regTerm = rtc.getRegulatingTerminal();
       if (regTerm.isValid() && regTerm == leg.value().getTerminal()) {
         std::unique_ptr<RatioTapChangerInterfaceIIDM> tapChanger = DYN::make_unique<RatioTapChangerInterfaceIIDM>(rtc, "TWO");
         fictTwoWTransf->setRatioTapChanger(std::move(tapChanger));
@@ -725,8 +721,8 @@ DataInterfaceIIDM::importLccConverter(iidm::LccConverterStation& lccIIDM) const 
 
 std::unique_ptr<HvdcLineInterfaceIIDM>
 DataInterfaceIIDM::importHvdcLine(iidm::HvdcLine& hvdcLineIIDM) const {
-  std::shared_ptr<ConverterInterface> conv1 = std::dynamic_pointer_cast<ConverterInterface>(findComponent(hvdcLineIIDM.getConverterStation1Id()));
-  std::shared_ptr<ConverterInterface> conv2 = std::dynamic_pointer_cast<ConverterInterface>(findComponent(hvdcLineIIDM.getConverterStation2Id()));
+  std::shared_ptr<ConverterInterface> conv1 = std::dynamic_pointer_cast<ConverterInterface>(findComponent(hvdcLineIIDM.getConverterStation1().getId()));
+  std::shared_ptr<ConverterInterface> conv2 = std::dynamic_pointer_cast<ConverterInterface>(findComponent(hvdcLineIIDM.getConverterStation2().getId()));
 
   std::unique_ptr<HvdcLineInterfaceIIDM> hvdcLine = DYN::make_unique<HvdcLineInterfaceIIDM>(hvdcLineIIDM, conv1, conv2);
   return hvdcLine;
@@ -742,7 +738,7 @@ DataInterfaceIIDM::findBusInterface(const iidm::Terminal& terminal) const {
   if (terminal.getVoltageLevel().getTopologyKind() == iidm::TopologyKind::NODE_BREAKER) {
     return findNodeBreakerBusInterface(terminal.getVoltageLevel(), static_cast<int>(terminal.getNodeBreakerView().getNode()));
   } else {
-    return findBusBreakerBusInterface(terminal.getBusBreakerView().getConnectableBus());
+    return findBusBreakerBusInterface(terminal.getBusBreakerView().getConnectableBus().value());
   }
 }
 

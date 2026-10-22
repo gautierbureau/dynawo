@@ -24,7 +24,7 @@
 #include "DYNFileSystemUtils.h"
 #include <iidm/StaticVarCompensator.h>
 #include <iidm/VoltageLevel.h>
-#include <iidm/VoltagePerReactivePowerControl.h>
+#include <iidm/VoltageRegulation.h>
 #include <iostream>
 
 using iidm::StaticVarCompensator;
@@ -45,7 +45,7 @@ staticVarCompensatorIIDM_(svc) {
 
   setType(ComponentInterface::SVC);
 
-  hasVoltagePerReactivePowerControl_ = svc.hasVoltagePerReactivePowerControl();
+  hasVoltagePerReactivePowerControl_ = svc.isWithMode(iidm::RegulationMode::VOLTAGE_PER_REACTIVE_POWER);
 
   stateVariables_.resize(3);
   stateVariables_[VAR_P] = StateVariable("p", StateVariable::DOUBLE);  // P
@@ -175,12 +175,12 @@ StaticVarCompensatorInterfaceIIDM::getID() const {
 
 double
 StaticVarCompensatorInterfaceIIDM::getBMin() const {
-  return staticVarCompensatorIIDM_.getBMin();
+  return staticVarCompensatorIIDM_.getBmin();
 }
 
 double
 StaticVarCompensatorInterfaceIIDM::getBMax() const {
-  return staticVarCompensatorIIDM_.getBMax();
+  return staticVarCompensatorIIDM_.getBmax();
 }
 
 double
@@ -201,19 +201,19 @@ StaticVarCompensatorInterfaceIIDM::hasVoltagePerReactivePowerControl() const {
 double
 StaticVarCompensatorInterfaceIIDM::getSlope() const {
   if (hasVoltagePerReactivePowerControl_) {
-    return staticVarCompensatorIIDM_.getVoltagePerReactivePowerControl().getSlope();
+    return staticVarCompensatorIIDM_.getVoltageRegulation()->getSlope();
   }
   return 0.;
 }
 
 double
 StaticVarCompensatorInterfaceIIDM::getVSetPoint() const {
-  return staticVarCompensatorIIDM_.getVoltageSetpoint();
+  return staticVarCompensatorIIDM_.getRegulatingTargetV();
 }
 
 double
 StaticVarCompensatorInterfaceIIDM::getReactivePowerSetPoint() const {
-  return staticVarCompensatorIIDM_.getReactivePowerSetpoint();
+  return staticVarCompensatorIIDM_.getRegulatingTargetQ();
 }
 
 // StandbyAutomaton extension is not exposed by iidm-bridge yet; return defaults
@@ -242,17 +242,13 @@ double
 StaticVarCompensatorInterfaceIIDM::getB0() const { return 0.0; }
 
 StaticVarCompensatorInterface::RegulationMode_t StaticVarCompensatorInterfaceIIDM::getRegulationMode() const {
-  iidm::StaticVarCompensatorRegulationMode regMode = staticVarCompensatorIIDM_.getRegulationMode();
-  switch (regMode) {
-    case iidm::StaticVarCompensatorRegulationMode::VOLTAGE:
-      return StaticVarCompensatorInterface::RUNNING_V;
-    case iidm::StaticVarCompensatorRegulationMode::REACTIVE_POWER:
-      return StaticVarCompensatorInterface::RUNNING_Q;
-    case iidm::StaticVarCompensatorRegulationMode::OFF:
-      return StaticVarCompensatorInterface::OFF;
-    default:
-      return StaticVarCompensatorInterface::OFF;
-  }
+  // powsybl 7.4: the mode of the voltage regulation, off when it is not regulating; the voltage per
+  // reactive power mode is a voltage regulation with a slope
+  if (!staticVarCompensatorIIDM_.isRegulating())
+    return StaticVarCompensatorInterface::OFF;
+  if (staticVarCompensatorIIDM_.isWithMode(iidm::RegulationMode::REACTIVE_POWER))
+    return StaticVarCompensatorInterface::RUNNING_Q;
+  return StaticVarCompensatorInterface::RUNNING_V;
 }
 
 }  // namespace DYN

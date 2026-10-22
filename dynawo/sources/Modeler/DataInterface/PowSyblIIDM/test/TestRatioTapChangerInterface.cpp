@@ -78,14 +78,14 @@ TEST(DataInterfaceTest, RatioTapChanger_3WT) {
   iidm::Network network = iidm::NetworkFactory::load("resources/RatioTapChanger3WT.xiidm");
   iidm::ThreeWindingsTransformer threeWT = network.getThreeWindingsTransformer("3WT_VL1_VL2_VL3").value();
 
-  RatioTapChangerInterfaceIIDM IfceLeg2(threeWT.getLeg2().getRatioTapChanger(), "TWO");
+  RatioTapChangerInterfaceIIDM IfceLeg2(threeWT.getLeg2().getRatioTapChanger().value(), "TWO");
   ASSERT_EQ(IfceLeg2.getNbTap(), 3);
   ASSERT_EQ(IfceLeg2.getSteps().size(), 3);
   ASSERT_EQ(IfceLeg2.getLowPosition(), 1);
   ASSERT_EQ(IfceLeg2.getCurrentPosition(), 2);
   ASSERT_FALSE(IfceLeg2.hasLoadTapChangingCapabilities());
 
-  RatioTapChangerInterfaceIIDM IfceLeg3(threeWT.getLeg3().getRatioTapChanger(), "THREE");
+  RatioTapChangerInterfaceIIDM IfceLeg3(threeWT.getLeg3().getRatioTapChanger().value(), "THREE");
   ASSERT_EQ(IfceLeg3.getNbTap(), 4);
   ASSERT_EQ(IfceLeg3.getSteps().size(), 4);
   ASSERT_EQ(IfceLeg3.getLowPosition(), -3);

@@ -158,12 +158,12 @@ CalculatedBusInterfaceIIDM::exportStateVariablesUnitComponent() {
   if (doubleIsZero(angle))
     angle = 0.;
   for (const auto& node : nodes_) {
-    iidm::Terminal terminal = voltageLevel_.getNodeBreakerView().getTerminal(node);
-    if (!terminal.isValid()) continue;
-    iidm::Bus bus = terminal.getBusView();
-    if (!bus.isValid()) continue;
-    bus.setV(getStateVarV());
-    bus.setAngle(angle);
+    iidm::optional<iidm::Terminal> terminal = voltageLevel_.getNodeBreakerView().getTerminal(node);
+    if (!terminal) continue;
+    iidm::optional<iidm::Bus> bus = terminal->getBusView().getBus();
+    if (!bus) continue;
+    bus->setV(getStateVarV());
+    bus->setAngle(angle);
   }
 }
 

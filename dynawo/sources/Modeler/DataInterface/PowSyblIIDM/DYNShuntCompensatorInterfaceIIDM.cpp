@@ -149,17 +149,17 @@ ShuntCompensatorInterfaceIIDM::getMaximumSection() const {
 
 double
 ShuntCompensatorInterfaceIIDM::getB(const int section) const {
-  if (shuntCompensatorIIDM_.hasLinearModel()) {
+  if (shuntCompensatorIIDM_.getModelType() == iidm::ShuntCompensatorModelType::LINEAR) {
     // linear: cumulative susceptance up to 'section' sections
-    return shuntCompensatorIIDM_.getBPerSection() * static_cast<double>(section);
+    return shuntCompensatorIIDM_.getModel<iidm::ShuntCompensatorLinearModel>().getBPerSection() * static_cast<double>(section);
   }
-  if (shuntCompensatorIIDM_.hasNonLinearModel()) {
+  if (shuntCompensatorIIDM_.getModelType() == iidm::ShuntCompensatorModelType::NON_LINEAR) {
     if (section <= 0) {
       return 0.;
     }
-    const auto sections = shuntCompensatorIIDM_.getNonLinearModel().getAllSections();
+    const auto sections = shuntCompensatorIIDM_.getModel<iidm::ShuntCompensatorNonLinearModel>().getAllSections();
     if (static_cast<int>(sections.size()) >= section) {
-      return sections[section - 1].b;
+      return sections[section - 1].getB();
     }
   }
   return 0.;
@@ -167,17 +167,17 @@ ShuntCompensatorInterfaceIIDM::getB(const int section) const {
 
 bool
 ShuntCompensatorInterfaceIIDM::isLinear() const {
-  return shuntCompensatorIIDM_.hasLinearModel();
+  return shuntCompensatorIIDM_.getModelType() == iidm::ShuntCompensatorModelType::LINEAR;
 }
 
 bool
 ShuntCompensatorInterfaceIIDM::isVoltageRegulationOn() const {
-  return shuntCompensatorIIDM_.isVoltageRegulatorOn();
+  return shuntCompensatorIIDM_.isRegulatingWithMode(iidm::RegulationMode::VOLTAGE);
 }
 
 double
 ShuntCompensatorInterfaceIIDM::getTargetV() const {
-  return shuntCompensatorIIDM_.getTargetV();
+  return shuntCompensatorIIDM_.getRegulatingTargetV();
 }
 
 }  // namespace DYN

@@ -25,14 +25,14 @@
 #include "DYNDanglingLineInterface.h"
 #include "DYNInjectorInterfaceIIDM.h"
 #include "DYNCurrentLimitInterface.h"
-#include <iidm/DanglingLine.h>
+#include <iidm/BoundaryLine.h>
 
 namespace DYN {
 
 /**
  * class DanglingLineInterfaceIIDM
  */
-class DanglingLineInterfaceIIDM : public DanglingLineInterface, public InjectorInterfaceIIDM<iidm::DanglingLine> {
+class DanglingLineInterfaceIIDM : public DanglingLineInterface, public InjectorInterfaceIIDM<iidm::BoundaryLine> {
  public:
   /**
    * @brief defines the index of each state variable
@@ -48,7 +48,7 @@ class DanglingLineInterfaceIIDM : public DanglingLineInterface, public InjectorI
    * @brief Constructor
    * @param danglingLine :  dangling line's iidm instance
    */
-  explicit DanglingLineInterfaceIIDM(const iidm::DanglingLine& danglingLine);
+  explicit DanglingLineInterfaceIIDM(const iidm::BoundaryLine& danglingLine);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -151,7 +151,7 @@ class DanglingLineInterfaceIIDM : public DanglingLineInterface, public InjectorI
   int getComponentVarIndex(const std::string& varName) const override;
 
  private:
-  iidm::DanglingLine danglingLineIIDM_;  ///< iidm dangling line instance (value-typed handle)
+  iidm::BoundaryLine danglingLineIIDM_;  ///< iidm dangling line instance (value-typed handle)
   std::vector<std::unique_ptr<CurrentLimitInterface> > currentLimitInterfaces_;  ///< current limit interfaces
 };  ///< class for dangling line interface
 }  // namespace DYN

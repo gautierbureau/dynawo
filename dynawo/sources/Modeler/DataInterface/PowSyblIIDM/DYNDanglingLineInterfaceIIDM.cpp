@@ -23,7 +23,7 @@
 #include "DYNDanglingLineInterfaceIIDM.h"
 #include "DYNCurrentLimitInterface.h"
 
-#include <iidm/DanglingLine.h>
+#include <iidm/BoundaryLine.h>
 
 #include "DYNCommon.h"
 
@@ -33,7 +33,7 @@ using std::vector;
 
 namespace DYN {
 
-DanglingLineInterfaceIIDM::DanglingLineInterfaceIIDM(const iidm::DanglingLine& danglingLine) :
+DanglingLineInterfaceIIDM::DanglingLineInterfaceIIDM(const iidm::BoundaryLine& danglingLine) :
 DanglingLineInterface(false),
 InjectorInterfaceIIDM(danglingLine, danglingLine.getId()),
 danglingLineIIDM_(danglingLine) {

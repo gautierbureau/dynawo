@@ -45,7 +45,7 @@ batteryIIDM_(battery) {
   stateVariables_[VAR_P] = StateVariable("p", StateVariable::DOUBLE, neededForCriteriaCheck);  // P
   stateVariables_[VAR_Q] = StateVariable("q", StateVariable::DOUBLE);  // Q
   stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);   // connectionState
-  hasActivePowerControl_ = batteryIIDM_.hasActivePowerControl();
+  hasActivePowerControl_ = batteryIIDM_.hasExtension<iidm::ActivePowerControl>();
 }
 
 int
@@ -195,10 +195,10 @@ BatteryInterfaceIIDM::getQ() {
 
 double
 BatteryInterfaceIIDM::getQMax() {
-  if (batteryIIDM_.hasMinMaxReactiveLimits()) {
-    return batteryIIDM_.getMinMaxReactiveLimits().getMaxQ();
-  } else if (batteryIIDM_.hasReactiveCapabilityCurve()) {
-    assert(batteryIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
+  if (batteryIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::MIN_MAX) {
+    return batteryIIDM_.getReactiveLimits<iidm::MinMaxReactiveLimits>().getMaxQ();
+  } else if (batteryIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::CURVE) {
+    assert(batteryIIDM_.getReactiveLimits<iidm::ReactiveCapabilityCurve>().getPoints().size() > 0);
     double qMax = 0.0;
     const double pGen = - getP();
     const auto& points = getReactiveCurvesPoints();
@@ -224,11 +224,11 @@ BatteryInterfaceIIDM::getQMax() {
 
 double
 BatteryInterfaceIIDM::getQNom() {
-  if (batteryIIDM_.hasMinMaxReactiveLimits()) {
-    return std::max(std::abs(batteryIIDM_.getMinMaxReactiveLimits().getMaxQ()),
-        std::abs(batteryIIDM_.getMinMaxReactiveLimits().getMinQ()));
-  } else if (batteryIIDM_.hasReactiveCapabilityCurve()) {
-    assert(batteryIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
+  if (batteryIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::MIN_MAX) {
+    return std::max(std::abs(batteryIIDM_.getReactiveLimits<iidm::MinMaxReactiveLimits>().getMaxQ()),
+        std::abs(batteryIIDM_.getReactiveLimits<iidm::MinMaxReactiveLimits>().getMinQ()));
+  } else if (batteryIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::CURVE) {
+    assert(batteryIIDM_.getReactiveLimits<iidm::ReactiveCapabilityCurve>().getPoints().size() > 0);
     double qNom = 0.0;
     const auto& points = getReactiveCurvesPoints();
     for (unsigned int i = 0; i < points.size(); ++i) {
@@ -248,10 +248,10 @@ BatteryInterfaceIIDM::getQNom() {
 
 double
 BatteryInterfaceIIDM::getQMin() {
-  if (batteryIIDM_.hasMinMaxReactiveLimits()) {
-    return batteryIIDM_.getMinMaxReactiveLimits().getMinQ();
-  } else if (batteryIIDM_.hasReactiveCapabilityCurve()) {
-    assert(batteryIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
+  if (batteryIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::MIN_MAX) {
+    return batteryIIDM_.getReactiveLimits<iidm::MinMaxReactiveLimits>().getMinQ();
+  } else if (batteryIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::CURVE) {
+    assert(batteryIIDM_.getReactiveLimits<iidm::ReactiveCapabilityCurve>().getPoints().size() > 0);
     double qMin = 0.0;
     const double pGen = - getP();
     const auto& points = getReactiveCurvesPoints();
@@ -293,10 +293,10 @@ BatteryInterfaceIIDM::getID() const {
 
 vector<GeneratorInterface::ReactiveCurvePoint> BatteryInterfaceIIDM::getReactiveCurvesPoints() const {
   vector<GeneratorInterface::ReactiveCurvePoint> ret;
-  if (batteryIIDM_.hasReactiveCapabilityCurve()) {
-    const auto reactiveCurve = batteryIIDM_.getReactiveCapabilityCurve();
+  if (batteryIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::CURVE) {
+    const auto reactiveCurve = batteryIIDM_.getReactiveLimits<iidm::ReactiveCapabilityCurve>();
     for (const auto& point : reactiveCurve.getPoints()) {
-      ret.emplace_back(point.p, point.minQ, point.maxQ);
+      ret.emplace_back(point.getP(), point.getMinQ(), point.getMaxQ());
     }
   }
   return ret;
@@ -314,7 +314,7 @@ BatteryInterfaceIIDM::hasActivePowerControl() const {
 bool
 BatteryInterfaceIIDM::isParticipating() const {
   if (hasActivePowerControl()) {
-    return batteryIIDM_.getActivePowerControl().isParticipate();
+    return batteryIIDM_.getExtension<iidm::ActivePowerControl>().isParticipate();
   }
   return false;
 }
@@ -322,7 +322,7 @@ BatteryInterfaceIIDM::isParticipating() const {
 double
 BatteryInterfaceIIDM::getActivePowerControlDroop() const {
   if (hasActivePowerControl() && isParticipating()) {
-    return batteryIIDM_.getActivePowerControl().getDroop();
+    return batteryIIDM_.getExtension<iidm::ActivePowerControl>().getDroop();
   }
   return 0.;
 }

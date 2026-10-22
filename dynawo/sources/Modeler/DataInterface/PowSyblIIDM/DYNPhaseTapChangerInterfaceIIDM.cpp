@@ -31,7 +31,7 @@ namespace DYN {
 
 PhaseTapChangerInterfaceIIDM::PhaseTapChangerInterfaceIIDM(iidm::PhaseTapChanger tapChanger) : tapChangerIIDM_(tapChanger) {
   for (const auto& step : tapChanger.getAllSteps()) {
-    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(step));
+    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(step.second));
   }
 }
 
@@ -124,8 +124,8 @@ PhaseTapChangerInterfaceIIDM::getTargetDeadBand() const {
   if (!getRegulating()) {
     return 0.;
   }
-  const auto d = tapChangerIIDM_.getTargetDeadband();
-  return d.has_value() ? d.value() : 0.;
+  const double d = tapChangerIIDM_.getTargetDeadband();
+  return std::isnan(d) ? 0. : d;
 }
 
 }  // namespace DYN
