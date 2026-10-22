@@ -18,11 +18,14 @@
  *
  * The JVM registers its network in the registry of iidm-bridge (IidmBridgeRegistry) under an id. Dynawo reads it there
  * through the JNI backend of iidm-bridge, and writes the final values of its state variables into it: no IIDM file is
- * written or read.
+ * written or read. The JVM gives the input files of the simulation too, the jobs file and the dyd, par... files it refers
+ * to, that Dynawo reads from their content rather than from the file system.
  */
 #include <jni.h>
 
+#include <cstddef>
 #include <cstdlib>
+#include <memory>
 #include <mutex>
 #include <string>
 
@@ -38,6 +41,7 @@
 #include "DYNError.h"
 #include "DYNExecUtils.h"
 #include "DYNInitXml.h"
+#include "DYNInputFiles.h"
 #include "DYNIoDico.h"
 #include "DYNSignalHandler.h"
 #include "DYNSimulationLauncher.h"
@@ -83,6 +87,29 @@ void throwDynawoException(JNIEnv* env, const std::string& message) {
 }
 
 /**
+ * @brief the input files given by the JVM
+ * @param env JNI environment of the calling thread
+ * @param paths paths of the files
+ * @param contents contents of the files, in the order of their paths
+ * @return the input files
+ */
+std::shared_ptr<DYN::InputFiles> toInputFiles(JNIEnv* env, jobjectArray paths, jobjectArray contents) {
+  const std::shared_ptr<DYN::InputFiles> inputFiles = std::make_shared<DYN::InputFiles>();
+  const jsize count = env->GetArrayLength(paths);
+  for (jsize i = 0; i < count; ++i) {
+    jstring path = static_cast<jstring>(env->GetObjectArrayElement(paths, i));
+    jbyteArray content = static_cast<jbyteArray>(env->GetObjectArrayElement(contents, i));
+    const jsize length = env->GetArrayLength(content);
+    std::string bytes(static_cast<std::size_t>(length), '\0');
+    env->GetByteArrayRegion(content, 0, length, reinterpret_cast<jbyte*>(&bytes[0]));
+    inputFiles->addFile(toString(env, path), bytes);
+    env->DeleteLocalRef(path);
+    env->DeleteLocalRef(content);
+  }
+  return inputFiles;
+}
+
+/**
  * @brief set an environment variable that is not set yet
  * @param name name of the variable
  * @param value its value
@@ -116,9 +143,10 @@ void setDynawoEnvironment(const std::string& installDir) {
 /**
  * @brief run the job(s) of a jobs file on the network registered in iidm-bridge under an id
  * @param jobsFile jobs file
+ * @param inputFiles input files given in memory, the jobs file and the files it refers to
  * @param networkId id of the network in the registry of iidm-bridge
  */
-void runJobs(const std::string& jobsFile, const std::string& networkId) {
+void runJobs(const std::string& jobsFile, const std::shared_ptr<const DYN::InputFiles>& inputFiles, const std::string& networkId) {
   // the JVM handles the signals of the process
   DYN::SignalHandler::disableSignalHandlers();
   DYN::InitXerces xerces;
@@ -131,7 +159,7 @@ void runJobs(const std::string& jobsFile, const std::string& networkId) {
   }
   // the network of the JVM itself, without any copy
   const boost::shared_ptr<iidm::Network> network = boost::make_shared<iidm::Network>(iidm::NetworkFactory::wrap(networkId));
-  launchSimu(jobsFile, DYN::DataInterfaceIIDM::build(network));
+  launchSimu(jobsFile, DYN::DataInterfaceIIDM::build(network), inputFiles);
 }
 
 }  // namespace
@@ -153,16 +181,19 @@ Java_com_powsybl_dynawo_jni_DynawoNative_getVersion(JNIEnv* env, jclass /*clazz*
  * @brief run the job(s) of a jobs file on a network of the JVM; a failure throws a DynawoNativeException
  * @param env JNI environment of the calling thread
  * @param installDir installation directory of Dynawo
- * @param jobsFile jobs file
+ * @param jobsFile jobs file, in the directory where the outputs are written
+ * @param inputPaths paths of the input files given in memory: the jobs file and the files it refers to that Dynawo reads
+ * from their content rather than from the file system
+ * @param inputContents contents of the input files given in memory, in the order of their paths
  * @param networkId id of the network in the registry of iidm-bridge (IidmBridgeRegistry)
  */
 JNIEXPORT void JNICALL
 Java_com_powsybl_dynawo_jni_DynawoNative_runJobs(JNIEnv* env, jclass /*clazz*/, jstring installDir, jstring jobsFile,
-    jstring networkId) {
+    jobjectArray inputPaths, jobjectArray inputContents, jstring networkId) {
   std::lock_guard<std::mutex> lock(simulationMutex);
   try {
     setDynawoEnvironment(toString(env, installDir));
-    runJobs(toString(env, jobsFile), toString(env, networkId));
+    runJobs(toString(env, jobsFile), toInputFiles(env, inputPaths, inputContents), toString(env, networkId));
     return;
   } catch (const DYN::Error& e) {
     throwDynawoException(env, std::string("DYN Error: ") + e.what());
