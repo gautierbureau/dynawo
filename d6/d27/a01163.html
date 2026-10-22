@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: DYNSolverIDA.h File Reference</title>
+<title>Dynawo: DYNSolverKINSubModel.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.8.0</div>
+    2.0.0</div>
   </td>
  </tr>
  </tbody>
@@ -97,33 +97,29 @@ $(document).ready(function(){initNavTree('d6/d27/a01163.html','../../');});
   <div class="summary">
 <a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">DYNSolverIDA.h File Reference</div>  </div>
+<div class="title">DYNSolverKINSubModel.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Solver based on sundials/IDA solver : variable step, order one or two.  
+<p>Class of the solver used to calculate the initial values of the model This solver is based on sundials/KINSOL solver : solve f(u) = 0.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;boost/shared_ptr.hpp&gt;</code><br />
+<div class="textblock"><code>#include &lt;boost/core/noncopyable.hpp&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;sundials/sundials_linearsolver.h&gt;</code><br />
-<code>#include &lt;sundials/sundials_matrix.h&gt;</code><br />
 <code>#include &lt;sundials/sundials_nvector.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="../../d9/d65/a01145_source.html">DYNSolverFactory.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../db/d17/a01148_source.html">DYNSolverImpl.h</a>&quot;</code><br />
+<code>#include &lt;sundials/sundials_matrix.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d25/a01157_source.html">DYNSolverKINCommon.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/d9d/a00464_source.html">PARParametersSet.h</a>&quot;</code><br />
 </div>
 <p><a href="../../d6/d27/a01163_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d0f/a03594.html">DYN::SolverIDAFactory</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d9/df0/a03598.html" title="class Solver IDA ">SolverIDA</a> factory class.  <a href="../../da/d0f/a03594.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/df0/a03598.html">DYN::SolverIDA</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class <a class="el" href="../../d7/d96/a03546.html" title="Solver interface class. ">Solver</a> IDA  <a href="../../d9/df0/a03598.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/da2/a03620.html">DYN::SolverKINSubModel</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sub model for solver KIN class <a class="el" href="../../db/d88/a03628.html" title="Solver interface class. ">Solver</a> related to a <a class="el" href="../../d9/dc5/a02924.html" title="SubModel Class. ">SubModel</a>.  <a href="../../d0/da2/a03620.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Solver based on sundials/IDA solver : variable step, order one or two. </p>
+<div class="textblock"><p>Class of the solver used to calculate the initial values of the model This solver is based on sundials/KINSOL solver : solve f(u) = 0. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!--
@@ -140,8 +136,8 @@ Classes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_a769528b188158bb44ac136b67c42939.html">Solvers</a></li><li class="navelem"><a class="el" href="../../dir_c05a980bf6ea4623b2447d7b9a9fe8a3.html">VariableTimeStep</a></li><li class="navelem"><a class="el" href="../../dir_beba4d4bb7737edf36f7d7f4f97c1f3c.html">SolverIDA</a></li><li class="navelem"><a class="el" href="../../d6/d27/a01163.html">DYNSolverIDA.h</a></li>
-    <li class="footer">Generated on Fri Jul 3 2026 08:17:29 for Dynawo by
+    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_a769528b188158bb44ac136b67c42939.html">Solvers</a></li><li class="navelem"><a class="el" href="../../dir_d00bb33c142b7149cd0b208ba1e7d1c9.html">AlgebraicSolvers</a></li><li class="navelem"><a class="el" href="../../d6/d27/a01163.html">DYNSolverKINSubModel.h</a></li>
+    <li class="footer">Generated on Thu Oct 22 2026 07:38:49 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

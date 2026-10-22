@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: DYNModelSwitch.h File Reference</title>
+<title>Dynawo: DYNModelLine.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.8.0</div>
+    2.0.0</div>
   </td>
  </tr>
  </tbody>
@@ -97,19 +97,20 @@ $(document).ready(function(){initNavTree('de/def/a01016.html','../../');});
   <div class="summary">
 <a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">DYNModelSwitch.h File Reference</div>  </div>
+<div class="title">DYNModelLine.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;boost/shared_ptr.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="../../df/dbc/a01004_source.html">DYNModelQuadripole.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../df/dce/a00974_source.html">DYNModelBus.h</a>&quot;</code><br />
+<code>#include &lt;boost/archive/binary_iarchive.hpp&gt;</code><br />
+<code>#include &lt;boost/archive/binary_oarchive.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/dcf/a01031_source.html">DYNModelQuadripole.h</a>&quot;</code><br />
 </div>
 <p><a href="../../de/def/a01016_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d7d/a03386.html">DYN::ModelSwitch</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic AC switch model.  <a href="../../db/d7d/a03386.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc7/a03424.html">DYN::ModelLine</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic AC line model.  <a href="../../dc/dc7/a03424.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
@@ -128,8 +129,8 @@ Classes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_a4d4f000bd99afbf77ec024c15aebee1.html">Models</a></li><li class="navelem"><a class="el" href="../../dir_1d85a110c1104c8803c230870bb3238d.html">CPP</a></li><li class="navelem"><a class="el" href="../../dir_3973929b854910cd78a606b051bb30eb.html">ModelNetwork</a></li><li class="navelem"><a class="el" href="../../de/def/a01016.html">DYNModelSwitch.h</a></li>
-    <li class="footer">Generated on Fri Jul 3 2026 08:17:29 for Dynawo by
+    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_a4d4f000bd99afbf77ec024c15aebee1.html">Models</a></li><li class="navelem"><a class="el" href="../../dir_1d85a110c1104c8803c230870bb3238d.html">CPP</a></li><li class="navelem"><a class="el" href="../../dir_3973929b854910cd78a606b051bb30eb.html">ModelNetwork</a></li><li class="navelem"><a class="el" href="../../de/def/a01016.html">DYNModelLine.h</a></li>
+    <li class="footer">Generated on Thu Oct 22 2026 07:38:49 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

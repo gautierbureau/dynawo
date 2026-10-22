@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: DYNTraceStream.h File Reference</title>
+<title>Dynawo: DYNParameter.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.8.0</div>
+    2.0.0</div>
   </td>
  </tr>
  </tbody>
@@ -99,95 +99,110 @@ $(document).ready(function(){initNavTree('dd/d5c/a00578.html','../../');});
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">DYNTraceStream.h File Reference</div>  </div>
+<div class="title">DYNParameter.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Trace stream header.  
+<p>Dynawo Parameter: header file.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;boost/shared_ptr.hpp&gt;</code><br />
-<code>#include &lt;sstream&gt;</code><br />
-<code>#include &lt;string&gt;</code><br />
+<div class="textblock"><code>#include &lt;string&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;map&gt;</code><br />
+<code>#include &lt;boost/optional.hpp&gt;</code><br />
+<code>#include &lt;boost/any.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d24/a00524_source.html">DYNCommon.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/d44/a00533_source.html">DYNError.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/dc8/a00581_source.html">DYNParameter.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../dd/d5c/a00578_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/deb/a02766.html">DYN::TraceStream</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d4/da5/a02746.html" title="Trace static class. ">Trace</a> stream class.  <a href="../../dd/deb/a02766.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dbf/a02788.html">DYN::ParameterCommon</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a7f30ec83caa9180e23f0f9079c7f4794"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d5c/a00578.html#a7f30ec83caa9180e23f0f9079c7f4794">DYN::SeverityLevel</a> { <a class="el" href="../../dd/d5c/a00578.html#a7f30ec83caa9180e23f0f9079c7f4794aba17c0778dd43b6f34851dc72bb01bc0">DYN::DEBUG</a>, 
-<a class="el" href="../../dd/d5c/a00578.html#a7f30ec83caa9180e23f0f9079c7f4794a91c78882ba9f10f232f4d92f90bf5bb0">DYN::INFO</a>, 
-<a class="el" href="../../dd/d5c/a00578.html#a7f30ec83caa9180e23f0f9079c7f4794a65e4a0f0a3074f0188f25c7bc20deeeb">DYN::WARN</a>, 
-<a class="el" href="../../dd/d5c/a00578.html#a7f30ec83caa9180e23f0f9079c7f4794a9b4e3f574f324f82af263be3111118dc">DYN::ERROR</a>
+<tr class="memitem:a291ef7e1a977f032272b802e8363df01"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01">DYN::parameterOrigin_t</a> { <br />
+&#160;&#160;<a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01aa954e4e82c94f237c9ef4b6e0e857157">DYN::MO</a>, 
+<a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01a60f59406d0f70705615af297c58c508a">DYN::LOADED_DUMP</a>, 
+<a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01ab4aa784cb0c84b5eb9f243ab75ae1762">DYN::PAR</a>, 
+<a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01a75cc61d35671d31263988b41e2a48298">DYN::IIDM</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01a737be290f586685d38ea1da4a36ccc74">DYN::LOCAL_INIT</a>, 
+<a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01a86a3180976a5f2ac6e9b67613df8293f">DYN::FINAL</a>, 
+<a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01ac778fbc17a1cfe511e89ccab0a80b3e9">DYN::NB_ORIGINS</a>
+<br />
  }</td></tr>
-<tr class="memdesc:a7f30ec83caa9180e23f0f9079c7f4794"><td class="mdescLeft">&#160;</td><td class="mdescRight">Severity level used for traces filtering.  <a href="../../dd/d5c/a00578.html#a7f30ec83caa9180e23f0f9079c7f4794">More...</a><br /></td></tr>
-<tr class="separator:a7f30ec83caa9180e23f0f9079c7f4794"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:a291ef7e1a977f032272b802e8363df01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter origins enum (ordered by increasing priority)  <a href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01">More...</a><br /></td></tr>
+<tr class="separator:a291ef7e1a977f032272b802e8363df01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0b992bada48a2eb748585beda635bd92"><td class="memItemLeft" align="right" valign="top">TraceStream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d5c/a00578.html#a0b992bada48a2eb748585beda635bd92">DYN::eol</a> (TraceStream &amp;os)</td></tr>
-<tr class="memdesc:a0b992bada48a2eb748585beda635bd92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operator&lt;&lt; overload for end of line function pointer.  <a href="../../dd/d5c/a00578.html#a0b992bada48a2eb748585beda635bd92">More...</a><br /></td></tr>
-<tr class="separator:a0b992bada48a2eb748585beda635bd92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad24ff9682bec4cd934f1e76b598bad3c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d5c/a00578.html#ad24ff9682bec4cd934f1e76b598bad3c">DYN::origin2Str</a> (parameterOrigin_t origin)</td></tr>
+<tr class="memdesc:ad24ff9682bec4cd934f1e76b598bad3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert a parameter origin to string  <a href="../../dd/d5c/a00578.html#ad24ff9682bec4cd934f1e76b598bad3c">More...</a><br /></td></tr>
+<tr class="separator:ad24ff9682bec4cd934f1e76b598bad3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Trace stream header. </p>
-<p>Trace streams are used by <code>Trace</code> static class for stream-like logging </p>
+<div class="textblock"><p>Dynawo Parameter: header file. </p>
 </div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="file_a7f30ec83caa9180e23f0f9079c7f4794"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_a7f30ec83caa9180e23f0f9079c7f4794">&#9670;&nbsp;</a></span>SeverityLevel</h2>
+<a id="file_a291ef7e1a977f032272b802e8363df01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a291ef7e1a977f032272b802e8363df01">&#9670;&nbsp;</a></span>parameterOrigin_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="../../dd/d5c/a00578.html#a7f30ec83caa9180e23f0f9079c7f4794">DYN::SeverityLevel</a></td>
+          <td class="memname">enum <a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01">DYN::parameterOrigin_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Severity level used for traces filtering. </p>
-<p>Severity levels used for traces filtering. Must be ordered by severity. </p><dl class="section note"><dt>Note</dt><dd>Must be accorded to <code>severityLevelFromString</code> and <code>stringFromSeverityLevel</code> functions in <code>DYNTrace.cpp</code>. </dd></dl>
+<p>Parameter origins enum (ordered by increasing priority) </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7f30ec83caa9180e23f0f9079c7f4794aba17c0778dd43b6f34851dc72bb01bc0"></a>DEBUG&#160;</td><td class="fielddoc"><p>Debug severity level. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a291ef7e1a977f032272b802e8363df01aa954e4e82c94f237c9ef4b6e0e857157"></a>MO&#160;</td><td class="fielddoc"><p>Parameter from MODELICA model. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7f30ec83caa9180e23f0f9079c7f4794a91c78882ba9f10f232f4d92f90bf5bb0"></a>INFO&#160;</td><td class="fielddoc"><p>Information severity level. </p>
+<tr><td class="fieldname"><a id="a291ef7e1a977f032272b802e8363df01a60f59406d0f70705615af297c58c508a"></a>LOADED_DUMP&#160;</td><td class="fielddoc"><p>Value loaded from previous dump. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7f30ec83caa9180e23f0f9079c7f4794a65e4a0f0a3074f0188f25c7bc20deeeb"></a>WARN&#160;</td><td class="fielddoc"><p>Warning severity level. </p>
+<tr><td class="fieldname"><a id="a291ef7e1a977f032272b802e8363df01ab4aa784cb0c84b5eb9f243ab75ae1762"></a>PAR&#160;</td><td class="fielddoc"><p>Parameter from PAR file. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7f30ec83caa9180e23f0f9079c7f4794a9b4e3f574f324f82af263be3111118dc"></a>ERROR&#160;</td><td class="fielddoc"><pre class="fragment">Error severity level </pre> </td></tr>
+<tr><td class="fieldname"><a id="a291ef7e1a977f032272b802e8363df01a75cc61d35671d31263988b41e2a48298"></a>IIDM&#160;</td><td class="fielddoc"><p>Parameter from IIDM file. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a291ef7e1a977f032272b802e8363df01a737be290f586685d38ea1da4a36ccc74"></a>LOCAL_INIT&#160;</td><td class="fielddoc"><p>Parameter from local initialization. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a291ef7e1a977f032272b802e8363df01a86a3180976a5f2ac6e9b67613df8293f"></a>FINAL&#160;</td><td class="fielddoc"><p>Value used for dynamic simulation. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a291ef7e1a977f032272b802e8363df01ac778fbc17a1cfe511e89ccab0a80b3e9"></a>NB_ORIGINS&#160;</td><td class="fielddoc"><p>Number of origins (for data dimensions) </p>
+</td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="file_a0b992bada48a2eb748585beda635bd92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_a0b992bada48a2eb748585beda635bd92">&#9670;&nbsp;</a></span>eol()</h2>
+<a id="file_ad24ff9682bec4cd934f1e76b598bad3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_ad24ff9682bec4cd934f1e76b598bad3c">&#9670;&nbsp;</a></span>origin2Str()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TraceStream&amp; DYN::eol </td>
+          <td class="memname">std::string DYN::origin2Str </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../dd/deb/a02766.html">TraceStream</a> &amp;&#160;</td>
-          <td class="paramname"><em>os</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="../../dd/d5c/a00578.html#a291ef7e1a977f032272b802e8363df01">parameterOrigin_t</a>&#160;</td>
+          <td class="paramname"><em>origin</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Operator&lt;&lt; overload for end of line function pointer. </p>
-<p>Flushes the content of the buffer to the logging core when end of line function pointer is passed on the stream. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>convert a parameter origin to string </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">os</td><td>: Reference to a TraceStream instance to flush </td></tr>
+    <tr><td class="paramname">origin</td><td>: the parameter origin as an enum </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Reference to given TraceStream instance </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the converted origin as a string </dd></dl>
 
 </div>
 </div>
@@ -207,8 +222,8 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_c5eaf1ac1cf936f6800d020d474d243d.html">Common</a></li><li class="navelem"><a class="el" href="../../dd/d5c/a00578.html">DYNTraceStream.h</a></li>
-    <li class="footer">Generated on Fri Jul 3 2026 08:17:29 for Dynawo by
+    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_c5eaf1ac1cf936f6800d020d474d243d.html">Common</a></li><li class="navelem"><a class="el" href="../../dd/d5c/a00578.html">DYNParameter.h</a></li>
+    <li class="footer">Generated on Thu Oct 22 2026 07:38:49 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

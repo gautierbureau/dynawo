@@ -14,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Dynawo: DYNSolverKINCommon.h File Reference</title>
+<title>Dynawo: DYNOutputDispatcher.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -39,7 +39,7 @@
  <tr style="height: 150px;">
   <td style="padding-left: 0.5em;">
    <div id="projectbrief">Developer documentation for Dynawo
-    1.8.0</div>
+    2.0.0</div>
   </td>
  </tr>
  </tbody>
@@ -97,29 +97,33 @@ $(document).ready(function(){initNavTree('d0/dc8/a01124.html','../../');});
   <div class="summary">
 <a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">DYNSolverKINCommon.h File Reference</div>  </div>
+<div class="title">DYNOutputDispatcher.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Common class for all algebraic solvers based on sundials/KINSOL.  
+<p>OutputDispatcher header.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;kinsol/kinsol.h&gt;</code><br />
-<code>#include &lt;sundials/sundials_linearsolver.h&gt;</code><br />
-<code>#include &lt;sundials/sundials_nvector.h&gt;</code><br />
-<code>#include &lt;sundials/sundials_matrix.h&gt;</code><br />
-<code>#include &lt;string&gt;</code><br />
+<div class="textblock"><code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;map&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d0/d39/a01112_source.html">DYNRTOutputCommon.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d7/d80/a00614_source.html">DYNActionBuffer.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../df/dd5/a01115_source.html">DYNClock.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d0/d61/a01130_source.html">DYNOutputChannel.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dd/d32/a00041_source.html">CRVCurvesCollection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d1f/a00506_source.html">TLTimeline.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../da/dec/a00080_source.html">CSTRConstraintsCollection.h</a>&quot;</code><br />
 </div>
 <p><a href="../../d0/dc8/a01124_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/de9/a03530.html">DYN::SolverKINCommon</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class <a class="el" href="../../d0/de9/a03530.html" title="class SolverKINCommon: common part of all the KINSOL-based solvers Generic class for KINSOL-based sol...">SolverKINCommon</a>: common part of all the KINSOL-based solvers Generic class for KINSOL-based solver  <a href="../../d0/de9/a03530.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d29/a03568.html">DYN::OutputDispatcher</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for publishing outputs (curves, timeline, constraints) to output channels.  <a href="../../dc/d29/a03568.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Common class for all algebraic solvers based on sundials/KINSOL. </p>
+<div class="textblock"><p>OutputDispatcher header. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!--
@@ -136,8 +140,8 @@ Classes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_a769528b188158bb44ac136b67c42939.html">Solvers</a></li><li class="navelem"><a class="el" href="../../dir_d00bb33c142b7149cd0b208ba1e7d1c9.html">AlgebraicSolvers</a></li><li class="navelem"><a class="el" href="../../d0/dc8/a01124.html">DYNSolverKINCommon.h</a></li>
-    <li class="footer">Generated on Fri Jul 3 2026 08:17:29 for Dynawo by
+    <li class="navelem"><a class="el" href="../../dir_1784a59e55c9933a90efd2d239600c8f.html">dynawo</a></li><li class="navelem"><a class="el" href="../../dir_22a316840cfeae933077e8f7330b01fd.html">sources</a></li><li class="navelem"><a class="el" href="../../dir_c46db7bd8c7067701c1d6b63dbd877bb.html">RT</a></li><li class="navelem"><a class="el" href="../../dir_fd010f168572fde6d103f03fced15216.html">Engine</a></li><li class="navelem"><a class="el" href="../../d0/dc8/a01124.html">DYNOutputDispatcher.h</a></li>
+    <li class="footer">Generated on Thu Oct 22 2026 07:38:49 for Dynawo by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>
