@@ -90,14 +90,17 @@ static void terminateFailed(const std::shared_ptr<Simulation>& simulation, const
  * @param jobsFileName file describing the job(s) to launch
  * @param isInteractive true if simulation in interactive or real-time mode
  * @param data data interface of the network to simulate, null to read the iidm file of the job(s)
+ * @param inputFiles input files given in memory: the jobs file and the files it refers to that are read from their
+ * content rather than from the file system
  */
-static void launchJobs(const std::string& jobsFileName, bool isInteractive, const boost::shared_ptr<DYN::DataInterface>& data) {
+static void launchJobs(const std::string& jobsFileName, bool isInteractive, const boost::shared_ptr<DYN::DataInterface>& data,
+    const std::shared_ptr<const DYN::InputFiles>& inputFiles) {
 #if defined(_DEBUG_) || defined(PRINT_TIMERS)
   DYN::Timer timer("Main::LaunchSimu");
 #endif
 
   job::XmlImporter importer;
-  const std::shared_ptr<job::JobsCollection>& jobsCollection = importer.importFromFile(jobsFileName);
+  const std::shared_ptr<job::JobsCollection>& jobsCollection = inputFiles->importFile(importer, jobsFileName);
   const std::string prefixJobFile = absolute(removeFileName(jobsFileName));
   if (jobsCollection->getJobs().empty())
     throw DYNError(DYN::Error::SIMULATION, NoJobDefined);
@@ -111,6 +114,7 @@ static void launchJobs(const std::string& jobsFileName, bool isInteractive, cons
     context->setLocale(getMandatoryEnvVar("DYNAWO_LOCALE"));
     context->setInputDirectory(prefixJobFile);
     context->setWorkingDirectory(prefixJobFile);
+    context->setInputFiles(inputFiles);
 
     std::shared_ptr<Simulation> simulation;
     try {
@@ -185,9 +189,14 @@ static void launchJobs(const std::string& jobsFileName, bool isInteractive, cons
 }
 
 void launchSimu(const std::string& jobsFileName, bool isInteractive) {
-  launchJobs(jobsFileName, isInteractive, boost::shared_ptr<DYN::DataInterface>());
+  launchJobs(jobsFileName, isInteractive, boost::shared_ptr<DYN::DataInterface>(), std::make_shared<DYN::InputFiles>());
 }
 
 void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data) {
-  launchJobs(jobsFileName, false, data);
+  launchJobs(jobsFileName, false, data, std::make_shared<DYN::InputFiles>());
+}
+
+void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data,
+    const std::shared_ptr<const DYN::InputFiles>& inputFiles) {
+  launchJobs(jobsFileName, false, data, inputFiles ? inputFiles : std::make_shared<DYN::InputFiles>());
 }

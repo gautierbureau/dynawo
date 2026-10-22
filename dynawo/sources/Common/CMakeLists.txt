@@ -64,6 +64,7 @@ set(COMMON_SOURCES
   DYNExecUtils.cpp
   DYNEnumUtils.cpp
   DYNFileSystemUtils.cpp
+  DYNInputFiles.cpp
   DYNMessage.cpp
   DYNMessageTimeline.cpp
   DYNGraph.cpp
@@ -85,6 +86,7 @@ set(COMMON_INCLUDE_HEADERS
   DYNExecUtils.h
   DYNEnumUtils.h
   DYNFileSystemUtils.h
+  DYNInputFiles.h
   DYNGraph.h
   DYNMessage.h
   DYNMessage.hpp

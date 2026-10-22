@@ -20,7 +20,10 @@
 #ifndef SIMULATION_DYNSIMULATIONCONTEXT_H_
 #define SIMULATION_DYNSIMULATIONCONTEXT_H_
 
+#include <memory>
 #include <string>
+
+#include "DYNInputFiles.h"
 
 namespace DYN {
 
@@ -56,6 +59,12 @@ class SimulationContext {
   void setLocale(const std::string& locale);
 
   /**
+   * @brief set the input files of the simulation given in memory
+   * @param inputFiles input files read from their content rather than from the file system
+   */
+  void setInputFiles(const std::shared_ptr<const InputFiles>& inputFiles);
+
+  /**
    * @brief get the working directory of the simulation
    * @return the working directory of the simulation
    */
@@ -79,11 +88,24 @@ class SimulationContext {
    */
   const std::string& getLocale();
 
+  /**
+   * @brief get the input files of the simulation given in memory
+   * @return the input files given in memory, none by default: all the input files are read from the file system
+   */
+  const InputFiles& getInputFiles() const;
+
+  /**
+   * @brief get the input files of the simulation given in memory, to share them
+   * @return the input files given in memory
+   */
+  const std::shared_ptr<const InputFiles>& getSharedInputFiles() const;
+
  private:
   std::string workingDirectory_;  ///< working directory of the simulation : where files should be created
   std::string inputDirectory_;  ///< input directory : where files describing the simulation are located
   std::string resourcesDirectory_;  ///< directory where resources files are located
   std::string locale_;  ///< locale to use for log messages
+  std::shared_ptr<const InputFiles> inputFiles_ = std::make_shared<InputFiles>();  ///< input files given in memory
 };
 
 }  // end of namespace DYN

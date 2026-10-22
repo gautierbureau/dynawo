@@ -252,7 +252,7 @@ Simulation::configureSimulationInputs() {
   vector<string> dydFiles;
   for (const auto& dynModelsEntry : jobEntry_->getModelerEntry()->getDynModelsEntries()) {
     string absoluteDirPath = createAbsolutePath(dynModelsEntry->getDydFile(), context_->getInputDirectory());
-    if (!exists(absoluteDirPath)) {
+    if (!context_->getInputFiles().exists(absoluteDirPath)) {
       throw DYNError(Error::MODELER, UnknownDydFile, absoluteDirPath);
     }
     dydFiles_.push_back(absoluteDirPath);
@@ -276,7 +276,7 @@ Simulation::configureCriteria() {
   for (const auto& criteriaFile : jobEntry_->getSimulationEntry()->getCriteriaFiles()) {
     criteria::XmlImporter parser;
     std::string path = createAbsolutePath(criteriaFile, context_->getInputDirectory());
-    std::shared_ptr<criteria::CriteriaCollection> ccollec = parser.importFromFile(path);
+    std::shared_ptr<criteria::CriteriaCollection> ccollec = context_->getInputFiles().importFile(parser, path);
     if (!criteriaCollection_)
       criteriaCollection_ = ccollec;
     else
@@ -422,7 +422,7 @@ Simulation::configureCurveOutputs() {
 
     //---- inputFile ----
     string curveInputFile = createAbsolutePath(jobEntry_->getOutputsEntry()->getCurvesEntry()->getInputFile(), context_->getInputDirectory());
-    if (!exists(curveInputFile))
+    if (!context_->getInputFiles().exists(curveInputFile))
       throw DYNError(Error::MODELER, UnknownCurveFile, curveInputFile);
     setCurvesInputFile(curveInputFile);
     importCurvesRequest();
@@ -470,7 +470,7 @@ Simulation::configureFinalStateValueOutputs() {
         jobEntry_->getOutputsEntry()->getFinalStateValuesEntry()->getInputFile(),
         context_->getInputDirectory());
 
-    if (!exists(finalStateValuesInputFile))
+    if (!context_->getInputFiles().exists(finalStateValuesInputFile))
       throw DYNError(Error::MODELER, UnknownFinalStateValuesFile, finalStateValuesInputFile);
     setFinalStateValuesInputFile(finalStateValuesInputFile);
     importFinalStateValuesRequest();
@@ -645,6 +645,7 @@ Simulation::loadDynamicData() {
   // Load model
   dyd_.reset(new DynamicData());  // takes ownership of pointer
   dyd_->setRootDirectory(context_->getInputDirectory());
+  dyd_->setInputFiles(context_->getSharedInputFiles());
   dyd_->setParametersReference(referenceParameters_);
 
   if (!data_) {
@@ -676,7 +677,7 @@ Simulation::loadDynamicData() {
         throw DYNError(Error::GENERAL, MissingParFile, jobEntry_->getName());
     }
     networkParFile_ = createAbsolutePath(jobEntry_->getModelerEntry()->getNetworkEntry()->getNetworkParFile(), context_->getInputDirectory());
-    if (!exists(networkParFile_)) {
+    if (!context_->getInputFiles().exists(networkParFile_)) {
       throw DYNError(Error::GENERAL, UnknownParFile, networkParFile_, context_->getInputDirectory());
     } else {
       networkParFile_ = jobEntry_->getModelerEntry()->getNetworkEntry()->getNetworkParFile();
@@ -695,7 +696,7 @@ Simulation::setSolver() {
   solver_ = SolverFactory::createSolverFromLib(jobEntry_->getSolverEntry()->getLib() + sharedLibraryExtension());
 
   parameters::XmlImporter importer;
-  std::shared_ptr<ParametersSetCollection> parameters = importer.importFromFile(solverParFile);
+  std::shared_ptr<ParametersSetCollection> parameters = context_->getInputFiles().importFile(importer, solverParFile);
   parameters->propagateOriginData(solverParFile);
   referenceParameters_[solverParFile] = parameters;
   string parId = jobEntry_->getSolverEntry()->getParametersId();
@@ -760,7 +761,7 @@ Simulation::configureLogs() {
 void
 Simulation::importCurvesRequest() {
   curves::XmlImporter importer;
-  curvesCollection_ = CurvesCollectionFactory::copyInstance(importer.importFromFile(curvesInputFile_));
+  curvesCollection_ = CurvesCollectionFactory::copyInstance(context_->getInputFiles().importFile(importer, curvesInputFile_));
 }
 
 void
@@ -768,7 +769,7 @@ Simulation::importFinalStateValuesRequest() const {
   // Obtain Final State Values definitions from input file
   finalStateValues::XmlImporter importer;
   boost::shared_ptr<FinalStateValuesCollection> finalStateValuesCollection =
-    FinalStateValuesCollectionFactory::copyInstance(importer.importFromFile(finalStateValuesInputFile_));
+    FinalStateValuesCollectionFactory::copyInstance(context_->getInputFiles().importFile(importer, finalStateValuesInputFile_));
 
   // Final State Values and Curve points will be recorded during simulation in the same data structures
   // Here we merge the Final State Values definitions with the existing Curves definitions
@@ -822,7 +823,7 @@ Simulation::initFromData(const shared_ptr<DataInterface>& data, const shared_ptr
     const std::string initParFile = createAbsolutePath(jobEntry_->getLocalInitEntry()->getParFile(), context_->getInputDirectory());
     const std::string parId = jobEntry_->getLocalInitEntry()->getParId();
     parameters::XmlImporter parametersImporter;
-    std::shared_ptr<ParametersSetCollection> localInitSetCollection = parametersImporter.importFromFile(initParFile);
+    std::shared_ptr<ParametersSetCollection> localInitSetCollection = context_->getInputFiles().importFile(parametersImporter, initParFile);
     std::shared_ptr<ParametersSet> localInitParameters = localInitSetCollection->getParametersSet(parId);
 
     model_->setLocalInitParameters(localInitParameters);

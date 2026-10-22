@@ -22,6 +22,10 @@
 
 #include "DYDImporter.h"
 
+#include <functional>
+#include <istream>
+#include <memory>
+
 #include <boost/shared_ptr.hpp>
 
 namespace dynamicdata {
@@ -38,6 +42,17 @@ class XmlImporter : public Importer {
    * @copydoc Importer::importFromDydFiles()
    */
   boost::shared_ptr<DynamicModelsCollection> importFromDydFiles(const std::vector<std::string>& fileNames) const  override;
+
+  /**
+   * @brief Import dynamic models collection from files, read from the streams a function opens for them
+   *
+   * @param fileNames list of files to read
+   * @param openFile opens the stream of a file, in a failed state if the file cannot be opened: for files that are not
+   * on the file system, such as files given in memory
+   * @returns Collection imported
+   */
+  boost::shared_ptr<DynamicModelsCollection> importFromDydFiles(const std::vector<std::string>& fileNames,
+      const std::function<std::unique_ptr<std::istream>(const std::string&)>& openFile) const;
 
   /**
    * @copydoc Importer::importFromStream()

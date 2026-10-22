@@ -40,6 +40,14 @@ namespace dynamicdata {
 
 shared_ptr<DynamicModelsCollection>
 XmlImporter::importFromDydFiles(const vector<string>& fileNames) const {
+  return importFromDydFiles(fileNames, [](const string& fileName) {
+    return std::unique_ptr<std::istream>(new std::ifstream(fileName.c_str()));
+  });
+}
+
+shared_ptr<DynamicModelsCollection>
+XmlImporter::importFromDydFiles(const vector<string>& fileNames,
+    const std::function<std::unique_ptr<std::istream>(const string&)>& openFile) const {
   XmlHandler dydHandler;
   xml::sax::parser::ParserFactory parser_factory;
   xml::sax::parser::ParserPtr parser = parser_factory.createParser();
@@ -51,12 +59,12 @@ XmlImporter::importFromDydFiles(const vector<string>& fileNames) const {
   }
 
   for (const auto& fileName : fileNames) {
-    std::ifstream stream(fileName.c_str());
-    if (!stream)
+    const std::unique_ptr<std::istream> stream = openFile(fileName);
+    if (!*stream)
       throw DYNError(DYN::Error::API, FileSystemItemDoesNotExist, fileName.c_str());
 
     try {
-      importFromStream(stream, dydHandler, parser, xsdValidation);
+      importFromStream(*stream, dydHandler, parser, xsdValidation);
     } catch (const DYN::Error& exp) {
       throw DYNError(DYN::Error::API, XmlFileParsingError, fileName.c_str(), exp.what());
     }

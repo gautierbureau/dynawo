@@ -87,6 +87,8 @@ target_include_directories(dynawo_SimulationCommon
   )
 
 target_link_libraries(dynawo_SimulationCommon
+  PUBLIC
+    dynawo_Common
   PRIVATE
     dynawo_Interface
   )
