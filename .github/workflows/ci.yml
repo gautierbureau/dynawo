@@ -35,6 +35,25 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4
 
+      - name: Install Java/JNI and GraalVM native-image for iidm-bridge
+        run: |
+          # iidm-bridge (the powsybl-iidm4cpp replacement) is built with
+          # IIDM_BRIDGE_ENABLE_JNI / IIDM_BRIDGE_BUILD_JAVA / IIDM_BRIDGE_BUILD_NATIVE
+          # which require: a JDK (jni.h + libjvm.so), Maven, and a native-image
+          # toolchain. The dynawo-ci image is fedora:29 based and ships none of
+          # them; install them here until they are baked into the image.
+          dnf install -y --setopt=tsflags=nodocs maven
+          # GraalVM Community JDK 21 — the iidm-bridge java module targets
+          # Java 21 (see java/pom.xml maven.compiler.source/target), and
+          # native-image is bundled, no separate 'gu install' needed.
+          curl -L -o /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_linux-x64_bin.tar.gz
+          mkdir -p /opt/graalvm
+          tar xzf /tmp/graalvm.tar.gz -C /opt/graalvm --strip-components=1
+          rm /tmp/graalvm.tar.gz
+          echo "GRAALVM_HOME=/opt/graalvm" >> "$GITHUB_ENV"
+          echo "JAVA_HOME=/opt/graalvm" >> "$GITHUB_ENV"
+          echo "/opt/graalvm/bin" >> "$GITHUB_PATH"
+
       - name: Create master tag and release if necessary
         if: github.ref == 'refs/heads/master' && github.event_name == 'push' && (github.event_name != 'workflow_dispatch' || inputs.perform-master-tag)
         uses: actions/github-script@v7
@@ -118,6 +137,20 @@ jobs:
       DYNAWO_SRC_OPENMODELICA: /opt/OpenModelica/Source
       DYNAWO_NB_PROCESSORS_USED: 2
     steps:
+      - name: Install Java/JNI and GraalVM native-image for iidm-bridge
+        run: |
+          dnf install -y --setopt=tsflags=nodocs maven
+          curl -L -o /tmp/graalvm.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_linux-x64_bin.tar.gz
+          mkdir -p /opt/graalvm
+          tar xzf /tmp/graalvm.tar.gz -C /opt/graalvm --strip-components=1
+          rm /tmp/graalvm.tar.gz
+          # JAVA_HOME is exported here for the third-party build; the Sonarcloud
+          # step sets its own JAVA_HOME inline (sonar-scanner needs JDK 17), so
+          # the two don't conflict.
+          echo "GRAALVM_HOME=/opt/graalvm" >> "$GITHUB_ENV"
+          echo "JAVA_HOME=/opt/graalvm" >> "$GITHUB_ENV"
+          echo "/opt/graalvm/bin" >> "$GITHUB_PATH"
+
       - name: Install Sonar wrapper
         working-directory: ${{ runner.workspace }}
         env:
@@ -163,6 +196,7 @@ jobs:
           $CONTAINER_WORKSPACE/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output util/envDynawo.sh build-tests-coverage
 
       - name: Sonarcloud
+        if: false  # disabled while migrating to iidm-bridge; re-enable once branch is merged
         working-directory: ${{ runner.workspace }}/dynawo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -191,6 +225,46 @@ jobs:
         shell: cmd
         run: choco install wget --no-progress
 
+      - name: Install GraalVM (JDK 21)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Maven
+        shell: cmd
+        run: |
+          curl -L -o C:\maven.zip https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip
+          7z x C:\maven.zip -oC:\
+          del C:\maven.zip
+          echo MAVEN_HOME=C:\apache-maven-3.9.6>>%GITHUB_ENV%
+          echo C:\apache-maven-3.9.6\bin>>%GITHUB_PATH%
+
+      - name: Debug Java/Maven install
+        shell: cmd
+        run: |
+          echo --- JAVA_HOME=%JAVA_HOME%
+          echo --- MAVEN_HOME=%MAVEN_HOME%
+          echo --- PATH=%PATH%
+          if exist "%JAVA_HOME%\bin\java.exe" ( echo found java.exe ) else ( echo MISSING java.exe at %JAVA_HOME%\bin )
+          if exist "%MAVEN_HOME%\bin\mvn.cmd" ( echo found mvn.cmd ) else ( echo MISSING mvn.cmd at %MAVEN_HOME%\bin )
+          dir C:\apache-maven-3.9.6\bin 2>nul || echo no maven dir at C:\apache-maven-3.9.6
+          where java 2>nul || echo java not on PATH
+          where mvn  2>nul || echo mvn  not on PATH
+          java -version 2>&1 || echo java invocation failed
+          mvn  -version 2>&1 || echo mvn  invocation failed
+          echo --- listing %JAVA_HOME%\bin
+          dir "%JAVA_HOME%\bin" 2>nul || echo cannot list %JAVA_HOME%\bin
+          echo --- searching for native-image
+          if exist "%JAVA_HOME%\bin\native-image.cmd" ( echo found native-image.cmd ) else ( echo MISSING native-image.cmd )
+          if exist "%JAVA_HOME%\bin\native-image.exe" ( echo found native-image.exe ) else ( echo MISSING native-image.exe )
+          if exist "%JAVA_HOME%\bin\native-image"     ( echo found native-image ) else ( echo MISSING native-image )
+          where native-image     2>nul || echo native-image     not on PATH
+          where native-image.cmd 2>nul || echo native-image.cmd not on PATH
+          set "PATH=%JAVA_HOME%\bin;%PATH%"
+          native-image --version 2>&1 || echo native-image invocation failed
+
       - name: Install OpenModelica and Third Parties
         shell: cmd
         run: |
@@ -204,6 +278,7 @@ jobs:
           PATH: C:\Windows\system32;C:\Program Files\Git\cmd;C:\hostedtoolcache\windows\Python\3.12.10\x64
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          set "PATH=%JAVA_HOME%\bin;%MAVEN_HOME%\bin;%PATH%"
           cd \dynawo
           cmake -Wno-dev -S dynawo/3rdParty -B b-3-p -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../../d-3-p -DOPENMODELICA_INSTALL=../../OpenModelica -DOPENMODELICA_SRC=../../OpenModelica/Source -DOMDEV_HOME=../../OMDev -G "Ninja"
           cmake --build b-3-p

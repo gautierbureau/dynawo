@@ -20,46 +20,44 @@
 
 #include "DYNStepInterfaceIIDM.h"
 
-#include <powsybl/iidm/TapChanger.hpp>
-
 namespace DYN {
 
-StepInterfaceIIDM::StepInterfaceIIDM(const powsybl::iidm::PhaseTapChangerStep& step) : phaseStep_(step),
-                                                                                       isPhaseStep_(true) {
+StepInterfaceIIDM::StepInterfaceIIDM(const iidm::PhaseTapChangerStep& step) : phaseStep_(step),
+                                                                              kind_(Kind::PHASE) {
 }
 
-StepInterfaceIIDM::StepInterfaceIIDM(const powsybl::iidm::RatioTapChangerStep& step) : ratioStep_(step),
-                                                                                       isPhaseStep_(false) {
+StepInterfaceIIDM::StepInterfaceIIDM(const iidm::RatioTapChangerStep& step) : ratioStep_(step),
+                                                                              kind_(Kind::RATIO) {
 }
 
 double
 StepInterfaceIIDM::getR() const {
-  return isPhaseStep_ ? phaseStep_->getR() : ratioStep_->getR();
+  return kind_ == Kind::PHASE ? phaseStep_->getR() : ratioStep_->getR();
 }
 
 double
 StepInterfaceIIDM::getX() const {
-  return isPhaseStep_ ? phaseStep_->getX() : ratioStep_->getX();
+  return kind_ == Kind::PHASE ? phaseStep_->getX() : ratioStep_->getX();
 }
 
 double
 StepInterfaceIIDM::getG() const {
-  return isPhaseStep_ ? phaseStep_->getG() : ratioStep_->getG();
+  return kind_ == Kind::PHASE ? phaseStep_->getG() : ratioStep_->getG();
 }
 
 double
 StepInterfaceIIDM::getB() const {
-  return isPhaseStep_ ? phaseStep_->getB() : ratioStep_->getB();
+  return kind_ == Kind::PHASE ? phaseStep_->getB() : ratioStep_->getB();
 }
 
 double
 StepInterfaceIIDM::getRho() const {
-  return isPhaseStep_ ? phaseStep_->getRho() : ratioStep_->getRho();
+  return kind_ == Kind::PHASE ? phaseStep_->getRho() : ratioStep_->getRho();
 }
 
 double
 StepInterfaceIIDM::getAlpha() const {
-  return isPhaseStep_ ? phaseStep_->getAlpha() : 0.0;
+  return kind_ == Kind::PHASE ? phaseStep_->getAlpha() : 0.0;
 }
 
 }  // namespace DYN

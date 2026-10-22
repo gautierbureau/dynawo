@@ -19,24 +19,26 @@
  */
 #include <cmath>  // M_PI
 
-#include <powsybl/iidm/Bus.hpp>
-#include <powsybl/iidm/VoltageLevel.hpp>
-#include <powsybl/iidm/BusbarSection.hpp>
-#include <powsybl/iidm/Connectable.hpp>
+#include <iidm/Bus.h>
+#include <iidm/VoltageLevel.h>
+#include <iidm/BusbarSection.h>
 #include "DYNBusInterfaceIIDM.h"
 #include "DYNCommonConstants.h"
 #include "DYNStateVariable.h"
 #include "DYNTrace.h"
 #include "DYNCommon.h"
 using boost::shared_ptr;
-using powsybl::iidm::Bus;
+using iidm::Bus;
+using iidm::VoltageLevel;
 using std::string;
 
 namespace DYN {
 
-BusInterfaceIIDM::BusInterfaceIIDM(Bus& bus) :
+BusInterfaceIIDM::BusInterfaceIIDM(const Bus& bus, const VoltageLevel& voltageLevel) :
 BusInterface(false),
 busIIDM_(bus),
+voltageLevel_(voltageLevel),
+busId_(bus.getId()),
 hasConnection_(false) {
   setType(ComponentInterface::BUS);
   if (!std::isnan(busIIDM_.getV())) {
@@ -56,23 +58,25 @@ hasConnection_(false) {
 
 const std::string&
 BusInterfaceIIDM::getID() const {
-  return busIIDM_.getId();
+  return busId_;
 }
 
 double
 BusInterfaceIIDM::getVMax() const {
-  if (std::isnan(busIIDM_.getVoltageLevel().getHighVoltageLimit())) {
+  const auto high = voltageLevel_.getHighVoltageLimit();
+  if (!high.has_value()) {
     return uMaxPu * getVNom();   // default data
   }
-  return busIIDM_.getVoltageLevel().getHighVoltageLimit();
+  return high.value();
 }
 
 double
 BusInterfaceIIDM::getVMin() const {
-  if (std::isnan(busIIDM_.getVoltageLevel().getLowVoltageLimit())) {
+  const auto low = voltageLevel_.getLowVoltageLimit();
+  if (!low.has_value()) {
     return uMinPu * getVNom();   // default data
   }
-  return busIIDM_.getVoltageLevel().getLowVoltageLimit();
+  return low.value();
 }
 
 double
@@ -95,7 +99,7 @@ BusInterfaceIIDM::getAngle0() const {
 
 double
 BusInterfaceIIDM::getVNom() const {
-  return busIIDM_.getVoltageLevel().getNominalV();
+  return voltageLevel_.getNominalV();
 }
 
 double

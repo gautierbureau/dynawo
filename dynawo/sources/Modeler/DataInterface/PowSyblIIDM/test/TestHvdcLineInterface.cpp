@@ -17,93 +17,36 @@
 #include "DYNVscConverterInterfaceIIDM.h"
 #include "DYNVoltageLevelInterfaceIIDM.h"
 
-#include <powsybl/iidm/Bus.hpp>
-#include <powsybl/iidm/HvdcLine.hpp>
-#include <powsybl/iidm/HvdcLineAdder.hpp>
-#include <powsybl/iidm/LccConverterStation.hpp>
-#include <powsybl/iidm/LccConverterStationAdder.hpp>
-#include <powsybl/iidm/Network.hpp>
-#include <powsybl/iidm/Substation.hpp>
-#include <powsybl/iidm/Terminal.hpp>
-#include <powsybl/iidm/VscConverterStation.hpp>
-#include <powsybl/iidm/VscConverterStationAdder.hpp>
+#include <iidm/Network.h>
+#include <iidm/NetworkFactory.h>
+#include <iidm/HvdcLine.h>
+#include <iidm/Enums.h>
 
 #include "gtest_dynawo.h"
 
-namespace powsybl {
-namespace iidm {
-
-static Network
-createHvdcLineNetwork() {
-  Network network("test", "test");
-  Substation& substation = network.newSubstation().setId("S1").setName("S1_NAME").setCountry(Country::FR).setTso("TSO").add();
-
-  VoltageLevel& vl1 = substation.newVoltageLevel()
-                          .setId("VL1")
-                          .setName("VL1_NAME")
-                          .setTopologyKind(TopologyKind::BUS_BREAKER)
-                          .setNominalV(380.0)
-                          .setLowVoltageLimit(340.0)
-                          .setHighVoltageLimit(420.0)
-                          .add();
-
-  Bus& vl1Bus1 = vl1.getBusBreakerView().newBus().setId("VL1_BUS1").add();
-
-  vl1.newLccConverterStation()
-      .setId("LCC1")
-      .setName("LCC1_NAME")
-      .setBus(vl1Bus1.getId())
-      .setConnectableBus(vl1Bus1.getId())
-      .setLossFactor(2.0)
-      .setPowerFactor(-.2)
-      .add();
-
-  vl1.newVscConverterStation()
-      .setId("VSC2")
-      .setName("VSC2_NAME")
-      .setBus(vl1Bus1.getId())
-      .setConnectableBus(vl1Bus1.getId())
-      .setLossFactor(3.0)
-      .setVoltageRegulatorOn(true)
-      .setVoltageSetpoint(1.2)
-      .setReactivePowerSetpoint(-1.5)
-      .add();
-
-  network.newHvdcLine()
-      .setId("HVDC1")
-      .setName("HVDC1_NAME")
-      .setActivePowerSetpoint(111.1)
-      .setConvertersMode(HvdcLine::ConvertersMode::SIDE_1_RECTIFIER_SIDE_2_INVERTER)
-      .setConverterStationId1("LCC1")
-      .setConverterStationId2("VSC2")
-      .setMaxP(12.0)
-      .setNominalV(13.0)
-      .setR(14.0)
-      .add();
-
-  return network;
-}  // createHvdcLineNetwork()
-}  // namespace iidm
-}  // namespace powsybl
-
 namespace DYN {
 
-using powsybl::iidm::createHvdcLineNetwork;
+static iidm::VoltageLevel findVL(iidm::Network& net, const std::string& id) {
+  for (auto& vl : net.getVoltageLevels())
+    if (vl.getId() == id) return vl;
+  throw std::runtime_error("VoltageLevel not found: " + id);
+}
 
 TEST(DataInterfaceTest, HvdcLine) {
-  powsybl::iidm::Network network = createHvdcLineNetwork();
-  powsybl::iidm::HvdcLine& hvdcLine = network.getHvdcLine("HVDC1");
-  powsybl::iidm::LccConverterStation& lcc = network.getLccConverterStation("LCC1");
-  powsybl::iidm::VscConverterStation& vsc = network.getVscConverterStation("VSC2");
-  powsybl::iidm::VoltageLevel& vl1 = network.getVoltageLevel("VL1");
+  auto net = iidm::NetworkFactory::load("resources/hvdc.xiidm");
+  auto hvdcLine = net.getHvdcLine("HVDC1").value();
+  auto lcc = net.getLccConverterStation("LCC1").value();
+  auto vsc = net.getVscConverterStation("VSC2").value();
+  auto vl1 = findVL(net, "VL1");
 
   const std::shared_ptr<LccConverterInterface> LccIfce = std::make_shared<LccConverterInterfaceIIDM>(lcc);
   const std::shared_ptr<VscConverterInterface> VscIfce = std::make_shared<VscConverterInterfaceIIDM>(vsc);
 
-  DYN::HvdcLineInterfaceIIDM Ifce(hvdcLine, LccIfce, VscIfce);
+  HvdcLineInterfaceIIDM Ifce(hvdcLine, LccIfce, VscIfce);
   const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl1);
   LccIfce->setVoltageLevelInterface(vlItf);
   VscIfce->setVoltageLevelInterface(vlItf);
+
   ASSERT_EQ(Ifce.getID(), "HVDC1");
 
   ASSERT_EQ(Ifce.getIdConverter1(), "LCC1");
@@ -125,9 +68,9 @@ TEST(DataInterfaceTest, HvdcLine) {
   ASSERT_EQ(Ifce.getComponentVarIndex(std::string("invalid")), -1);
 
   ASSERT_EQ(Ifce.getConverterMode(), HvdcLineInterface::RECTIFIER_INVERTER);
-  hvdcLine.setConvertersMode(powsybl::iidm::HvdcLine::ConvertersMode::SIDE_1_INVERTER_SIDE_2_RECTIFIER);
+  hvdcLine.setConvertersMode(iidm::HvdcConverterStationMode::INVERTER);
   ASSERT_EQ(Ifce.getConverterMode(), HvdcLineInterface::INVERTER_RECTIFIER);
-  hvdcLine.setConvertersMode(powsybl::iidm::HvdcLine::ConvertersMode::SIDE_1_RECTIFIER_SIDE_2_INVERTER);
+  hvdcLine.setConvertersMode(iidm::HvdcConverterStationMode::RECTIFIER);
   ASSERT_EQ(Ifce.getConverterMode(), HvdcLineInterface::RECTIFIER_INVERTER);
 
   ASSERT_FALSE(Ifce.getDroop());
@@ -149,5 +92,6 @@ TEST(DataInterfaceTest, HvdcLine) {
   ASSERT_TRUE(Ifce.isPartiallyConnected());
 
   ASSERT_TRUE(Ifce.hasInitialConditions());
-}  // TEST(DataInterfaceTest, HvdcLine)
+}
+
 }  // namespace DYN

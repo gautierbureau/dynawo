@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_5" id="test" caseDate="2022-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="test">
+    <iidm:substation id="S1" country="FR" tso="TSO">
+        <iidm:voltageLevel id="VL1" nominalV="382.0" lowVoltageLimit="340.0" highVoltageLimit="420.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="VL1_BUS1"/>
+            </iidm:busBreakerTopology>
+            <iidm:generator id="GEN1" energySource="OTHER" minP="3.0" maxP="50.0"
+                voltageRegulatorOn="false" targetP="45.0" targetQ="10.0"
+                connectableBus="VL1_BUS1"/>
+        </iidm:voltageLevel>
+    </iidm:substation>
+</iidm:network>

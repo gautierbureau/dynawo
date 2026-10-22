@@ -24,14 +24,14 @@
 
 #include "DYNShuntCompensatorInterface.h"
 #include "DYNInjectorInterfaceIIDM.h"
-#include <powsybl/iidm/ShuntCompensator.hpp>
+#include <iidm/ShuntCompensator.h>
 
 namespace DYN {
 
 /**
  * class ShuntCompensatorInterfaceIIDM
  */
-class ShuntCompensatorInterfaceIIDM : public ShuntCompensatorInterface, public InjectorInterfaceIIDM {
+class ShuntCompensatorInterfaceIIDM : public ShuntCompensatorInterface, public InjectorInterfaceIIDM<iidm::ShuntCompensator> {
  public:
   /**
    * @brief defines the index of each state variable
@@ -47,7 +47,7 @@ class ShuntCompensatorInterfaceIIDM : public ShuntCompensatorInterface, public I
    * @brief Constructor
    * @param shunt shunt compensator's iidm instance
    */
-  explicit ShuntCompensatorInterfaceIIDM(powsybl::iidm::ShuntCompensator& shunt);
+  explicit ShuntCompensatorInterfaceIIDM(const iidm::ShuntCompensator& shunt);
 
   /**
    * @copydoc ComponentInterface::exportStateVariablesUnitComponent()
@@ -139,7 +139,7 @@ class ShuntCompensatorInterfaceIIDM : public ShuntCompensatorInterface, public I
   int getComponentVarIndex(const std::string& varName) const override;
 
  private:
-  powsybl::iidm::ShuntCompensator& shuntCompensatorIIDM_;  ///< reference to the iidm shunt compensator instance
+  iidm::ShuntCompensator shuntCompensatorIIDM_;  ///< iidm shunt compensator instance (value-typed handle)
 };
 }  // namespace DYN
 

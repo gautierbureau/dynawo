@@ -24,8 +24,11 @@
 
 #include "DYNInjectorInterfaceIIDM.h"
 
-#include <powsybl/iidm/HvdcLine.hpp>
-#include <powsybl/iidm/VscConverterStation.hpp>
+#include <iidm/HvdcLine.h>
+#include <iidm/VscConverterStation.h>
+#include <iidm/ReactiveCapabilityCurve.h>
+#include <iidm/MinMaxReactiveLimits.h>
+#include <iidm/VoltageLevel.h>
 
 #include <string>
 
@@ -33,7 +36,7 @@ using std::shared_ptr;
 
 namespace DYN {
 
-VscConverterInterfaceIIDM::VscConverterInterfaceIIDM(powsybl::iidm::VscConverterStation& vsc) : VscConverterInterface(false),
+VscConverterInterfaceIIDM::VscConverterInterfaceIIDM(const iidm::VscConverterStation& vsc) : VscConverterInterface(false),
                                                                                                 InjectorInterfaceIIDM(vsc, vsc.getId()),
                                                                                                 vscConverterIIDM_(vsc) {
   if (hasQInjector() || hasPInjector()) {
@@ -57,7 +60,7 @@ VscConverterInterfaceIIDM::importStaticParameters() {
   staticParameters_.insert(std::make_pair("qMax", StaticParameter("qMax", StaticParameter::DOUBLE).setValue(getQMax())));
   if (getBusInterface()) {
     double U0 = getBusInterface()->getV0();
-    double vNom = vscConverterIIDM_.getHvdcLine().get().getNominalV();
+    double vNom = vscConverterIIDM_.getHvdcLine().getNominalV();
     double theta = getBusInterface()->getAngle0();
     staticParameters_.insert(std::make_pair("v_pu", StaticParameter("v_pu", StaticParameter::DOUBLE).setValue(U0 / vNom)));
     staticParameters_.insert(std::make_pair("angle_pu", StaticParameter("angle_pu", StaticParameter::DOUBLE).setValue(theta * M_PI / 180)));
@@ -122,20 +125,57 @@ VscConverterInterfaceIIDM::getP() {
 
 double
 VscConverterInterfaceIIDM::getQMax() {
-  return vscConverterIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getMaxQ(-1 * getP());
+  if (vscConverterIIDM_.hasReactiveCapabilityCurve()) {
+    const auto curve = vscConverterIIDM_.getReactiveCapabilityCurve();
+    const double p = -1 * getP();
+    const auto points = curve.getPoints();
+    if (points.empty()) return 0.;
+    // Interpolate maxQ against p; fallback to nearest endpoint.
+    if (p <= points.front().p) return points.front().maxQ;
+    if (p >= points.back().p) return points.back().maxQ;
+    for (size_t i = 1; i < points.size(); ++i) {
+      if (p <= points[i].p) {
+        const double t = (p - points[i - 1].p) / (points[i].p - points[i - 1].p);
+        return points[i - 1].maxQ + t * (points[i].maxQ - points[i - 1].maxQ);
+      }
+    }
+    return points.back().maxQ;
+  }
+  if (vscConverterIIDM_.hasMinMaxReactiveLimits()) {
+    return vscConverterIIDM_.getMinMaxReactiveLimits().getMaxQ();
+  }
+  return 0.;
 }
 
 double
 VscConverterInterfaceIIDM::getQMin() {
-  return vscConverterIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getMinQ(-1 * getP());
+  if (vscConverterIIDM_.hasReactiveCapabilityCurve()) {
+    const auto curve = vscConverterIIDM_.getReactiveCapabilityCurve();
+    const double p = -1 * getP();
+    const auto points = curve.getPoints();
+    if (points.empty()) return 0.;
+    if (p <= points.front().p) return points.front().minQ;
+    if (p >= points.back().p) return points.back().minQ;
+    for (size_t i = 1; i < points.size(); ++i) {
+      if (p <= points[i].p) {
+        const double t = (p - points[i - 1].p) / (points[i].p - points[i - 1].p);
+        return points[i - 1].minQ + t * (points[i].minQ - points[i - 1].minQ);
+      }
+    }
+    return points.back().minQ;
+  }
+  if (vscConverterIIDM_.hasMinMaxReactiveLimits()) {
+    return vscConverterIIDM_.getMinMaxReactiveLimits().getMinQ();
+  }
+  return 0.;
 }
 
 std::vector<VscConverterInterface::ReactiveCurvePoint> VscConverterInterfaceIIDM::getReactiveCurvesPoints() const {
   std::vector<VscConverterInterface::ReactiveCurvePoint> ret;
-  if (vscConverterIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    const auto& reactiveCurve = vscConverterIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>();
+  if (vscConverterIIDM_.hasReactiveCapabilityCurve()) {
+    const auto reactiveCurve = vscConverterIIDM_.getReactiveCapabilityCurve();
     for (const auto& point : reactiveCurve.getPoints()) {
-      ret.emplace_back(point.getP(), point.getMinQ(), point.getMaxQ());
+      ret.emplace_back(point.p, point.minQ, point.maxQ);
     }
   }
 
@@ -149,7 +189,7 @@ VscConverterInterfaceIIDM::getQ() {
 
 const std::string&
 VscConverterInterfaceIIDM::getID() const {
-  return vscConverterIIDM_.getId();
+  return getIDInjector();
 }
 
 double
@@ -172,7 +212,7 @@ VscConverterInterfaceIIDM::getVoltageSetpoint() const {
   return vscConverterIIDM_.getVoltageSetpoint();
 }
 
-powsybl::iidm::VscConverterStation&
+iidm::VscConverterStation&
 VscConverterInterfaceIIDM::getVscIIDM() {
   return vscConverterIIDM_;
 }

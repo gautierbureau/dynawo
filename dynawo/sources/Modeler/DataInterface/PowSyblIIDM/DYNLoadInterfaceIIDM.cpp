@@ -24,13 +24,14 @@
 
 #include "DYNCommon.h"
 
-#include <powsybl/iidm/Load.hpp>
+#include <iidm/Load.h>
+#include <iidm/VoltageLevel.h>
 
-using powsybl::iidm::Load;
+using iidm::Load;
 
 namespace DYN {
 
-LoadInterfaceIIDM::LoadInterfaceIIDM(Load& load) : LoadInterface(false),
+LoadInterfaceIIDM::LoadInterfaceIIDM(const Load& load) : LoadInterface(false),
                                                    InjectorInterfaceIIDM(load, load.getId()),
                                                    loadIIDM_(load),
                                                    loadPUnderV_(0.),
@@ -191,7 +192,7 @@ LoadInterfaceIIDM::getPUnderVoltage() {
 
 bool
 LoadInterfaceIIDM::isFictitious() {
-  return (loadIIDM_.isFictitious() || loadIIDM_.getLoadType() == powsybl::iidm::LoadType::FICTITIOUS);
+  return (loadIIDM_.isFictitious() || loadIIDM_.getLoadType() == iidm::LoadType::FICTITIOUS);
 }
 
 }  // namespace DYN

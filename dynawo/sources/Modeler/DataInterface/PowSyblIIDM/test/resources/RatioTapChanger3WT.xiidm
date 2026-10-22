@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_5" id="test" caseDate="2022-01-01T00:00:00.000+01:00" forecastDistance="0" sourceFormat="test">
+    <iidm:substation id="S1" name="S1_NAME" country="FR" tso="TSO">
+        <iidm:voltageLevel id="VL1" name="VL1_NAME" nominalV="380.0" lowVoltageLimit="340.0" highVoltageLimit="420.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="VL1_BUS1"/>
+            </iidm:busBreakerTopology>
+        </iidm:voltageLevel>
+        <iidm:voltageLevel id="VL2" name="VL2_NAME" nominalV="225.0" lowVoltageLimit="200.0" highVoltageLimit="260.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="VL2_BUS1"/>
+            </iidm:busBreakerTopology>
+        </iidm:voltageLevel>
+        <iidm:voltageLevel id="VL3" name="VL3_NAME" nominalV="63.0" lowVoltageLimit="50.0" highVoltageLimit="70.0" topologyKind="BUS_BREAKER">
+            <iidm:busBreakerTopology>
+                <iidm:bus id="VL3_BUS1"/>
+            </iidm:busBreakerTopology>
+        </iidm:voltageLevel>
+        <iidm:threeWindingsTransformer id="3WT_VL1_VL2_VL3" name="3WT_VL1_VL2_VL3_NAME" r1="1.3" x1="1.4" g1="1.6" b1="1.7" ratedU1="380.0" r2="2.3" x2="2.4" g2="0.0" b2="0.0" ratedU2="225.0" r3="3.3" x3="3.4" g3="0.0" b3="0.0" ratedU3="63.0" ratedU0="380.0" bus1="VL1_BUS1" connectableBus1="VL1_BUS1" voltageLevelId1="VL1" bus2="VL2_BUS1" connectableBus2="VL2_BUS1" voltageLevelId2="VL2" bus3="VL3_BUS1" connectableBus3="VL3_BUS1" voltageLevelId3="VL3">
+            <iidm:ratioTapChanger2 lowTapPosition="1" tapPosition="2" loadTapChangingCapabilities="false">
+                <iidm:step r="12.0" x="14.0" g="11.0" b="10.0" rho="13.0"/>
+                <iidm:step r="17.0" x="19.0" g="16.0" b="15.0" rho="18.0"/>
+                <iidm:step r="22.0" x="24.0" g="21.0" b="20.0" rho="23.0"/>
+            </iidm:ratioTapChanger2>
+            <iidm:ratioTapChanger3 lowTapPosition="-3" tapPosition="-2" loadTapChangingCapabilities="false">
+                <iidm:step r="-12.0" x="-14.0" g="-11.0" b="-10.0" rho="-13.0"/>
+                <iidm:step r="-17.0" x="-19.0" g="-16.0" b="-15.0" rho="-18.0"/>
+                <iidm:step r="-22.0" x="-24.0" g="-21.0" b="-20.0" rho="-23.0"/>
+                <iidm:step r="-220.0" x="-240.0" g="-210.0" b="-200.0" rho="-230.0"/>
+            </iidm:ratioTapChanger3>
+        </iidm:threeWindingsTransformer>
+    </iidm:substation>
+</iidm:network>

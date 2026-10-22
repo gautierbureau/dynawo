@@ -19,27 +19,23 @@
  *
  */
 //======================================================================
-#include <boost/dll/import.hpp>
-#include <boost/function.hpp>
-
 #include "DYNStaticVarCompensatorInterfaceIIDM.h"
 #include "DYNExecUtils.h"
 #include "DYNFileSystemUtils.h"
-#include "DYNIIDMExtensions.hpp"
+#include <iidm/StaticVarCompensator.h>
+#include <iidm/VoltageLevel.h>
+#include <iidm/VoltagePerReactivePowerControl.h>
 #include <iostream>
 
-using powsybl::iidm::StaticVarCompensator;
+using iidm::StaticVarCompensator;
 using std::string;
 using std::shared_ptr;
 
 namespace DYN {
 
-StaticVarCompensatorInterfaceIIDM::~StaticVarCompensatorInterfaceIIDM() {
-  // destroy the class
-  destroy_extension_(extension_);
-}
+StaticVarCompensatorInterfaceIIDM::~StaticVarCompensatorInterfaceIIDM() = default;
 
-StaticVarCompensatorInterfaceIIDM::StaticVarCompensatorInterfaceIIDM(StaticVarCompensator& svc) :
+StaticVarCompensatorInterfaceIIDM::StaticVarCompensatorInterfaceIIDM(const StaticVarCompensator& svc) :
 StaticVarCompensatorInterface(false),
 InjectorInterfaceIIDM(svc, svc.getId()),
 staticVarCompensatorIIDM_(svc) {
@@ -49,21 +45,15 @@ staticVarCompensatorIIDM_(svc) {
 
   setType(ComponentInterface::SVC);
 
-  auto libPath = IIDMExtensions::findLibraryPath();
-  auto extensionDef = IIDMExtensions::getExtension<StaticVarCompensatorInterfaceIIDMExtension>(libPath.generic_string());
-
-  extension_ = std::get<IIDMExtensions::CREATE_FUNCTION>(extensionDef)(svc);
-  destroy_extension_ = std::get<IIDMExtensions::DESTROY_FUNCTION>(extensionDef);
-  voltagePerReactivePowerControl_ = svc.findExtension<powsybl::iidm::extensions::iidm::VoltagePerReactivePowerControl>();
+  hasVoltagePerReactivePowerControl_ = svc.hasVoltagePerReactivePowerControl();
 
   stateVariables_.resize(3);
   stateVariables_[VAR_P] = StateVariable("p", StateVariable::DOUBLE);  // P
   stateVariables_[VAR_Q] = StateVariable("q", StateVariable::DOUBLE);  // Q
   stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);  // connectionState
-  if (hasStandbyAutomaton()) {
-    stateVariables_.resize(VAR_REGULATINGMODE+1);
-    stateVariables_[VAR_REGULATINGMODE] = StateVariable("regulatingMode", StateVariable::INT);  // regulatingMode
-  }
+  // The PowSyBl StandbyAutomaton extension is not exposed by iidm-bridge yet,
+  // so the regulating-mode state variable is not registered (hasStandbyAutomaton()
+  // always returns false below).
 }
 
 int
@@ -98,27 +88,8 @@ StaticVarCompensatorInterfaceIIDM::exportStateVariablesUnitComponent() {
   staticVarCompensatorIIDM_.getTerminal().setP(-1 * getValue<double>(VAR_P) * SNREF);
   staticVarCompensatorIIDM_.getTerminal().setQ(-1 * getValue<double>(VAR_Q) * SNREF);
   bool connected = (getValue<int>(VAR_STATE) == CLOSED);
-  if (hasStandbyAutomaton()) {
-    int regulatingMode = getValue<int>(VAR_REGULATINGMODE);
-    bool standbyMode(false);
-    switch (regulatingMode) {
-      case StaticVarCompensatorInterface::OFF:
-        staticVarCompensatorIIDM_.setRegulationMode(powsybl::iidm::StaticVarCompensator::RegulationMode::OFF);
-        break;
-      case StaticVarCompensatorInterface::STANDBY:
-        standbyMode = true;
-        break;
-      case StaticVarCompensatorInterface::RUNNING_Q:
-        staticVarCompensatorIIDM_.setRegulationMode(powsybl::iidm::StaticVarCompensator::RegulationMode::REACTIVE_POWER);
-        break;
-      case StaticVarCompensatorInterface::RUNNING_V:
-        staticVarCompensatorIIDM_.setRegulationMode(powsybl::iidm::StaticVarCompensator::RegulationMode::VOLTAGE);
-        break;
-      default:
-        throw DYNError(Error::STATIC_DATA, RegulationModeNotInIIDM, regulatingMode, staticVarCompensatorIIDM_.getId());
-    }
-    extension_->exportStandByMode(standbyMode);
-  }
+  // StandbyAutomaton extension not yet exposed by iidm-bridge - the
+  // regulatingMode state variable is never registered, so nothing to export.
 
   if (getVoltageLevelInterfaceInjector()->isNodeBreakerTopology()) {
     // should be removed once a solution has been found to propagate switches (de)connection
@@ -199,17 +170,17 @@ StaticVarCompensatorInterfaceIIDM::getVNom() const {
 
 const std::string&
 StaticVarCompensatorInterfaceIIDM::getID() const {
-  return staticVarCompensatorIIDM_.getId();
+  return getIDInjector();
 }
 
 double
 StaticVarCompensatorInterfaceIIDM::getBMin() const {
-  return staticVarCompensatorIIDM_.getBmin();
+  return staticVarCompensatorIIDM_.getBMin();
 }
 
 double
 StaticVarCompensatorInterfaceIIDM::getBMax() const {
-  return staticVarCompensatorIIDM_.getBmax();
+  return staticVarCompensatorIIDM_.getBMax();
 }
 
 double
@@ -224,16 +195,13 @@ StaticVarCompensatorInterfaceIIDM::getQ() {
 
 bool
 StaticVarCompensatorInterfaceIIDM::hasVoltagePerReactivePowerControl() const {
-  if (voltagePerReactivePowerControl_) {
-    return true;
-  }
-  return false;
+  return hasVoltagePerReactivePowerControl_;
 }
 
 double
 StaticVarCompensatorInterfaceIIDM::getSlope() const {
-  if (hasVoltagePerReactivePowerControl()) {
-    return voltagePerReactivePowerControl_.get().getSlope();
+  if (hasVoltagePerReactivePowerControl_) {
+    return staticVarCompensatorIIDM_.getVoltagePerReactivePowerControl().getSlope();
   }
   return 0.;
 }
@@ -248,53 +216,39 @@ StaticVarCompensatorInterfaceIIDM::getReactivePowerSetPoint() const {
   return staticVarCompensatorIIDM_.getReactivePowerSetpoint();
 }
 
+// StandbyAutomaton extension is not exposed by iidm-bridge yet; return defaults
+// until the bridge surfaces it. PowSyBl reference: StandbyAutomaton extension
+// on StaticVarCompensator (UMinActivation, UMaxActivation, UMin/MaxSetPoint,
+// standby flag, B0).
 double
-StaticVarCompensatorInterfaceIIDM::getUMinActivation() const {
-  return extension_ ? extension_->getUMinActivation() : 0.0;
-}
+StaticVarCompensatorInterfaceIIDM::getUMinActivation() const { return 0.0; }
 
 double
-StaticVarCompensatorInterfaceIIDM::getUMaxActivation() const {
-  return extension_ ? extension_->getUMaxActivation() : 0.0;
-}
+StaticVarCompensatorInterfaceIIDM::getUMaxActivation() const { return 0.0; }
 
 double
-StaticVarCompensatorInterfaceIIDM::getUSetPointMin() const {
-  return extension_ ? extension_->getUSetPointMin() : 0.0;
-}
+StaticVarCompensatorInterfaceIIDM::getUSetPointMin() const { return 0.0; }
 
 double
-StaticVarCompensatorInterfaceIIDM::getUSetPointMax() const {
-  return extension_ ? extension_->getUSetPointMax() : 0.0;
-}
+StaticVarCompensatorInterfaceIIDM::getUSetPointMax() const { return 0.0; }
 
 bool
-StaticVarCompensatorInterfaceIIDM::hasStandbyAutomaton() const {
-  return extension_ ? extension_->hasStandbyAutomaton() : false;
-}
+StaticVarCompensatorInterfaceIIDM::hasStandbyAutomaton() const { return false; }
 
 bool
-StaticVarCompensatorInterfaceIIDM::isStandBy() const {
-  return extension_ ? extension_->isStandBy() : false;
-}
+StaticVarCompensatorInterfaceIIDM::isStandBy() const { return false; }
 
 double
-StaticVarCompensatorInterfaceIIDM::getB0() const {
-  return extension_ ? extension_->getB0() : 0.0;
-}
+StaticVarCompensatorInterfaceIIDM::getB0() const { return 0.0; }
 
 StaticVarCompensatorInterface::RegulationMode_t StaticVarCompensatorInterfaceIIDM::getRegulationMode() const {
-  if (extension_ && extension_->isStandBy()) {
-    return StaticVarCompensatorInterface::STANDBY;
-  }
-
-  const powsybl::iidm::StaticVarCompensator::RegulationMode& regMode = staticVarCompensatorIIDM_.getRegulationMode();
+  iidm::StaticVarCompensatorRegulationMode regMode = staticVarCompensatorIIDM_.getRegulationMode();
   switch (regMode) {
-    case powsybl::iidm::StaticVarCompensator::RegulationMode::VOLTAGE:
+    case iidm::StaticVarCompensatorRegulationMode::VOLTAGE:
       return StaticVarCompensatorInterface::RUNNING_V;
-    case powsybl::iidm::StaticVarCompensator::RegulationMode::REACTIVE_POWER:
+    case iidm::StaticVarCompensatorRegulationMode::REACTIVE_POWER:
       return StaticVarCompensatorInterface::RUNNING_Q;
-    case powsybl::iidm::StaticVarCompensator::RegulationMode::OFF:
+    case iidm::StaticVarCompensatorRegulationMode::OFF:
       return StaticVarCompensatorInterface::OFF;
     default:
       return StaticVarCompensatorInterface::OFF;

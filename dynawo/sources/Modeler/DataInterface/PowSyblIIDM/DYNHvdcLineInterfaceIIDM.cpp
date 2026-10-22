@@ -24,7 +24,7 @@
 
 #include "DYNHvdcLineInterfaceIIDM.h"
 
-#include <powsybl/iidm/HvdcLine.hpp>
+#include <iidm/HvdcLine.h>
 
 #include "DYNLccConverterInterfaceIIDM.h"
 #include "DYNModelConstants.h"
@@ -38,9 +38,10 @@ using std::string;
 
 namespace DYN {
 
-HvdcLineInterfaceIIDM::HvdcLineInterfaceIIDM(powsybl::iidm::HvdcLine& hvdcLine,
+HvdcLineInterfaceIIDM::HvdcLineInterfaceIIDM(const iidm::HvdcLine& hvdcLine,
                                              const shared_ptr<ConverterInterface>& conv1,
                                              const shared_ptr<ConverterInterface>& conv2) : hvdcLineIIDM_(hvdcLine),
+                                                                                            hvdcLineId_(hvdcLine.getId()),
                                                                                             conv1_(conv1),
                                                                                             conv2_(conv2) {
   setType(ComponentInterface::HVDC_LINE);
@@ -52,8 +53,8 @@ HvdcLineInterfaceIIDM::HvdcLineInterfaceIIDM(powsybl::iidm::HvdcLine& hvdcLine,
   stateVariables_[VAR_STATE1] = StateVariable("state1", StateVariable::INT);  // connectionState1
   stateVariables_[VAR_STATE2] = StateVariable("state2", StateVariable::INT);  // connectionState2
 
-  hvdcActivePowerControl_ = hvdcLine.findExtension<powsybl::iidm::extensions::iidm::HvdcAngleDroopActivePowerControl>();
-  hvdcActivePowerRange_ = hvdcLine.findExtension<powsybl::iidm::extensions::iidm::HvdcOperatorActivePowerRange>();
+  hasHvdcActivePowerControl_ = hvdcLine.hasHvdcAngleDroopActivePowerControl();
+  hasHvdcActivePowerRange_ = hvdcLine.hasHvdcOperatorActivePowerRange();
 }
 
 HvdcLineInterfaceIIDM::~HvdcLineInterfaceIIDM() {
@@ -184,13 +185,13 @@ void HvdcLineInterfaceIIDM::exportStateVariablesUnitComponent() {
 void HvdcLineInterfaceIIDM::importStaticParameters() {
   staticParameters_.clear();
 
-  bool isACEmulationEnabled = hvdcActivePowerControl_ && hvdcActivePowerControl_.get().isEnabled();
+  bool isACEmulationEnabled = hasHvdcActivePowerControl_ && hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl().isEnabled();
   double p0ACEmulationPu = 0.;
   double droop = 0.;
   if (isACEmulationEnabled) {
-    double p0ACEmulation = hvdcActivePowerControl_.get().getP0();
-    p0ACEmulationPu = p0ACEmulation / SNREF;
-    droop = hvdcActivePowerControl_.get().getDroop();
+    const auto apc = hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl();
+    p0ACEmulationPu = apc.getP0() / SNREF;
+    droop = apc.getDroop();
   }
   staticParameters_.insert(std::make_pair("isACEmulationEnabled", StaticParameter("isACEmulationEnabled",
                              StaticParameter::BOOL).setValue(isACEmulationEnabled)));
@@ -254,7 +255,7 @@ HvdcLineInterfaceIIDM::isPartiallyConnected() const {
 
 const std::string&
 HvdcLineInterfaceIIDM::getID() const {
-  return hvdcLineIIDM_.getId();
+  return hvdcLineId_;
 }
 
 double
@@ -279,18 +280,19 @@ HvdcLineInterfaceIIDM::getPmax() const {
 
 HvdcLineInterfaceIIDM::ConverterMode_t
 HvdcLineInterfaceIIDM::getConverterMode() const {
-  return hvdcLineIIDM_.getConvertersMode() ==
-      powsybl::iidm::HvdcLine::ConvertersMode::SIDE_1_RECTIFIER_SIDE_2_INVERTER ? HvdcLineInterface::RECTIFIER_INVERTER : HvdcLineInterface::INVERTER_RECTIFIER;
+  return hvdcLineIIDM_.getConvertersMode() == iidm::HvdcConverterStationMode::RECTIFIER
+             ? HvdcLineInterface::RECTIFIER_INVERTER
+             : HvdcLineInterface::INVERTER_RECTIFIER;
 }
 
 string
 HvdcLineInterfaceIIDM::getIdConverter1() const {
-  return hvdcLineIIDM_.getConverterStation1().get().getId();
+  return hvdcLineIIDM_.getConverterStation1Id();
 }
 
 string
 HvdcLineInterfaceIIDM::getIdConverter2() const {
-  return hvdcLineIIDM_.getConverterStation2().get().getId();
+  return hvdcLineIIDM_.getConverterStation2Id();
 }
 
 int HvdcLineInterfaceIIDM::getComponentVarIndex(const std::string& varName) const {
@@ -322,27 +324,32 @@ HvdcLineInterfaceIIDM::getConverter2() const {
 
 boost::optional<double>
 HvdcLineInterfaceIIDM::getDroop() const {
-  return hvdcActivePowerControl_ ? hvdcActivePowerControl_.get().getDroop() : boost::optional<double>();
+  return hasHvdcActivePowerControl_ ? boost::optional<double>(hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl().getDroop())
+                                    : boost::optional<double>();
 }
 
 boost::optional<double>
 HvdcLineInterfaceIIDM::getP0() const {
-  return hvdcActivePowerControl_ ? hvdcActivePowerControl_.get().getP0() : boost::optional<double>();
+  return hasHvdcActivePowerControl_ ? boost::optional<double>(hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl().getP0())
+                                    : boost::optional<double>();
 }
 
 boost::optional<bool>
 HvdcLineInterfaceIIDM::isActivePowerControlEnabled() const {
-  return hvdcActivePowerControl_ ? hvdcActivePowerControl_.get().isEnabled() : boost::optional<bool>();
+  return hasHvdcActivePowerControl_ ? boost::optional<bool>(hvdcLineIIDM_.getHvdcAngleDroopActivePowerControl().isEnabled())
+                                    : boost::optional<bool>();
 }
 
 boost::optional<double>
 HvdcLineInterfaceIIDM::getOprFromCS1toCS2() const {
-  return hvdcActivePowerRange_ ? hvdcActivePowerRange_.get().getOprFromCS1toCS2() : boost::optional<double>();
+  return hasHvdcActivePowerRange_ ? boost::optional<double>(hvdcLineIIDM_.getHvdcOperatorActivePowerRange().getOprFromCS1toCS2())
+                                  : boost::optional<double>();
 }
 
 boost::optional<double>
 HvdcLineInterfaceIIDM::getOprFromCS2toCS1() const {
-  return hvdcActivePowerRange_ ? hvdcActivePowerRange_.get().getOprFromCS2toCS1() : boost::optional<double>();
+  return hasHvdcActivePowerRange_ ? boost::optional<double>(hvdcLineIIDM_.getHvdcOperatorActivePowerRange().getOprFromCS2toCS1())
+                                  : boost::optional<double>();
 }
 
 

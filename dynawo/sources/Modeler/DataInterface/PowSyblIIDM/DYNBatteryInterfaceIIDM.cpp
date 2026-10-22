@@ -23,14 +23,20 @@
 
 #include "DYNBatteryInterfaceIIDM.h"
 
-#include <powsybl/iidm/MinMaxReactiveLimits.hpp>
+#include <iidm/MinMaxReactiveLimits.h>
+#include <iidm/ReactiveCapabilityCurve.h>
+#include <iidm/ActivePowerControl.h>
+#include <iidm/VoltageLevel.h>
+
+#include <cmath>
+#include <cassert>
 
 using std::string;
 using std::vector;
 
 namespace DYN {
 
-BatteryInterfaceIIDM::BatteryInterfaceIIDM(powsybl::iidm::Battery& battery) :
+BatteryInterfaceIIDM::BatteryInterfaceIIDM(const iidm::Battery& battery) :
 InjectorInterfaceIIDM(battery, battery.getId()),
 batteryIIDM_(battery) {
   setType(ComponentInterface::GENERATOR);
@@ -39,7 +45,7 @@ batteryIIDM_(battery) {
   stateVariables_[VAR_P] = StateVariable("p", StateVariable::DOUBLE, neededForCriteriaCheck);  // P
   stateVariables_[VAR_Q] = StateVariable("q", StateVariable::DOUBLE);  // Q
   stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);   // connectionState
-  activePowerControl_ = battery.findExtension<powsybl::iidm::extensions::iidm::ActivePowerControl>();
+  hasActivePowerControl_ = batteryIIDM_.hasActivePowerControl();
 }
 
 int
@@ -189,10 +195,10 @@ BatteryInterfaceIIDM::getQ() {
 
 double
 BatteryInterfaceIIDM::getQMax() {
-  if (batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::MIN_MAX) {
-    return batteryIIDM_.getReactiveLimits<powsybl::iidm::MinMaxReactiveLimits>().getMaxQ();
-  } else if (batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    assert(batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>().getPointCount() > 0);
+  if (batteryIIDM_.hasMinMaxReactiveLimits()) {
+    return batteryIIDM_.getMinMaxReactiveLimits().getMaxQ();
+  } else if (batteryIIDM_.hasReactiveCapabilityCurve()) {
+    assert(batteryIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
     double qMax = 0.0;
     const double pGen = - getP();
     const auto& points = getReactiveCurvesPoints();
@@ -218,11 +224,11 @@ BatteryInterfaceIIDM::getQMax() {
 
 double
 BatteryInterfaceIIDM::getQNom() {
-  if (batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::MIN_MAX) {
-    return std::max(std::abs(batteryIIDM_.getReactiveLimits<powsybl::iidm::MinMaxReactiveLimits>().getMaxQ()),
-        std::abs(batteryIIDM_.getReactiveLimits<powsybl::iidm::MinMaxReactiveLimits>().getMinQ()));
-  } else if (batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    assert(batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>().getPointCount() > 0);
+  if (batteryIIDM_.hasMinMaxReactiveLimits()) {
+    return std::max(std::abs(batteryIIDM_.getMinMaxReactiveLimits().getMaxQ()),
+        std::abs(batteryIIDM_.getMinMaxReactiveLimits().getMinQ()));
+  } else if (batteryIIDM_.hasReactiveCapabilityCurve()) {
+    assert(batteryIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
     double qNom = 0.0;
     const auto& points = getReactiveCurvesPoints();
     for (unsigned int i = 0; i < points.size(); ++i) {
@@ -242,10 +248,10 @@ BatteryInterfaceIIDM::getQNom() {
 
 double
 BatteryInterfaceIIDM::getQMin() {
-  if (batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::MIN_MAX) {
-    return batteryIIDM_.getReactiveLimits<powsybl::iidm::MinMaxReactiveLimits>().getMinQ();
-  } else if (batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    assert(batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>().getPointCount() > 0);
+  if (batteryIIDM_.hasMinMaxReactiveLimits()) {
+    return batteryIIDM_.getMinMaxReactiveLimits().getMinQ();
+  } else if (batteryIIDM_.hasReactiveCapabilityCurve()) {
+    assert(batteryIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
     double qMin = 0.0;
     const double pGen = - getP();
     const auto& points = getReactiveCurvesPoints();
@@ -282,18 +288,17 @@ BatteryInterfaceIIDM::getTargetV() {
 
 const std::string&
 BatteryInterfaceIIDM::getID() const {
-  return batteryIIDM_.getId();
+  return getIDInjector();
 }
 
 vector<GeneratorInterface::ReactiveCurvePoint> BatteryInterfaceIIDM::getReactiveCurvesPoints() const {
   vector<GeneratorInterface::ReactiveCurvePoint> ret;
-  if (batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveLimits>().getKind() == powsybl::iidm::ReactiveLimitsKind::CURVE) {
-    const auto& reactiveCurve = batteryIIDM_.getReactiveLimits<powsybl::iidm::ReactiveCapabilityCurve>();
+  if (batteryIIDM_.hasReactiveCapabilityCurve()) {
+    const auto reactiveCurve = batteryIIDM_.getReactiveCapabilityCurve();
     for (const auto& point : reactiveCurve.getPoints()) {
-      ret.emplace_back(point.getP(), point.getMinQ(), point.getMaxQ());
+      ret.emplace_back(point.p, point.minQ, point.maxQ);
     }
   }
-
   return ret;
 }
 
@@ -303,16 +308,13 @@ bool BatteryInterfaceIIDM::isVoltageRegulationOn() const {
 
 bool
 BatteryInterfaceIIDM::hasActivePowerControl() const {
-  if (activePowerControl_) {
-    return true;
-  }
-  return false;
+  return hasActivePowerControl_;
 }
 
 bool
 BatteryInterfaceIIDM::isParticipating() const {
   if (hasActivePowerControl()) {
-    return activePowerControl_.get().isParticipate();
+    return batteryIIDM_.getActivePowerControl().isParticipate();
   }
   return false;
 }
@@ -320,7 +322,7 @@ BatteryInterfaceIIDM::isParticipating() const {
 double
 BatteryInterfaceIIDM::getActivePowerControlDroop() const {
   if (hasActivePowerControl() && isParticipating()) {
-    return activePowerControl_.get().getDroop();
+    return batteryIIDM_.getActivePowerControl().getDroop();
   }
   return 0.;
 }

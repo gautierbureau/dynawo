@@ -147,17 +147,20 @@ ServiceManagerInterfaceIIDM::getRegulatedBus(const std::string& regulatingCompon
       if (isABattery) {
         return std::shared_ptr<BusInterface>();
       } else {
-        const auto& generator = dataInterface_->getNetworkIIDM().getGenerator(regulatingComp.get()->getID());
-        return getRegulatedBusOnSide(generator.getRegulatingTerminal());
+        auto generator = dataInterface_->getNetworkIIDM().getGenerator(regulatingComp.get()->getID());
+        if (!generator) return std::shared_ptr<BusInterface>();
+        return getRegulatedBusOnSide(generator.value().getRegulatingTerminal());
       }
     }
     case ComponentInterface::SVC: {
-      const auto& svc = dataInterface_->getNetworkIIDM().getStaticVarCompensator(regulatingComp.get()->getID());
-      return getRegulatedBusOnSide(svc.getRegulatingTerminal());
+      auto svc = dataInterface_->getNetworkIIDM().getStaticVarCompensator(regulatingComp.get()->getID());
+      if (!svc) return std::shared_ptr<BusInterface>();
+      return getRegulatedBusOnSide(svc.value().getRegulatingTerminal());
     }
     case ComponentInterface::SHUNT: {
-      const auto& shunt = dataInterface_->getNetworkIIDM().getShuntCompensator(regulatingComp.get()->getID());
-      return getRegulatedBusOnSide(shunt.getRegulatingTerminal());
+      auto shunt = dataInterface_->getNetworkIIDM().getShuntCompensator(regulatingComp.get()->getID());
+      if (!shunt) return std::shared_ptr<BusInterface>();
+      return getRegulatedBusOnSide(shunt.value().getRegulatingTerminal());
     }
     case ComponentInterface::UNKNOWN:
     case ComponentInterface::BUS:
@@ -173,22 +176,23 @@ ServiceManagerInterfaceIIDM::getRegulatedBus(const std::string& regulatingCompon
     case ComponentInterface::COMPONENT_TYPE_COUNT:
       break;
     case ComponentInterface::VSC_CONVERTER: {
-      const auto& vsc = dataInterface_->getNetworkIIDM().getVscConverterStation(regulatingComp.get()->getID());
-      return getRegulatedBusOnSide(vsc.getTerminal());  // regulating at connection terminal
+      auto vsc = dataInterface_->getNetworkIIDM().getVscConverterStation(regulatingComp.get()->getID());
+      if (!vsc) return std::shared_ptr<BusInterface>();
+      return getRegulatedBusOnSide(vsc.value().getRegulatingTerminal());
     }
   }
   return std::shared_ptr<BusInterface> ();
 }
 
 std::shared_ptr<BusInterface>
-ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const powsybl::iidm::Terminal& terminal) const {
+ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const iidm::Terminal& terminal) const {
   auto regulatedId = dataInterface_->findBusInterface(terminal)->getID();
   const auto& regulatedComponent = dataInterface_->findComponent(regulatedId);
   switch (regulatedComponent->getType()) {
     case ComponentInterface::LINE: {
       std::shared_ptr<LineInterface> line = std::dynamic_pointer_cast<LineInterface>(regulatedComponent);
-      const auto& lineIIDM = dataInterface_->getNetworkIIDM().getLine(regulatedComponent.get()->getID());
-      if (stdcxx::areSame(terminal, lineIIDM.getTerminal1()))
+      auto lineIIDM = dataInterface_->getNetworkIIDM().getLine(regulatedComponent.get()->getID());
+      if (lineIIDM && terminal == lineIIDM.value().getTerminal1())
         return line.get()->getBusInterface1();
       return line.get()->getBusInterface2();
     }
@@ -198,9 +202,9 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const powsybl::iidm::Terminal
     }
     case ComponentInterface::SWITCH: {
       std::shared_ptr<SwitchInterface> switch_ = std::dynamic_pointer_cast<SwitchInterface>(regulatedComponent);
-      const auto& SwitchTerminals = terminal.getConnectable().get().getTerminals();
-      assert(static_cast<int>(SwitchTerminals.size()) == 2);
-      if (stdcxx::areSame(terminal, SwitchTerminals.at(0).get()))
+      const auto switchTerminals = terminal.getTerminals();
+      assert(switchTerminals.size() == 2);
+      if (terminal == switchTerminals.at(0))
         return switch_.get()->getBusInterface1();
       return switch_.get()->getBusInterface2();
     }
@@ -215,8 +219,8 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const powsybl::iidm::Terminal
     }
     case ComponentInterface::TWO_WTFO: {
       std::shared_ptr<TwoWTransformerInterface> TwoWTransf = std::dynamic_pointer_cast<TwoWTransformerInterface>(regulatedComponent);
-      const auto& TwoWTransfIIDM = dataInterface_->getNetworkIIDM().getTwoWindingsTransformer(regulatedComponent.get()->getID());
-      if (stdcxx::areSame(terminal, TwoWTransfIIDM.getTerminal1()))
+      auto TwoWTransfIIDM = dataInterface_->getNetworkIIDM().getTwoWindingsTransformer(regulatedComponent.get()->getID());
+      if (TwoWTransfIIDM && terminal == TwoWTransfIIDM.value().getTerminal1())
         return TwoWTransf.get()->getBusInterface1();
       return TwoWTransf.get()->getBusInterface2();
     }
@@ -234,11 +238,13 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const powsybl::iidm::Terminal
     }
     case ComponentInterface::THREE_WTFO: {
       std::shared_ptr<ThreeWTransformerInterface> ThreeWTransf = std::dynamic_pointer_cast<ThreeWTransformerInterface>(regulatedComponent);
-      const auto& ThreeWTransfIIDM = dataInterface_->getNetworkIIDM().getThreeWindingsTransformer(regulatedComponent.get()->getID());
-      if (stdcxx::areSame(terminal, ThreeWTransfIIDM.getLeg1().getTerminal()))
-        return ThreeWTransf.get()->getBusInterface1();
-      if (stdcxx::areSame(terminal, ThreeWTransfIIDM.getLeg2().getTerminal()))
-        return ThreeWTransf.get()->getBusInterface2();
+      auto ThreeWTransfIIDM = dataInterface_->getNetworkIIDM().getThreeWindingsTransformer(regulatedComponent.get()->getID());
+      if (ThreeWTransfIIDM) {
+        if (terminal == ThreeWTransfIIDM.value().getLeg1().getTerminal())
+          return ThreeWTransf.get()->getBusInterface1();
+        if (terminal == ThreeWTransfIIDM.value().getLeg2().getTerminal())
+          return ThreeWTransf.get()->getBusInterface2();
+      }
       return ThreeWTransf.get()->getBusInterface3();
     }
     case ComponentInterface::UNKNOWN:
