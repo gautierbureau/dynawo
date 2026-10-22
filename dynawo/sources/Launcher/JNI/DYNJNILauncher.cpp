@@ -181,8 +181,8 @@ void runJobs(const std::string& jobsFile, const std::shared_ptr<const DYN::Input
     const std::shared_ptr<DYN::OutputFiles>& outputFiles, const std::string& networkId) {
   // the JVM handles the signals of the process
   DYN::SignalHandler::disableSignalHandlers();
+  // the inputs given in memory are still XML documents, which Xerces parses; libxml2 parsed the IIDM files of iidm4cpp
   DYN::InitXerces xerces;
-  DYN::InitLibXml2 libxml2;
   if (!dictionariesLoaded) {
     DYN::IoDicos& dicos = DYN::IoDicos::instance();
     dicos.addPath(getMandatoryEnvVar("DYNAWO_RESOURCES_DIR"));
