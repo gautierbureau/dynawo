@@ -25,10 +25,17 @@ set(package_name        "libiidm")
 set(package_config_dir  "IidmBridge")
 set(package_install_dir "${CMAKE_INSTALL_PREFIX}/${package_name}")
 
-# Pinning the master branch by commit SHA keeps builds reproducible while the
-# upstream project is in rapid pre-1.0 iteration. Bump this together with any
-# API migration work.
-set(iidm_bridge_git_tag "8bc24df")
+# A release tag of iidm-bridge: bump it together with any API migration work.
+set(iidm_bridge_git_tag "v0.0.7")
+
+# The GraalVM backend runs Dynawo on its own (dynawo.sh jobs) and needs the native image; the JNI
+# backend, for Dynawo run from a JVM, only needs a JDK. DYNAWO_LIBIIDM_ENABLE_GRAALVM=OFF builds the
+# JNI backend alone, without the native image.
+if(DEFINED ENV{DYNAWO_LIBIIDM_ENABLE_GRAALVM})
+  set(iidm_bridge_graalvm $ENV{DYNAWO_LIBIIDM_ENABLE_GRAALVM})
+else()
+  set(iidm_bridge_graalvm ON)
+endif()
 
 if(DEFINED ENV{DYNAWO_LIBIIDM_GIT_URL})
   set(iidm_bridge_git_url $ENV{DYNAWO_LIBIIDM_GIT_URL})
@@ -86,20 +93,22 @@ else()
                       "$<$<BOOL:${FORCE_CXX11_ABI}>:-DCMAKE_CXX_FLAGS=-D_GLIBCXX_USE_CXX11_ABI=1>"
                       "$<$<BOOL:${MSVC}>:-DINSTALL_LIB_DIR:STRING=bin>"
                       "-DBUILD_SHARED_LIBS=ON"
-                      "-DIIDM_BRIDGE_ENABLE_GRAALVM=ON"
+                      "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
+                      "-DIIDM_BRIDGE_ENABLE_GRAALVM=${iidm_bridge_graalvm}"
                       "-DIIDM_BRIDGE_ENABLE_JNI=ON"
                       "-DIIDM_BRIDGE_BUILD_TESTS=OFF"
                       "-DIIDM_BRIDGE_BUILD_EXAMPLES=OFF"
                       "-DIIDM_BRIDGE_BUILD_JAVA=ON"
-                      "-DIIDM_BRIDGE_BUILD_NATIVE=ON"
+                      "-DIIDM_BRIDGE_BUILD_NATIVE=${iidm_bridge_graalvm}"
                       ${_native_image_hint}
   )
 
   unset(_native_image_hint)
-
-  unset(iidm_bridge_git_url)
-  unset(iidm_bridge_git_tag)
 endif()
+
+unset(iidm_bridge_graalvm)
+unset(iidm_bridge_git_url)
+unset(iidm_bridge_git_tag)
 
 unset(package_install_dir)
 unset(package_config_dir)

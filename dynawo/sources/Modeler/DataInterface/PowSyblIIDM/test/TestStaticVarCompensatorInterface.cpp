@@ -106,9 +106,9 @@ TEST(DataInterfaceTest, SVarC_1) {
   ASSERT_FALSE(svcInterface.hasInitialConditions());
 
   ASSERT_EQ(svcInterface.getRegulationMode(), StaticVarCompensatorInterface::OFF);
-  svc.setRegulationMode(iidm::StaticVarCompensatorRegulationMode::VOLTAGE);
+  svc.newVoltageRegulation().withMode(iidm::RegulationMode::VOLTAGE).withRegulating(true).build();
   ASSERT_EQ(svcInterface.getRegulationMode(), StaticVarCompensatorInterface::RUNNING_V);
-  svc.setRegulationMode(iidm::StaticVarCompensatorRegulationMode::REACTIVE_POWER);
+  svc.newVoltageRegulation().withMode(iidm::RegulationMode::REACTIVE_POWER).withRegulating(true).build();
   ASSERT_EQ(svcInterface.getRegulationMode(), StaticVarCompensatorInterface::RUNNING_Q);
 }
 

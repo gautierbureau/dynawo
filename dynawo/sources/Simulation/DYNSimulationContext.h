@@ -20,7 +20,11 @@
 #ifndef SIMULATION_DYNSIMULATIONCONTEXT_H_
 #define SIMULATION_DYNSIMULATIONCONTEXT_H_
 
+#include <memory>
 #include <string>
+
+#include "DYNInputFiles.h"
+#include "DYNOutputFiles.h"
 
 namespace DYN {
 
@@ -56,6 +60,23 @@ class SimulationContext {
   void setLocale(const std::string& locale);
 
   /**
+   * @brief set the input files of the simulation given in memory
+   * @param inputFiles input files read from their content rather than from the file system
+   */
+  void setInputFiles(const std::shared_ptr<const InputFiles>& inputFiles);
+
+  /**
+   * @brief set the output files of the simulation written in memory
+   *
+   * The logs, timeline, curves, final state values, constraints and lost equipments of the simulation are written there
+   * rather than on the file system; its other outputs, the dump files of its states for instance, are still written on
+   * the file system
+   *
+   * @param outputFiles output files written in memory, null to write all the outputs on the file system
+   */
+  void setOutputFiles(const std::shared_ptr<OutputFiles>& outputFiles);
+
+  /**
    * @brief get the working directory of the simulation
    * @return the working directory of the simulation
    */
@@ -79,11 +100,31 @@ class SimulationContext {
    */
   const std::string& getLocale();
 
+  /**
+   * @brief get the input files of the simulation given in memory
+   * @return the input files given in memory, none by default: all the input files are read from the file system
+   */
+  const InputFiles& getInputFiles() const;
+
+  /**
+   * @brief get the input files of the simulation given in memory, to share them
+   * @return the input files given in memory
+   */
+  const std::shared_ptr<const InputFiles>& getSharedInputFiles() const;
+
+  /**
+   * @brief get the output files of the simulation written in memory
+   * @return the output files written in memory, null by default: all the outputs are written on the file system
+   */
+  const std::shared_ptr<OutputFiles>& getOutputFiles() const;
+
  private:
   std::string workingDirectory_;  ///< working directory of the simulation : where files should be created
   std::string inputDirectory_;  ///< input directory : where files describing the simulation are located
   std::string resourcesDirectory_;  ///< directory where resources files are located
   std::string locale_;  ///< locale to use for log messages
+  std::shared_ptr<const InputFiles> inputFiles_ = std::make_shared<InputFiles>();  ///< input files given in memory
+  std::shared_ptr<OutputFiles> outputFiles_;  ///< output files written in memory, if any
 };
 
 }  // end of namespace DYN

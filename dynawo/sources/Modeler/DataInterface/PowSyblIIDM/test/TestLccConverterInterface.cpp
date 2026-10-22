@@ -84,7 +84,7 @@ TEST(DataInterfaceTest, LccConverter) {
 
   ASSERT_FALSE(Ifce.hasInitialConditions());
 
-  ASSERT_EQ(Ifce.getLccIIDM().getHvdcLine().getId(), "HVDC1");
+  ASSERT_EQ(Ifce.getLccIIDM().getHvdcLine().value().getId(), "HVDC1");
   Ifce.importStaticParameters();
 
   ASSERT_EQ(Ifce.getLccIIDM().getId(), lcc.getId());

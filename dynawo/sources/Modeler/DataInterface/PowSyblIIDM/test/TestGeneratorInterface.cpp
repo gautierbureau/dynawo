@@ -145,14 +145,12 @@ TEST(DataInterfaceTest, Generator_2) {
   ASSERT_FALSE(genItf.isVoltageRegulationOn());
   ASSERT_EQ(genItf.getTargetV(), 0.0);
 
-  // set targetV and voltageRegulatorOn via setters; the new bridge keeps the
-  // previously-set targetQ (10.0 from the xiidm file) unless we explicitly
-  // clear it. The DataInterface only treats targetQ as "absent" when it is
-  // NaN, so reset it here to reproduce the "regulator is on, no targetQ"
-  // case the test exercises.
-  gen.setTargetV(24.0)
-     .setVoltageRegulatorOn(true)
-     .setTargetQ(std::numeric_limits<double>::quiet_NaN());
+  // a local voltage regulation of 24 kV; the generator keeps the target Q of the xiidm file (10.0)
+  // unless it is cleared, and the DataInterface only treats a NaN target Q as absent: clear it to
+  // reproduce the "regulator is on, no targetQ" case the test exercises
+  gen.setLocalTargetV(24.0);
+  gen.newVoltageRegulation().withMode(iidm::RegulationMode::VOLTAGE).withRegulating(true).build();
+  gen.setLocalTargetQ(std::numeric_limits<double>::quiet_NaN());
   ASSERT_EQ(genItf.getTargetQ(), 0.0);
   genItf.importStaticParameters();
 }

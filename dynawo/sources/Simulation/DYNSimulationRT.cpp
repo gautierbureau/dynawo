@@ -293,8 +293,9 @@ SimulationRT::simulate() {
     outputDispatcher_->publishCurvesNames(curvesCollection_);
 
   try {
-    // update state variable only if the IIDM final state is exported, or criteria is checked, or lost equipments are exported
-    if (data_ && (finalState_.iidmFile_ || isLostEquipmentsExported())) {
+    // update state variable only if the IIDM final state is exported or written into the network, or criteria is checked,
+    // or lost equipments are exported
+    if (data_ && (finalState_.iidmFile_ || exportFinalStateToNetwork_ || isLostEquipmentsExported())) {
       data_->getStateVariableReference();   // Each state variable in DataInterface has a mapped reference variable in dynamic model,
                                          // either in a modelica model or in a C++ model.
       // save initial connection state at t0 for each equipment

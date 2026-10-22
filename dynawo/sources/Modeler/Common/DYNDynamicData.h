@@ -19,6 +19,7 @@
 #define MODELER_COMMON_DYNDYNAMICDATA_H_
 
 #include "DYNConnectInterface.h"
+#include "DYNInputFiles.h"
 #include "DYDBlackBoxModel.h"
 #include "PARParameter.h"
 
@@ -205,6 +206,15 @@ class DynamicData : public boost::noncopyable {
   }
 
   /**
+   * @brief set the input files given in memory, that the dyd files and the par files they refer to are read from rather
+   * than from the file system
+   * @param inputFiles input files given in memory
+   */
+  inline void setInputFiles(const std::shared_ptr<const InputFiles>& inputFiles) {
+    inputFiles_ = inputFiles ? inputFiles : std::make_shared<InputFiles>();
+  }
+
+  /**
    * @brief get the current dynamicModelsCollection used
    * @return the current dynamicModelsCollection used
    */
@@ -257,6 +267,7 @@ class DynamicData : public boost::noncopyable {
 
  private:
   std::string rootDirectory_;  ///< directory to use as root when reading file
+  std::shared_ptr<const InputFiles> inputFiles_ = std::make_shared<InputFiles>();  ///< input files given in memory
   std::unordered_map<std::string,
           std::shared_ptr<parameters::ParametersSetCollection> > referenceParameters_;  ///< association between file name and parameters collection
 

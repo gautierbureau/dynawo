@@ -81,7 +81,10 @@ void
 DynamicData::initFromDydFiles(const std::vector <string>& fileNames) {
   const dynamicdata::XmlImporter importer;
 
-  setDynamicModelsCollection(importer.importFromDydFiles(fileNames));
+  const std::shared_ptr<const InputFiles> inputFiles = inputFiles_;
+  setDynamicModelsCollection(importer.importFromDydFiles(fileNames, [inputFiles](const string& fileName) {
+    return inputFiles->open(fileName);
+  }));
 }
 
 void
@@ -259,13 +262,13 @@ DynamicData::getParametersSet(const string& modelId, const string& parFile, cons
     return std::shared_ptr<ParametersSet>();
   }
 
-  const std::string canonicalParFilePath = canonical(parFile, rootDirectory_);
+  const std::string canonicalParFilePath = inputFiles_->canonical(parFile, rootDirectory_);
   if (referenceParameters_.find(canonicalParFilePath) != referenceParameters_.end())
     return referenceParameters_[canonicalParFilePath]->getParametersSet(parId);
 
   // Parameters file not already loaded
   const parameters::XmlImporter parametersImporter;
-  const std::shared_ptr<ParametersSetCollection> parametersSetCollection = parametersImporter.importFromFile(canonicalParFilePath);
+  const std::shared_ptr<ParametersSetCollection> parametersSetCollection = inputFiles_->importFile(parametersImporter, canonicalParFilePath);
   parametersSetCollection->propagateOriginData(canonicalParFilePath);
   referenceParameters_[canonicalParFilePath] = parametersSetCollection;
   parametersSetCollection->getParametersFromMacroParameter();

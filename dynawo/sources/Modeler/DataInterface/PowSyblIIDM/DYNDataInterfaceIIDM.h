@@ -61,6 +61,15 @@ class DataInterfaceIIDM : public DataInterfaceImpl {
   static boost::shared_ptr<DataInterface> build(const std::string& iidmFilePath, unsigned int nbVariants = 1);
 
   /**
+   * @brief Build an instance of this class on a network already loaded: the network of a JVM that Dynawo is run from
+   * (iidm::NetworkFactory::wrap), for instance
+   * @param networkIIDM the iidm network
+   * @param nbVariants number of variants of the network
+   * @return The data interface built on that network
+   */
+  static boost::shared_ptr<DataInterface> build(const boost::shared_ptr<iidm::Network>& networkIIDM, unsigned int nbVariants = 1);
+
+  /**
    * @brief Constructor
    * @param networkIIDM instance of iidm network
    */
@@ -351,7 +360,7 @@ class DataInterfaceIIDM : public DataInterfaceImpl {
    * @param danglingLineIIDM IIDM instance to use to create danglingLineInterface
    * @return the instance of danglingLineInterface created
    */
-  std::unique_ptr<DanglingLineInterfaceIIDM> importDanglingLine(iidm::DanglingLine& danglingLineIIDM) const;
+  std::unique_ptr<DanglingLineInterfaceIIDM> importDanglingLine(iidm::BoundaryLine& danglingLineIIDM) const;
 
   /**
    * @brief import and create a svc interface thanks to the IIDM instance

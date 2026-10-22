@@ -44,9 +44,15 @@ class SignalHandler {
   static void setExitSignal(bool exitSignal);
 
   /**
-   * @brief declare the signal to intercept
+   * @brief declare the signal to intercept, unless it was disabled
    */
   static void setSignalHandlers();
+
+  /**
+   * @brief never declare the signal to intercept: for a process whose signals are handled by another runtime, such as
+   * a JVM that Dynawo is run from
+   */
+  static void disableSignalHandlers();
 
   /**
    * @brief handler to intercept signal
@@ -56,6 +62,7 @@ class SignalHandler {
 
  protected:
   static bool gotExitSignal_;  ///< one signal was intercepted
+  static bool signalHandlersDisabled_;  ///< the signals are never intercepted
 };
 }  // namespace DYN
 #endif  // SIMULATION_DYNSIGNALHANDLER_H_

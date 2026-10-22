@@ -29,6 +29,7 @@
 #include "DYNSwitchInterfaceIIDM.h"
 #include "DYNStaticVarCompensatorInterfaceIIDM.h"
 
+#include <iidm/Connectable.h>
 
 namespace DYN {
 
@@ -202,7 +203,7 @@ ServiceManagerInterfaceIIDM::getRegulatedBusOnSide(const iidm::Terminal& termina
     }
     case ComponentInterface::SWITCH: {
       std::shared_ptr<SwitchInterface> switch_ = std::dynamic_pointer_cast<SwitchInterface>(regulatedComponent);
-      const auto switchTerminals = terminal.getTerminals();
+      const auto switchTerminals = terminal.getConnectable().getTerminals();
       assert(switchTerminals.size() == 2);
       if (terminal == switchTerminals.at(0))
         return switch_.get()->getBusInterface1();

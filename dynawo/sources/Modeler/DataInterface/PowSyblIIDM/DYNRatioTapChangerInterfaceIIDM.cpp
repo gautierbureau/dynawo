@@ -24,6 +24,8 @@
 
 #include "make_unique.hpp"
 
+#include <iidm/Connectable.h>
+
 #include <cmath>
 
 using boost::shared_ptr;
@@ -34,7 +36,7 @@ RatioTapChangerInterfaceIIDM::RatioTapChangerInterfaceIIDM(iidm::RatioTapChanger
   tapChangerIIDM_(tapChanger),
   terminalRefSide_(terminalRefSide) {
   for (const auto& step : tapChanger.getAllSteps()) {
-    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(step));
+    steps_.push_back(DYN::make_unique<StepInterfaceIIDM>(step.second));
   }
 }
 
@@ -80,15 +82,17 @@ RatioTapChangerInterfaceIIDM::getRegulating() const {
 
 double
 RatioTapChangerInterfaceIIDM::getTargetV() const {
-  if (std::isnan(tapChangerIIDM_.getTargetV())) {
+  // the target value of its voltage regulation, as powsybl 7.4 defines getTargetV()
+  const iidm::optional<iidm::VoltageRegulation> regulation = tapChangerIIDM_.getVoltageRegulation();
+  if (!tapChangerIIDM_.isWithMode(iidm::RegulationMode::VOLTAGE) || !regulation || std::isnan(regulation->getTargetValue())) {
     return 99999.0;
   }
-  return tapChangerIIDM_.getTargetV();
+  return regulation->getTargetValue();
 }
 
 std::string
 RatioTapChangerInterfaceIIDM::getTerminalRefId() const {
-  return getRegulating() ? tapChangerIIDM_.getRegulationTerminal().getConnectableId() : std::string();
+  return getRegulating() ? tapChangerIIDM_.getRegulatingTerminal().getConnectable().getId() : std::string();
 }
 
 std::string
@@ -131,8 +135,8 @@ RatioTapChangerInterfaceIIDM::getTargetDeadBand() const {
   if (!getRegulating()) {
     return 0.;
   }
-  const auto d = tapChangerIIDM_.getTargetDeadband();
-  return d.has_value() ? d.value() : 0.;
+  const iidm::optional<iidm::VoltageRegulation> regulation = tapChangerIIDM_.getVoltageRegulation();
+  return regulation && !std::isnan(regulation->getTargetDeadband()) ? regulation->getTargetDeadband() : 0.;
 }
 
 }  // namespace DYN

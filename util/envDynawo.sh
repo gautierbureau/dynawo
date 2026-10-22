@@ -1894,6 +1894,10 @@ deploy_dynawo() {
     mkdir -p share/cmake
     cp -R -P $DYNAWO_LIBIIDM_HOME/lib64/cmake/IidmBridge share/cmake/
   fi
+  # the jar of iidm-bridge, for a JVM that runs Dynawo (dynawo_JNILauncher): built from the same sources as its library
+  if [ -d "$DYNAWO_LIBIIDM_HOME/share/iidm-bridge" ]; then
+    cp -R -P $DYNAWO_LIBIIDM_HOME/share/iidm-bridge share/
+  fi
 
   mkdir -p cmake
   cp -P $DYNAWO_SUITESPARSE_INSTALL_DIR/cmake/* cmake

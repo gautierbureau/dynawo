@@ -70,13 +70,38 @@ static void print(const T& output, const DYN::SeverityLevel level = DYN::INFO) {
   }
 }
 
-void launchSimu(const std::string& jobsFileName, bool isInteractive) {
+/**
+ * @brief terminate a simulation that failed
+ * @param simulation simulation that failed
+ * @param data data interface of the network given by the caller, if any: a failed simulation leaves that network as it
+ * was, without writing its final state, an IIDM file of it or the lost equipments, that would write into it
+ */
+static void terminateFailed(const std::shared_ptr<Simulation>& simulation, const boost::shared_ptr<DYN::DataInterface>& data) {
+  if (data) {
+    simulation->disableExportIIDM();
+    simulation->setExportFinalStateToNetwork(false);
+    simulation->setLostEquipmentsExportMode(Simulation::EXPORT_LOSTEQUIPMENTS_NONE);
+  }
+  simulation->terminate();
+}
+
+/**
+ * @brief launch the job(s) of a jobs file
+ * @param jobsFileName file describing the job(s) to launch
+ * @param isInteractive true if simulation in interactive or real-time mode
+ * @param data data interface of the network to simulate, null to read the iidm file of the job(s)
+ * @param inputFiles input files given in memory: the jobs file and the files it refers to that are read from their
+ * content rather than from the file system
+ * @param outputFiles output files written in memory, null to write all the outputs on the file system
+ */
+static void launchJobs(const std::string& jobsFileName, bool isInteractive, const boost::shared_ptr<DYN::DataInterface>& data,
+    const std::shared_ptr<const DYN::InputFiles>& inputFiles, const std::shared_ptr<DYN::OutputFiles>& outputFiles) {
 #if defined(_DEBUG_) || defined(PRINT_TIMERS)
   DYN::Timer timer("Main::LaunchSimu");
 #endif
 
   job::XmlImporter importer;
-  const std::shared_ptr<job::JobsCollection>& jobsCollection = importer.importFromFile(jobsFileName);
+  const std::shared_ptr<job::JobsCollection>& jobsCollection = inputFiles->importFile(importer, jobsFileName);
   const std::string prefixJobFile = absolute(removeFileName(jobsFileName));
   if (jobsCollection->getJobs().empty())
     throw DYNError(DYN::Error::SIMULATION, NoJobDefined);
@@ -90,13 +115,17 @@ void launchSimu(const std::string& jobsFileName, bool isInteractive) {
     context->setLocale(getMandatoryEnvVar("DYNAWO_LOCALE"));
     context->setInputDirectory(prefixJobFile);
     context->setWorkingDirectory(prefixJobFile);
+    context->setInputFiles(inputFiles);
+    context->setOutputFiles(outputFiles);
 
     std::shared_ptr<Simulation> simulation;
     try {
       if (isInteractive)
-        simulation = std::unique_ptr<SimulationRT>(new SimulationRT(job, context));
+        simulation = std::unique_ptr<SimulationRT>(new SimulationRT(job, context, data));
       else
-        simulation = std::unique_ptr<Simulation>(new Simulation(job, context));
+        simulation = std::unique_ptr<Simulation>(new Simulation(job, context, data));
+      if (data)
+        simulation->setExportFinalStateToNetwork(true);
 
       simulation->init();
     } catch (const DYN::Error& err) {
@@ -126,27 +155,27 @@ void launchSimu(const std::string& jobsFileName, bool isInteractive) {
         simulation->setLostEquipmentsExportMode(Simulation::EXPORT_LOSTEQUIPMENTS_NONE);
       }
       print(err.what(), DYN::ERROR);
-      simulation->terminate();
+      terminateFailed(simulation, data);
       throw;
     } catch (const DYN::Terminate& e) {
       print(e.what(), DYN::ERROR);
-      simulation->terminate();
+      terminateFailed(simulation, data);
       throw;
     } catch (const DYN::MessageError& e) {
       print(e.what(), DYN::ERROR);
-      simulation->terminate();
+      terminateFailed(simulation, data);
       throw;
     } catch (const char* s) {
       print(s, DYN::ERROR);
-      simulation->terminate();
+      terminateFailed(simulation, data);
       throw;
     } catch (const std::string& Msg) {
       print(Msg, DYN::ERROR);
-      simulation->terminate();
+      terminateFailed(simulation, data);
       throw;
     } catch (const std::exception& exc) {
       print(exc.what(), DYN::ERROR);
-      simulation->terminate();
+      terminateFailed(simulation, data);
       throw;
     }
     simulation->clean();
@@ -159,4 +188,23 @@ void launchSimu(const std::string& jobsFileName, bool isInteractive) {
       print(DYNLog(ResultFolder, outputsDirectory));
     }
   }
+}
+
+void launchSimu(const std::string& jobsFileName, bool isInteractive) {
+  launchJobs(jobsFileName, isInteractive, boost::shared_ptr<DYN::DataInterface>(), std::make_shared<DYN::InputFiles>(),
+      std::shared_ptr<DYN::OutputFiles>());
+}
+
+void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data) {
+  launchJobs(jobsFileName, false, data, std::make_shared<DYN::InputFiles>(), std::shared_ptr<DYN::OutputFiles>());
+}
+
+void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data,
+    const std::shared_ptr<const DYN::InputFiles>& inputFiles) {
+  launchJobs(jobsFileName, false, data, inputFiles ? inputFiles : std::make_shared<DYN::InputFiles>(), std::shared_ptr<DYN::OutputFiles>());
+}
+
+void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data,
+    const std::shared_ptr<const DYN::InputFiles>& inputFiles, const std::shared_ptr<DYN::OutputFiles>& outputFiles) {
+  launchJobs(jobsFileName, false, data, inputFiles ? inputFiles : std::make_shared<DYN::InputFiles>(), outputFiles);
 }

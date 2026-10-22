@@ -42,6 +42,16 @@ SimulationContext::setLocale(const std::string& locale) {
   locale_ = locale;
 }
 
+void
+SimulationContext::setInputFiles(const std::shared_ptr<const InputFiles>& inputFiles) {
+  inputFiles_ = inputFiles ? inputFiles : std::make_shared<InputFiles>();
+}
+
+void
+SimulationContext::setOutputFiles(const std::shared_ptr<OutputFiles>& outputFiles) {
+  outputFiles_ = outputFiles;
+}
+
 const std::string&
 SimulationContext::getWorkingDirectory() {
   return workingDirectory_;
@@ -60,6 +70,21 @@ SimulationContext::getResourcesDirectory() {
 const std::string&
 SimulationContext::getLocale() {
   return locale_;
+}
+
+const InputFiles&
+SimulationContext::getInputFiles() const {
+  return *inputFiles_;
+}
+
+const std::shared_ptr<const InputFiles>&
+SimulationContext::getSharedInputFiles() const {
+  return inputFiles_;
+}
+
+const std::shared_ptr<OutputFiles>&
+SimulationContext::getOutputFiles() const {
+  return outputFiles_;
 }
 
 }  // end of namespace DYN

@@ -53,3 +53,6 @@ else()
   configure_file(dynawo.cmd.in dynawo.cmd @ONLY)
   install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/dynawo.cmd DESTINATION .)
 endif()
+
+# Dynawo run from a JVM
+add_subdirectory(JNI)

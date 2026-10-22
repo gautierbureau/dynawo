@@ -94,7 +94,7 @@ TEST(DataInterfaceTest, VscConverter_1) {
   // t=0.5 → QMax=15, QMin=10
   ASSERT_DOUBLE_EQ(Ifce.getQMax(), 15.0);
 
-  ASSERT_EQ(Ifce.getVscIIDM().getHvdcLine().getId(), "HVDC1");
+  ASSERT_EQ(Ifce.getVscIIDM().getHvdcLine().value().getId(), "HVDC1");
   Ifce.importStaticParameters();
 
   ASSERT_EQ(Ifce.getVscIIDM().getId(), vsc.getId());

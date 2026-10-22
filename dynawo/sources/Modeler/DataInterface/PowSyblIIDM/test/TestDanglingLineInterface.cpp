@@ -23,7 +23,7 @@
 #include <iidm/NetworkFactory.h>
 #include <iidm/VoltageLevel.h>
 #include <iidm/Bus.h>
-#include <iidm/DanglingLine.h>
+#include <iidm/BoundaryLine.h>
 
 #include "gtest_dynawo.h"
 
@@ -45,7 +45,7 @@ TEST(DataInterfaceTest, DanglingLine_1) {
   auto net = iidm::NetworkFactory::load("resources/dangling_line.xiidm");
   auto vl = findVL(net, "VL1");
   auto bus1 = findBus(vl, "VL1_BUS1");
-  auto danglingLine = net.getDanglingLine("DANGLING_LINE1").value();
+  auto danglingLine = net.getBoundaryLine("DANGLING_LINE1").value();
 
   DanglingLineInterfaceIIDM danglingLineIfce(danglingLine);
   const std::shared_ptr<VoltageLevelInterface> vlItf = std::make_shared<VoltageLevelInterfaceIIDM>(vl);
@@ -102,7 +102,7 @@ TEST(DataInterfaceTest, DanglingLine_1) {
   ASSERT_EQ(danglingLineIfce.getCurrentLimitInterfaces().size(), 2);
 
   // DANGLING_LINE2 has p=10 q=40 in the file and x=0 → getX() returns 0.01
-  auto danglingLine2 = net.getDanglingLine("DANGLING_LINE2").value();
+  auto danglingLine2 = net.getBoundaryLine("DANGLING_LINE2").value();
   DanglingLineInterfaceIIDM danglingLineIfce2(danglingLine2);
   danglingLineIfce2.setVoltageLevelInterface(vlItf);
   ASSERT_DOUBLE_EQ(danglingLineIfce2.getX(), 0.01);
@@ -110,7 +110,7 @@ TEST(DataInterfaceTest, DanglingLine_1) {
 
 TEST(DataInterfaceTest, DanglingLine_2) {
   auto net = iidm::NetworkFactory::load("resources/dangling_line2.xiidm");
-  auto danglingLine = net.getDanglingLine("DANGLING_LINE1").value();
+  auto danglingLine = net.getBoundaryLine("DANGLING_LINE1").value();
 
   DanglingLineInterfaceIIDM danglingLineIfce(danglingLine);
   ASSERT_TRUE(danglingLineIfce.hasInitialConditions());

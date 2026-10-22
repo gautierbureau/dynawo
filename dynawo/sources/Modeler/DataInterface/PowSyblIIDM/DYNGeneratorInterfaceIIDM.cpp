@@ -50,8 +50,8 @@ generatorIIDM_(generator) {
   stateVariables_[VAR_P] = StateVariable("p", StateVariable::DOUBLE, neededForCriteriaCheck);  // P
   stateVariables_[VAR_Q] = StateVariable("q", StateVariable::DOUBLE);  // Q
   stateVariables_[VAR_STATE] = StateVariable("state", StateVariable::INT);   // connectionState
-  hasActivePowerControl_ = generator.hasActivePowerControl();
-  hasCoordinatedReactiveControl_ = generator.hasCoordinatedReactiveControl();
+  hasActivePowerControl_ = generator.hasExtension<iidm::ActivePowerControl>();
+  hasCoordinatedReactiveControl_ = generator.hasExtension<iidm::CoordinatedReactiveControl>();
 }
 
 int
@@ -211,10 +211,10 @@ GeneratorInterfaceIIDM::getQ() {
 
 double
 GeneratorInterfaceIIDM::getQMax() {
-  if (generatorIIDM_.hasMinMaxReactiveLimits()) {
-    return generatorIIDM_.getMinMaxReactiveLimits().getMaxQ();
-  } else if (generatorIIDM_.hasReactiveCapabilityCurve()) {
-    assert(generatorIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
+  if (generatorIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::MIN_MAX) {
+    return generatorIIDM_.getReactiveLimits<iidm::MinMaxReactiveLimits>().getMaxQ();
+  } else if (generatorIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::CURVE) {
+    assert(generatorIIDM_.getReactiveLimits<iidm::ReactiveCapabilityCurve>().getPoints().size() > 0);
     double qMax = 0.0;
     const double pGen = - getP();
     const auto& points = getReactiveCurvesPoints();
@@ -240,11 +240,11 @@ GeneratorInterfaceIIDM::getQMax() {
 
 double
 GeneratorInterfaceIIDM::getQNom() {
-  if (generatorIIDM_.hasMinMaxReactiveLimits()) {
-    return std::max(std::abs(generatorIIDM_.getMinMaxReactiveLimits().getMaxQ()),
-        std::abs(generatorIIDM_.getMinMaxReactiveLimits().getMinQ()));
-  } else if (generatorIIDM_.hasReactiveCapabilityCurve()) {
-    assert(generatorIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
+  if (generatorIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::MIN_MAX) {
+    return std::max(std::abs(generatorIIDM_.getReactiveLimits<iidm::MinMaxReactiveLimits>().getMaxQ()),
+        std::abs(generatorIIDM_.getReactiveLimits<iidm::MinMaxReactiveLimits>().getMinQ()));
+  } else if (generatorIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::CURVE) {
+    assert(generatorIIDM_.getReactiveLimits<iidm::ReactiveCapabilityCurve>().getPoints().size() > 0);
     double qNom = 0.0;
     const auto& points = getReactiveCurvesPoints();
     for (unsigned int i = 0; i < points.size(); ++i) {
@@ -264,10 +264,10 @@ GeneratorInterfaceIIDM::getQNom() {
 
 double
 GeneratorInterfaceIIDM::getQMin() {
-  if (generatorIIDM_.hasMinMaxReactiveLimits()) {
-    return generatorIIDM_.getMinMaxReactiveLimits().getMinQ();
-  } else if (generatorIIDM_.hasReactiveCapabilityCurve()) {
-    assert(generatorIIDM_.getReactiveCapabilityCurve().getPoints().size() > 0);
+  if (generatorIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::MIN_MAX) {
+    return generatorIIDM_.getReactiveLimits<iidm::MinMaxReactiveLimits>().getMinQ();
+  } else if (generatorIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::CURVE) {
+    assert(generatorIIDM_.getReactiveLimits<iidm::ReactiveCapabilityCurve>().getPoints().size() > 0);
     double qMin = 0.0;
     const double pGen = - getP();
     const auto& points = getReactiveCurvesPoints();
@@ -293,8 +293,8 @@ GeneratorInterfaceIIDM::getQMin() {
 
 double
 GeneratorInterfaceIIDM::getTargetQ() {
-  if (!std::isnan(generatorIIDM_.getTargetQ())) {
-    return - 1.0 * generatorIIDM_.getTargetQ();
+  if (!std::isnan(generatorIIDM_.getLocalTargetQ())) {
+    return - 1.0 * generatorIIDM_.getLocalTargetQ();
   } else {
     return 0;
   }
@@ -302,8 +302,8 @@ GeneratorInterfaceIIDM::getTargetQ() {
 
 double
 GeneratorInterfaceIIDM::getTargetV() {
-  if (!std::isnan(generatorIIDM_.getTargetV())) {
-    return generatorIIDM_.getTargetV();
+  if (!std::isnan(generatorIIDM_.getRegulatingTargetV())) {
+    return generatorIIDM_.getRegulatingTargetV();
   } else {
     return 0;
   }
@@ -317,10 +317,10 @@ GeneratorInterfaceIIDM::getID() const {
 
 vector<GeneratorInterface::ReactiveCurvePoint> GeneratorInterfaceIIDM::getReactiveCurvesPoints() const {
   vector<GeneratorInterface::ReactiveCurvePoint> ret;
-  if (generatorIIDM_.hasReactiveCapabilityCurve()) {
-    const auto reactiveCurve = generatorIIDM_.getReactiveCapabilityCurve();
+  if (generatorIIDM_.getReactiveLimits().getKind() == iidm::ReactiveLimitsKind::CURVE) {
+    const auto reactiveCurve = generatorIIDM_.getReactiveLimits<iidm::ReactiveCapabilityCurve>();
     for (const auto& point : reactiveCurve.getPoints()) {
-      ret.emplace_back(point.p, point.minQ, point.maxQ);
+      ret.emplace_back(point.getP(), point.getMinQ(), point.getMaxQ());
     }
   }
 
@@ -328,7 +328,7 @@ vector<GeneratorInterface::ReactiveCurvePoint> GeneratorInterfaceIIDM::getReacti
 }
 
 bool GeneratorInterfaceIIDM::isVoltageRegulationOn() const {
-  return generatorIIDM_.isVoltageRegulatorOn();
+  return generatorIIDM_.isRegulatingWithMode(iidm::RegulationMode::VOLTAGE);
 }
 
 bool
@@ -339,7 +339,7 @@ GeneratorInterfaceIIDM::hasActivePowerControl() const {
 bool
 GeneratorInterfaceIIDM::isParticipating() const {
   if (hasActivePowerControl_) {
-    return generatorIIDM_.getActivePowerControl().isParticipate();
+    return generatorIIDM_.getExtension<iidm::ActivePowerControl>().isParticipate();
   }
   return false;
 }
@@ -347,7 +347,7 @@ GeneratorInterfaceIIDM::isParticipating() const {
 double
 GeneratorInterfaceIIDM::getActivePowerControlDroop() const {
   if (hasActivePowerControl_ && isParticipating()) {
-    return generatorIIDM_.getActivePowerControl().getDroop();
+    return generatorIIDM_.getExtension<iidm::ActivePowerControl>().getDroop();
   }
   return 0.;
 }
@@ -360,7 +360,7 @@ GeneratorInterfaceIIDM::hasCoordinatedReactiveControl() const {
 double
 GeneratorInterfaceIIDM::getCoordinatedReactiveControlPercentage() const {
   if (hasCoordinatedReactiveControl()) {
-    return generatorIIDM_.getCoordinatedReactiveControl().getQPercent();
+    return generatorIIDM_.getExtension<iidm::CoordinatedReactiveControl>().getQPercent();
   }
   return 0.;
 }
