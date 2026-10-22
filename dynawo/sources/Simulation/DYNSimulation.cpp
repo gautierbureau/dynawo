@@ -235,8 +235,7 @@ wasLoggingEnabled_(false) {
   outputsDirectory_ = context_->getWorkingDirectory();
   if (jobEntry_->getOutputsEntry()) {
     outputsDirectory_ = createAbsolutePath(jobEntry_->getOutputsEntry()->getOutputsDirectory(), context_->getWorkingDirectory());
-    if (!isDirectory(outputsDirectory_))
-      createDirectory(outputsDirectory_);
+    createOutputDirectory(outputsDirectory_);
   }
 
   configureLogs();
@@ -337,8 +336,7 @@ Simulation::configureConstraintsOutputs() {
     pid_string << pid_;
     constraintsCollection_ = ConstraintsCollectionFactory::newInstance("Simulation_" + pid_string.str());
     const string constraintsDir = createAbsolutePath("constraints", outputsDirectory_);
-    if (!isDirectory(constraintsDir))
-      createDirectory(constraintsDir);
+    createOutputDirectory(constraintsDir);
 
     //---- exportMode ----
     string exportMode = jobEntry_->getOutputsEntry()->getConstraintsEntry()->getExportMode();
@@ -368,8 +366,7 @@ Simulation::configureTimelineOutputs() {
     pid_string << pid_;
     timeline_ = TimelineFactory::newInstance("Simulation_" + pid_string.str());
     string timeLineDir = createAbsolutePath("timeLine", outputsDirectory_);
-    if (!isDirectory(timeLineDir))
-      createDirectory(timeLineDir);
+    createOutputDirectory(timeLineDir);
 
     //---- exportMode ----
     const string& exportMode = jobEntry_->getOutputsEntry()->getTimelineEntry()->getExportMode();
@@ -417,8 +414,7 @@ Simulation::configureCurveOutputs() {
   // Curves settings
   if (jobEntry_->getOutputsEntry()->getCurvesEntry()) {
     string curvesDir = createAbsolutePath("curves", outputsDirectory_);
-    if (!isDirectory(curvesDir))
-      createDirectory(curvesDir);
+    createOutputDirectory(curvesDir);
 
     //---- inputFile ----
     string curveInputFile = createAbsolutePath(jobEntry_->getOutputsEntry()->getCurvesEntry()->getInputFile(), context_->getInputDirectory());
@@ -446,6 +442,9 @@ Simulation::configureCurveOutputs() {
 #else
       exportModeFlag = Simulation::EXPORT_CURVES_HDF5;
       outputFile = createAbsolutePath("curves.h5", curvesDir);
+      // written on the file system by the HDF5 library, even with the output files written in memory
+      if (!isDirectory(curvesDir))
+        createDirectory(curvesDir);
 #endif
     } else {
       throw DYNError(Error::MODELER, UnknownCurvesExport, exportMode);
@@ -462,8 +461,7 @@ Simulation::configureFinalStateValueOutputs() {
   // Final state value settings
   if (jobEntry_->getOutputsEntry()->getFinalStateValuesEntry()) {
     string finalStateValuesDir = createAbsolutePath("finalStateValues", outputsDirectory_);
-    if (!isDirectory(finalStateValuesDir))
-      createDirectory(finalStateValuesDir);
+    createOutputDirectory(finalStateValuesDir);
 
     //---- inputFile ----
     string finalStateValuesInputFile = createAbsolutePath(
@@ -553,8 +551,7 @@ Simulation::configureLostEquipmentsOutputs() {
   if (jobEntry_->getOutputsEntry()->getLostEquipmentsEntry()
       && jobEntry_->getOutputsEntry()->getLostEquipmentsEntry()->getDumpLostEquipments()) {
     string lostEquipmentsDir = createAbsolutePath("lostEquipments", outputsDirectory_);
-    if (!isDirectory(lostEquipmentsDir))
-      createDirectory(lostEquipmentsDir);
+    createOutputDirectory(lostEquipmentsDir);
 
     setLostEquipmentsExportMode(Simulation::EXPORT_LOSTEQUIPMENTS_XML);
     setLostEquipmentsOutputFile(createAbsolutePath("lostEquipments.xml", lostEquipmentsDir));
@@ -718,8 +715,7 @@ Simulation::configureLogs() {
 
   if (jobEntry_->getOutputsEntry()->getLogsEntry()) {
     string logsDir = createAbsolutePath("logs", outputsDirectory_);
-    if (!isDirectory(logsDir))
-      createDirectory(logsDir);
+    createOutputDirectory(logsDir);
 
     if (jobEntry_->getOutputsEntry()->getLogsEntry()->getAppenderEntries().empty()) {
       wasLoggingEnabled_ = Trace::isLoggingEnabled();
@@ -730,13 +726,13 @@ Simulation::configureLogs() {
       for (const auto& appenderEntry : appendersEntry) {
         string file = createAbsolutePath(appenderEntry->getFilePath(), logsDir);
         // Creates log directory if doesn't exist
-        string fileDir = removeFileName(file);
-        if (!isDirectory(fileDir))
-          createDirectory(fileDir);
+        createOutputDirectory(removeFileName(file));
 
         Trace::TraceAppender app;
         app.setTag(appenderEntry->getTag());
         app.setFilePath(file);
+        if (context_->getOutputFiles())
+          app.setStream(context_->getOutputFiles()->open(file));
         app.setLvlFilter(Trace::severityLevelFromString(appenderEntry->getLvlFilter()));
         app.setShowLevelTag(appenderEntry->getShowLevelTag());
         app.setSeparator(appenderEntry->getSeparator());
@@ -1309,33 +1305,18 @@ Simulation::terminate() {
     if (exportCurvesMode_ == EXPORT_CURVES_HDF5) {
       printCurvesHdf5(curvesOutputFile_);
     } else {
-      ofstream fileCurves;
-      openFileStream(fileCurves, curvesOutputFile_);
-      printCurves(fileCurves);
-      fileCurves.close();
+      printCurves(*openOutputFile(curvesOutputFile_));
     }
   }
 
-  if (!finalStateValuesOutputFile_.empty()) {
-    ofstream fileFinalStateValues;
-    openFileStream(fileFinalStateValues, finalStateValuesOutputFile_);
-    printFinalStateValues(fileFinalStateValues);
-    fileFinalStateValues.close();
-  }
+  if (!finalStateValuesOutputFile_.empty())
+    printFinalStateValues(*openOutputFile(finalStateValuesOutputFile_));
 
-  if (!timelineOutputFile_.empty()) {
-    ofstream fileTimeline;
-    openFileStream(fileTimeline, timelineOutputFile_);
-    printTimeline(fileTimeline);
-    fileTimeline.close();
-  }
+  if (!timelineOutputFile_.empty())
+    printTimeline(*openOutputFile(timelineOutputFile_));
 
-  if (!constraintsOutputFile_.empty()) {
-    ofstream fileConstraints;
-    openFileStream(fileConstraints, constraintsOutputFile_);
-    printConstraints(fileConstraints);
-    fileConstraints.close();
-  }
+  if (!constraintsOutputFile_.empty())
+    printConstraints(*openOutputFile(constraintsOutputFile_));
 
   if (dumpFinalValues_) {
     string finalValuesDir = createAbsolutePath("finalValues", outputsDirectory_);
@@ -1351,12 +1332,8 @@ Simulation::terminate() {
     data_->exportStateVariables();
   }
 
-  if (data_ && isLostEquipmentsExported() && !lostEquipmentsOutputFile_.empty()) {
-    ofstream fileLostEquipments;
-    openFileStream(fileLostEquipments, lostEquipmentsOutputFile_);
-    printLostEquipments(fileLostEquipments);
-    fileLostEquipments.close();
-  }
+  if (data_ && isLostEquipmentsExported() && !lostEquipmentsOutputFile_.empty())
+    printLostEquipments(*openOutputFile(lostEquipmentsOutputFile_));
 
   if (finalState_.dumpFile_)
     dumpState();
@@ -1371,12 +1348,21 @@ Simulation::terminate() {
   }
 }
 
-void
-Simulation::openFileStream(ofstream& stream, const std::string& path) const {
-  stream.open(path.c_str(), ofstream::out);
-  if (!stream.is_open()) {
+std::shared_ptr<std::ostream>
+Simulation::openOutputFile(const std::string& path) const {
+  if (context_->getOutputFiles())
+    return context_->getOutputFiles()->open(path);
+  const std::shared_ptr<ofstream> stream = std::make_shared<ofstream>(path.c_str(), ofstream::out);
+  if (!stream->is_open()) {
     throw DYNError(Error::SIMULATION, OpenFileFailed, path);
   }
+  return stream;
+}
+
+void
+Simulation::createOutputDirectory(const std::string& directory) const {
+  if (!context_->getOutputFiles() && !isDirectory(directory))
+    createDirectory(directory);
 }
 
 void

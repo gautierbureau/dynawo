@@ -167,9 +167,19 @@ void Trace::configureSink(const std::vector<TraceAppender>& appenders, bool eras
 
   // Add appender
   for (const auto& appender : appenders) {
-    boost::shared_ptr<FileSink> sink(new FileSink(
-      keywords::file_name = appender.getFilePath(),
-      keywords::open_mode = std::ios_base::out));
+    boost::shared_ptr<sinks::basic_formatting_sink_frontend<char> > sink;
+    if (appender.getStream()) {
+      // the logs kept in memory, emptied as the file would be
+      const std::shared_ptr<std::ostringstream> appenderStream = appender.getStream();
+      appenderStream->str(string());
+      const boost::shared_ptr<TextSink> textSink = boost::make_shared<TextSink>();
+      textSink->locked_backend()->add_stream(boost::shared_ptr<std::ostream>(appenderStream.get(), [appenderStream](std::ostream*) {}));
+      sink = textSink;
+    } else {
+      sink = boost::shared_ptr<FileSink>(new FileSink(
+        keywords::file_name = appender.getFilePath(),
+        keywords::open_mode = std::ios_base::out));
+    }
 
     // build format for each appenders depending on its attributes
     const string& appenderTag = appender.getTag();

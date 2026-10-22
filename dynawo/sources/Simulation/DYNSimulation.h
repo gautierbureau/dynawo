@@ -24,6 +24,7 @@
 #include <deque>
 #include <unordered_map>
 #include <memory>
+#include <ostream>
 #include <libzip/ZipFile.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
@@ -636,11 +637,17 @@ class Simulation {
 
  protected:
   /**
-   * @brief open a file stream
-   * @param stream file stream stream to open
+   * @brief open an output file for writing, in memory if the output files of the simulation are written in memory
    * @param path path of the file
+   * @return the stream of the file
    */
-  void openFileStream(std::ofstream& stream, const std::string& path) const;
+  std::shared_ptr<std::ostream> openOutputFile(const std::string& path) const;
+
+  /**
+   * @brief create the directory of outputs if it does not exist, unless the output files are written in memory
+   * @param directory directory of outputs
+   */
+  void createOutputDirectory(const std::string& directory) const;
 
   /**
    * @brief check if criteria are fullfilled

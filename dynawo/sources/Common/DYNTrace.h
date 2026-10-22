@@ -24,6 +24,8 @@
 #ifndef COMMON_DYNTRACE_H_
 #define COMMON_DYNTRACE_H_
 
+#include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -75,10 +77,10 @@ class Trace {
    * @brief Stucture defining traces for a specific thread
    */
   struct TraceSinks {
-    std::unordered_multimap<TagAndSeverityLevel, boost::shared_ptr<FileSink>,
-                        TagAndSeverityLevelHash> sinks;  ///< multimap each appender tag-severitylevel pair to its corresponding file sink
-    std::unordered_multimap<TagAndSeverityLevel, boost::shared_ptr<FileSink>,
-                        TagAndSeverityLevelHash> persistentSinks;  ///< multimap each appender tag-severitylevel pair to its corresponding persistent file sink
+    std::unordered_multimap<TagAndSeverityLevel, boost::shared_ptr<boost::log::sinks::sink>,
+                        TagAndSeverityLevelHash> sinks;  ///< multimap each appender tag-severitylevel pair to its corresponding file or stream sink
+    std::unordered_multimap<TagAndSeverityLevel, boost::shared_ptr<boost::log::sinks::sink>,
+                        TagAndSeverityLevelHash> persistentSinks;  ///< multimap each appender tag-severitylevel pair to its corresponding persistent sink
   };
 
   /**
@@ -188,6 +190,14 @@ class Trace {
     }
 
     /**
+     * @brief Stream attribute getter
+     * @return Stream the appender writes into instead of its file, null if it writes into its file
+     */
+    const std::shared_ptr<std::ostringstream>& getStream() const {
+      return stream_;
+    }
+
+    /**
      * @brief Tag attribute setter
      * @param tag Tag filtered by the appender
      */
@@ -252,6 +262,17 @@ class Trace {
       persistent_ = persistent;
     }
 
+    /**
+     * @brief Stream attribute setter
+     *
+     * The logs are then kept in memory, the stream being emptied when the appender is configured as the file would be
+     *
+     * @param stream Stream the appender writes into instead of its file
+     */
+    void setStream(const std::shared_ptr<std::ostringstream>& stream) {
+      stream_ = stream;
+    }
+
    private:
     std::string tag_;  ///< Tag filtered by the appender
     std::string filePath_;  ///< Output file path of the appender
@@ -261,6 +282,7 @@ class Trace {
     bool showTimeStamp_;  ///< @b true if the timestamp of the log should be printed
     std::string timeStampFormat_;  ///< format of the timestamp information , "" if no time to print
     bool persistent_;  ///< Do not remove this appender when resetting
+    std::shared_ptr<std::ostringstream> stream_;  ///< Stream the appender writes into instead of its file, if any
   };
 
   /**

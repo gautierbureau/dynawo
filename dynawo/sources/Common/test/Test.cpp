@@ -27,6 +27,7 @@
 #include "DYNError.h"
 #include "DYNError_keys.h"
 #include "DYNTrace.h"
+#include "DYNOutputFiles.h"
 #include "DYNSparseMatrix.h"
 #include "DYNEnumUtils.h"
 #include "DYNTimer.h"
@@ -302,6 +303,58 @@ TEST(CommonTest, testTrace) {
   }
     boost::filesystem::path fspath("res/myLogFile.log");
     ASSERT_EQ(boost::filesystem::remove(fspath), true);
+}
+
+TEST(CommonTest, testTraceInMemory) {
+  Trace::init();
+
+  OutputFiles outputFiles;
+  Trace::TraceAppender app;
+  app.setTag("MyTag");
+  app.setFilePath("res/myLogFileInMemory.log");
+  app.setStream(outputFiles.open("res/myLogFileInMemory.log"));
+  app.setLvlFilter(INFO);
+  app.setShowLevelTag(true);
+  app.setSeparator(" | ");
+  app.setShowTimeStamp(true);
+  app.setTimeStampFormat("");
+  std::vector<Trace::TraceAppender> appenders;
+  appenders.push_back(app);
+  Trace::clearAndAddAppenders(appenders);
+
+  Trace::error("MyTag") << " MyErrorMessage" << Trace::endline;
+  Trace::warn("MyTag") << " MyWarnMessage" << Trace::endline;
+  Trace::debug("MyTag") << " MyDebugMessage" << Trace::endline;  // Filtered
+  ASSERT_EQ(app.getStream()->str(), " | ERROR |  MyErrorMessage\n | WARN |  MyWarnMessage\n");
+
+  // emptied as the file would be
+  Trace::clearLogFile("MyTag", INFO);
+  Trace::info("MyTag") << " MyInfoMessage" << Trace::endline;
+  Trace::resetCustomAppenders();
+
+  const std::vector<std::pair<std::string, std::string> > files = outputFiles.getFiles();
+  ASSERT_EQ(files.size(), 1U);
+  ASSERT_EQ(files[0].first, boost::filesystem::absolute("res/myLogFileInMemory.log").string());
+  ASSERT_EQ(files[0].second, " | INFO |  MyInfoMessage\n");
+  ASSERT_FALSE(exists("res/myLogFileInMemory.log"));
+}
+
+TEST(CommonTest, testOutputFiles) {
+  OutputFiles outputFiles;
+  *outputFiles.open("res/myOutputFile.txt") << "first";
+  const std::shared_ptr<std::ostringstream> stream = outputFiles.open("res/../res/myOutputFile.txt");
+  // emptied as a file opened for writing
+  ASSERT_EQ(stream->str(), "");
+  *stream << "second";
+  *outputFiles.open("res/myOtherOutputFile.txt") << "other";
+
+  const std::vector<std::pair<std::string, std::string> > files = outputFiles.getFiles();
+  ASSERT_EQ(files.size(), 2U);
+  ASSERT_EQ(files[0].first, boost::filesystem::absolute("res/myOtherOutputFile.txt").string());
+  ASSERT_EQ(files[0].second, "other");
+  ASSERT_EQ(files[1].first, boost::filesystem::absolute("res/myOutputFile.txt").string());
+  ASSERT_EQ(files[1].second, "second");
+  ASSERT_FALSE(exists("res/myOutputFile.txt"));
 }
 
 

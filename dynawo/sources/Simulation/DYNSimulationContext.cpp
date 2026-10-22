@@ -47,6 +47,11 @@ SimulationContext::setInputFiles(const std::shared_ptr<const InputFiles>& inputF
   inputFiles_ = inputFiles ? inputFiles : std::make_shared<InputFiles>();
 }
 
+void
+SimulationContext::setOutputFiles(const std::shared_ptr<OutputFiles>& outputFiles) {
+  outputFiles_ = outputFiles;
+}
+
 const std::string&
 SimulationContext::getWorkingDirectory() {
   return workingDirectory_;
@@ -75,6 +80,11 @@ SimulationContext::getInputFiles() const {
 const std::shared_ptr<const InputFiles>&
 SimulationContext::getSharedInputFiles() const {
   return inputFiles_;
+}
+
+const std::shared_ptr<OutputFiles>&
+SimulationContext::getOutputFiles() const {
+  return outputFiles_;
 }
 
 }  // end of namespace DYN

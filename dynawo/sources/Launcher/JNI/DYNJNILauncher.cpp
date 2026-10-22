@@ -19,7 +19,8 @@
  * The JVM registers its network in the registry of iidm-bridge (IidmBridgeRegistry) under an id. Dynawo reads it there
  * through the JNI backend of iidm-bridge, and writes the final values of its state variables into it: no IIDM file is
  * written or read. The JVM gives the input files of the simulation too, the jobs file and the dyd, par... files it refers
- * to, that Dynawo reads from their content rather than from the file system.
+ * to, that Dynawo reads from their content rather than from the file system, and gets back its output files, the logs,
+ * timeline, curves... that Dynawo writes in memory rather than on the file system, but its dump files.
  */
 #include <jni.h>
 
@@ -43,6 +44,7 @@
 #include "DYNInitXml.h"
 #include "DYNInputFiles.h"
 #include "DYNIoDico.h"
+#include "DYNOutputFiles.h"
 #include "DYNSignalHandler.h"
 #include "DYNSimulationLauncher.h"
 #include "DYNTerminate.h"
@@ -110,6 +112,34 @@ std::shared_ptr<DYN::InputFiles> toInputFiles(JNIEnv* env, jobjectArray paths, j
 }
 
 /**
+ * @brief give the output files written in memory to the JVM, until a Java exception is thrown
+ * @param env JNI environment of the calling thread
+ * @param outputFiles output files written in memory
+ * @param files map of the JVM (java.util.Map<String, byte[]>) where the output files are put by their paths
+ */
+void putOutputFiles(JNIEnv* env, const DYN::OutputFiles& outputFiles, jobject files) {
+  const jmethodID put = env->GetMethodID(env->GetObjectClass(files), "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+  if (!put)
+    return;
+  for (const auto& file : outputFiles.getFiles()) {
+    jstring path = env->NewStringUTF(file.first.c_str());
+    if (!path)
+      return;
+    const jsize length = static_cast<jsize>(file.second.size());
+    jbyteArray content = env->NewByteArray(length);
+    if (!content)
+      return;
+    env->SetByteArrayRegion(content, 0, length, reinterpret_cast<const jbyte*>(file.second.data()));
+    jobject previous = env->CallObjectMethod(files, put, path, content);
+    if (env->ExceptionCheck())
+      return;
+    env->DeleteLocalRef(previous);
+    env->DeleteLocalRef(content);
+    env->DeleteLocalRef(path);
+  }
+}
+
+/**
  * @brief set an environment variable that is not set yet
  * @param name name of the variable
  * @param value its value
@@ -144,9 +174,11 @@ void setDynawoEnvironment(const std::string& installDir) {
  * @brief run the job(s) of a jobs file on the network registered in iidm-bridge under an id
  * @param jobsFile jobs file
  * @param inputFiles input files given in memory, the jobs file and the files it refers to
+ * @param outputFiles output files written in memory
  * @param networkId id of the network in the registry of iidm-bridge
  */
-void runJobs(const std::string& jobsFile, const std::shared_ptr<const DYN::InputFiles>& inputFiles, const std::string& networkId) {
+void runJobs(const std::string& jobsFile, const std::shared_ptr<const DYN::InputFiles>& inputFiles,
+    const std::shared_ptr<DYN::OutputFiles>& outputFiles, const std::string& networkId) {
   // the JVM handles the signals of the process
   DYN::SignalHandler::disableSignalHandlers();
   DYN::InitXerces xerces;
@@ -159,7 +191,7 @@ void runJobs(const std::string& jobsFile, const std::shared_ptr<const DYN::Input
   }
   // the network of the JVM itself, without any copy
   const boost::shared_ptr<iidm::Network> network = boost::make_shared<iidm::Network>(iidm::NetworkFactory::wrap(networkId));
-  launchSimu(jobsFile, DYN::DataInterfaceIIDM::build(network), inputFiles);
+  launchSimu(jobsFile, DYN::DataInterfaceIIDM::build(network), inputFiles, outputFiles);
 }
 
 }  // namespace
@@ -181,39 +213,50 @@ Java_com_powsybl_dynawo_jni_DynawoNative_getVersion(JNIEnv* env, jclass /*clazz*
  * @brief run the job(s) of a jobs file on a network of the JVM; a failure throws a DynawoNativeException
  * @param env JNI environment of the calling thread
  * @param installDir installation directory of Dynawo
- * @param jobsFile jobs file, in the directory where the outputs are written
+ * @param jobsFile jobs file, in the directory of the outputs
  * @param inputPaths paths of the input files given in memory: the jobs file and the files it refers to that Dynawo reads
  * from their content rather than from the file system
  * @param inputContents contents of the input files given in memory, in the order of their paths
  * @param networkId id of the network in the registry of iidm-bridge (IidmBridgeRegistry)
+ * @param outputFiles map (java.util.Map<String, byte[]>) where the output files that Dynawo writes in memory are put by
+ * their absolute paths, also by a failed simulation: the logs, timeline, curves, final state values, constraints and lost
+ * equipments. Its other outputs, the dump files of its states for instance, are written in the directory of the outputs.
  */
 JNIEXPORT void JNICALL
 Java_com_powsybl_dynawo_jni_DynawoNative_runJobs(JNIEnv* env, jclass /*clazz*/, jstring installDir, jstring jobsFile,
-    jobjectArray inputPaths, jobjectArray inputContents, jstring networkId) {
+    jobjectArray inputPaths, jobjectArray inputContents, jstring networkId, jobject outputFiles) {
   std::lock_guard<std::mutex> lock(simulationMutex);
+  const std::shared_ptr<DYN::OutputFiles> outputs = std::make_shared<DYN::OutputFiles>();
+  bool failed = true;
+  std::string failure;
   try {
     setDynawoEnvironment(toString(env, installDir));
-    runJobs(toString(env, jobsFile), toInputFiles(env, inputPaths, inputContents), toString(env, networkId));
-    return;
+    runJobs(toString(env, jobsFile), toInputFiles(env, inputPaths, inputContents), outputs, toString(env, networkId));
+    failed = false;
   } catch (const DYN::Error& e) {
-    throwDynawoException(env, std::string("DYN Error: ") + e.what());
+    failure = std::string("DYN Error: ") + e.what();
   } catch (const DYN::MessageError& e) {
-    throwDynawoException(env, e.what());
+    failure = e.what();
   } catch (const DYN::Terminate& e) {
-    throwDynawoException(env, e.what());
+    failure = e.what();
   } catch (const xml::sax::parser::ParserException& e) {
-    throwDynawoException(env, e.what());
+    failure = e.what();
   } catch (const std::exception& e) {
-    throwDynawoException(env, e.what());
+    failure = e.what();
   } catch (const char* s) {
-    throwDynawoException(env, s);
+    failure = s;
   } catch (const std::string& s) {
-    throwDynawoException(env, s);
+    failure = s;
   } catch (...) {
-    throwDynawoException(env, "Unexpected error");
+    failure = "Unexpected error";
   }
-  // a failed job leaves the appenders of its logs
-  DYN::Trace::resetCustomAppenders();
+  if (failed) {
+    // a failed job leaves the appenders of its logs
+    DYN::Trace::resetCustomAppenders();
+  }
+  putOutputFiles(env, *outputs, outputFiles);
+  if (failed && !env->ExceptionCheck())
+    throwDynawoException(env, failure);
 }
 
 }  // extern "C"

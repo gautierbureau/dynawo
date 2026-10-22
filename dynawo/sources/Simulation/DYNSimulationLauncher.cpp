@@ -92,9 +92,10 @@ static void terminateFailed(const std::shared_ptr<Simulation>& simulation, const
  * @param data data interface of the network to simulate, null to read the iidm file of the job(s)
  * @param inputFiles input files given in memory: the jobs file and the files it refers to that are read from their
  * content rather than from the file system
+ * @param outputFiles output files written in memory, null to write all the outputs on the file system
  */
 static void launchJobs(const std::string& jobsFileName, bool isInteractive, const boost::shared_ptr<DYN::DataInterface>& data,
-    const std::shared_ptr<const DYN::InputFiles>& inputFiles) {
+    const std::shared_ptr<const DYN::InputFiles>& inputFiles, const std::shared_ptr<DYN::OutputFiles>& outputFiles) {
 #if defined(_DEBUG_) || defined(PRINT_TIMERS)
   DYN::Timer timer("Main::LaunchSimu");
 #endif
@@ -115,6 +116,7 @@ static void launchJobs(const std::string& jobsFileName, bool isInteractive, cons
     context->setInputDirectory(prefixJobFile);
     context->setWorkingDirectory(prefixJobFile);
     context->setInputFiles(inputFiles);
+    context->setOutputFiles(outputFiles);
 
     std::shared_ptr<Simulation> simulation;
     try {
@@ -189,14 +191,20 @@ static void launchJobs(const std::string& jobsFileName, bool isInteractive, cons
 }
 
 void launchSimu(const std::string& jobsFileName, bool isInteractive) {
-  launchJobs(jobsFileName, isInteractive, boost::shared_ptr<DYN::DataInterface>(), std::make_shared<DYN::InputFiles>());
+  launchJobs(jobsFileName, isInteractive, boost::shared_ptr<DYN::DataInterface>(), std::make_shared<DYN::InputFiles>(),
+      std::shared_ptr<DYN::OutputFiles>());
 }
 
 void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data) {
-  launchJobs(jobsFileName, false, data, std::make_shared<DYN::InputFiles>());
+  launchJobs(jobsFileName, false, data, std::make_shared<DYN::InputFiles>(), std::shared_ptr<DYN::OutputFiles>());
 }
 
 void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data,
     const std::shared_ptr<const DYN::InputFiles>& inputFiles) {
-  launchJobs(jobsFileName, false, data, inputFiles ? inputFiles : std::make_shared<DYN::InputFiles>());
+  launchJobs(jobsFileName, false, data, inputFiles ? inputFiles : std::make_shared<DYN::InputFiles>(), std::shared_ptr<DYN::OutputFiles>());
+}
+
+void launchSimu(const std::string& jobsFileName, const boost::shared_ptr<DYN::DataInterface>& data,
+    const std::shared_ptr<const DYN::InputFiles>& inputFiles, const std::shared_ptr<DYN::OutputFiles>& outputFiles) {
+  launchJobs(jobsFileName, false, data, inputFiles ? inputFiles : std::make_shared<DYN::InputFiles>(), outputFiles);
 }
